@@ -14,6 +14,9 @@ const reviewContext = document.getElementById('reviewContext');
 const scopeBadge = document.getElementById('scopeBadge');
 const formStatus = document.getElementById('formStatus');
 
+const COMMENT_FORM_NAME = 'card-review';
+const COMMENT_POST_PATH = '/forms.html';
+
 const LESSON_META = {
   L1: {
     number: '1',
@@ -55,6 +58,17 @@ function slugify(value) {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+}
+
+function truncate(value, maxLength = 76) {
+  const text = String(value || '').trim();
+  return text.length <= maxLength ? text : `${text.slice(0, maxLength - 1).trim()}…`;
+}
+
+function panelTitle(panelHtml, fallback) {
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = panelHtml || '';
+  return wrapper.querySelector('.panel-title')?.textContent?.trim() || fallback;
 }
 
 function naturalLessonSort(a, b) {
@@ -229,7 +243,9 @@ function renderLesson() {
       <div><strong>Comments</strong><span>Use card comments for exact corrections; use the lesson comment for general suggestions.</span></div>
     </section>
 
-    ${filteredCards.length ? [...grouped.entries()].map(([deck, deckCards], groupIndex) => renderSubdeck(deck, deckCards, forceOpen || groupIndex === 0)).join('') : `
+    ${filteredCards.length ? [...grouped.entries()]
+      .map(([deck, deckCards], groupIndex) => renderSubdeck(deck, deckCards, forceOpen || groupIndex === 0))
+      .join('') : `
       <div class="empty-state">No cards match these filters.</div>
     `}`;
 
@@ -238,6 +254,8 @@ function renderLesson() {
 
 function renderSubdeck(deck, deckCards, open) {
   const meta = lessonMeta(currentLesson);
+  const accordionId = `subdeck-${slugify(`${currentLesson}-${deck}`)}`;
+
   return `<section class="subdeck-section" data-subdeck="${escapeHtml(deck)}">
     <div class="subdeck-heading">
       <div>
@@ -247,19 +265,48 @@ function renderSubdeck(deck, deckCards, open) {
       </div>
       <button type="button" class="subdeck-comment-button" data-comment-scope="deck" data-lesson="${escapeHtml(currentLesson)}" data-deck="${escapeHtml(deck)}">Comment on subdeck</button>
     </div>
-    <details class="subdeck-details" ${open ? 'open' : ''}>
-      <summary>${open ? 'Cards shown' : `Open ${deckCards.length} card${deckCards.length === 1 ? '' : 's'}`}</summary>
-      <div class="card-list">
-        ${deckCards.map((card, index) => renderCard(card, index + 1, deckCards.length)).join('')}
+
+    <div class="subdeck-accordion ${open ? 'is-open' : ''}">
+      <button
+        type="button"
+        class="subdeck-toggle"
+        aria-expanded="${String(open)}"
+        aria-controls="${accordionId}"
+        data-card-count="${deckCards.length}"
+      >
+        <span class="subdeck-toggle-text">${open ? 'Cards shown' : `Open ${deckCards.length} card${deckCards.length === 1 ? '' : 's'}`}</span>
+        <span class="subdeck-chevron" aria-hidden="true">⌄</span>
+      </button>
+      <div class="subdeck-collapse" id="${accordionId}">
+        <div class="subdeck-collapse-inner">
+          <div class="card-list">
+            ${deckCards.map((card, index) => renderCard(card, index + 1, deckCards.length)).join('')}
+          </div>
+        </div>
       </div>
-    </details>
+    </div>
   </section>`;
 }
 
 function renderCard(card, position, total) {
   const anchor = `card-${slugify(card.key)}`;
+  const title = panelTitle(card.panel, card.deck);
+  const promptSummary = truncate(stripHtml(card.prompt), 86);
+
   return `<article class="review-card" id="${anchor}" data-key="${escapeHtml(card.key)}" data-lesson="${escapeHtml(card.lesson)}" data-deck="${escapeHtml(card.deck)}">
-    <div class="card-position">Card ${position} of ${total}</div>
+    <div class="card-sticky-tools">
+      <div class="sticky-card-copy">
+        <span class="sticky-card-index">Card ${position} of ${total}</span>
+        <strong>${escapeHtml(title)}</strong>
+        <span class="sticky-side-state">Recall side</span>
+      </div>
+      <div class="sticky-card-actions">
+        <button class="reveal-button sticky-reveal" type="button" aria-expanded="false">Show answer</button>
+        <button class="card-comment-button sticky-comment" type="button" data-comment-scope="card">Comment</button>
+      </div>
+    </div>
+
+    <div class="card-position">Card ${position} of ${total} · ${escapeHtml(promptSummary)}</div>
 
     <div class="flip-shell">
       <div class="flip-card-inner">
@@ -312,17 +359,82 @@ function setFlipHeight(reviewCard, showAnswer, immediate = false) {
 
 function scheduleVisibleFlipHeights() {
   requestAnimationFrame(() => {
-    document.querySelectorAll('.subdeck-details[open] .review-card').forEach(reviewCard => {
+    document.querySelectorAll('.subdeck-accordion.is-open .review-card').forEach(reviewCard => {
       setFlipHeight(reviewCard, reviewCard.classList.contains('show-answer'), true);
     });
   });
 
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => {
-      document.querySelectorAll('.subdeck-details[open] .review-card').forEach(reviewCard => {
+      document.querySelectorAll('.subdeck-accordion.is-open .review-card').forEach(reviewCard => {
         setFlipHeight(reviewCard, reviewCard.classList.contains('show-answer'), true);
       });
     });
+  }
+}
+
+function scrollCardIntoFocus(reviewCard) {
+  if (!reviewCard) return;
+  requestAnimationFrame(() => {
+    reviewCard.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'nearest'
+    });
+  });
+}
+
+function updateCardSideControls(reviewCard, showAnswer) {
+  reviewCard.querySelectorAll('.reveal-button').forEach(button => {
+    button.setAttribute('aria-expanded', String(showAnswer));
+    button.textContent = button.classList.contains('sticky-reveal')
+      ? (showAnswer ? 'Show recall' : 'Show answer')
+      : (showAnswer ? 'Flip to recall side' : 'Flip to answer side');
+  });
+
+  const state = reviewCard.querySelector('.sticky-side-state');
+  if (state) state.textContent = showAnswer ? 'Answer side' : 'Recall side';
+
+  reviewCard.querySelector('.recall-side')?.setAttribute('aria-hidden', String(showAnswer));
+  reviewCard.querySelector('.answer-side')?.setAttribute('aria-hidden', String(!showAnswer));
+}
+
+function setCardSide(reviewCard, showAnswer) {
+  if (!reviewCard) return;
+
+  setFlipHeight(reviewCard, showAnswer);
+  requestAnimationFrame(() => {
+    reviewCard.classList.toggle('show-answer', showAnswer);
+    updateCardSideControls(reviewCard, showAnswer);
+    scrollCardIntoFocus(reviewCard);
+  });
+
+  window.setTimeout(() => {
+    setFlipHeight(reviewCard, showAnswer);
+  }, 620);
+}
+
+function setSubdeckOpen(accordion, open) {
+  if (!accordion) return;
+
+  accordion.classList.toggle('is-open', open);
+  const toggle = accordion.querySelector('.subdeck-toggle');
+  const text = accordion.querySelector('.subdeck-toggle-text');
+  const total = Number(toggle?.dataset.cardCount || 0);
+
+  toggle?.setAttribute('aria-expanded', String(open));
+  if (text) {
+    text.textContent = open
+      ? 'Cards shown'
+      : `Open ${total} card${total === 1 ? '' : 's'}`;
+  }
+
+  if (open) {
+    window.setTimeout(() => {
+      accordion.querySelectorAll('.review-card').forEach(reviewCard => {
+        setFlipHeight(reviewCard, reviewCard.classList.contains('show-answer'), true);
+      });
+    }, 460);
   }
 }
 
@@ -376,6 +488,27 @@ function closeReview() {
   document.body.style.overflow = '';
 }
 
+async function copyCurrentComment() {
+  const reviewer = document.getElementById('reviewer').value.trim();
+  const comment = document.getElementById('comment').value.trim();
+  const context = reviewContext.textContent.trim();
+  const text = [
+    'Italian flash-card review comment',
+    context,
+    reviewer ? `Reviewer: ${reviewer}` : '',
+    `Comment: ${comment}`
+  ].filter(Boolean).join('\n');
+
+  try {
+    await navigator.clipboard.writeText(text);
+    formStatus.textContent = 'Comment copied. You can paste it into an email or message.';
+    formStatus.classList.remove('error');
+  } catch (error) {
+    formStatus.textContent = 'Could not copy automatically. Select and copy the comment text manually.';
+    formStatus.classList.add('error');
+  }
+}
+
 document.addEventListener('click', event => {
   const navigationButton = event.target.closest('[data-lesson-nav]');
   if (navigationButton) {
@@ -383,25 +516,23 @@ document.addEventListener('click', event => {
     return;
   }
 
-  const revealButton = event.target.closest('.reveal-button');
-  if (revealButton) {
-    const reviewCard = revealButton.closest('.review-card');
-    const showAnswer = !reviewCard.classList.contains('show-answer');
-
-    setFlipHeight(reviewCard, showAnswer);
-    requestAnimationFrame(() => {
-      reviewCard.classList.toggle('show-answer', showAnswer);
-      revealButton.textContent = showAnswer ? 'Flip to recall side' : 'Flip to answer side';
-      revealButton.setAttribute('aria-expanded', String(showAnswer));
-      reviewCard.querySelector('.recall-side').setAttribute('aria-hidden', String(showAnswer));
-      reviewCard.querySelector('.answer-side').setAttribute('aria-hidden', String(!showAnswer));
-    });
+  const subdeckToggle = event.target.closest('.subdeck-toggle');
+  if (subdeckToggle) {
+    const accordion = subdeckToggle.closest('.subdeck-accordion');
+    setSubdeckOpen(accordion, !accordion.classList.contains('is-open'));
     return;
   }
 
-  const fallbackButton = event.target.closest('[data-standard-submit]');
-  if (fallbackButton) {
-    HTMLFormElement.prototype.submit.call(reviewForm);
+  const revealButton = event.target.closest('.reveal-button');
+  if (revealButton) {
+    const reviewCard = revealButton.closest('.review-card');
+    setCardSide(reviewCard, !reviewCard.classList.contains('show-answer'));
+    return;
+  }
+
+  const copyButton = event.target.closest('[data-copy-comment]');
+  if (copyButton) {
+    copyCurrentComment();
     return;
   }
 
@@ -435,22 +566,6 @@ document.addEventListener('click', event => {
 });
 
 document.addEventListener('toggle', event => {
-  if (event.target.matches('.subdeck-details')) {
-    const section = event.target.closest('.subdeck-section');
-    const total = section?.querySelectorAll('.review-card').length || 0;
-    event.target.querySelector('summary').textContent = event.target.open
-      ? 'Cards shown'
-      : `Open ${total} card${total === 1 ? '' : 's'}`;
-
-    if (event.target.open) {
-      requestAnimationFrame(() => {
-        event.target.querySelectorAll('.review-card').forEach(reviewCard => {
-          setFlipHeight(reviewCard, reviewCard.classList.contains('show-answer'), true);
-        });
-      });
-    }
-  }
-
   const reviewCard = event.target.closest?.('.review-card');
   if (reviewCard && event.target.matches('.extra')) {
     requestAnimationFrame(() => {
@@ -473,14 +588,17 @@ reviewForm.addEventListener('submit', async event => {
 
   try {
     const data = new URLSearchParams(new FormData(reviewForm));
-    const response = await fetch('/', {
+    data.set('form-name', COMMENT_FORM_NAME);
+
+    const response = await fetch(COMMENT_POST_PATH, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: data.toString(),
-      credentials: 'same-origin'
+      credentials: 'same-origin',
+      redirect: 'follow'
     });
 
-    if (!response.ok && !response.redirected) {
+    if (!response.ok) {
       throw new Error(`Submission failed with status ${response.status}`);
     }
 
@@ -489,7 +607,7 @@ reviewForm.addEventListener('submit', async event => {
     setTimeout(closeReview, 1200);
   } catch (error) {
     formStatus.classList.add('error');
-    formStatus.innerHTML = `The automatic submission failed. <button type="button" data-standard-submit>Try standard submit</button>`;
+    formStatus.innerHTML = 'Comments are not active yet. In Netlify, enable <strong>Forms → Form detection</strong>, redeploy the site, then try again. <button type="button" data-copy-comment>Copy this comment</button>';
     console.error(error);
   } finally {
     submitButton.disabled = false;
@@ -498,12 +616,12 @@ reviewForm.addEventListener('submit', async event => {
 
 searchInput.addEventListener('input', renderLesson);
 deckSelect.addEventListener('change', renderLesson);
+
 expandAllButton.addEventListener('click', () => {
-  const details = [...document.querySelectorAll('.subdeck-details')];
-  const shouldOpen = details.some(detail => !detail.open);
-  details.forEach(detail => { detail.open = shouldOpen; });
+  const accordions = [...document.querySelectorAll('.subdeck-accordion')];
+  const shouldOpen = accordions.some(accordion => !accordion.classList.contains('is-open'));
+  accordions.forEach(accordion => setSubdeckOpen(accordion, shouldOpen));
   expandAllButton.textContent = shouldOpen ? 'Close all subdecks' : 'Open all subdecks';
-  if (shouldOpen) scheduleVisibleFlipHeights();
 });
 
 window.addEventListener('hashchange', () => {
@@ -514,7 +632,7 @@ window.addEventListener('hashchange', () => {
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(scheduleVisibleFlipHeights, 120);
+  resizeTimer = setTimeout(scheduleVisibleFlipHeights, 140);
 });
 
 loadCards();
