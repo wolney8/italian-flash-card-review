@@ -1,25 +1,38 @@
-# Italian Flash Card Review
+# Italian for Beginners - BSE Course
 
-A user-neutral review site for the Italian for Beginners Anki decks.
+Review site for the class-shareable Anki decks created from Lessons 1–3 of the Italian for Beginners course.
 
-## Netlify setup
+## Live review site
 
-1. In Netlify, choose **Add new project → Import an existing project**.
-2. Select `wolney8/italian-flash-card-review`.
-3. Use:
-   - **Production branch:** `main`
-   - **Build command:** leave blank
-   - **Publish directory:** `.`
-4. Deploy the site.
-5. In Netlify, open **Forms** and enable form detection.
-6. Trigger one more deploy, then submit a test comment.
+Netlify publishes this repository as:
 
-Comments are stored privately in:
+`https://italian-flash-card-review.netlify.app`
 
-`Netlify → Forms → card-review`
+The site lets reviewers:
 
-## Updating the review site
+- open one lesson at a time;
+- inspect the **Recall side** and **Answer side** of each flash card;
+- filter by subdeck or search within a lesson;
+- leave a private comment on a card, subdeck, lesson or the whole site.
 
-Update the files in this same repository and commit them to `main`. Netlify will redeploy automatically.
+Comments are collected through the Netlify form named `card-review`.
 
-Existing form submissions remain in Netlify as long as the same Netlify project and the `card-review` form are kept.
+## Deployment
+
+The Netlify production site is connected to the `main` branch. Commits pushed to `main` trigger a new production deployment.
+
+## Source files
+
+- `index.html` — site structure and Netlify form
+- `styles.css` — review-site and card-preview styling
+- `app.js` — lesson navigation, answer reveal and comments
+- `data/` — compressed card-review data
+- `netlify.toml` — static-site publish configuration
+
+## Anki deck schema
+
+The design and content rules for the v5.1 decks, including the process for Lesson 4 and later lessons, are documented here:
+
+- [Anki Deck Schema v5.1](docs/ANKI_DECK_SCHEMA_V5_1.md)
+
+Keep that document as the source of truth when adding or updating lessons.
