@@ -7,6 +7,7 @@
   <title>Italian for Beginners - BSE Course</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="review-enhancements.css">
+  <link rel="stylesheet" href="google-review.css">
 </head>
 <body class="card nightMode">
   <div class="site-shell">
@@ -19,6 +20,8 @@
       </div>
       <button class="general-comment" type="button" data-comment-scope="general">General comment</button>
     </header>
+
+    <div id="reviewerIdentityMount"></div>
 
     <nav id="lessonNav" class="lesson-nav" aria-label="Lesson navigation"></nav>
 
@@ -40,6 +43,8 @@
     </footer>
   </div>
 
+  <iframe id="googleReviewSink" name="googleReviewSink" title="Comment submission target" aria-hidden="true"></iframe>
+
   <div class="review-modal" id="reviewModal" hidden>
     <div class="review-backdrop" data-close-modal></div>
     <section class="review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
@@ -47,8 +52,16 @@
       <h2 id="reviewTitle">Leave a comment</h2>
       <p class="review-context" id="reviewContext"></p>
 
-      <form class="review-form" id="reviewForm" method="POST">
-        <input type="hidden" name="form-name" value="card-review">
+      <form
+        class="review-form"
+        id="reviewForm"
+        method="POST"
+        action="https://script.google.com/macros/s/AKfycbykw2N7OUync7sM3yXDGQJ_2eb2pPrPA6j23dM79NFB6gQb2sXbB6z1new-kEPdHg36nQ/exec"
+        target="googleReviewSink"
+      >
+        <p class="hidden-field" aria-hidden="true">
+          <label>Do not fill this in: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+        </p>
         <input type="hidden" name="scope" id="formScope">
         <input type="hidden" name="item_id" id="formItemId">
         <input type="hidden" name="lesson" id="formLesson">
@@ -58,10 +71,10 @@
         <input type="hidden" name="site_version" value="5.1-review-3">
 
         <label for="reviewer">Name or initials</label>
-        <input id="reviewer" name="reviewer" autocomplete="name" required>
+        <input id="reviewer" name="reviewer" maxlength="80" autocomplete="name" required>
 
         <label for="comment">Comment</label>
-        <textarea id="comment" name="comment" required placeholder="What should be checked or changed?"></textarea>
+        <textarea id="comment" name="comment" maxlength="4000" required placeholder="What should be checked or changed?"></textarea>
 
         <div class="modal-buttons">
           <button class="modal-close" type="button" data-close-modal>Cancel</button>
@@ -73,6 +86,7 @@
     </section>
   </div>
 
+  <script src="google-review.js" defer></script>
   <script src="app.js" defer></script>
 </body>
 </html>
