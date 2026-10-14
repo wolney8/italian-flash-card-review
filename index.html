@@ -3,33 +3,31 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Italian for Beginners flash-card review for Lessons 1–3.">
-  <title>Italian Flash Card Review</title>
+  <meta name="description" content="Italian for Beginners - BSE Course flash-card review for Lessons 1–3.">
+  <title>Italian for Beginners - BSE Course</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="card nightMode">
   <div class="site-shell">
     <header class="site-intro">
-      <h1>Italian Flash Card Review</h1>
-      <p>Review the cards for Lessons 1–3. Open an answer, then leave a short comment on a card or subdeck when something looks inaccurate or unclear.</p>
-      <p>Comments are sent privately to the site owner. A name or initials is enough.</p>
+      <div>
+        <p class="eyebrow">Flash-card review</p>
+        <h1>Italian for Beginners - BSE Course</h1>
+        <p>Choose a lesson, inspect the recall and answer sides, and leave a short comment wherever something needs checking.</p>
+        <p>Comments are sent privately to the site owner. A name or initials is enough.</p>
+      </div>
+      <button class="general-comment" type="button" data-comment-scope="general">General comment</button>
     </header>
 
-    <div class="toolbar">
-      <select id="lesson" aria-label="Filter by lesson">
-        <option value="">All lessons</option>
-        <option value="L1">Lesson 1</option>
-        <option value="L2">Lesson 2</option>
-        <option value="L3">Lesson 3</option>
-      </select>
+    <nav id="lessonNav" class="lesson-nav" aria-label="Lesson navigation"></nav>
 
+    <div class="lesson-toolbar" id="lessonToolbar" hidden>
       <select id="deck" aria-label="Filter by subdeck">
         <option value="">All subdecks</option>
       </select>
-
-      <input id="search" type="search" placeholder="Search cards" aria-label="Search cards">
+      <input id="search" type="search" placeholder="Search this lesson" aria-label="Search this lesson">
       <span id="count" aria-live="polite"></span>
-      <button class="general-comment" type="button" data-comment-scope="general">General comment</button>
+      <button id="expandAll" type="button">Open all subdecks</button>
     </div>
 
     <main id="app">
@@ -37,7 +35,7 @@
     </main>
 
     <footer class="site-footer">
-      Italian for Beginners revision material. Version 5.1 review site.
+      Italian for Beginners - BSE Course · Version 5.1 review site
     </footer>
   </div>
 
