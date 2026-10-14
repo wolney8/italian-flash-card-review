@@ -15,16 +15,30 @@ The site lets reviewers:
 - filter by subdeck or search within a lesson;
 - leave a private comment on a card, subdeck, lesson or the whole site.
 
-Comments are collected through the Netlify form named `card-review`.
-
 ## Deployment
 
 The Netlify production site is connected to the `main` branch. Commits pushed to `main` trigger a new production deployment.
 
+## Netlify comments
+
+Comments use the Netlify form named `card-review`.
+
+After form-related changes:
+
+1. Open **Netlify → Forms**.
+2. Make sure **Form detection** is enabled.
+3. Trigger a fresh production deployment.
+4. Confirm `card-review` appears under active forms.
+5. Submit one test comment.
+
+The static form blueprint is in `forms.html`; the visible form is the modal in `index.html`.
+
 ## Source files
 
-- `index.html` — site structure and Netlify form
-- `styles.css` — review-site and card-preview styling
+- `index.html` — site structure and comment modal
+- `forms.html` — static Netlify form blueprint
+- `styles.css` — shared card-preview styling
+- `review-enhancements.css` — review-site navigation, flips, accordions and sticky tools
 - `app.js` — lesson navigation, answer reveal and comments
 - `data/` — compressed card-review data
 - `netlify.toml` — static-site publish configuration
@@ -35,4 +49,8 @@ The design and content rules for the v5.1 decks, including the process for Lesso
 
 - [Anki Deck Schema v5.1](docs/ANKI_DECK_SCHEMA_V5_1.md)
 
-Keep that document as the source of truth when adding or updating lessons.
+## Optional Google Sheets comments
+
+A Google Sheets + Apps Script alternative is documented here:
+
+- [Google Sheets comment backend](docs/GOOGLE_SHEETS_COMMENTS.md)
