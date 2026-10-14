@@ -1,0 +1,96 @@
+.reviewer-identity {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(260px, auto) minmax(160px, auto);
+  align-items: center;
+  gap: 16px;
+  max-width: 1040px;
+  margin: 0 auto 10px;
+  padding: 16px 18px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  text-align: left;
+}
+
+.reviewer-identity-copy strong,
+.reviewer-identity-copy span {
+  display: block;
+}
+
+.reviewer-identity-copy span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.reviewer-identity-form {
+  display: flex;
+  gap: 8px;
+}
+
+.reviewer-identity-form input {
+  min-width: 220px;
+  padding: 9px 11px;
+  background: var(--paper2);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+
+.reviewer-identity-form button {
+  padding: 9px 13px;
+  background: var(--primary);
+  color: var(--primary-ink);
+  border: 1px solid var(--primary);
+  border-radius: 9px;
+  font-weight: 800;
+}
+
+.reviewer-identity-status {
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.review-tracking-note {
+  max-width: 1040px;
+  margin: 0 auto 14px;
+  padding: 0 4px;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: left;
+}
+
+#googleReviewSink {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@media (max-width: 840px) {
+  .reviewer-identity {
+    grid-template-columns: 1fr;
+  }
+
+  .reviewer-identity-status {
+    text-align: left;
+  }
+}
+
+@media (max-width: 560px) {
+  .reviewer-identity-form {
+    flex-direction: column;
+  }
+
+  .reviewer-identity-form input,
+  .reviewer-identity-form button {
+    width: 100%;
+    min-width: 0;
+  }
+}
