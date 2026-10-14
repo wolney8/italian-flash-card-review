@@ -1,4 +1,4 @@
-const GOOGLE_REVIEW_ENDPOINT = 'https://script.google.com/macros/s/AKfycbykw2N7OUync7sM3yXDGQJ_2eb2pPrPA6j23dM79NFB6gQb2sXbB6z1new-kEPdHg36nQ/exec';
+const GOOGLE_REVIEW_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyBZwlHEKrcPVnLRGKVgorqGf-3K9yU9GWcuoRSqAt1UwTdVauUW_ZmYWle7Z050uZbww/exec';
 const GOOGLE_REVIEW_TARGET = 'googleReviewSink';
 const REVIEWER_STORAGE_KEY = 'italianFlashCardReviewer';
 const ACCESS_STORAGE_KEY = 'italianFlashCardPagesSeen';
