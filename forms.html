@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <title>Review form blueprint</title>
+</head>
+<body>
+  <!-- Static Netlify form blueprint. The visible modal in index.html posts the same named fields here. -->
+  <form name="card-review" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="card-review">
+    <p><label>Leave empty: <input name="bot-field"></label></p>
+    <p><label>Name or initials <input name="reviewer"></label></p>
+    <p><label>Comment <textarea name="comment"></textarea></label></p>
+    <input name="scope">
+    <input name="item_id">
+    <input name="lesson">
+    <input name="deck">
+    <input name="card_key">
+    <input name="card_summary">
+    <input name="site_version">
+    <button type="submit">Send</button>
+  </form>
+</body>
+</html>
