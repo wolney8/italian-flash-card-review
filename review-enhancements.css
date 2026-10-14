@@ -1,0 +1,190 @@
+/* Review-site refinements layered over the Anki card styling. */
+
+body.card.nightMode,
+body.card.night_mode {
+  --bg: #181b1f;
+  --paper: #252a30;
+  --paper2: #30363d;
+  --ink: #f4f6f7;
+  --muted: #c5cdd2;
+  --line: #48525c;
+  --soft: #4a3440;
+  background:
+    radial-gradient(circle at top, rgba(112, 142, 137, .08), transparent 34rem),
+    var(--bg);
+}
+
+body.card:not(.nightMode):not(.night_mode) {
+  --bg: #eef1f3;
+  --paper: #ffffff;
+  --paper2: #f2f5f6;
+  --ink: #263137;
+  --muted: #657079;
+  --line: #d3dbe0;
+}
+
+.site-intro,
+.lesson-toolbar,
+.review-guide,
+.lesson-header,
+.lesson-review-help,
+.lesson-tile,
+.subdeck-section,
+.empty-state {
+  background: var(--paper);
+  border-color: var(--line);
+}
+
+.lesson-nav {
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  border-color: var(--line);
+}
+
+.subdeck-section {
+  box-shadow: 0 16px 42px rgba(0, 0, 0, .18);
+}
+
+.subdeck-heading {
+  background: var(--paper2);
+  border-bottom-color: var(--line);
+}
+
+.card-list {
+  background: color-mix(in srgb, var(--bg) 88%, #000 12%);
+}
+
+.review-card {
+  --paper: #334b4b;
+  --paper2: #283c3c;
+  --line: #607b77;
+  --muted: #d0dad7;
+  --green: #b6e5d8;
+  --recall: #3a5353;
+  --answer: #273e3c;
+  max-width: 900px;
+  background: #20262b;
+  border-color: #56616a;
+  box-shadow: 0 18px 52px rgba(0, 0, 0, .28);
+}
+
+.review-card .topic-panel,
+.review-card .answer-body {
+  background: var(--paper);
+}
+
+.review-card .card-position {
+  color: #aeb8bd;
+}
+
+/* Smooth two-sided flash-card flip. */
+.flip-shell {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 19px;
+  perspective: 1800px;
+  transition: height .5s cubic-bezier(.22, .8, .24, 1);
+  contain: layout paint;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform .56s cubic-bezier(.22, .8, .24, 1);
+  will-change: transform;
+}
+
+.card-face {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.recall-side {
+  transform: rotateY(0deg);
+}
+
+.review-card .answer-side {
+  display: block;
+  margin: 0;
+  transform: rotateY(180deg);
+}
+
+.review-card.show-answer .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.review-card:not(.show-answer) .answer-side,
+.review-card.show-answer .recall-side {
+  pointer-events: none;
+}
+
+.card-actions {
+  margin-top: 18px;
+}
+
+.reveal-button {
+  min-width: 190px;
+  box-shadow: 0 8px 18px rgba(100, 190, 167, .14);
+  transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+}
+
+.reveal-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 11px 24px rgba(100, 190, 167, .2);
+}
+
+.card-comment-button {
+  background: transparent;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+
+.card-comment-button:hover {
+  transform: translateY(-1px);
+}
+
+.hidden-field {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+
+.form-status {
+  line-height: 1.4;
+}
+
+.form-status button {
+  margin-top: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+@media (max-width: 760px) {
+  .review-card {
+    border-radius: 20px;
+  }
+
+  .flip-shell {
+    border-radius: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-shell,
+  .flip-card-inner,
+  .reveal-button,
+  .card-comment-button {
+    transition: none !important;
+  }
+}
