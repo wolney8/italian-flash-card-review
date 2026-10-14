@@ -47,26 +47,15 @@
       <h2 id="reviewTitle">Leave a comment</h2>
       <p class="review-context" id="reviewContext"></p>
 
-      <form
-        class="review-form"
-        id="reviewForm"
-        name="card-review"
-        method="POST"
-        action="/thank-you.html"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-      >
+      <form class="review-form" id="reviewForm" method="POST">
         <input type="hidden" name="form-name" value="card-review">
-        <p class="hidden-field" aria-hidden="true">
-          <label>Do not fill this in: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
-        </p>
         <input type="hidden" name="scope" id="formScope">
         <input type="hidden" name="item_id" id="formItemId">
         <input type="hidden" name="lesson" id="formLesson">
         <input type="hidden" name="deck" id="formDeck">
         <input type="hidden" name="card_key" id="formCardKey">
         <input type="hidden" name="card_summary" id="formCardSummary">
-        <input type="hidden" name="site_version" value="5.1-review-2">
+        <input type="hidden" name="site_version" value="5.1-review-3">
 
         <label for="reviewer">Name or initials</label>
         <input id="reviewer" name="reviewer" autocomplete="name" required>
