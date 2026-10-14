@@ -25,9 +25,12 @@ function slugify(value){
 async function loadCards(){
   try{
     if(typeof DecompressionStream==='undefined') throw new Error('This browser is too old to open the review data.');
-    const response=await fetch('cards.b64');
-    if(!response.ok) throw new Error('Could not load the card data.');
-    const encoded=(await response.text()).trim();
+    const files=Array.from({length:9},(_,i)=>`data/cards-${String(i+1).padStart(2,'0')}.txt`);
+    const encoded=(await Promise.all(files.map(async file=>{
+      const response=await fetch(file);
+      if(!response.ok) throw new Error('Could not load the card data.');
+      return (await response.text()).trim();
+    }))).join('');
     const bytes=Uint8Array.from(atob(encoded), ch=>ch.charCodeAt(0));
     const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
     cards=JSON.parse(await new Response(stream).text());
