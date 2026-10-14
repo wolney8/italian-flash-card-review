@@ -6,6 +6,7 @@
   <meta name="description" content="Italian for Beginners - BSE Course flash-card review for Lessons 1–3.">
   <title>Italian for Beginners - BSE Course</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="review-enhancements.css">
 </head>
 <body class="card nightMode">
   <div class="site-shell">
@@ -39,21 +40,6 @@
     </footer>
   </div>
 
-  <!-- Netlify detects this static form during deployment. -->
-  <form name="card-review" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
-    <input type="hidden" name="form-name" value="card-review">
-    <input name="bot-field">
-    <input name="reviewer">
-    <textarea name="comment"></textarea>
-    <input name="scope">
-    <input name="item_id">
-    <input name="lesson">
-    <input name="deck">
-    <input name="card_key">
-    <input name="card_summary">
-    <input name="site_version">
-  </form>
-
   <div class="review-modal" id="reviewModal" hidden>
     <div class="review-backdrop" data-close-modal></div>
     <section class="review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
@@ -61,15 +47,26 @@
       <h2 id="reviewTitle">Leave a comment</h2>
       <p class="review-context" id="reviewContext"></p>
 
-      <form class="review-form" id="reviewForm">
+      <form
+        class="review-form"
+        id="reviewForm"
+        name="card-review"
+        method="POST"
+        action="/thank-you.html"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+      >
         <input type="hidden" name="form-name" value="card-review">
+        <p class="hidden-field" aria-hidden="true">
+          <label>Do not fill this in: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+        </p>
         <input type="hidden" name="scope" id="formScope">
         <input type="hidden" name="item_id" id="formItemId">
         <input type="hidden" name="lesson" id="formLesson">
         <input type="hidden" name="deck" id="formDeck">
         <input type="hidden" name="card_key" id="formCardKey">
         <input type="hidden" name="card_summary" id="formCardSummary">
-        <input type="hidden" name="site_version" value="5.1">
+        <input type="hidden" name="site_version" value="5.1-review-2">
 
         <label for="reviewer">Name or initials</label>
         <input id="reviewer" name="reviewer" autocomplete="name" required>
