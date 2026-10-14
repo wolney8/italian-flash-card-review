@@ -88,6 +88,7 @@ function setLesson(lesson, updateHash = true) {
     const targetHash = lesson ? `#lesson-${lesson}` : '#lessons';
     if (location.hash !== targetHash) history.pushState(null, '', targetHash);
   }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -168,7 +169,7 @@ function renderLessonIndex() {
     <section class="review-guide">
       <p class="eyebrow">How to review</p>
       <h2>Choose one lesson at a time</h2>
-      <p>Each flash card opens on its <strong>Recall side</strong>: the question the learner sees in Anki. Select <strong>Show answer side</strong> to inspect the answer, pronunciation and teaching notes.</p>
+      <p>Each flash card opens on its <strong>Recall side</strong>: the question the learner sees in Anki. Select <strong>Flip to answer side</strong> to inspect the answer, pronunciation and teaching notes.</p>
       <p>Use <strong>Comment on this card</strong> for a specific correction. Use the main <strong>Comment on Lesson</strong> button inside a lesson for broader feedback.</p>
       <div class="review-stats"><span>${cards.length} cards</span><span>${totalSubdecks} subdecks</span><span>${lessons.length} lessons</span></div>
     </section>
@@ -224,13 +225,15 @@ function renderLesson() {
 
     <section class="lesson-review-help">
       <div><strong>Recall side</strong><span>The prompt a learner sees first.</span></div>
-      <div><strong>Answer side</strong><span>The Italian answer, pronunciation and teaching notes.</span></div>
+      <div><strong>Answer side</strong><span>Flip the card to see the answer, pronunciation and teaching notes.</span></div>
       <div><strong>Comments</strong><span>Use card comments for exact corrections; use the lesson comment for general suggestions.</span></div>
     </section>
 
     ${filteredCards.length ? [...grouped.entries()].map(([deck, deckCards], groupIndex) => renderSubdeck(deck, deckCards, forceOpen || groupIndex === 0)).join('') : `
       <div class="empty-state">No cards match these filters.</div>
     `}`;
+
+  scheduleVisibleFlipHeights();
 }
 
 function renderSubdeck(deck, deckCards, open) {
@@ -258,31 +261,69 @@ function renderCard(card, position, total) {
   return `<article class="review-card" id="${anchor}" data-key="${escapeHtml(card.key)}" data-lesson="${escapeHtml(card.lesson)}" data-deck="${escapeHtml(card.deck)}">
     <div class="card-position">Card ${position} of ${total}</div>
 
-    <section class="card-side recall-side">
-      <div class="side-label recall-label">Recall side</div>
-      <div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div>
-      <div class="topic-panel">${card.panel}</div>
-      <div class="front-body">${card.prompt}</div>
-    </section>
+    <div class="flip-shell">
+      <div class="flip-card-inner">
+        <section class="card-side card-face recall-side" aria-hidden="false">
+          <div class="side-label recall-label">Recall side</div>
+          <div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div>
+          <div class="topic-panel">${card.panel}</div>
+          <div class="front-body">${card.prompt}</div>
+        </section>
 
-    <div class="card-actions">
-      <button class="reveal-button" type="button" aria-expanded="false">Show answer side</button>
-      <button class="card-comment-button" type="button" data-comment-scope="card">Comment on this card</button>
+        <section class="card-side card-face answer-side" aria-hidden="true">
+          <div class="side-label answer-label-main">Answer side</div>
+          <div class="answer-body">
+            <div class="answer-label">Answer</div>
+            <div class="italian">${card.answer}</div>
+            <div class="phon">${card.pron}</div>
+            <div class="section"><div class="label">Meaning</div>${card.meaning}</div>
+            ${card.literal ? `<div class="section"><div class="label">Literal</div>${card.literal}</div>` : ''}
+            <div class="section"><div class="label">Rule / forms</div>${card.rule}</div>
+            <details class="extra"><summary>Source</summary><div class="inside">${card.source}<p>${escapeHtml(card.key)}</p></div></details>
+          </div>
+        </section>
+      </div>
     </div>
 
-    <section class="card-side answer-side" aria-hidden="true">
-      <div class="side-label answer-label-main">Answer side</div>
-      <div class="answer-body">
-        <div class="answer-label">Answer</div>
-        <div class="italian">${card.answer}</div>
-        <div class="phon">${card.pron}</div>
-        <div class="section"><div class="label">Meaning</div>${card.meaning}</div>
-        ${card.literal ? `<div class="section"><div class="label">Literal</div>${card.literal}</div>` : ''}
-        <div class="section"><div class="label">Rule / forms</div>${card.rule}</div>
-        <details class="extra"><summary>Source</summary><div class="inside">${card.source}<p>${escapeHtml(card.key)}</p></div></details>
-      </div>
-    </section>
+    <div class="card-actions">
+      <button class="reveal-button" type="button" aria-expanded="false">Flip to answer side</button>
+      <button class="card-comment-button" type="button" data-comment-scope="card">Comment on this card</button>
+    </div>
   </article>`;
+}
+
+function setFlipHeight(reviewCard, showAnswer, immediate = false) {
+  const shell = reviewCard?.querySelector('.flip-shell');
+  const targetFace = reviewCard?.querySelector(showAnswer ? '.answer-side' : '.recall-side');
+  if (!shell || !targetFace || targetFace.offsetParent === null) return;
+
+  const height = Math.ceil(targetFace.scrollHeight);
+  if (!height) return;
+
+  if (immediate) {
+    shell.style.transition = 'none';
+    shell.style.height = `${height}px`;
+    shell.getBoundingClientRect();
+    shell.style.removeProperty('transition');
+  } else {
+    shell.style.height = `${height}px`;
+  }
+}
+
+function scheduleVisibleFlipHeights() {
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.subdeck-details[open] .review-card').forEach(reviewCard => {
+      setFlipHeight(reviewCard, reviewCard.classList.contains('show-answer'), true);
+    });
+  });
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => {
+      document.querySelectorAll('.subdeck-details[open] .review-card').forEach(reviewCard => {
+        setFlipHeight(reviewCard, reviewCard.classList.contains('show-answer'), true);
+      });
+    });
+  }
 }
 
 function findCardFromSection(section) {
@@ -345,10 +386,22 @@ document.addEventListener('click', event => {
   const revealButton = event.target.closest('.reveal-button');
   if (revealButton) {
     const reviewCard = revealButton.closest('.review-card');
-    const isOpen = reviewCard.classList.toggle('show-answer');
-    revealButton.textContent = isOpen ? 'Hide answer side' : 'Show answer side';
-    revealButton.setAttribute('aria-expanded', String(isOpen));
-    reviewCard.querySelector('.answer-side').setAttribute('aria-hidden', String(!isOpen));
+    const showAnswer = !reviewCard.classList.contains('show-answer');
+
+    setFlipHeight(reviewCard, showAnswer);
+    requestAnimationFrame(() => {
+      reviewCard.classList.toggle('show-answer', showAnswer);
+      revealButton.textContent = showAnswer ? 'Flip to recall side' : 'Flip to answer side';
+      revealButton.setAttribute('aria-expanded', String(showAnswer));
+      reviewCard.querySelector('.recall-side').setAttribute('aria-hidden', String(showAnswer));
+      reviewCard.querySelector('.answer-side').setAttribute('aria-hidden', String(!showAnswer));
+    });
+    return;
+  }
+
+  const fallbackButton = event.target.closest('[data-standard-submit]');
+  if (fallbackButton) {
+    HTMLFormElement.prototype.submit.call(reviewForm);
     return;
   }
 
@@ -381,6 +434,31 @@ document.addEventListener('click', event => {
   if (event.target.closest('[data-close-modal]')) closeReview();
 });
 
+document.addEventListener('toggle', event => {
+  if (event.target.matches('.subdeck-details')) {
+    const section = event.target.closest('.subdeck-section');
+    const total = section?.querySelectorAll('.review-card').length || 0;
+    event.target.querySelector('summary').textContent = event.target.open
+      ? 'Cards shown'
+      : `Open ${total} card${total === 1 ? '' : 's'}`;
+
+    if (event.target.open) {
+      requestAnimationFrame(() => {
+        event.target.querySelectorAll('.review-card').forEach(reviewCard => {
+          setFlipHeight(reviewCard, reviewCard.classList.contains('show-answer'), true);
+        });
+      });
+    }
+  }
+
+  const reviewCard = event.target.closest?.('.review-card');
+  if (reviewCard && event.target.matches('.extra')) {
+    requestAnimationFrame(() => {
+      setFlipHeight(reviewCard, reviewCard.classList.contains('show-answer'));
+    });
+  }
+}, true);
+
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && !modal.hidden) closeReview();
 });
@@ -398,17 +476,21 @@ reviewForm.addEventListener('submit', async event => {
     const response = await fetch('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: data.toString()
+      body: data.toString(),
+      credentials: 'same-origin'
     });
 
-    if (!response.ok) throw new Error('Submission failed');
+    if (!response.ok && !response.redirected) {
+      throw new Error(`Submission failed with status ${response.status}`);
+    }
 
     formStatus.textContent = 'Thank you — your comment was sent.';
     reviewForm.querySelector('#comment').value = '';
-    setTimeout(closeReview, 1100);
+    setTimeout(closeReview, 1200);
   } catch (error) {
-    formStatus.textContent = 'The comment could not be sent. Please try again.';
     formStatus.classList.add('error');
+    formStatus.innerHTML = `The automatic submission failed. <button type="button" data-standard-submit>Try standard submit</button>`;
+    console.error(error);
   } finally {
     submitButton.disabled = false;
   }
@@ -421,11 +503,18 @@ expandAllButton.addEventListener('click', () => {
   const shouldOpen = details.some(detail => !detail.open);
   details.forEach(detail => { detail.open = shouldOpen; });
   expandAllButton.textContent = shouldOpen ? 'Close all subdecks' : 'Open all subdecks';
+  if (shouldOpen) scheduleVisibleFlipHeights();
 });
 
 window.addEventListener('hashchange', () => {
   const lesson = lessonFromHash();
   if (lesson !== currentLesson) setLesson(lesson, false);
+});
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(scheduleVisibleFlipHeights, 120);
 });
 
 loadCards();
