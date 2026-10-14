@@ -1,158 +1,431 @@
-let cards=[];
-const app=document.getElementById('app');
-const lessonSelect=document.getElementById('lesson');
-const deckSelect=document.getElementById('deck');
-const searchInput=document.getElementById('search');
-const count=document.getElementById('count');
-const modal=document.getElementById('reviewModal');
-const reviewForm=document.getElementById('reviewForm');
-const reviewContext=document.getElementById('reviewContext');
-const scopeBadge=document.getElementById('scopeBadge');
-const formStatus=document.getElementById('formStatus');
+let cards = [];
+let currentLesson = null;
 
-function escapeHtml(value){
-  return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+const app = document.getElementById('app');
+const lessonNav = document.getElementById('lessonNav');
+const lessonToolbar = document.getElementById('lessonToolbar');
+const deckSelect = document.getElementById('deck');
+const searchInput = document.getElementById('search');
+const count = document.getElementById('count');
+const expandAllButton = document.getElementById('expandAll');
+const modal = document.getElementById('reviewModal');
+const reviewForm = document.getElementById('reviewForm');
+const reviewContext = document.getElementById('reviewContext');
+const scopeBadge = document.getElementById('scopeBadge');
+const formStatus = document.getElementById('formStatus');
+
+const LESSON_META = {
+  L1: {
+    number: '1',
+    title: 'Introductions',
+    description: 'Greetings, names, essere, chiamarsi, tu and formal Lei.'
+  },
+  L2: {
+    number: '2',
+    title: 'Alphabet, Sounds and Articles',
+    description: 'Alphabet and spelling, pronunciation patterns, gender and articles.'
+  },
+  L3: {
+    number: '3',
+    title: 'Origins, Nationality and Residence',
+    description: 'Pronouns, origins, countries, nationalities and where people live.'
+  }
+};
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  }[character]));
 }
-function stripHtml(value){
-  const d=document.createElement('div');
-  d.innerHTML=value || '';
-  return (d.textContent || '').replace(/\s+/g,' ').trim();
+
+function stripHtml(value) {
+  const element = document.createElement('div');
+  element.innerHTML = value || '';
+  return (element.textContent || '').replace(/\s+/g, ' ').trim();
 }
-function slugify(value){
-  return String(value || '').normalize('NFKD').replace(/[\u0300-\u036f]/g,'')
-    .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+
+function slugify(value) {
+  return String(value || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
 }
-async function loadCards(){
-  try{
-    if(typeof DecompressionStream==='undefined') throw new Error('This browser is too old to open the review data.');
-    const files=Array.from({length:9},(_,i)=>`data/cards-${String(i+1).padStart(2,'0')}.txt`);
-    const encoded=(await Promise.all(files.map(async file=>{
-      const response=await fetch(file);
-      if(!response.ok) throw new Error('Could not load the card data.');
+
+function naturalLessonSort(a, b) {
+  return Number(String(a).replace(/\D/g, '')) - Number(String(b).replace(/\D/g, ''));
+}
+
+function lessonMeta(lesson) {
+  if (LESSON_META[lesson]) return LESSON_META[lesson];
+  const number = String(lesson).replace(/\D/g, '') || lesson;
+  return {
+    number,
+    title: `Lesson ${number}`,
+    description: 'Italian for Beginners revision cards.'
+  };
+}
+
+function lessonFromHash() {
+  const match = location.hash.match(/^#lesson-(L\d+)$/i);
+  return match ? match[1].toUpperCase() : null;
+}
+
+function setLesson(lesson, updateHash = true) {
+  currentLesson = lesson;
+  deckSelect.value = '';
+  searchInput.value = '';
+  updateDeckOptions();
+  renderNavigation();
+  renderView();
+
+  if (updateHash) {
+    const targetHash = lesson ? `#lesson-${lesson}` : '#lessons';
+    if (location.hash !== targetHash) history.pushState(null, '', targetHash);
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+async function loadCards() {
+  try {
+    if (typeof DecompressionStream === 'undefined') {
+      throw new Error('This browser is too old to open the review data.');
+    }
+
+    const files = Array.from(
+      { length: 9 },
+      (_, index) => `data/cards-${String(index + 1).padStart(2, '0')}.txt`
+    );
+
+    const encoded = (await Promise.all(files.map(async file => {
+      const response = await fetch(file);
+      if (!response.ok) throw new Error('Could not load the card data.');
       return (await response.text()).trim();
     }))).join('');
-    const bytes=Uint8Array.from(atob(encoded), ch=>ch.charCodeAt(0));
-    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-    cards=JSON.parse(await new Response(stream).text());
+
+    const bytes = Uint8Array.from(atob(encoded), character => character.charCodeAt(0));
+    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    cards = JSON.parse(await new Response(stream).text());
+
+    const requestedLesson = lessonFromHash();
+    currentLesson = cards.some(card => card.lesson === requestedLesson) ? requestedLesson : null;
+
     updateDeckOptions();
-    draw();
-    if(location.hash) setTimeout(()=>document.querySelector(location.hash)?.scrollIntoView(),50);
-  }catch(error){
-    app.innerHTML=`<div class="loading"><strong>The cards could not be loaded.</strong><br>${escapeHtml(error.message)}</div>`;
+    renderNavigation();
+    renderView();
+  } catch (error) {
+    app.innerHTML = `<div class="loading"><strong>The cards could not be loaded.</strong><br>${escapeHtml(error.message)}</div>`;
   }
 }
-function updateDeckOptions(){
-  const selectedLesson=lessonSelect.value;
-  const previous=deckSelect.value;
-  const decks=[...new Set(cards.filter(c=>!selectedLesson||c.lesson===selectedLesson).map(c=>c.deck))];
-  deckSelect.innerHTML='<option value="">All subdecks</option>'+decks.map(d=>`<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
-  if(decks.includes(previous)) deckSelect.value=previous;
+
+function renderNavigation() {
+  const lessons = [...new Set(cards.map(card => card.lesson))].sort(naturalLessonSort);
+  lessonNav.innerHTML = [
+    `<button type="button" class="lesson-nav-button ${currentLesson ? '' : 'active'}" data-lesson-nav="">All lessons</button>`,
+    ...lessons.map(lesson => {
+      const meta = lessonMeta(lesson);
+      return `<button type="button" class="lesson-nav-button ${currentLesson === lesson ? 'active' : ''}" data-lesson-nav="${escapeHtml(lesson)}">Lesson ${escapeHtml(meta.number)}</button>`;
+    })
+  ].join('');
 }
-function draw(){
-  const q=searchInput.value.toLowerCase().trim();
-  const lesson=lessonSelect.value;
-  const deck=deckSelect.value;
-  const list=cards.filter(c=>
-    (!lesson||c.lesson===lesson) &&
-    (!deck||c.deck===deck) &&
-    (!q||JSON.stringify(c).toLowerCase().includes(q))
-  );
-  count.textContent=list.length+' cards';
-  app.innerHTML=list.map(c=>{
-    const anchor='card-'+slugify(c.key);
-    return `<section class="preview-card" id="${anchor}" data-key="${escapeHtml(c.key)}" data-lesson="${escapeHtml(c.lesson)}" data-deck="${escapeHtml(c.deck)}">
-      <div class="deck-label">${escapeHtml(c.lesson)} · ${escapeHtml(c.deck)}</div>
-      <div class="topic-panel">${c.panel}</div>
-      <div class="front-body">${c.prompt}</div>
-      <button class="reveal" type="button">Show / hide answer</button>
-      <div class="comment-actions">
-        <button class="comment-button" type="button" data-comment-scope="card">Comment on card</button>
-        <button class="comment-button secondary" type="button" data-comment-scope="deck">Comment on subdeck</button>
-      </div>
-      <div class="preview-answer">
-        <div class="answer-body">
-          <div class="answer-label">Answer</div>
-          <div class="italian">${c.answer}</div>
-          <div class="phon">${c.pron}</div>
-          <div class="section"><div class="label">Meaning</div>${c.meaning}</div>
-          ${c.literal?`<div class="section"><div class="label">Literal</div>${c.literal}</div>`:''}
-          <div class="section"><div class="label">Rule / forms</div>${c.rule}</div>
-          <details class="extra"><summary>Source</summary><div class="inside">${c.source}<p>${escapeHtml(c.key)}</p></div></details>
-        </div>
-      </div>
+
+function updateDeckOptions() {
+  const previous = deckSelect.value;
+  const decks = [...new Set(
+    cards
+      .filter(card => !currentLesson || card.lesson === currentLesson)
+      .map(card => card.deck)
+  )];
+
+  deckSelect.innerHTML = '<option value="">All subdecks</option>' + decks
+    .map(deck => `<option value="${escapeHtml(deck)}">${escapeHtml(deck)}</option>`)
+    .join('');
+
+  if (decks.includes(previous)) deckSelect.value = previous;
+}
+
+function renderView() {
+  if (!currentLesson) {
+    lessonToolbar.hidden = true;
+    renderLessonIndex();
+    return;
+  }
+
+  lessonToolbar.hidden = false;
+  renderLesson();
+}
+
+function renderLessonIndex() {
+  const lessons = [...new Set(cards.map(card => card.lesson))].sort(naturalLessonSort);
+  const totalSubdecks = new Set(cards.map(card => `${card.lesson}::${card.deck}`)).size;
+
+  app.innerHTML = `
+    <section class="review-guide">
+      <p class="eyebrow">How to review</p>
+      <h2>Choose one lesson at a time</h2>
+      <p>Each flash card opens on its <strong>Recall side</strong>: the question the learner sees in Anki. Select <strong>Show answer side</strong> to inspect the answer, pronunciation and teaching notes.</p>
+      <p>Use <strong>Comment on this card</strong> for a specific correction. Use the main <strong>Comment on Lesson</strong> button inside a lesson for broader feedback.</p>
+      <div class="review-stats"><span>${cards.length} cards</span><span>${totalSubdecks} subdecks</span><span>${lessons.length} lessons</span></div>
+    </section>
+    <section class="lesson-grid" aria-label="Course lessons">
+      ${lessons.map(lesson => {
+        const meta = lessonMeta(lesson);
+        const lessonCards = cards.filter(card => card.lesson === lesson);
+        const subdeckCount = new Set(lessonCards.map(card => card.deck)).size;
+        return `<article class="lesson-tile">
+          <div class="lesson-number">${escapeHtml(meta.number)}</div>
+          <div>
+            <p class="eyebrow">Lesson ${escapeHtml(meta.number)}</p>
+            <h2>${escapeHtml(meta.title)}</h2>
+            <p>${escapeHtml(meta.description)}</p>
+            <p class="lesson-count">${lessonCards.length} cards · ${subdeckCount} subdecks</p>
+            <button type="button" class="open-lesson-button" data-lesson-nav="${escapeHtml(lesson)}">Open Lesson ${escapeHtml(meta.number)}</button>
+          </div>
+        </article>`;
+      }).join('')}
     </section>`;
-  }).join('');
 }
-function openReview(scope, card){
-  formStatus.textContent='';
+
+function renderLesson() {
+  const meta = lessonMeta(currentLesson);
+  const query = searchInput.value.toLowerCase().trim();
+  const selectedDeck = deckSelect.value;
+  const lessonCards = cards.filter(card => card.lesson === currentLesson);
+  const filteredCards = lessonCards.filter(card =>
+    (!selectedDeck || card.deck === selectedDeck) &&
+    (!query || JSON.stringify(card).toLowerCase().includes(query))
+  );
+
+  count.textContent = `${filteredCards.length} of ${lessonCards.length} cards`;
+
+  const grouped = new Map();
+  filteredCards.forEach(card => {
+    if (!grouped.has(card.deck)) grouped.set(card.deck, []);
+    grouped.get(card.deck).push(card);
+  });
+
+  const forceOpen = Boolean(query || selectedDeck);
+
+  app.innerHTML = `
+    <section class="lesson-header">
+      <div>
+        <button type="button" class="back-to-lessons" data-lesson-nav="">← All lessons</button>
+        <p class="eyebrow">Lesson ${escapeHtml(meta.number)}</p>
+        <h2>${escapeHtml(meta.title)}</h2>
+        <p>${escapeHtml(meta.description)}</p>
+      </div>
+      <button type="button" class="lesson-comment-button" data-comment-scope="lesson" data-lesson="${escapeHtml(currentLesson)}">Comment on Lesson ${escapeHtml(meta.number)}</button>
+    </section>
+
+    <section class="lesson-review-help">
+      <div><strong>Recall side</strong><span>The prompt a learner sees first.</span></div>
+      <div><strong>Answer side</strong><span>The Italian answer, pronunciation and teaching notes.</span></div>
+      <div><strong>Comments</strong><span>Use card comments for exact corrections; use the lesson comment for general suggestions.</span></div>
+    </section>
+
+    ${filteredCards.length ? [...grouped.entries()].map(([deck, deckCards], groupIndex) => renderSubdeck(deck, deckCards, forceOpen || groupIndex === 0)).join('') : `
+      <div class="empty-state">No cards match these filters.</div>
+    `}`;
+}
+
+function renderSubdeck(deck, deckCards, open) {
+  const meta = lessonMeta(currentLesson);
+  return `<section class="subdeck-section" data-subdeck="${escapeHtml(deck)}">
+    <div class="subdeck-heading">
+      <div>
+        <p class="eyebrow">Lesson ${escapeHtml(meta.number)} subdeck</p>
+        <h3>${escapeHtml(deck)}</h3>
+        <p>${deckCards.length} card${deckCards.length === 1 ? '' : 's'}</p>
+      </div>
+      <button type="button" class="subdeck-comment-button" data-comment-scope="deck" data-lesson="${escapeHtml(currentLesson)}" data-deck="${escapeHtml(deck)}">Comment on subdeck</button>
+    </div>
+    <details class="subdeck-details" ${open ? 'open' : ''}>
+      <summary>${open ? 'Cards shown' : `Open ${deckCards.length} card${deckCards.length === 1 ? '' : 's'}`}</summary>
+      <div class="card-list">
+        ${deckCards.map((card, index) => renderCard(card, index + 1, deckCards.length)).join('')}
+      </div>
+    </details>
+  </section>`;
+}
+
+function renderCard(card, position, total) {
+  const anchor = `card-${slugify(card.key)}`;
+  return `<article class="review-card" id="${anchor}" data-key="${escapeHtml(card.key)}" data-lesson="${escapeHtml(card.lesson)}" data-deck="${escapeHtml(card.deck)}">
+    <div class="card-position">Card ${position} of ${total}</div>
+
+    <section class="card-side recall-side">
+      <div class="side-label recall-label">Recall side</div>
+      <div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div>
+      <div class="topic-panel">${card.panel}</div>
+      <div class="front-body">${card.prompt}</div>
+    </section>
+
+    <div class="card-actions">
+      <button class="reveal-button" type="button" aria-expanded="false">Show answer side</button>
+      <button class="card-comment-button" type="button" data-comment-scope="card">Comment on this card</button>
+    </div>
+
+    <section class="card-side answer-side" aria-hidden="true">
+      <div class="side-label answer-label-main">Answer side</div>
+      <div class="answer-body">
+        <div class="answer-label">Answer</div>
+        <div class="italian">${card.answer}</div>
+        <div class="phon">${card.pron}</div>
+        <div class="section"><div class="label">Meaning</div>${card.meaning}</div>
+        ${card.literal ? `<div class="section"><div class="label">Literal</div>${card.literal}</div>` : ''}
+        <div class="section"><div class="label">Rule / forms</div>${card.rule}</div>
+        <details class="extra"><summary>Source</summary><div class="inside">${card.source}<p>${escapeHtml(card.key)}</p></div></details>
+      </div>
+    </section>
+  </article>`;
+}
+
+function findCardFromSection(section) {
+  return cards.find(card => card.key === section?.dataset.key);
+}
+
+function openReview(scope, context = {}) {
+  formStatus.textContent = '';
   formStatus.classList.remove('error');
   reviewForm.reset();
-  document.getElementById('formScope').value=scope;
-  document.getElementById('formLesson').value=card?.lesson || '';
-  document.getElementById('formDeck').value=card?.deck || '';
-  document.getElementById('formCardKey').value=scope==='card' ? (card?.key || '') : '';
-  const summary=scope==='card' ? `${stripHtml(card?.prompt)} → ${stripHtml(card?.answer)}` : '';
-  document.getElementById('formCardSummary').value=summary;
-  if(scope==='card'){
-    document.getElementById('formItemId').value='card:'+card.key;
-    scopeBadge.textContent='Card comment';
-    reviewContext.textContent=`${card.lesson} · ${card.deck} · ${summary}`;
-  } else if(scope==='deck'){
-    document.getElementById('formItemId').value='deck:'+card.lesson+':'+slugify(card.deck);
-    scopeBadge.textContent='Subdeck comment';
-    reviewContext.textContent=`${card.lesson} · ${card.deck}`;
+
+  const lesson = context.lesson || '';
+  const deck = context.deck || '';
+  const card = context.card || null;
+  const meta = lesson ? lessonMeta(lesson) : null;
+
+  document.getElementById('formScope').value = scope;
+  document.getElementById('formLesson').value = lesson;
+  document.getElementById('formDeck').value = deck;
+  document.getElementById('formCardKey').value = card?.key || '';
+
+  const summary = card ? `${stripHtml(card.prompt)} → ${stripHtml(card.answer)}` : '';
+  document.getElementById('formCardSummary').value = summary;
+
+  if (scope === 'card' && card) {
+    document.getElementById('formItemId').value = `card:${card.key}`;
+    scopeBadge.textContent = 'Card comment';
+    reviewContext.textContent = `${card.lesson} · ${card.deck} · ${summary}`;
+  } else if (scope === 'deck') {
+    document.getElementById('formItemId').value = `deck:${lesson}:${slugify(deck)}`;
+    scopeBadge.textContent = 'Subdeck comment';
+    reviewContext.textContent = `Lesson ${meta?.number || ''} · ${deck}`;
+  } else if (scope === 'lesson') {
+    document.getElementById('formItemId').value = `lesson:${lesson}`;
+    scopeBadge.textContent = `Lesson ${meta?.number || ''} comment`;
+    reviewContext.textContent = `Lesson ${meta?.number || ''} · ${meta?.title || ''}`;
   } else {
-    document.getElementById('formItemId').value='site:general';
-    scopeBadge.textContent='General comment';
-    reviewContext.textContent='Lessons 1–3 review site';
+    document.getElementById('formItemId').value = 'site:general';
+    scopeBadge.textContent = 'General comment';
+    reviewContext.textContent = 'Italian for Beginners - BSE Course';
   }
-  modal.hidden=false;
-  document.body.style.overflow='hidden';
-  setTimeout(()=>document.getElementById('reviewer').focus(),0);
+
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('reviewer').focus(), 0);
 }
-function closeReview(){
-  modal.hidden=true;
-  document.body.style.overflow='';
+
+function closeReview() {
+  modal.hidden = true;
+  document.body.style.overflow = '';
 }
-document.addEventListener('click', event=>{
-  const reveal=event.target.closest('.reveal');
-  if(reveal) reveal.closest('.preview-card').classList.toggle('show');
-  const commentButton=event.target.closest('[data-comment-scope]');
-  if(commentButton){
-    const scope=commentButton.dataset.commentScope;
-    if(scope==='general') return openReview('general', null);
-    const section=commentButton.closest('.preview-card');
-    const card=cards.find(c=>c.key===section?.dataset.key);
-    if(card) openReview(scope, card);
+
+document.addEventListener('click', event => {
+  const navigationButton = event.target.closest('[data-lesson-nav]');
+  if (navigationButton) {
+    setLesson(navigationButton.dataset.lessonNav || null);
+    return;
   }
-  if(event.target.closest('[data-close-modal]')) closeReview();
+
+  const revealButton = event.target.closest('.reveal-button');
+  if (revealButton) {
+    const reviewCard = revealButton.closest('.review-card');
+    const isOpen = reviewCard.classList.toggle('show-answer');
+    revealButton.textContent = isOpen ? 'Hide answer side' : 'Show answer side';
+    revealButton.setAttribute('aria-expanded', String(isOpen));
+    reviewCard.querySelector('.answer-side').setAttribute('aria-hidden', String(!isOpen));
+    return;
+  }
+
+  const commentButton = event.target.closest('[data-comment-scope]');
+  if (commentButton) {
+    const scope = commentButton.dataset.commentScope;
+    if (scope === 'general') {
+      openReview('general');
+      return;
+    }
+    if (scope === 'lesson') {
+      openReview('lesson', { lesson: commentButton.dataset.lesson });
+      return;
+    }
+    if (scope === 'deck') {
+      openReview('deck', {
+        lesson: commentButton.dataset.lesson,
+        deck: commentButton.dataset.deck
+      });
+      return;
+    }
+    if (scope === 'card') {
+      const section = commentButton.closest('.review-card');
+      const card = findCardFromSection(section);
+      if (card) openReview('card', { lesson: card.lesson, deck: card.deck, card });
+      return;
+    }
+  }
+
+  if (event.target.closest('[data-close-modal]')) closeReview();
 });
-document.addEventListener('keydown', event=>{if(event.key==='Escape'&&!modal.hidden) closeReview();});
-reviewForm.addEventListener('submit', async event=>{
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && !modal.hidden) closeReview();
+});
+
+reviewForm.addEventListener('submit', async event => {
   event.preventDefault();
-  formStatus.textContent='Sending…';
+  formStatus.textContent = 'Sending…';
   formStatus.classList.remove('error');
-  const submit=reviewForm.querySelector('.modal-submit');
-  submit.disabled=true;
-  try{
-    const data=new URLSearchParams(new FormData(reviewForm));
-    const response=await fetch('/',{
-      method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body:data.toString()
+
+  const submitButton = reviewForm.querySelector('.modal-submit');
+  submitButton.disabled = true;
+
+  try {
+    const data = new URLSearchParams(new FormData(reviewForm));
+    const response = await fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: data.toString()
     });
-    if(!response.ok) throw new Error('Submission failed');
-    formStatus.textContent='Thank you — your comment was sent.';
-    reviewForm.querySelector('#comment').value='';
-    setTimeout(closeReview,1100);
-  }catch(error){
-    formStatus.textContent='The comment could not be sent. Please try again.';
+
+    if (!response.ok) throw new Error('Submission failed');
+
+    formStatus.textContent = 'Thank you — your comment was sent.';
+    reviewForm.querySelector('#comment').value = '';
+    setTimeout(closeReview, 1100);
+  } catch (error) {
+    formStatus.textContent = 'The comment could not be sent. Please try again.';
     formStatus.classList.add('error');
-  }finally{
-    submit.disabled=false;
+  } finally {
+    submitButton.disabled = false;
   }
 });
-searchInput.addEventListener('input', draw);
-lessonSelect.addEventListener('change', ()=>{updateDeckOptions();draw();});
-deckSelect.addEventListener('change', draw);
+
+searchInput.addEventListener('input', renderLesson);
+deckSelect.addEventListener('change', renderLesson);
+expandAllButton.addEventListener('click', () => {
+  const details = [...document.querySelectorAll('.subdeck-details')];
+  const shouldOpen = details.some(detail => !detail.open);
+  details.forEach(detail => { detail.open = shouldOpen; });
+  expandAllButton.textContent = shouldOpen ? 'Close all subdecks' : 'Open all subdecks';
+});
+
+window.addEventListener('hashchange', () => {
+  const lesson = lessonFromHash();
+  if (lesson !== currentLesson) setLesson(lesson, false);
+});
+
 loadCards();
