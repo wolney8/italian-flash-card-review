@@ -1,13 +1,94 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Italian for Beginners flash-card review for Lessons 1–3.">
-<title>Italian Flash Card Review</title>
-<style>
-PLACEHOLDER
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Italian for Beginners flash-card review for Lessons 1–3.">
+  <title>Italian Flash Card Review</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body></body>
+<body class="card nightMode">
+  <div class="site-shell">
+    <header class="site-intro">
+      <h1>Italian Flash Card Review</h1>
+      <p>Review the cards for Lessons 1–3. Open an answer, then leave a short comment on a card or subdeck when something looks inaccurate or unclear.</p>
+      <p>Comments are sent privately to the site owner. A name or initials is enough.</p>
+    </header>
+
+    <div class="toolbar">
+      <select id="lesson" aria-label="Filter by lesson">
+        <option value="">All lessons</option>
+        <option value="L1">Lesson 1</option>
+        <option value="L2">Lesson 2</option>
+        <option value="L3">Lesson 3</option>
+      </select>
+
+      <select id="deck" aria-label="Filter by subdeck">
+        <option value="">All subdecks</option>
+      </select>
+
+      <input id="search" type="search" placeholder="Search cards" aria-label="Search cards">
+      <span id="count" aria-live="polite"></span>
+      <button class="general-comment" type="button" data-comment-scope="general">General comment</button>
+    </div>
+
+    <main id="app">
+      <div class="loading">Loading cards…</div>
+    </main>
+
+    <footer class="site-footer">
+      Italian for Beginners revision material. Version 5.1 review site.
+    </footer>
+  </div>
+
+  <!-- Netlify detects this static form during deployment. -->
+  <form name="card-review" method="POST" data-netlify="true" netlify-honeypot="bot-field" hidden>
+    <input type="hidden" name="form-name" value="card-review">
+    <input name="bot-field">
+    <input name="reviewer">
+    <textarea name="comment"></textarea>
+    <input name="scope">
+    <input name="item_id">
+    <input name="lesson">
+    <input name="deck">
+    <input name="card_key">
+    <input name="card_summary">
+    <input name="site_version">
+  </form>
+
+  <div class="review-modal" id="reviewModal" hidden>
+    <div class="review-backdrop" data-close-modal></div>
+    <section class="review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+      <span class="scope-badge" id="scopeBadge">Card comment</span>
+      <h2 id="reviewTitle">Leave a comment</h2>
+      <p class="review-context" id="reviewContext"></p>
+
+      <form class="review-form" id="reviewForm">
+        <input type="hidden" name="form-name" value="card-review">
+        <input type="hidden" name="scope" id="formScope">
+        <input type="hidden" name="item_id" id="formItemId">
+        <input type="hidden" name="lesson" id="formLesson">
+        <input type="hidden" name="deck" id="formDeck">
+        <input type="hidden" name="card_key" id="formCardKey">
+        <input type="hidden" name="card_summary" id="formCardSummary">
+        <input type="hidden" name="site_version" value="5.1">
+
+        <label for="reviewer">Name or initials</label>
+        <input id="reviewer" name="reviewer" autocomplete="name" required>
+
+        <label for="comment">Comment</label>
+        <textarea id="comment" name="comment" required placeholder="What should be checked or changed?"></textarea>
+
+        <div class="modal-buttons">
+          <button class="modal-close" type="button" data-close-modal>Cancel</button>
+          <button class="modal-submit" type="submit">Send comment</button>
+        </div>
+
+        <div class="form-status" id="formStatus" aria-live="polite"></div>
+      </form>
+    </section>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
 </html>
