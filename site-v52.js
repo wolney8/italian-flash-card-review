@@ -1,5 +1,9 @@
 (function () {
   const SITE_VERSION = '5.2-review-1';
+  const PATCH_FILES = Array.from(
+    { length: 6 },
+    (_, index) => `data/v52-patch-${String(index + 1).padStart(2, '0')}.txt`
+  );
 
   function decodePatch(encoded) {
     const bytes = Uint8Array.from(atob(encoded.trim()), character => character.charCodeAt(0));
@@ -68,9 +72,12 @@
     patchLessonMetadata();
     patchTrackingVersion();
 
-    const response = await fetch('data/site-v52-patch.b64', { cache: 'no-store' });
-    if (!response.ok) throw new Error('Could not load the v5.2 lesson update.');
-    const payload = await decodePatch(await response.text());
+    const encoded = (await Promise.all(PATCH_FILES.map(async file => {
+      const response = await fetch(file, { cache: 'no-store' });
+      if (!response.ok) throw new Error('Could not load the v5.2 lesson update.');
+      return (await response.text()).trim();
+    }))).join('');
+    const payload = await decodePatch(encoded);
 
     const waitForCards = () => {
       if (typeof cards !== 'undefined' && Array.isArray(cards) && cards.length) {
