@@ -1,9 +1,14 @@
 (function () {
   const SITE_VERSION = '5.2-review-1';
-  const PATCH_FILES = Array.from(
-    { length: 6 },
-    (_, index) => `data/v52-patch-${String(index + 1).padStart(2, '0')}.txt`
-  );
+  const PATCH_FILES = [
+    'data/v52-patch-01.txt',
+    'data/v52-patch-02.txt',
+    'data/v52-patch-03.txt',
+    'data/v52-patch-04a.txt',
+    'data/v52-patch-04b.txt',
+    'data/v52-patch-05.txt',
+    'data/v52-patch-06.txt'
+  ];
 
   function decodePatch(encoded) {
     const bytes = Uint8Array.from(atob(encoded.trim()), character => character.charCodeAt(0));
