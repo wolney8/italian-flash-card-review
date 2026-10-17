@@ -1,6 +1,6 @@
 # Italian for Beginners - BSE Course
 
-Review site for the class-shareable Anki decks created from Lessons 1–4 of the Italian for Beginners course.
+Review site for the class-shareable flash-card decks created from Lessons 1–4 of the Italian for Beginners course.
 
 ## Live review site
 
@@ -21,8 +21,8 @@ The site lets reviewers:
 ```text
 Lesson 1: 44 cards
 Lesson 2 curated: 113 cards
-Lesson 3 self-contained: 116 cards
-Lesson 4: 116 cards
+Lesson 3 self-contained/refined: 116 cards
+Lesson 4 refined: 116 cards
 Total: 389 cards
 ```
 
@@ -58,15 +58,17 @@ See:
 - `app.js` — lesson navigation and card interactions
 - `google-review.js` — Google Sheets comments and access logging
 - `site-v52.js` — Lesson 2/3 curation patch and Lesson 4 loader
-- `data/` — compressed card-review data
+- `site-v53.js` — platform-neutral wording and Lesson 3/4 card refinements
+- `data/` — compressed card-review data and versioned update payloads
 - `netlify.toml` — static-site publish configuration
 
-## Anki deck schema
+## Deck schema
 
 The current design and curation rules are documented here:
 
-- [Anki Deck Schema v5.2](docs/ANKI_DECK_SCHEMA_V5_2.md)
+- [Deck Schema v5.3](docs/ANKI_DECK_SCHEMA_V5_3.md)
+- [Deck Schema v5.2](docs/ANKI_DECK_SCHEMA_V5_2.md)
 
 The earlier v5.1 document remains as historical reference:
 
-- [Anki Deck Schema v5.1](docs/ANKI_DECK_SCHEMA_V5_1.md)
+- [Deck Schema v5.1](docs/ANKI_DECK_SCHEMA_V5_1.md)
