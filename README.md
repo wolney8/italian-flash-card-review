@@ -59,6 +59,7 @@ See:
 - `google-review.js` — Google Sheets comments and access logging
 - `site-v52.js` — Lesson 2/3 curation patch and Lesson 4 loader
 - `site-v53.js` — platform-neutral wording and Lesson 3/4 card refinements
+- `site-v54.js` — reusable conversation prompts and complete age-sentence breakdowns
 - `data/` — compressed card-review data and versioned update payloads
 - `netlify.toml` — static-site publish configuration
 
@@ -66,6 +67,7 @@ See:
 
 The current design and curation rules are documented here:
 
+- [Deck Schema v5.4](docs/ANKI_DECK_SCHEMA_V5_4.md)
 - [Deck Schema v5.3](docs/ANKI_DECK_SCHEMA_V5_3.md)
 - [Deck Schema v5.2](docs/ANKI_DECK_SCHEMA_V5_2.md)
 
