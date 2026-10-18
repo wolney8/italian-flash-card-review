@@ -1,0 +1,257 @@
+/* Personal audit mode. Enabled only with ?audit=1. */
+
+.target-word {
+  padding: 0 .16em;
+  border-radius: .18em;
+  background: #f0a3c2;
+  color: #243332;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.audit-panel {
+  max-width: 1040px;
+  margin: 24px auto;
+  padding: 22px 24px;
+  background: var(--paper);
+  border: 2px solid var(--primary);
+  border-radius: 20px;
+  text-align: left;
+  box-shadow: 0 14px 38px rgba(0, 0, 0, .18);
+}
+
+.audit-panel h2 {
+  margin: 0 0 7px;
+  font-size: 27px;
+  line-height: 1.2;
+}
+
+.audit-panel p {
+  color: var(--muted);
+}
+
+.audit-panel-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: start;
+}
+
+.audit-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+}
+
+.audit-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.audit-controls select,
+.audit-controls button,
+.audit-controls a {
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper2);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.audit-controls button:hover,
+.audit-controls a:hover {
+  border-color: var(--accent);
+}
+
+.audit-progress-track {
+  height: 10px;
+  margin-top: 17px;
+  overflow: hidden;
+  background: var(--paper2);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+.audit-progress-fill {
+  width: 0;
+  height: 100%;
+  background: var(--primary);
+  transition: width .28s ease;
+}
+
+.audit-progress-copy {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.audit-progress-copy strong {
+  color: var(--ink);
+}
+
+.audit-notice {
+  min-height: 22px;
+  margin-top: 10px;
+  color: var(--green);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.audit-card-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 15px;
+  padding: 13px 14px;
+  background: #171c20;
+  border: 1px solid #4b5760;
+  border-radius: 14px;
+  text-align: left;
+}
+
+.audit-status-copy {
+  min-width: 145px;
+}
+
+.audit-status-copy strong,
+.audit-status-copy span {
+  display: block;
+}
+
+.audit-status-copy strong {
+  font-size: 14px;
+}
+
+.audit-status-copy span {
+  color: #aeb9bf;
+  font-size: 12px;
+}
+
+.audit-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.audit-action {
+  min-height: 40px;
+  padding: 8px 11px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #2a3137;
+  color: #edf3f1;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 820;
+}
+
+.audit-action:hover {
+  transform: translateY(-1px);
+}
+
+.audit-action.ok {
+  border-color: #83d3b9;
+}
+
+.audit-action.fix {
+  border-color: #f0a3c2;
+}
+
+.audit-action.remove {
+  border-color: #e98b86;
+}
+
+.audit-action.clear {
+  border-color: #6b7881;
+  color: #c5ced3;
+}
+
+.audit-action.active.ok {
+  background: #176756;
+}
+
+.audit-action.active.fix {
+  background: #75425a;
+}
+
+.audit-action.active.remove {
+  background: #743b38;
+}
+
+.review-card.audit-ok {
+  border-color: #75c7ae;
+}
+
+.review-card.audit-fix {
+  border-color: #e89bbc;
+}
+
+.review-card.audit-remove {
+  border-color: #e1827c;
+  opacity: .88;
+}
+
+.audit-filtered-out,
+.audit-empty-subdeck {
+  display: none !important;
+}
+
+.audit-teacher-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  background: #453642;
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  color: #f3dfe8;
+  font-size: 13px;
+  text-align: left;
+}
+
+@media (max-width: 760px) {
+  .audit-panel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audit-controls {
+    justify-content: stretch;
+  }
+
+  .audit-controls label,
+  .audit-controls select,
+  .audit-controls button,
+  .audit-controls a {
+    width: 100%;
+  }
+
+  .audit-card-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .audit-actions,
+  .audit-action {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audit-progress-fill,
+  .audit-action {
+    transition: none !important;
+  }
+}
