@@ -27,6 +27,7 @@
     renderView();
     ruleVersion();
     document.querySelector('.site-footer')?.replaceChildren(document.createTextNode('Italian for Beginners - BSE Course · Version 5.3 review site'));
+    window.__ITALIAN_V53_READY__ = true;
   }
 
   async function initialise() {
