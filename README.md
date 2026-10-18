@@ -16,6 +16,22 @@ The site lets reviewers:
 - leave a private comment on a card, subdeck, lesson or the whole site;
 - optionally enter a name or initials so visits and comments can be labelled in the private review spreadsheet.
 
+## Personal audit mode
+
+The normal site remains uncluttered for the tutor and class. A structured card audit is available at:
+
+`https://italian-flash-card-review.netlify.app/?audit=1`
+
+Audit mode adds:
+
+- **Reviewed OK**;
+- **Needs change**;
+- **Remove card**;
+- lesson progress and status filters;
+- **Next unreviewed** navigation.
+
+See [Card audit workflow](docs/CARD_AUDIT_WORKFLOW.md).
+
 ## Current card set
 
 ```text
@@ -32,13 +48,13 @@ The Netlify production site is connected to the `main` branch. Commits pushed to
 
 ## Comments and access logging
 
-Comments and basic page-view events are sent to a private Google Sheet through a deployed Google Apps Script web app.
+Comments, audit actions and basic page-view events are sent to a private Google Sheet through a deployed Google Apps Script web app.
 
 The review site records:
 
 - timestamp;
 - optional reviewer name or initials;
-- comment or page-view event;
+- comment, audit action or page-view event;
 - lesson, subdeck and card context;
 - review-site version.
 
@@ -48,6 +64,7 @@ See:
 
 - [Google Sheets comment backend](docs/GOOGLE_SHEETS_COMMENTS.md)
 - [Privacy and access tracking](docs/PRIVACY_AND_ACCESS_TRACKING.md)
+- [Card audit workflow](docs/CARD_AUDIT_WORKFLOW.md)
 
 ## Source files
 
@@ -55,11 +72,14 @@ See:
 - `styles.css` — shared card-preview styling
 - `review-enhancements.css` — review-site navigation, flips, accordions and sticky tools
 - `google-review.css` — reviewer identity and tracking notice styling
+- `audit-tools.css` — audit panel, progress and card-status styling
 - `app.js` — lesson navigation and card interactions
 - `google-review.js` — Google Sheets comments and access logging
+- `audit-tools.js` — optional per-card audit workflow
 - `site-v52.js` — Lesson 2/3 curation patch and Lesson 4 loader
 - `site-v53.js` — platform-neutral wording and Lesson 3/4 card refinements
 - `site-v54.js` — reusable conversation prompts and complete age-sentence breakdowns
+- `site-v55.js` — confirmed tutor corrections and audit baseline fixes
 - `data/` — compressed card-review data and versioned update payloads
 - `netlify.toml` — static-site publish configuration
 
