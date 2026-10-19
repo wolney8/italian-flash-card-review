@@ -1,44 +1,74 @@
 (function () {
-  const SITE_VERSION = '5.5-audit-1';
-  const ARTICLE_MEANINGS = {
-    'italian-l2-ex9-093': 'an office',
-    'italian-l2-ex9-094': 'a male friend',
-    'italian-l2-ex9-095': 'an agency',
-    'italian-l2-ex9-096': 'a female architect',
-    'italian-l2-ex9-097': 'a bookshop',
-    'italian-l2-ex9-098': 'a gentleman / Mr',
-    'italian-l2-ex9-099': 'a house',
-    'italian-l2-ex9-100': 'a female friend',
-    'italian-l2-ex9-101': 'a male worker',
-    'italian-l2-ex9-102': 'a lady / Mrs',
-    'italian-l2-ex9-103': 'a course',
-    'italian-l2-ex9-104': 'a male nurse',
-    'italian-l2-ex9-105': 'a male student',
-    'italian-l2-ex9-106': 'a studio / an office',
-    'italian-l2-ex9-107': 'a hospital',
-    'italian-l2-ex9-108': 'a number',
-    'italian-l2-ex9-109': 'a shop',
-    'italian-l2-ex9-110': 'a female worker',
-    'italian-l2-ex9-111': 'a female secretary'
-  };
+  const SITE_VERSION = '6.0-review-1';
+  const CARD_FILES = [
+    'data/v60-cards-01.txt',
+    'data/v60-cards-02.txt',
+    'data/v60-cards-03.txt',
+    'data/v60-cards-04.txt',
+    'data/v60-cards-05.txt',
+    'data/v60-cards-06.txt',
+    'data/v60-cards-07.txt',
+    'data/v60-cards-08a.txt',
+    'data/v60-cards-08b.txt'
+  ];
 
-  function byKey(key) {
-    return cards.find(card => card.key === key);
+  function installV6Styles() {
+    if (document.getElementById('v60CardStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'v60CardStyles';
+    style.textContent = `
+      .literal-note{margin-top:8px;color:var(--muted);font-size:13px}
+      .gram{display:inline-block;padding:.05em .25em;border-radius:.28em;font-weight:850;border-bottom:3px solid currentColor}
+      .gram.masc{color:#8ec5ff}.gram.fem{color:#f0a3c2}.gram.sing{color:#f3c969}.gram.plur{color:#9edac9}
+      .gram.vowel{color:#c2a7f0}.gram.special{color:#f0b27a}.gram.verb{color:#87d7c6}
+      .field-heading{font-size:12px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+      .target-word{padding:.02em .18em;border-radius:.18em;background:var(--accent);color:#243332}
+      .clarification-block{margin-top:16px}
+    `;
+    document.head.appendChild(style);
+  }
+
+  async function loadEncodedCards() {
+    return (await Promise.all(CARD_FILES.map(async file => {
+      const response = await fetch(file, { cache: 'no-store' });
+      if (!response.ok) throw new Error(`Could not load ${file}`);
+      return (await response.text()).trim();
+    }))).join('');
+  }
+
+  async function decodeCards(encoded) {
+    const bytes = Uint8Array.from(atob(encoded), character => character.charCodeAt(0));
+    const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    return JSON.parse(await new Response(stream).text());
+  }
+
+  function patchLessonMetadata() {
+    if (typeof lessonMeta !== 'function' || lessonMeta.__v60) return;
+    const previous = lessonMeta;
+    const replacement = function (lesson) {
+      const meta = {
+        L1: { number: '1', title: 'Introductions', description: 'Greetings, names, essere, chiamarsi, tu and formal Lei.' },
+        L2: { number: '2', title: 'Alphabet, Sounds and Articles', description: 'Alphabet and spelling, C/CH and G/GH sounds, gender and articles.' },
+        L3: { number: '3', title: 'Origins, Nationality and Residence', description: 'Pronouns, verb forms, origins, countries, nationalities and residence.' },
+        L4: { number: '4', title: 'Avere, Numbers, Plurals and Family', description: 'Avere, silent H, numbers 0–20, plural forms, articles and family vocabulary.' }
+      };
+      return meta[lesson] || previous(lesson);
+    };
+    replacement.__v60 = true;
+    lessonMeta = replacement;
   }
 
   function installDirectGoogleSubmit() {
     const reviewForm = document.getElementById('reviewForm');
     const endpoint = reviewForm?.action;
     const target = reviewForm?.target || 'googleReviewSink';
-    if (!endpoint || typeof submitToGoogleSheet !== 'function') return;
-
+    if (!endpoint) return;
     submitToGoogleSheet = function (fields) {
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = endpoint;
       form.target = target;
       form.hidden = true;
-
       Object.entries({ ...fields, site_version: SITE_VERSION }).forEach(([name, value]) => {
         const input = document.createElement('input');
         input.type = 'hidden';
@@ -46,98 +76,58 @@
         input.value = String(value ?? '');
         form.appendChild(input);
       });
-
       document.body.appendChild(form);
       HTMLFormElement.prototype.submit.call(form);
       window.setTimeout(() => form.remove(), 1500);
     };
   }
 
-  function applyTeacherFeedback() {
-    const endingCard = byKey('italian-l2-def-074');
-    if (endingCard) {
-      endingCard.panel = `
-        <div class="panel-head">
-          <span class="panel-badge">PLURAL</span>
-          <div class="panel-copy">
-            <div class="panel-title">Masculine plural endings</div>
-            <div class="panel-subtitle">Change a common -o noun to plural</div>
-          </div>
-        </div>
-        <div class="choice-row">
-          <span class="choice-chip">-i</span>
-          <span class="choice-chip">-e</span>
-          <span class="choice-chip">unchanged</span>
-        </div>`;
-      endingCard.prompt = `
-        <div class="instruction">Complete the common ending pattern.</div>
-        <div class="focus">masculine singular -o → masculine plural ___</div>
-        <div class="clue">ragazzo → ragazzi · boy → boys</div>`;
-      endingCard.answer = '-i';
-      endingCard.pron = 'ee';
-      endingCard.meaning = '<div class="natural">A common masculine noun ending changes from <b>-o</b> in the singular to <b>-i</b> in the plural.</div>';
-      endingCard.literal = '<div class="literal">singular <b>-o</b> → plural <b>-i</b></div>';
-      endingCard.rule = '<div class="pattern">Example: <b>ragazzo → ragazzi</b>. This is a common pattern, not an exception-free rule.</div>';
-    }
-
-    Object.entries(ARTICLE_MEANINGS).forEach(([key, english]) => {
-      const card = byKey(key);
-      if (card) card.meaning = `<div class="natural">${english}</div>`;
-    });
-
-    const whereCard = byKey('origin_where');
-    if (whereCard) {
-      whereCard.prompt = `
-        <div class="instruction">Say this in Italian:</div>
-        <div class="focus">Where?</div>
-        <div class="clue">Use the question word for place.</div>`;
-      whereCard.meaning = '<div class="natural">Where?</div>';
-      whereCard.literal = '<div class="literal"><b>dove</b> = where</div>';
-      whereCard.rule = '<div class="pattern"><b>Dove?</b> is the standalone question word used to ask about place.</div>';
-    }
-
-    const wordJobCard = byKey('role_nationality_italiana');
-    if (wordJobCard) {
-      wordJobCard.panel = `
-        <div class="panel-head">
-          <span class="panel-badge">JOB</span>
-          <div class="panel-copy">
-            <div class="panel-title">Word jobs</div>
-            <div class="panel-subtitle">Identify the target word</div>
-          </div>
-        </div>
-        <div class="choice-row">
-          <span class="choice-chip">noun</span>
-          <span class="choice-chip">verb</span>
-          <span class="choice-chip">adjective</span>
-        </div>`;
-      wordJobCard.prompt = `
-        <div class="instruction">What word class is the target word?</div>
-        <div class="focus">Io sono <mark class="target-word">italiana</mark>.</div>
-        <div class="clue">Target: <b>italiana</b> · it describes the speaker.</div>`;
-    }
+  function installV6Renderer() {
+    renderCard = function (card, position, total) {
+      const anchor = `card-${slugify(card.key)}`;
+      const title = panelTitle(card.panel, card.deck);
+      const promptSummary = truncate(stripHtml(card.prompt), 86);
+      const pattern = card.pattern || card.rule || '';
+      const reference = card.reference || card.source || '';
+      const usage = card.usage || '';
+      const clarification = card.clarification || '';
+      return `<article class="review-card" id="${anchor}" data-key="${escapeHtml(card.key)}" data-lesson="${escapeHtml(card.lesson)}" data-deck="${escapeHtml(card.deck)}">
+        <div class="card-sticky-tools"><div class="sticky-card-copy"><span class="sticky-card-index">Card ${position} of ${total}</span><strong>${escapeHtml(title)}</strong><span class="sticky-side-state">Recall side</span></div><div class="sticky-card-actions"><button class="reveal-button sticky-reveal" type="button" aria-expanded="false">Show answer</button><button class="card-comment-button sticky-comment" type="button" data-comment-scope="card">Comment</button></div></div>
+        <div class="card-position">Card ${position} of ${total} · ${escapeHtml(promptSummary)}</div>
+        <div class="flip-shell"><div class="flip-card-inner">
+          <section class="card-side card-face recall-side" aria-hidden="false"><div class="side-label recall-label">Recall side</div><div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div><div class="topic-panel">${card.panel || ''}</div><div class="front-body">${card.prompt || ''}</div></section>
+          <section class="card-side card-face answer-side" aria-hidden="true"><div class="side-label answer-label-main">Answer side</div><div class="answer-body"><div class="answer-label">Answer</div><div class="italian">${card.answer || ''}</div>${card.pron ? `<div class="phon">${card.pron}</div>` : ''}${card.meaning ? `<div class="section"><div class="label">Natural English</div><div class="natural">${card.meaning}</div></div>` : ''}${card.literal ? `<div class="section"><div class="label">Literal construction</div><div class="literal">${card.literal}</div></div>` : ''}${usage ? `<div class="section"><div class="label">Use / word jobs</div><div class="usage">${usage}</div></div>` : ''}${pattern ? `<div class="section"><div class="label">Rule / forms</div><div class="pattern">${pattern}</div></div>` : ''}${clarification ? `<details class="extra clarification-block"><summary>Clarification</summary><div class="inside">${clarification}</div></details>` : ''}<details class="extra"><summary>Course source</summary><div class="inside">${reference}<p>${escapeHtml(card.key)}</p></div></details></div></section>
+        </div></div>
+        <div class="card-actions"><button class="reveal-button" type="button" aria-expanded="false">Flip to answer side</button><button class="card-comment-button" type="button" data-comment-scope="card">Comment on this card</button></div>
+      </article>`;
+    };
   }
 
-  function apply() {
-    applyTeacherFeedback();
+  function apply(finalCards) {
+    cards = finalCards;
+    patchLessonMetadata();
+    installV6Styles();
     installDirectGoogleSubmit();
+    installV6Renderer();
+    const requestedLesson = location.hash.match(/^#lesson-(L\d+)$/i)?.[1]?.toUpperCase() || null;
+    currentLesson = requestedLesson && cards.some(card => card.lesson === requestedLesson) ? requestedLesson : (currentLesson && cards.some(card => card.lesson === currentLesson) ? currentLesson : null);
     document.querySelectorAll('input[name="site_version"]').forEach(input => { input.value = SITE_VERSION; });
-    document.querySelector('.site-footer')?.replaceChildren(
-      document.createTextNode('Italian for Beginners - BSE Course · Version 5.5 audit site')
-    );
-    updateDeckOptions();
-    renderNavigation();
-    renderView();
+    document.querySelector('.site-footer')?.replaceChildren(document.createTextNode('Italian for Beginners - BSE Course · Version 6.0 review site'));
+    document.querySelector('meta[name="description"]')?.setAttribute('content','Italian for Beginners - BSE Course flash-card review for Lessons 1–4, version 6.0.');
+    updateDeckOptions(); renderNavigation(); renderView();
     window.__ITALIAN_V55_READY__ = true;
+    window.__ITALIAN_V60_READY__ = true;
   }
 
-  function waitForV54() {
-    if (window.__ITALIAN_V54_READY__ && typeof cards !== 'undefined' && Array.isArray(cards) && cards.length) {
-      apply();
-      return;
-    }
-    window.setTimeout(waitForV54, 80);
+  async function initialise() {
+    if (typeof DecompressionStream === 'undefined') throw new Error('This browser cannot decompress the version 6 card data.');
+    const finalCards = await decodeCards(await loadEncodedCards());
+    const waitForApp = () => {
+      if (typeof cards !== 'undefined' && Array.isArray(cards) && typeof renderView === 'function' && window.__ITALIAN_V54_READY__) { apply(finalCards); return; }
+      window.setTimeout(waitForApp, 60);
+    };
+    waitForApp();
   }
 
-  waitForV54();
+  initialise().catch(error => console.error('v6.0 site update failed:', error));
 })();
