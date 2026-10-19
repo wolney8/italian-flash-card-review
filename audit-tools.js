@@ -1,12 +1,23 @@
 (function () {
   const STORAGE_KEY = 'italianFlashCardAuditStatusesV1';
   const FILTER_KEY = 'italianFlashCardAuditFilterV1';
-  const SITE_VERSION = '5.5-audit-1';
+  const SITE_VERSION = '5.5-audit-2';
   const VALID = new Set(['ok', 'fix', 'remove']);
   const params = new URLSearchParams(window.location.search);
   if (params.get('audit') !== '1') return;
 
+  document.body.classList.add('audit-mode-active');
+
   let timer = null;
+
+  function installAuditRibbon() {
+    if (document.getElementById('auditModeRibbon')) return;
+    const ribbon = document.createElement('div');
+    ribbon.id = 'auditModeRibbon';
+    ribbon.className = 'audit-mode-ribbon';
+    ribbon.innerHTML = '<strong>AUDIT MODE</strong><span>Review controls are active</span>';
+    document.body.appendChild(ribbon);
+  }
 
   function readState() {
     try {
@@ -88,20 +99,20 @@
   }
 
   function ensurePanel() {
-    if (!currentLesson || document.getElementById('auditPanel')) return;
-    const anchor = document.querySelector('.lesson-review-help') || document.querySelector('.lesson-header');
-    if (!anchor) return;
+    if (typeof currentLesson === 'undefined' || !currentLesson || document.getElementById('auditPanel')) return;
+    const header = document.querySelector('.lesson-header');
+    if (!header) return;
 
     const exitUrl = `${window.location.pathname}${window.location.hash || '#lessons'}`;
     const panel = document.createElement('section');
     panel.id = 'auditPanel';
-    panel.className = 'audit-panel';
+    panel.className = 'audit-panel audit-panel-prominent';
     panel.innerHTML = `
       <div class="audit-panel-grid">
         <div>
           <p class="eyebrow">Personal audit mode</p>
-          <h2>Review every card deliberately</h2>
-          <p>Mark each card as <strong>Reviewed OK</strong>, <strong>Needs change</strong> or <strong>Remove</strong>. Status is saved in this browser and each action is also written to the private review spreadsheet using the permanent card key.</p>
+          <h2>Audit controls are active for this lesson</h2>
+          <p>Mark each card as <strong>Reviewed OK</strong>, <strong>Needs change</strong> or <strong>Remove</strong>. Each action is saved locally and written to the private review spreadsheet using the permanent card key.</p>
         </div>
         <div class="audit-controls">
           <label>Show
@@ -121,7 +132,7 @@
       <div class="audit-progress-copy" id="auditProgressCopy"></div>
       <div class="audit-notice" id="auditNotice" aria-live="polite"></div>`;
 
-    anchor.insertAdjacentElement('afterend', panel);
+    header.insertAdjacentElement('afterend', panel);
     const filter = document.getElementById('auditFilter');
     filter.value = localStorage.getItem(FILTER_KEY) || 'all';
     filter.addEventListener('change', () => {
@@ -138,8 +149,15 @@
       if (!card) return;
       const status = statusOf(key);
       const existing = cardElement.querySelector('.audit-card-bar');
-      if (!existing) cardElement.insertAdjacentHTML('beforeend', barMarkup(card, status));
-      else if (existing.dataset.auditStatus !== status) existing.outerHTML = barMarkup(card, status);
+      const markup = barMarkup(card, status);
+
+      if (!existing) {
+        const position = cardElement.querySelector('.card-position');
+        if (position) position.insertAdjacentHTML('afterend', markup);
+        else cardElement.insertAdjacentHTML('afterbegin', markup);
+      } else if (existing.dataset.auditStatus !== status) {
+        existing.outerHTML = markup;
+      }
 
       cardElement.classList.remove('audit-ok', 'audit-fix', 'audit-remove');
       if (status) cardElement.classList.add(`audit-${status}`);
@@ -147,13 +165,13 @@
   }
 
   function progress() {
-    if (!currentLesson) return;
+    if (typeof currentLesson === 'undefined' || !currentLesson) return;
     const lessonCards = cards.filter(card => card.lesson === currentLesson);
     const state = readState();
     const counts = { ok: 0, fix: 0, remove: 0 };
     lessonCards.forEach(card => {
       const status = state[card.key]?.status;
-      if (Object.hasOwn(counts, status)) counts[status] += 1;
+      if (Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
     });
     const reviewed = counts.ok + counts.fix + counts.remove;
     const total = lessonCards.length;
@@ -263,7 +281,9 @@
   }
 
   function enhance() {
-    if (!window.__ITALIAN_V55_READY__ || !currentLesson) return;
+    installAuditRibbon();
+    if (typeof cards === 'undefined' || !Array.isArray(cards) || !cards.length) return;
+    if (typeof currentLesson === 'undefined' || !currentLesson) return;
     ensurePanel();
     syncBars();
     applyFilter();
@@ -323,9 +343,11 @@
 
   const app = document.getElementById('app');
   if (app) new MutationObserver(scheduleEnhance).observe(app, { childList: true, subtree: true });
+  window.addEventListener('hashchange', scheduleEnhance);
 
+  installAuditRibbon();
   const wait = () => {
-    if (window.__ITALIAN_V55_READY__ && typeof cards !== 'undefined' && cards.length) enhance();
+    if (typeof cards !== 'undefined' && Array.isArray(cards) && cards.length) enhance();
     else window.setTimeout(wait, 100);
   };
   wait();
