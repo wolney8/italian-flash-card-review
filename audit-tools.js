@@ -1,7 +1,8 @@
 (function () {
   const STORAGE_KEY = 'italianFlashCardAuditStatusesV1';
   const FILTER_KEY = 'italianFlashCardAuditFilterV1';
-  const SITE_VERSION = '5.5-audit-2';
+  const COLLAPSE_KEY = 'italianFlashCardAuditCollapsedV1';
+  const SITE_VERSION = '5.5-audit-3';
   const VALID = new Set(['ok', 'fix', 'remove']);
   const params = new URLSearchParams(window.location.search);
   if (params.get('audit') !== '1') return;
@@ -19,21 +20,37 @@
     document.body.appendChild(ribbon);
   }
 
-  function readState() {
+  function readJson(key, fallback) {
     try {
-      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      return parsed && typeof parsed === 'object' ? parsed : {};
+      const parsed = JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+      return parsed && typeof parsed === 'object' ? parsed : fallback;
     } catch (_) {
-      return {};
+      return fallback;
     }
+  }
+
+  function readState() {
+    return readJson(STORAGE_KEY, {});
   }
 
   function writeState(state) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
 
+  function readCollapsed() {
+    return readJson(COLLAPSE_KEY, {});
+  }
+
+  function writeCollapsed(state) {
+    localStorage.setItem(COLLAPSE_KEY, JSON.stringify(state));
+  }
+
   function statusOf(key) {
     return readState()[key]?.status || '';
+  }
+
+  function isAudited(key) {
+    return VALID.has(statusOf(key));
   }
 
   function saveStatus(key, status) {
@@ -41,6 +58,17 @@
     if (VALID.has(status)) state[key] = { status, updated_at: new Date().toISOString() };
     else delete state[key];
     writeState(state);
+  }
+
+  function isCollapsed(key) {
+    return Boolean(readCollapsed()[key]);
+  }
+
+  function saveCollapsed(key, collapsed) {
+    const state = readCollapsed();
+    if (collapsed) state[key] = true;
+    else delete state[key];
+    writeCollapsed(state);
   }
 
   function cardFor(key) {
@@ -81,10 +109,10 @@
     return ['Not reviewed', 'Choose an audit action'];
   }
 
-  function barMarkup(card, status) {
+  function barMarkup(card, status, collapsed) {
     const [title, subtitle] = labels(status);
     return `
-      <div class="audit-card-bar" data-audit-key="${card.key}" data-audit-status="${status}">
+      <div class="audit-card-bar" data-audit-key="${card.key}" data-audit-status="${status}" data-audit-collapsed="${String(collapsed)}">
         <div class="audit-status-copy">
           <strong>${title}</strong>
           <span>${subtitle}</span>
@@ -93,6 +121,8 @@
           <button type="button" class="audit-action ok ${status === 'ok' ? 'active' : ''}" data-audit-action="ok">✓ Reviewed OK</button>
           <button type="button" class="audit-action fix ${status === 'fix' ? 'active' : ''}" data-audit-action="fix">⚠ Needs change</button>
           <button type="button" class="audit-action remove ${status === 'remove' ? 'active' : ''}" data-audit-action="remove">✕ Remove</button>
+          ${status ? `<button type="button" class="audit-action collapse" data-audit-action="collapse" aria-expanded="${String(!collapsed)}">${collapsed ? 'Expand card' : 'Collapse card'}</button>` : ''}
+          <button type="button" class="audit-action next" data-audit-next="${card.key}">Next unreviewed →</button>
           ${status ? '<button type="button" class="audit-action clear" data-audit-action="clear">Clear</button>' : ''}
         </div>
       </div>`;
@@ -112,7 +142,7 @@
         <div>
           <p class="eyebrow">Personal audit mode</p>
           <h2>Audit controls are active for this lesson</h2>
-          <p>Mark each card as <strong>Reviewed OK</strong>, <strong>Needs change</strong> or <strong>Remove</strong>. Each action is saved locally and written to the private review spreadsheet using the permanent card key.</p>
+          <p>Choose <strong>Reviewed OK</strong>, <strong>Needs change</strong> or <strong>Remove</strong> for every card. Any of those three choices counts as audited, so <strong>Next unreviewed</strong> skips all cards that already have a decision.</p>
         </div>
         <div class="audit-controls">
           <label>Show
@@ -139,7 +169,90 @@
       localStorage.setItem(FILTER_KEY, filter.value);
       applyFilter();
     });
-    document.getElementById('auditNext')?.addEventListener('click', nextUnreviewed);
+    document.getElementById('auditNext')?.addEventListener('click', () => nextUnreviewed());
+  }
+
+  function collapsibleParts(cardElement) {
+    return [
+      cardElement.querySelector('.card-sticky-tools'),
+      cardElement.querySelector('.flip-shell'),
+      cardElement.querySelector('.card-actions')
+    ].filter(Boolean);
+  }
+
+  function applyCollapsedState(cardElement, collapsed, animate = false) {
+    if (!cardElement) return;
+    const parts = collapsibleParts(cardElement);
+
+    if (!animate) {
+      cardElement.classList.toggle('audit-collapsed', collapsed);
+      parts.forEach(part => {
+        part.classList.add('audit-collapsible-part');
+        if (collapsed) {
+          part.style.maxHeight = '0px';
+          part.style.opacity = '0';
+          part.style.pointerEvents = 'none';
+          part.setAttribute('aria-hidden', 'true');
+          part.inert = true;
+        } else {
+          part.style.maxHeight = 'none';
+          part.style.opacity = '1';
+          part.style.pointerEvents = '';
+          part.removeAttribute('aria-hidden');
+          part.inert = false;
+        }
+      });
+      return;
+    }
+
+    if (collapsed) {
+      parts.forEach(part => {
+        part.classList.add('audit-collapsible-part');
+        part.inert = false;
+        part.removeAttribute('aria-hidden');
+        part.style.maxHeight = `${Math.ceil(part.getBoundingClientRect().height || part.scrollHeight)}px`;
+        part.style.opacity = '1';
+        part.style.pointerEvents = '';
+      });
+      document.body.offsetHeight;
+      requestAnimationFrame(() => {
+        cardElement.classList.add('audit-collapsed');
+        parts.forEach(part => {
+          part.style.maxHeight = '0px';
+          part.style.opacity = '0';
+          part.style.pointerEvents = 'none';
+        });
+      });
+      window.setTimeout(() => {
+        if (!cardElement.classList.contains('audit-collapsed')) return;
+        parts.forEach(part => {
+          part.setAttribute('aria-hidden', 'true');
+          part.inert = true;
+        });
+      }, 380);
+    } else {
+      cardElement.classList.remove('audit-collapsed');
+      parts.forEach(part => {
+        part.classList.add('audit-collapsible-part');
+        part.inert = false;
+        part.removeAttribute('aria-hidden');
+        part.style.maxHeight = '0px';
+        part.style.opacity = '0';
+        part.style.pointerEvents = 'none';
+      });
+      document.body.offsetHeight;
+      requestAnimationFrame(() => {
+        parts.forEach(part => {
+          part.style.maxHeight = `${Math.ceil(part.scrollHeight)}px`;
+          part.style.opacity = '1';
+          part.style.pointerEvents = '';
+        });
+      });
+      window.setTimeout(() => {
+        if (cardElement.classList.contains('audit-collapsed')) return;
+        parts.forEach(part => { part.style.maxHeight = 'none'; });
+      }, 400);
+    }
   }
 
   function syncBars() {
@@ -148,19 +261,53 @@
       const card = cardFor(key);
       if (!card) return;
       const status = statusOf(key);
+      const collapsed = Boolean(status) && isCollapsed(key);
       const existing = cardElement.querySelector('.audit-card-bar');
-      const markup = barMarkup(card, status);
+      const markup = barMarkup(card, status, collapsed);
 
       if (!existing) {
         const position = cardElement.querySelector('.card-position');
         if (position) position.insertAdjacentHTML('afterend', markup);
         else cardElement.insertAdjacentHTML('afterbegin', markup);
-      } else if (existing.dataset.auditStatus !== status) {
+      } else if (existing.dataset.auditStatus !== status || existing.dataset.auditCollapsed !== String(collapsed)) {
         existing.outerHTML = markup;
       }
 
       cardElement.classList.remove('audit-ok', 'audit-fix', 'audit-remove');
       if (status) cardElement.classList.add(`audit-${status}`);
+      applyCollapsedState(cardElement, collapsed, false);
+    });
+  }
+
+  function syncSubdeckCounts() {
+    if (typeof currentLesson === 'undefined' || !currentLesson) return;
+    const state = readState();
+
+    document.querySelectorAll('.subdeck-section').forEach(section => {
+      const deck = section.dataset.subdeck || '';
+      const deckCards = cards.filter(card => card.lesson === currentLesson && card.deck === deck);
+      const counts = { ok: 0, fix: 0, remove: 0 };
+      deckCards.forEach(card => {
+        const status = state[card.key]?.status;
+        if (Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
+      });
+      const audited = counts.ok + counts.fix + counts.remove;
+      const total = deckCards.length;
+      const toggle = section.querySelector('.subdeck-toggle');
+      if (!toggle) return;
+
+      let badge = toggle.querySelector('.audit-subdeck-count');
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'audit-subdeck-count';
+        const chevron = toggle.querySelector('.subdeck-chevron');
+        if (chevron) chevron.insertAdjacentElement('beforebegin', badge);
+        else toggle.appendChild(badge);
+      }
+
+      const text = `${audited}/${total} audited · ${counts.ok} OK · ${counts.fix} change · ${counts.remove} remove`;
+      if (badge.textContent !== text) badge.textContent = text;
+      badge.title = `${audited} of ${total} cards have a decision`;
     });
   }
 
@@ -173,18 +320,18 @@
       const status = state[card.key]?.status;
       if (Object.prototype.hasOwnProperty.call(counts, status)) counts[status] += 1;
     });
-    const reviewed = counts.ok + counts.fix + counts.remove;
+    const audited = counts.ok + counts.fix + counts.remove;
     const total = lessonCards.length;
-    const percent = total ? Math.round((reviewed / total) * 100) : 0;
+    const percent = total ? Math.round((audited / total) * 100) : 0;
     const fill = document.getElementById('auditProgressFill');
     if (fill) fill.style.width = `${percent}%`;
     const copy = document.getElementById('auditProgressCopy');
     if (copy) copy.innerHTML = `
-      <span><strong>${reviewed}/${total}</strong> reviewed</span>
+      <span><strong>${audited}/${total}</strong> audited</span>
       <span>${counts.ok} OK</span>
       <span>${counts.fix} need changes</span>
       <span>${counts.remove} to remove</span>
-      <span>${total - reviewed} remaining</span>`;
+      <span>${total - audited} unreviewed</span>`;
   }
 
   function applyFilter() {
@@ -192,7 +339,7 @@
     document.querySelectorAll('.review-card').forEach(cardElement => {
       const status = statusOf(cardElement.dataset.key);
       const visible = filter === 'all'
-        || (filter === 'unreviewed' && !status)
+        || (filter === 'unreviewed' && !VALID.has(status))
         || status === filter;
       cardElement.classList.toggle('audit-filtered-out', !visible);
     });
@@ -202,6 +349,7 @@
       section.classList.toggle('audit-empty-subdeck', Boolean(empty));
     });
     progress();
+    syncSubdeckCounts();
   }
 
   function announce(message) {
@@ -224,10 +372,25 @@
   function clearStatus(key) {
     const card = cardFor(key);
     if (!card) return;
+    const cardElement = document.querySelector(`.review-card[data-key="${key}"]`);
+    saveCollapsed(key, false);
+    if (cardElement?.classList.contains('audit-collapsed')) applyCollapsedState(cardElement, false, true);
     saveStatus(key, '');
     sendAudit(card, 'audit_reset', 'Audit status cleared');
-    enhance();
+    window.setTimeout(enhance, 50);
     announce('Audit status cleared.');
+  }
+
+  function toggleCollapse(key) {
+    const cardElement = document.querySelector(`.review-card[data-key="${key}"]`);
+    if (!cardElement || !isAudited(key)) return;
+    const collapsed = !isCollapsed(key);
+    saveCollapsed(key, collapsed);
+    applyCollapsedState(cardElement, collapsed, true);
+
+    const existing = cardElement.querySelector('.audit-card-bar');
+    const card = cardFor(key);
+    if (existing && card) existing.outerHTML = barMarkup(card, statusOf(key), collapsed);
   }
 
   function openAuditComment(key, status) {
@@ -252,10 +415,18 @@
     form.dataset.auditStatus = status;
   }
 
-  function nextUnreviewed() {
-    const target = cards.find(card => card.lesson === currentLesson && !statusOf(card.key));
+  function nextUnreviewed(afterKey = '') {
+    const lessonCards = cards.filter(card => card.lesson === currentLesson);
+    if (!lessonCards.length) return;
+
+    const currentIndex = afterKey ? lessonCards.findIndex(card => card.key === afterKey) : -1;
+    const start = currentIndex >= 0 ? currentIndex + 1 : 0;
+    const ordered = lessonCards.slice(start).concat(lessonCards.slice(0, start));
+    const target = ordered.find(card => card.key !== afterKey && !isAudited(card.key));
+
     if (!target) {
-      announce('Every card in this lesson has an audit status.');
+      if (afterKey && !isAudited(afterKey)) announce('This is the only unreviewed card left in this lesson.');
+      else announce('Every card in this lesson has an audit status.');
       return;
     }
 
@@ -263,11 +434,17 @@
       const cardElement = document.querySelector(`.review-card[data-key="${target.key}"]`);
       if (!cardElement) return;
       const accordion = cardElement.closest('.subdeck-accordion');
-      if (accordion && !accordion.classList.contains('is-open') && typeof setSubdeckOpen === 'function') setSubdeckOpen(accordion, true);
+      if (accordion && !accordion.classList.contains('is-open') && typeof setSubdeckOpen === 'function') {
+        setSubdeckOpen(accordion, true);
+      }
       const filter = document.getElementById('auditFilter');
       if (filter) filter.value = 'all';
       localStorage.setItem(FILTER_KEY, 'all');
       applyFilter();
+      if (cardElement.classList.contains('audit-collapsed')) {
+        saveCollapsed(target.key, false);
+        applyCollapsedState(cardElement, false, true);
+      }
       if (cardElement.classList.contains('show-answer') && typeof setCardSide === 'function') setCardSide(cardElement, false);
       window.setTimeout(() => cardElement.scrollIntoView({ behavior: 'smooth', block: 'start' }), 180);
     };
@@ -286,6 +463,7 @@
     if (typeof currentLesson === 'undefined' || !currentLesson) return;
     ensurePanel();
     syncBars();
+    syncSubdeckCounts();
     applyFilter();
   }
 
@@ -295,6 +473,12 @@
   }
 
   document.addEventListener('click', event => {
+    const nextButton = event.target.closest('[data-audit-next]');
+    if (nextButton) {
+      nextUnreviewed(nextButton.dataset.auditNext || '');
+      return;
+    }
+
     const auditButton = event.target.closest('[data-audit-action]');
     if (auditButton) {
       const key = auditButton.closest('.review-card')?.dataset.key;
@@ -302,6 +486,7 @@
       if (!key) return;
       if (action === 'ok') markOk(key);
       else if (action === 'fix' || action === 'remove') openAuditComment(key, action);
+      else if (action === 'collapse') toggleCollapse(key);
       else if (action === 'clear') clearStatus(key);
       return;
     }
