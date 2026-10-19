@@ -1,0 +1,74 @@
+/* Audit workflow refinements: per-card navigation, collapsible audited cards and subdeck counts. */
+
+.audit-action.next {
+  border-color: #86b9ea;
+  background: #25384a;
+}
+
+.audit-action.next:hover {
+  background: #2d4760;
+}
+
+.audit-action.collapse {
+  border-color: #b7a3e4;
+  background: #35304a;
+}
+
+.audit-action.collapse:hover {
+  background: #443b60;
+}
+
+.audit-collapsible-part {
+  overflow: hidden;
+  transition:
+    max-height .36s cubic-bezier(.22, .8, .24, 1),
+    opacity .24s ease,
+    margin-top .36s cubic-bezier(.22, .8, .24, 1),
+    margin-bottom .36s cubic-bezier(.22, .8, .24, 1);
+}
+
+.review-card.audit-collapsed .audit-collapsible-part {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.review-card.audit-collapsed {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .22);
+}
+
+.audit-mode-active .subdeck-toggle {
+  flex-wrap: wrap;
+}
+
+.audit-subdeck-count {
+  margin-left: auto;
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--green) 45%, var(--line) 55%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper2) 84%, transparent);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.audit-mode-active .subdeck-chevron {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 900px) {
+  .audit-subdeck-count {
+    order: 3;
+    width: 100%;
+    margin-left: 0;
+    border-radius: 9px;
+    white-space: normal;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audit-collapsible-part {
+    transition: none !important;
+  }
+}
