@@ -9,10 +9,8 @@
   }
 
   function renderBanner() {
-    if (!window.__ITALIAN_V55_READY__) return;
-
     const app = document.getElementById('app');
-    if (!app) return;
+    if (!app || typeof cards === 'undefined' || !Array.isArray(cards) || !cards.length) return;
 
     if (typeof currentLesson !== 'undefined' && currentLesson) {
       removeBanner();
@@ -26,13 +24,13 @@
 
     const banner = document.createElement('section');
     banner.id = 'auditOverviewBanner';
-    banner.className = 'audit-panel';
+    banner.className = 'audit-panel audit-panel-prominent';
     banner.innerHTML = `
       <div class="audit-panel-grid">
         <div>
           <p class="eyebrow">Personal audit mode is active</p>
-          <h2>Open a lesson to see the audit controls</h2>
-          <p>The <strong>Reviewed OK</strong>, <strong>Needs change</strong> and <strong>Remove</strong> controls appear beneath each card inside a lesson.</p>
+          <h2>Choose a lesson to begin the card-by-card audit</h2>
+          <p>The <strong>Reviewed OK</strong>, <strong>Needs change</strong> and <strong>Remove</strong> controls appear near the top of every card.</p>
         </div>
         <div class="audit-controls" aria-label="Open a lesson for auditing">
           <button type="button" data-lesson-nav="L1">Audit Lesson 1</button>
@@ -52,11 +50,10 @@
 
   const app = document.getElementById('app');
   if (app) new MutationObserver(schedule).observe(app, { childList: true, subtree: true });
-
   window.addEventListener('hashchange', schedule);
 
   const wait = () => {
-    if (window.__ITALIAN_V55_READY__) renderBanner();
+    if (typeof cards !== 'undefined' && Array.isArray(cards) && cards.length) renderBanner();
     else window.setTimeout(wait, 100);
   };
   wait();
