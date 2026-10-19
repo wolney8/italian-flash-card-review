@@ -10,6 +10,8 @@ Open a lesson from that page, then review each card using one of three statuses:
 - **Needs change** — opens the existing comment box for a concise correction.
 - **Remove** — opens the comment box to explain why the card adds no useful learning.
 
+All three choices count as **audited**. **Next unreviewed** skips every card that already has one of those three decisions.
+
 ## Suggested comment prefixes
 
 ```text
@@ -35,16 +37,19 @@ REMOVE —
 - If a card receives more than one audit action, the latest timestamp is the current decision.
 - Existing tutor comments and earlier review rows are not modified.
 
-## Progress controls
+## Progress and navigation controls
 
 Audit mode shows:
 
 - lesson progress;
-- counts for OK, needs change, remove and remaining;
+- counts for OK, needs change, remove and unreviewed;
 - filters for each status;
-- a **Next unreviewed** button.
+- a lesson-level **Next unreviewed** button;
+- a **Next unreviewed** button on every card;
+- an audited-card **Collapse card / Expand card** control;
+- a count on every subdeck, such as `6/10 audited · 4 OK · 1 change · 1 remove`.
 
-The progress display is browser-local. The Google Sheet is the durable review record.
+Card collapse state and audit progress are browser-local. The Google Sheet is the durable review record.
 
 ## Release process
 
