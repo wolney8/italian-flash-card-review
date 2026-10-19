@@ -12,13 +12,14 @@ The site lets reviewers:
 
 - open one lesson at a time;
 - inspect the **Recall side** and **Answer side** of each flash card;
+- move through cards with the normal study controls;
 - filter by subdeck or search within a lesson;
 - leave a private comment on a card, subdeck, lesson or the whole site;
 - optionally enter a name or initials so visits and comments can be labelled in the private review spreadsheet.
 
 ## Personal audit mode
 
-The normal site remains uncluttered for the tutor and class. A structured card audit is available at:
+The structured audit remains available at:
 
 `https://italian-flash-card-review.netlify.app/?audit=1`
 
@@ -27,28 +28,33 @@ Audit mode adds:
 - **Reviewed OK**;
 - **Needs change**;
 - **Remove card**;
-- lesson progress and status filters;
+- lesson and subdeck progress;
+- status filters;
 - **Next unreviewed** navigation.
 
 See [Card audit workflow](docs/CARD_AUDIT_WORKFLOW.md).
 
-## Current card set
+## Current v6.0 card set
 
 ```text
-Lesson 1: 44 cards
-Lesson 2 curated: 113 cards
-Lesson 3 self-contained/refined: 116 cards
-Lesson 4 refined: 116 cards
+Lesson 1: 42 cards
+Lesson 2: 111 cards
+Lesson 3: 120 cards
+Lesson 4: 116 cards
 Total: 389 cards
 ```
 
+The v6.0 data incorporates the tutor comments and the completed card audit while preserving stable card keys for retained cards.
+
 ## Deployment
 
-The Netlify production site is connected to the `main` branch. Commits pushed to `main` trigger a new production deployment.
+The Netlify production site is connected to the `main` branch. Commits pushed to `main` trigger a production deployment.
+
+The final v6.0 website data is loaded by `site-v55.js` from the versioned `data/v60-cards-*.txt` files.
 
 ## Comments and access logging
 
-Comments, audit actions and basic page-view events are sent to a private Google Sheet through a deployed Google Apps Script web app.
+Comments, audit actions and basic page-view events are sent to a private Google Sheet through the deployed Google Apps Script web app.
 
 The review site records:
 
@@ -76,21 +82,14 @@ See:
 - `app.js` — lesson navigation and card interactions
 - `google-review.js` — Google Sheets comments and access logging
 - `audit-tools.js` — optional per-card audit workflow
-- `site-v52.js` — Lesson 2/3 curation patch and Lesson 4 loader
-- `site-v53.js` — platform-neutral wording and Lesson 3/4 card refinements
-- `site-v54.js` — reusable conversation prompts and complete age-sentence breakdowns
-- `site-v55.js` — confirmed tutor corrections and audit baseline fixes
-- `data/` — compressed card-review data and versioned update payloads
+- `audit-overview.js` — normal study progression and audit navigation refinements
+- `site-v52.js` to `site-v54.js` — historical incremental compatibility layers
+- `site-v55.js` — final v6.0 card-data loader and renderer
+- `data/v60-cards-*.txt` — compressed v6.0 review data
 - `netlify.toml` — static-site publish configuration
 
 ## Deck schema
 
-The current design and curation rules are documented here:
+The v6.0 decks follow the established design rules plus the final audit decisions: clear three-part Recall prompts, platform-neutral wording, natural and literal English, construction blocks where useful, separated grammar fields, and source-supported active recall.
 
-- [Deck Schema v5.4](docs/ANKI_DECK_SCHEMA_V5_4.md)
-- [Deck Schema v5.3](docs/ANKI_DECK_SCHEMA_V5_3.md)
-- [Deck Schema v5.2](docs/ANKI_DECK_SCHEMA_V5_2.md)
-
-The earlier v5.1 document remains as historical reference:
-
-- [Deck Schema v5.1](docs/ANKI_DECK_SCHEMA_V5_1.md)
+Historical schema references remain in `docs/`.
