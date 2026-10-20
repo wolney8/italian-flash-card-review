@@ -1,15 +1,20 @@
 (function () {
-  const SITE_VERSION = '6.0-review-1';
+  const SITE_VERSION = '6.0-review-2';
   const CARD_FILES = [
-    'data/v60-cards-01.txt',
-    'data/v60-cards-02.txt',
-    'data/v60-cards-03.txt',
-    'data/v60-cards-04.txt',
-    'data/v60-cards-05.txt',
-    'data/v60-cards-06.txt',
-    'data/v60-cards-07.txt',
-    'data/v60-cards-08a.txt',
-    'data/v60-cards-08b.txt'
+    'data/cards-v60-01.txt',
+    'data/cards-v60-02.txt',
+    'data/cards-v60-03.txt',
+    'data/v60-fix-06.txt',
+    'data/cards-v60-05.txt',
+    'data/v60-fix-08.txt',
+    'data/cards-v60-07.txt',
+    'data/v60-fix-10.txt',
+    'data/cards-v60-09.txt',
+    'data/cards-v60-10.txt',
+    'data/cards-v60-11.txt',
+    'data/cards-v60-12.txt',
+    'data/v60-fix-15.txt',
+    'data/cards-v60-14.txt'
   ];
 
   function installV6Styles() {
