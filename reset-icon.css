@@ -1,0 +1,28 @@
+.site-mode-reset {
+  width: 42px !important;
+  min-width: 42px !important;
+  height: 42px;
+  min-height: 42px;
+  flex: 0 0 42px;
+  padding: 0 !important;
+  font-size: 0 !important;
+  line-height: 1;
+  text-align: center;
+}
+
+.site-mode-reset::before {
+  content: "↺";
+  display: inline-block;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 760px) {
+  .site-mode-reset {
+    width: 42px !important;
+    min-width: 42px !important;
+    align-self: flex-end;
+  }
+}
