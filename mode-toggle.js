@@ -1,5 +1,9 @@
 (function () {
   const STORAGE_KEY = 'italianFlashCardSiteModeV1';
+  const LEARNING_PROGRESS_KEYS = [
+    'italianFlashCardAnswersViewedV1',
+    'italianFlashCardStudyCollapsedV1'
+  ];
   const VALID = new Set(['learn', 'review']);
   const params = new URLSearchParams(window.location.search);
   const auditMode = params.get('audit') === '1';
@@ -23,18 +27,22 @@
     const style = document.createElement('style');
     style.id = 'siteModeStyles';
     style.textContent = `
-      .site-mode-panel{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:16px 0;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--paper2) 92%,transparent);box-shadow:0 8px 24px rgba(0,0,0,.16)}
-      .site-mode-copy strong,.site-mode-copy span{display:block}.site-mode-copy strong{margin-bottom:3px;font-size:14px}.site-mode-copy span{color:var(--muted);font-size:13px;line-height:1.45}
+      .site-mode-panel{display:flex;align-items:center;justify-content:space-between;gap:18px;width:100%;max-width:1040px;margin:16px auto;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--paper2) 92%,transparent);box-shadow:0 8px 24px rgba(0,0,0,.16)}
+      .site-mode-copy{min-width:0;text-align:left}.site-mode-copy strong,.site-mode-copy span{display:block}.site-mode-copy strong{margin-bottom:3px;font-size:14px}.site-mode-copy span{color:var(--muted);font-size:13px;line-height:1.45}
+      .site-mode-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
       .site-mode-switch{display:inline-grid;grid-template-columns:1fr 1fr;gap:4px;min-width:230px;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
-      .site-mode-button{min-height:42px;padding:8px 14px;border:0;border-radius:9px;background:transparent;color:var(--muted);font:inherit;font-weight:850;cursor:pointer;transition:background .2s ease,color .2s ease,transform .2s ease}
-      .site-mode-button:hover:not(:disabled){color:var(--text);transform:translateY(-1px)}
+      .site-mode-button,.site-mode-reset{min-height:42px;padding:8px 14px;border-radius:9px;font:inherit;font-weight:850;cursor:pointer;transition:background .2s ease,color .2s ease,transform .2s ease}
+      .site-mode-button{border:0;background:transparent;color:var(--muted)}
+      .site-mode-button:hover:not(:disabled),.site-mode-reset:hover{color:var(--text);transform:translateY(-1px)}
       .site-mode-button[aria-pressed="true"]{background:var(--green);color:#172321;box-shadow:0 5px 14px rgba(0,0,0,.2)}
       .site-mode-button:disabled{cursor:not-allowed;opacity:.45}
+      .site-mode-reset{border:1px solid var(--line);background:var(--paper);color:var(--muted);white-space:nowrap}
+      .mode-review .site-mode-reset{display:none!important}
       .mode-learn .general-comment,.mode-learn .lesson-comment-button,.mode-learn .subdeck-comment-button,.mode-learn .card-comment-button,.mode-learn .reviewer-identity,.mode-learn .review-course-source{display:none!important}
       .mode-learn .review-tracking-note{margin-top:0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--paper2) 88%,transparent)}
       .mode-learn .site-intro{grid-template-columns:1fr}
-      @media(max-width:760px){.site-mode-panel{align-items:stretch;flex-direction:column}.site-mode-switch{width:100%;min-width:0}}
-      @media(prefers-reduced-motion:reduce){.site-mode-button{transition:none}}
+      @media(max-width:760px){.site-mode-panel{align-items:stretch;flex-direction:column}.site-mode-actions,.site-mode-switch,.site-mode-reset{width:100%}.site-mode-actions{justify-content:stretch}.site-mode-switch{min-width:0}}
+      @media(prefers-reduced-motion:reduce){.site-mode-button,.site-mode-reset{transition:none}}
     `;
     document.head.appendChild(style);
   }
@@ -54,9 +62,12 @@
         <strong id="siteModeTitle">Choose a mode</strong>
         <span id="siteModeDescription"></span>
       </div>
-      <div class="site-mode-switch" role="group" aria-label="Learn or review mode">
-        <button type="button" class="site-mode-button" data-site-mode="learn">Learn</button>
-        <button type="button" class="site-mode-button" data-site-mode="review">Review</button>
+      <div class="site-mode-actions">
+        <div class="site-mode-switch" role="group" aria-label="Learn or review mode">
+          <button type="button" class="site-mode-button" data-site-mode="learn">Learn</button>
+          <button type="button" class="site-mode-button" data-site-mode="review">Review</button>
+        </div>
+        <button type="button" class="site-mode-reset" data-reset-learning>Reset learning progress</button>
       </div>`;
     header.insertAdjacentElement('afterend', panel);
     return panel;
@@ -73,6 +84,16 @@
     if (!modal || modal.hidden) return;
     modal.hidden = true;
     document.body.style.overflow = '';
+  }
+
+  function resetLearningProgress() {
+    const confirmed = window.confirm(
+      'Reset all learning progress for Lessons 1–4 in this browser?\n\nThis clears viewed-answer and collapsed-card progress. Comments and audit decisions are not affected.'
+    );
+    if (!confirmed) return;
+
+    LEARNING_PROGRESS_KEYS.forEach(key => localStorage.removeItem(key));
+    window.location.reload();
   }
 
   function updateHeader() {
@@ -158,11 +179,13 @@
 
       const learnButton = panel.querySelector('[data-site-mode="learn"]');
       const reviewButton = panel.querySelector('[data-site-mode="review"]');
+      const resetButton = panel.querySelector('[data-reset-learning]');
       if (learnButton) {
         learnButton.setAttribute('aria-pressed', String(mode === 'learn'));
         learnButton.disabled = auditMode;
       }
       if (reviewButton) reviewButton.setAttribute('aria-pressed', String(mode === 'review'));
+      if (resetButton) resetButton.hidden = auditMode || mode !== 'learn';
     }
 
     if (mode === 'learn') closeCommentModal();
@@ -182,8 +205,14 @@
   }
 
   document.addEventListener('click', event => {
-    const button = event.target.closest('[data-site-mode]');
-    if (button) setMode(button.dataset.siteMode);
+    const resetButton = event.target.closest('[data-reset-learning]');
+    if (resetButton) {
+      resetLearningProgress();
+      return;
+    }
+
+    const modeButton = event.target.closest('[data-site-mode]');
+    if (modeButton) setMode(modeButton.dataset.siteMode);
   });
 
   new MutationObserver(() => {
