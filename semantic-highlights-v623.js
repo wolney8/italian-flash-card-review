@@ -1,5 +1,5 @@
 (function () {
-  const SITE_VERSION = '6.2.3-semantic-candidate';
+  const SITE_VERSION = '6.2.3';
   const TOKEN_CLASS = {
     informal: 'informal', informally: 'informal', informale: 'informal',
     formal: 'formal', formally: 'formal', formale: 'formal',
@@ -95,7 +95,7 @@
     });
     installStyles();
     document.querySelectorAll('input[name="site_version"]').forEach(input => { input.value = SITE_VERSION; });
-    document.querySelector('.site-footer')?.replaceChildren(document.createTextNode('Italian for Beginners - BSE Course · Version 6.2.3 semantic candidate'));
+    document.querySelector('.site-footer')?.replaceChildren(document.createTextNode('Italian for Beginners - BSE Course · Version 6.2.3'));
     window.__SEMANTIC_V623_READY__ = true;
     updateDeckOptions();
     renderNavigation();
