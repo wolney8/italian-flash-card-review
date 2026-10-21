@@ -4,7 +4,7 @@ This is a binding addendum for all current and future Anki and Web UI cards.
 
 ## Semantic colour system
 
-Use the same category colours everywhere a learner-facing prompt, answer or explanation explicitly names the category.
+Use the same category colours wherever a learner-facing prompt, answer or explanation explicitly names the category and the colour improves the learning decision.
 
 | Category | Tokens | Dark-mode colour | Light-mode colour |
 |---|---|---|---|
@@ -18,11 +18,31 @@ Use the same category colours everywhere a learner-facing prompt, answer or expl
 ### Colour rules
 
 - Colour is reinforcement, not the only carrier of meaning; the word remains visible.
-- The same category always uses the same colour in Recall, Answer, tables, notes and visual panels.
+- The same category always uses the same colour in Recall prompts, clues, Answer explanations, tables and learning notes.
 - Existing semantic spans are not nested or recoloured inconsistently.
 - Source/reference metadata is excluded from learner-facing colour treatment.
 - The palette must remain readable in dark and light card modes.
 - Anki and the Web UI must use the same class names and colours.
+
+### Hero-panel exclusion
+
+The large hero/topic panel establishes the card’s subject and must remain visually stable.
+
+Do **not** apply semantic colour or underlining inside:
+
+- `.panel-title` — the large topic title;
+- `.panel-badge` — the circular badge or its text.
+
+For example, the title **Plural endings** and badge **PLURAL** remain in the normal hero typography even though the word `plural` is a semantic term.
+
+Semantic colour may still appear in:
+
+- `.panel-subtitle` when it clarifies the active learning contrast;
+- Recall instructions, target phrases and clues;
+- eyebrow/deck labels;
+- Answer-side explanations, tables and literal-construction metadata.
+
+The renderer and source data should remove semantic wrappers from hero titles and badges. CSS must also provide a defensive neutral rule so an accidental wrapper cannot change their appearance.
 
 ## Primary-answer clarity
 
@@ -65,6 +85,7 @@ Optional for clarity or emphasis: Lei, come si chiama?
 
 A release fails if:
 
+- semantic colour or underlining changes a hero `.panel-title` or `.panel-badge`;
 - an explicit register, gender or number label is uncoloured on one platform but coloured on the other;
 - category colours differ between Anki and Web UI;
 - an Answer field contains an `answer-variant` block or explanatory paragraph;
@@ -74,4 +95,4 @@ A release fails if:
 
 ## Current implementation
 
-The v6.2.3 candidate applies this schema to Lessons 1–4 while preserving all retained Anki and website identities.
+The current Lessons 1–4 implementation preserves semantic highlighting in learning prompts and explanations while explicitly excluding hero titles and circular badge text. Existing Anki and website identities remain unchanged.

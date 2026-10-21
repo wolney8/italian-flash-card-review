@@ -1,6 +1,6 @@
 (function () {
   const SITE_UPDATED = '21 October 2026';
-  const SITE_VERSION = '2026-10-21-final';
+  const SITE_VERSION = '2026-10-21-final-2';
 
   const PAIRS = {
     'italian-l4-plural-article-pair-maestri': { definite:'i', partitive:'dei', noun:'maestri', gloss:'teachers', gender:'masculine', condition:'before most consonants', base:'i' },
@@ -16,6 +16,17 @@
   function esc(value) {
     return String(value ?? '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[character]));
   }
+
+  function cleanHeroPanel(panel) {
+    if (!panel || (!panel.includes('panel-title') && !panel.includes('panel-badge'))) return panel;
+    const template = document.createElement('template');
+    template.innerHTML = panel;
+    template.content.querySelectorAll('.panel-title .gram, .panel-badge .gram').forEach(span => {
+      span.replaceWith(...span.childNodes);
+    });
+    return template.innerHTML;
+  }
+
   function semantic(word, gender) {
     return `<span class="gram ${gender === 'masculine' ? 'masc' : 'fem'}">${esc(word)}</span>`;
   }
@@ -37,14 +48,17 @@
   }
 
   function installStyles() {
-    if (document.getElementById('literalLayoutFinalStyles')) return;
+    if (document.getElementById('literalLayoutFinalStylesV2')) return;
     const style = document.createElement('style');
-    style.id = 'literalLayoutFinalStyles';
+    style.id = 'literalLayoutFinalStylesV2';
     style.textContent = `
       .gram{display:inline-block!important;width:max-content!important;max-width:100%;padding:0!important;border-radius:0!important;border-bottom:2px solid currentColor!important;line-height:1.12;vertical-align:baseline}
+      .panel-badge .gram,.panel-title .gram{color:inherit!important;border-bottom:0!important;border-radius:0!important;padding:0!important;width:auto!important;max-width:none!important;font-weight:inherit!important}
       .tiles{display:flex!important;flex-wrap:wrap!important;align-items:stretch!important;justify-content:flex-start;gap:10px!important}
       .word-tile{display:flex!important;flex:1 1 170px!important;flex-direction:column!important;justify-content:flex-start!important;min-width:150px!important;max-width:260px!important;min-height:110px!important;width:auto!important;height:auto!important;padding:13px 15px!important}
       .word-tile small{margin-top:auto!important;padding-top:10px!important}
+      .literal>.tiles{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(190px,1fr))!important;grid-auto-rows:1fr!important;align-items:stretch!important;justify-items:stretch!important;gap:10px!important}
+      .literal>.tiles>.word-tile{display:flex!important;flex:none!important;align-self:stretch!important;min-width:0!important;max-width:none!important;width:100%!important;height:100%!important;margin:0!important}
       .literal-pair-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:stretch;margin:10px 0}
       .phrase-group{min-width:0;display:grid;grid-template-columns:minmax(170px,1.25fr) minmax(105px,.75fr);gap:10px;align-items:stretch}
       .phrase-group .word-tile{min-width:0!important;max-width:none!important;width:100%!important;height:100%!important;margin:0!important}
@@ -54,7 +68,7 @@
       .condition{margin-top:12px;color:var(--ink);font-size:13px;line-height:1.35}
       .micro-rule{margin-top:auto;padding-top:13px;color:var(--green);font-size:13px;line-height:1.35}
       .noun-tile .primary-gloss{margin-top:auto;padding-top:16px}
-      @media(max-width:620px){.word-tile{flex-basis:145px!important;min-width:130px!important;max-width:100%!important}.literal-pair-grid{grid-template-columns:1fr}.phrase-group{grid-template-columns:minmax(145px,1.2fr) minmax(90px,.8fr)}}
+      @media(max-width:620px){.word-tile{flex-basis:145px!important;min-width:130px!important;max-width:100%!important}.literal>.tiles{grid-template-columns:1fr!important}.literal-pair-grid{grid-template-columns:1fr}.phrase-group{grid-template-columns:minmax(145px,1.2fr) minmax(90px,.8fr)}}
     `;
     document.head.appendChild(style);
   }
@@ -85,14 +99,16 @@
   }
 
   function apply() {
-    if (!Array.isArray(cards) || !cards.length || window.__LITERAL_LAYOUT_FINAL__) return;
+    if (!Array.isArray(cards) || !cards.length || window.__LITERAL_LAYOUT_FINAL_V2__) return;
     cards = cards.map(original => {
-      const config = PAIRS[original.key];
-      if (!config) return original;
-      return {...original, literal: literal(config), clarification: clarification(config, original.clarification)};
+      const base = {...original, panel: cleanHeroPanel(original.panel)};
+      const config = PAIRS[base.key];
+      if (!config) return base;
+      return {...base, literal: literal(config), clarification: clarification(config, base.clarification)};
     });
     installStyles(); installDirectSubmit(); setUpdatedReference();
     window.__LITERAL_LAYOUT_FINAL__ = true;
+    window.__LITERAL_LAYOUT_FINAL_V2__ = true;
     updateDeckOptions(); renderNavigation(); renderView();
   }
 

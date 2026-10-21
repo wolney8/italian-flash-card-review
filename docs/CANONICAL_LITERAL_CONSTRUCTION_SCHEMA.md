@@ -7,10 +7,41 @@ This addendum is binding for current and future Italian Anki and Web UI cards.
 ## General literal tiles
 
 - Use responsive tiles with a useful minimum width rather than content-sized boxes.
-- Tiles in a row stretch to equal height.
+- **Direct Literal Construction tile groups must use a true equal-row CSS Grid**, not minimum heights alone.
+- The direct `.tiles` container uses `grid-auto-rows: 1fr`; every direct `.word-tile` stretches to `height: 100%` and `align-self: stretch`.
+- Tiles in the same grid row therefore share the exact rendered height, even when one gloss wraps or contains highlighted metadata.
 - Italian appears first; its English gloss appears beneath.
 - Long glosses wrap inside the tile without forcing neighbouring tiles into unreadably narrow columns.
 - Shared layout classes and wording must remain identical in Anki and the Web UI.
+
+Recommended structure:
+
+```html
+<div class="literal">
+  <div class="tiles">
+    <div class="word-tile">...</div>
+    <div class="word-tile">...</div>
+  </div>
+</div>
+```
+
+Required layout behaviour:
+
+```css
+.literal > .tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-auto-rows: 1fr;
+  align-items: stretch;
+}
+.literal > .tiles > .word-tile {
+  width: 100%;
+  height: 100%;
+  align-self: stretch;
+}
+```
+
+On narrow screens, the grid may collapse to one column. Equal-height comparison is required only for tiles that share a row.
 
 ## Paired article phrases
 
@@ -58,6 +89,7 @@ Never append orphaned fragments such as `, z`, `, vowel`, or `, s + consonant` t
 ## Responsive rules
 
 - General word tiles use a flexible minimum width and wrap rather than becoming content-sized slivers.
+- Direct Literal Construction groups use CSS Grid so adjacent boxes remain the same height.
 - Article-pair phrases use a two-column phrase grid on wider screens.
 - Each phrase contains a wider article tile and a narrower noun tile.
 - The two phrases stack vertically on narrow screens.
@@ -66,9 +98,11 @@ Never append orphaned fragments such as `, z`, `, vowel`, or `, s + consonant` t
 
 A release fails if:
 
+- two direct Literal Construction tiles in the same row render at different heights;
+- equal height depends only on `min-height` rather than grid-row stretching;
 - the definite article shows gender/number metadata but its paired partitive article does not;
 - a starting condition is an orphaned punctuation fragment;
 - semantic underlines extend beyond the highlighted word because of padding;
 - a word tile becomes too narrow to show its content clearly;
-- Anki and Web UI render different literal-construction content;
+- Anki and Web UI render different literal-construction content or layout classes;
 - stable note IDs, GUIDs, card IDs, deck IDs or website card keys change unnecessarily.
