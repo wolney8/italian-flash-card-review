@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Italian for Beginners - BSE Course flash-card learning and review for Lessons 1–4, with a plural-articles study sheet. Last updated 28 October 2026.">
+  <meta name="description" content="Italian for Beginners - BSE Course flash-card learning and review for Lessons 1–5. Last updated 28 October 2026.">
   <title>Italian for Beginners - BSE Course</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="review-enhancements.css">
@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="audit-tools.css?v=4">
   <link rel="stylesheet" href="audit-workflow-v3.css?v=2">
   <link rel="stylesheet" href="reset-icon.css?v=1">
+  <link rel="stylesheet" href="study-sheets.css?v=1">
 </head>
 <body class="card nightMode">
   <div class="site-shell">
@@ -20,7 +21,6 @@
         <h1>Italian for Beginners - BSE Course</h1>
         <p>Choose a lesson, inspect the recall and answer sides, and leave a short comment wherever something needs checking.</p>
         <p>Comments are sent privately to the site owner. A name or initials is enough.</p>
-        <a class="open-lesson-button" href="study/plural-articles.html" style="display:inline-block;text-decoration:none">Open plural articles study sheet</a>
       </div>
       <button class="general-comment" type="button" data-comment-scope="general">General comment</button>
     </header>
@@ -28,6 +28,22 @@
     <div id="reviewerIdentityMount"></div>
 
     <nav id="lessonNav" class="lesson-nav" aria-label="Lesson navigation"></nav>
+
+    <section class="study-sheets-section" aria-labelledby="studySheetsTitle">
+      <div class="study-sheets-heading">
+        <p class="eyebrow">Study resources</p>
+        <h2 id="studySheetsTitle">Study sheets</h2>
+        <p>Open focused visual guides alongside the lesson cards. More sheets can be added here as the course develops.</p>
+      </div>
+      <div class="study-sheet-grid">
+        <article class="study-sheet-card">
+          <span class="study-sheet-type">Grammar guide</span>
+          <h3>Plural articles: “the” and “some”</h3>
+          <p>Compare <strong>i / gli / le</strong> with <strong>dei / degli / delle</strong>, including ordinary and special masculine openings.</p>
+          <a class="study-sheet-button" href="study/plural-articles.html">Open study sheet</a>
+        </article>
+      </div>
+    </section>
 
     <div class="lesson-toolbar" id="lessonToolbar" hidden>
       <select id="deck" aria-label="Filter by subdeck">
@@ -72,7 +88,7 @@
         <input type="hidden" name="deck" id="formDeck">
         <input type="hidden" name="card_key" id="formCardKey">
         <input type="hidden" name="card_summary" id="formCardSummary">
-        <input type="hidden" name="site_version" value="2026-10-28-study-sheet">
+        <input type="hidden" name="site_version" value="2026-10-28-lesson5-consolidation-review">
 
         <label for="reviewer">Name or initials</label>
         <input id="reviewer" name="reviewer" maxlength="80" autocomplete="name" required>
@@ -105,5 +121,6 @@
   <script src="card-flip-experience-v624.js?v=1" defer></script>
   <script src="final-content-integrity-v627.js?v=2" defer></script>
   <script src="pronunciation-decisions-v628.js?v=1" defer></script>
+  <script src="lesson5-consolidation-review.js?v=2" defer></script>
 </body>
 </html>

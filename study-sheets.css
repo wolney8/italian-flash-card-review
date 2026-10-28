@@ -1,0 +1,91 @@
+.study-sheets-section {
+  max-width: 1040px;
+  margin: 18px auto 24px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 14px 32px rgba(0,0,0,.16);
+}
+
+.study-sheets-heading h2 {
+  margin: 0 0 8px;
+  font-size: clamp(24px, 3vw, 34px);
+}
+
+.study-sheets-heading p:last-child {
+  margin: 0;
+  color: var(--muted);
+}
+
+.study-sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.study-sheet-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 210px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface-2, #30363d);
+}
+
+.study-sheet-type {
+  width: max-content;
+  margin-bottom: 10px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(169,223,207,.14);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.study-sheet-card h3 {
+  margin: 0 0 8px;
+  font-size: 21px;
+}
+
+.study-sheet-card p {
+  margin: 0 0 18px;
+  color: var(--muted);
+}
+
+.study-sheet-button {
+  display: inline-block;
+  width: max-content;
+  margin-top: auto;
+  padding: 10px 14px;
+  border: 2px solid var(--accent);
+  border-radius: 11px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 850;
+  transition: background .18s ease, color .18s ease, transform .18s ease;
+}
+
+.study-sheet-button:hover,
+.study-sheet-button:focus-visible {
+  background: var(--accent);
+  color: #2a2730;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 720px) {
+  .study-sheets-section {
+    margin: 14px 0 20px;
+    padding: 17px;
+  }
+
+  .study-sheet-button {
+    width: 100%;
+    text-align: center;
+  }
+}
