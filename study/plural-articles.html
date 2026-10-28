@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Visual revision sheet for Italian plural definite articles and partitive plural articles: i, gli, le, dei, degli and delle.">
+  <title>Plural Articles Study Sheet — Italian for Beginners</title>
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#17191d;--paper:#252a30;--paper2:#30363d;--ink:#f4f6f7;
+      --muted:#c5cdd2;--line:#4f5b64;--pink:#efa1c1;--mint:#a9dfcf;
+      --ordinary:#ffd166;--special:#9ac8ff;--feminine:#ffb3d1;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;padding:24px 16px 64px;background:radial-gradient(circle at top,rgba(112,142,137,.08),transparent 34rem),var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:18px;line-height:1.55}
+    main{max-width:1080px;margin:auto}
+    .hero,.panel{background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:0 16px 42px rgba(0,0,0,.2)}
+    .hero{padding:28px 30px;margin-bottom:22px}.panel{padding:24px 26px;margin:22px 0}
+    .eyebrow{margin:0 0 6px;color:var(--pink);font-size:12px;font-weight:900;letter-spacing:.1em;text-transform:uppercase}
+    h1{margin:0 0 10px;font-size:clamp(34px,6vw,58px);line-height:1.08}h2{margin:0 0 12px;font-size:clamp(25px,4vw,36px);line-height:1.15}h3{margin:0 0 8px}
+    p{margin:8px 0}.lead,.muted{color:var(--muted)}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+    .button{display:inline-block;padding:10px 15px;border:2px solid var(--mint);border-radius:11px;background:var(--mint);color:#183a35;text-decoration:none;font-weight:850;cursor:pointer}
+    .button.secondary{background:transparent;color:var(--pink);border-color:var(--pink)}
+    .matrix-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px}
+    table{width:100%;border-collapse:collapse;min-width:760px;background:var(--paper2)}
+    th,td{padding:15px 14px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);text-align:left;vertical-align:top}th:last-child,td:last-child{border-right:0}tr:last-child td{border-bottom:0}
+    thead th{background:#20262b;color:var(--mint);font-size:14px;text-transform:uppercase;letter-spacing:.06em}
+    .article{font-size:30px;font-weight:900;line-height:1}.ordinary{color:var(--ordinary)}.special{color:var(--special)}.feminine{color:var(--feminine)}
+    .pair{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}.pair-card{padding:16px;background:var(--paper2);border:1px solid var(--line);border-radius:14px;text-align:center}.pair-card strong{display:block;font-size:30px}.pair-card span{display:block;color:var(--muted);font-size:14px}
+    .flow{display:grid;gap:10px;margin-top:14px}.step{padding:14px 16px;background:var(--paper2);border:1px solid var(--line);border-radius:13px}.step strong{color:var(--mint)}
+    .example-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.example{padding:15px;background:var(--paper2);border:1px solid var(--line);border-radius:13px}.example .it{font-size:22px;font-weight:850}.example .en{color:var(--muted)}
+    .callout{padding:16px 18px;border-left:5px solid var(--ordinary);background:#2e2c28;border-radius:12px}.callout.special-note{border-left-color:var(--special);background:#252c34}
+    .singular-map{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:11px}.map-card{padding:15px;background:var(--paper2);border:1px solid var(--line);border-radius:13px}.map-card code{display:block;margin-top:8px;color:var(--mint);font-size:17px;white-space:normal}
+    details{margin:10px 0;border:1px solid var(--line);border-radius:12px;background:var(--paper2)}summary{cursor:pointer;padding:13px 15px;font-weight:850;color:var(--mint)}details div{padding:0 15px 15px}
+    .source-note{font-size:14px;color:var(--muted)}
+    @media(max-width:720px){body{padding:12px 8px 46px}.hero,.panel{padding:19px}.pair{grid-template-columns:1fr}.actions .button{width:100%;text-align:center}}
+    @media print{body{background:white;color:#111;padding:0}.hero,.panel{box-shadow:none;border-color:#aaa;break-inside:avoid}.actions{display:none}.muted,.lead,.source-note,.example .en{color:#333}.matrix-wrap{overflow:visible}table{min-width:0;background:white}.pair-card,.step,.example,.map-card,details{background:white}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="eyebrow">Study sheet</p>
+    <h1>Plural articles: <span class="ordinary">the</span> and <span class="special">some</span></h1>
+    <p class="lead">Use two decisions: choose whether you mean <strong>the</strong> or <strong>some</strong>, then match the noun's gender and opening sound.</p>
+    <div class="actions">
+      <a class="button" href="../?mode=learn">← Back to flash cards</a>
+      <button class="button secondary" type="button" onclick="window.print()">Print this sheet</button>
+    </div>
+  </header>
+
+  <section class="panel">
+    <p class="eyebrow">The complete pattern</p>
+    <h2>See <em>the</em> and <em>some</em> side by side</h2>
+    <div class="matrix-wrap">
+      <table>
+        <thead><tr><th>Noun pattern</th><th>THE — definite plural</th><th>SOME — partitive plural</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong class="ordinary">Masculine + ordinary consonant</strong><br><span class="muted">Most consonant openings</span></td>
+            <td><span class="article ordinary">i</span></td>
+            <td><span class="article ordinary">dei</span></td>
+            <td><strong>i libri</strong> — the books<br><strong>dei libri</strong> — some books</td>
+          </tr>
+          <tr>
+            <td><strong class="special">Masculine + vowel or special opening</strong><br><span class="muted">vowel; s + consonant; z; gn; ps; x; y</span></td>
+            <td><span class="article special">gli</span></td>
+            <td><span class="article special">degli</span></td>
+            <td><strong>gli amici</strong> — the friends<br><strong>degli amici</strong> — some friends</td>
+          </tr>
+          <tr>
+            <td><strong class="feminine">Feminine plural — any opening</strong></td>
+            <td><span class="article feminine">le</span></td>
+            <td><span class="article feminine">delle</span></td>
+            <td><strong>le case</strong> — the houses<br><strong>delle case</strong> — some houses</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pair">
+      <div class="pair-card"><strong class="ordinary">i ↔ dei</strong><span>ordinary masculine</span></div>
+      <div class="pair-card"><strong class="special">gli ↔ degli</strong><span>special masculine</span></div>
+      <div class="pair-card"><strong class="feminine">le ↔ delle</strong><span>all feminine plurals</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow">What “most consonants” means</p>
+    <h2>Ordinary masculine openings use <span class="ordinary">i / dei</span></h2>
+    <p>It means a masculine noun beginning with a normal consonant sound that is <strong>not</strong> in the special group.</p>
+    <div class="example-grid">
+      <div class="example"><div class="it">i bambini / dei bambini</div><div class="en">the children / some children</div></div>
+      <div class="example"><div class="it">i cani / dei cani</div><div class="en">the dogs / some dogs</div></div>
+      <div class="example"><div class="it">i gatti / dei gatti</div><div class="en">the cats / some cats</div></div>
+      <div class="example"><div class="it">i libri / dei libri</div><div class="en">the books / some books</div></div>
+      <div class="example"><div class="it">i maestri / dei maestri</div><div class="en">the teachers / some teachers</div></div>
+      <div class="example"><div class="it">i problemi / dei problemi</div><div class="en">the problems / some problems</div></div>
+    </div>
+    <div class="callout special-note" style="margin-top:16px">
+      <strong>Important:</strong> the letter <strong>p</strong> followed by another consonant is not automatically special. Say <strong>i problemi / dei problemi</strong> and <strong>i professori / dei professori</strong>. A genuinely special start such as <strong>ps-</strong> uses <strong>gli / degli</strong>: <strong>gli psicologi / degli psicologi</strong>.
+    </div>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow">Special masculine openings</p>
+    <h2>Use <span class="special">gli / degli</span></h2>
+    <div class="example-grid">
+      <div class="example"><div class="it">gli amici / degli amici</div><div class="en">vowel</div></div>
+      <div class="example"><div class="it">gli studenti / degli studenti</div><div class="en">s + consonant</div></div>
+      <div class="example"><div class="it">gli zii / degli zii</div><div class="en">z</div></div>
+      <div class="example"><div class="it">gli gnomi / degli gnomi</div><div class="en">gn</div></div>
+      <div class="example"><div class="it">gli psicologi / degli psicologi</div><div class="en">ps</div></div>
+      <div class="example"><div class="it">gli yogurt / degli yogurt</div><div class="en">y</div></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow">Work backwards from the singular</p>
+    <h2>A reliable shortcut</h2>
+    <div class="singular-map">
+      <div class="map-card"><strong>il / un</strong><code>→ i / dei</code><span class="muted">il libro → i libri → dei libri</span></div>
+      <div class="map-card"><strong>lo / uno</strong><code>→ gli / degli</code><span class="muted">lo zio → gli zii → degli zii</span></div>
+      <div class="map-card"><strong>masculine l’ / un</strong><code>→ gli / degli</code><span class="muted">l’amico → gli amici → degli amici</span></div>
+      <div class="map-card"><strong>la / una</strong><code>→ le / delle</code><span class="muted">la casa → le case → delle case</span></div>
+      <div class="map-card"><strong>feminine l’ / un’</strong><code>→ le / delle</code><span class="muted">l’amica → le amiche → delle amiche</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow">Decision path</p>
+    <h2>Choose the article in three steps</h2>
+    <div class="flow">
+      <div class="step"><strong>1.</strong> Do you mean <strong>the</strong> or <strong>some</strong>?</div>
+      <div class="step"><strong>2.</strong> Is the plural noun feminine? Use <strong class="feminine">le</strong> or <strong class="feminine">delle</strong>.</div>
+      <div class="step"><strong>3.</strong> If it is masculine, inspect the beginning: ordinary consonant → <strong class="ordinary">i / dei</strong>; vowel or special opening → <strong class="special">gli / degli</strong>.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <p class="eyebrow">Quick self-check</p>
+    <h2>Choose the missing article</h2>
+    <details><summary>1. ___ libri — the books</summary><div><strong>i libri</strong></div></details>
+    <details><summary>2. ___ amici — some friends</summary><div><strong>degli amici</strong></div></details>
+    <details><summary>3. ___ case — the houses</summary><div><strong>le case</strong></div></details>
+    <details><summary>4. ___ zii — some uncles</summary><div><strong>degli zii</strong></div></details>
+    <details><summary>5. ___ studenti — the students</summary><div><strong>gli studenti</strong></div></details>
+    <details><summary>6. ___ problemi — some problems</summary><div><strong>dei problemi</strong></div></details>
+  </section>
+
+  <section class="panel source-note">
+    <strong>Course basis:</strong> the article families introduced in Lesson 2, the plural tables and agreement work from Lesson 4, and the plural/article consolidation practised in Lesson 5. This is a structured revision aid rather than a replacement for Laura’s handouts.
+  </section>
+</main>
+</body>
+</html>
