@@ -1,5 +1,6 @@
 (function(){
-  const SITE_VERSION='2026-10-28-lesson5-consolidation-review-r2';
+  const SITE_VERSION='2026-10-30-weekend-study-sheets';
+  const SITE_UPDATED='30 October 2026';
   const EXPECTED_ENCODED_LENGTH=16828;
   const EXPECTED_CARD_COUNT=56;
   const EXPECTED_SUBDECK_COUNT=7;
@@ -9,6 +10,33 @@
     'data/lesson5-consolidation-02.txt',
     'data/lesson5-consolidation-03.txt',
     'data/lesson5-consolidation-04.txt',
+  ];
+
+  const STUDY_SHEETS=[
+    {
+      title:'Conversation foundations',
+      description:'Greetings, names, formal and informal speech, origins and residence.',
+      href:'study/weekend-study.html#conversation-foundations',
+      scope:'Lessons 1, 3 and 5 review'
+    },
+    {
+      title:'Avere, numbers and family',
+      description:'Present-tense forms, silent H, age, common expressions and quantities.',
+      href:'study/weekend-study.html#avere-numbers-family',
+      scope:'Lessons 4 and 5 review'
+    },
+    {
+      title:'Plurals and articles',
+      description:'Noun endings, definite articles and the plural forms used for “some”.',
+      href:'study/weekend-study.html#plural-articles',
+      scope:'Lessons 2, 4 and 5 review'
+    },
+    {
+      title:'C/G sounds and spelling with towns',
+      description:'Hard and soft sounds, H combinations and the Italian town spelling code.',
+      href:'study/weekend-study.html#c-g-sounds-and-spelling',
+      scope:'Lessons 2 and 5 review'
+    }
   ];
 
   async function loadCards(){
@@ -22,9 +50,7 @@
     if(encoded.length!==EXPECTED_ENCODED_LENGTH){
       throw new Error(`Lesson 5 data is incomplete: expected ${EXPECTED_ENCODED_LENGTH} characters, received ${encoded.length}.`);
     }
-    if(encoded.length%4!==0){
-      throw new Error('Lesson 5 data is not valid Base64.');
-    }
+    if(encoded.length%4!==0)throw new Error('Lesson 5 data is not valid Base64.');
 
     const bytes=Uint8Array.from(atob(encoded),character=>character.charCodeAt(0));
     const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
@@ -40,7 +66,6 @@
     if(keys.size!==EXPECTED_CARD_COUNT||subdecks.size!==EXPECTED_SUBDECK_COUNT||wrongLesson){
       throw new Error('Lesson 5 identity validation failed.');
     }
-
     return lesson5;
   }
 
@@ -59,6 +84,24 @@
     lessonMeta=replacement;
   }
 
+  function renderStudySheets(){
+    const section=document.querySelector('.study-sheets-section');
+    if(!section)return;
+    const cards=STUDY_SHEETS.map(sheet=>`<article class="study-sheet-card">
+      <span class="study-sheet-type">${sheet.scope}</span>
+      <h3>${sheet.title}</h3>
+      <p>${sheet.description}</p>
+      <a class="study-sheet-button" href="${sheet.href}">Open study sheet</a>
+    </article>`).join('');
+    const desired=`<div class="study-sheets-heading">
+      <p class="eyebrow">Study resources</p>
+      <h2 id="studySheetsTitle">Study sheets</h2>
+      <p>Use a focused guide, type an answer, then receive <strong style="color:#65c992">Corretto</strong> or <strong style="color:#ef777f">Sbagliato</strong> feedback after the attempt.</p>
+      <p><a class="study-sheet-index-link" href="study/weekend-study.html">View all study sheets</a></p>
+    </div><div class="study-sheet-grid">${cards}</div>`;
+    if(section.innerHTML!==desired)section.innerHTML=desired;
+  }
+
   function ensureAuditButton(){
     if(new URLSearchParams(location.search).get('audit')!=='1')return;
     const controls=document.querySelector('#auditOverviewBanner .audit-controls');
@@ -69,18 +112,24 @@
 
   function installSiteMetadata(){
     document.querySelectorAll('input[name="site_version"]').forEach(input=>{input.value=SITE_VERSION;});
+    const meta=document.querySelector('meta[name="description"]');
+    if(meta)meta.setAttribute('content',`Italian for Beginners - BSE Course flash-card learning and review for Lessons 1-5, with interactive study sheets. Last updated ${SITE_UPDATED}.`);
+
     if(typeof submitToGoogleSheet==='function'&&!submitToGoogleSheet.__lesson5Wrapped){
       const previous=submitToGoogleSheet;
       const wrapped=fields=>previous({...fields,site_version:SITE_VERSION});
       wrapped.__lesson5Wrapped=true;
       submitToGoogleSheet=wrapped;
     }
-    if(!document.getElementById('lesson5FooterDateStyle')){
-      const style=document.createElement('style');
+
+    let style=document.getElementById('lesson5FooterDateStyle');
+    if(!style){
+      style=document.createElement('style');
       style.id='lesson5FooterDateStyle';
-      style.textContent='.site-footer{font-size:0!important}.site-footer::after{content:"Italian for Beginners - BSE Course · Last updated 28 October 2026";font-size:14px!important;color:var(--muted)}';
       document.head.appendChild(style);
     }
+    const rule=`.site-footer{font-size:0!important}.site-footer::after{content:"Italian for Beginners - BSE Course · Last updated ${SITE_UPDATED}";font-size:14px!important;color:var(--muted)}`;
+    if(style.textContent!==rule)style.textContent=rule;
   }
 
   function showLoadError(error){
@@ -106,7 +155,6 @@
 
   function apply(lesson5){
     if(!Array.isArray(cards)||window.__LESSON5_CONSOLIDATION_REVIEW__)return;
-
     cards=cards.filter(card=>card.lesson!=='L5').concat(lesson5);
     patchLessonMeta();
 
@@ -114,6 +162,7 @@
     if(requested==='L5')currentLesson='L5';
 
     installSiteMetadata();
+    renderStudySheets();
     ensureAuditButton();
 
     window.__LESSON5_CONSOLIDATION_REVIEW__=true;
@@ -127,25 +176,18 @@
   }
 
   async function initialise(){
-    if(typeof DecompressionStream==='undefined'){
-      throw new Error('This browser cannot decompress the Lesson 5 data.');
-    }
-
+    if(typeof DecompressionStream==='undefined')throw new Error('This browser cannot decompress the Lesson 5 data.');
     const lesson5=await loadCards();
     const started=Date.now();
     const wait=()=>{
       const baseReady=Array.isArray(cards)&&cards.length>0&&typeof renderNavigation==='function'&&typeof renderView==='function';
       const reviewedReady=Boolean(window.__REVIEWED_PRONUNCIATION_DECISIONS_20261022__);
-
-      if(baseReady&&(reviewedReady||Date.now()-started>12000)){
-        apply(lesson5);
-      }else{
-        window.setTimeout(wait,80);
-      }
+      if(baseReady&&(reviewedReady||Date.now()-started>12000))apply(lesson5);
+      else window.setTimeout(wait,80);
     };
     wait();
   }
 
-  new MutationObserver(ensureAuditButton).observe(document.documentElement,{childList:true,subtree:true});
+  new MutationObserver(()=>{ensureAuditButton();installSiteMetadata();renderStudySheets();}).observe(document.documentElement,{childList:true,subtree:true});
   initialise().catch(showLoadError);
 })();
