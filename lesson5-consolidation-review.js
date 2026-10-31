@@ -1,6 +1,6 @@
 (function(){
-  const SITE_VERSION='2026-10-30-weekend-study-sheets';
-  const SITE_UPDATED='30 October 2026';
+  const SITE_VERSION='2026-10-31-expanded-study-sheets-v3';
+  const SITE_UPDATED='31 October 2026';
   const EXPECTED_ENCODED_LENGTH=16828;
   const EXPECTED_CARD_COUNT=56;
   const EXPECTED_SUBDECK_COUNT=7;
@@ -15,27 +15,57 @@
   const STUDY_SHEETS=[
     {
       title:'Conversation foundations',
-      description:'Greetings, names, formal and informal speech, origins and residence.',
-      href:'study/weekend-study.html#conversation-foundations',
-      scope:'Lessons 1, 3 and 5 review'
+      description:'Greetings, names, formal and informal speech, origins and residence',
+      href:'study/study-sheets.html#conversation-foundations',
+      scope:'Standalone conversation guide'
+    },
+    {
+      title:'Di, da, dove and pronouns',
+      description:'Origin, movement, residence, current location and third-person pronouns',
+      href:'study/study-sheets.html#di-da-dove-pronouns',
+      scope:'Standalone grammar guide'
+    },
+    {
+      title:'Subject pronouns and present tense',
+      description:'Match io, tu, lui/lei, noi, voi and loro to the verb ending',
+      href:'study/study-sheets.html#subject-pronouns-present-tense',
+      scope:'Standalone verb-pattern guide'
+    },
+    {
+      title:'Known verbs and their forms',
+      description:'A present-tense reference for every verb currently taught or encountered',
+      href:'study/study-sheets.html#known-verbs-and-forms',
+      scope:'Standalone verb reference'
+    },
+    {
+      title:'Word jobs and sentence building',
+      description:'Nouns, verbs, adjectives, pronouns, articles and prepositions',
+      href:'study/study-sheets.html#word-jobs-sentence-building',
+      scope:'Standalone grammar foundations'
     },
     {
       title:'Avere, numbers and family',
-      description:'Present-tense forms, silent H, age, common expressions and quantities.',
-      href:'study/weekend-study.html#avere-numbers-family',
-      scope:'Lessons 4 and 5 review'
+      description:'Present-tense forms, silent H, age, common expressions and quantities',
+      href:'study/study-sheets.html#avere-numbers-family',
+      scope:'Course review'
     },
     {
       title:'Plurals and articles',
-      description:'Noun endings, definite articles and the plural forms used for “some”.',
-      href:'study/weekend-study.html#plural-articles',
-      scope:'Lessons 2, 4 and 5 review'
+      description:'Noun endings, definite articles and plural "some" forms',
+      href:'study/study-sheets.html#plural-articles',
+      scope:'Course review'
     },
     {
       title:'C/G sounds and spelling with towns',
-      description:'Hard and soft sounds, H combinations and the Italian town spelling code.',
-      href:'study/weekend-study.html#c-g-sounds-and-spelling',
-      scope:'Lessons 2 and 5 review'
+      description:'Hard and soft sounds, H combinations and the Italian town spelling code',
+      href:'study/study-sheets.html#c-g-sounds-and-spelling',
+      scope:'Course review'
+    },
+    {
+      title:'Mixed review challenge',
+      description:'Combine register, origins, verbs, articles, plurals and sounds',
+      href:'study/study-sheets.html#mixed-review-challenge',
+      scope:'Standalone mixed practice'
     }
   ];
 
@@ -96,8 +126,8 @@
     const desired=`<div class="study-sheets-heading">
       <p class="eyebrow">Study resources</p>
       <h2 id="studySheetsTitle">Study sheets</h2>
-      <p>Use a focused guide, type an answer, then receive <strong style="color:#65c992">Corretto</strong> or <strong style="color:#ef777f">Sbagliato</strong> feedback after the attempt.</p>
-      <p><a class="study-sheet-index-link" href="study/weekend-study.html">View all study sheets</a></p>
+      <p>Choose from nine guides. Use typed or multiple-choice answers, reveal a hint when needed, then receive <strong style="color:#65c992">Corretto</strong> or <strong style="color:#ef777f">Sbagliato</strong> feedback after the attempt.</p>
+      <p><a class="study-sheet-index-link" href="study/study-sheets.html">View all study sheets</a></p>
     </div><div class="study-sheet-grid">${cards}</div>`;
     if(section.innerHTML!==desired)section.innerHTML=desired;
   }
