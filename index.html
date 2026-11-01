@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="course-data-pending">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Italian for Beginners - BSE Course flash-card learning and review for Lessons 1–5, with nine interactive study sheets. Last updated 31 October 2026.">
+  <meta name="description" content="Italian for Beginners — flashcards and interactive study sheets for learning or collaborative review. Lessons 1–5. Last updated 1 November 2026.">
   <title>Italian for Beginners - BSE Course</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="review-enhancements.css">
@@ -12,18 +12,81 @@
   <link rel="stylesheet" href="audit-workflow-v3.css?v=2">
   <link rel="stylesheet" href="reset-icon.css?v=1">
   <link rel="stylesheet" href="study-sheets.css?v=1">
+  <link rel="stylesheet" href="course-navigation-v1.css?v=1">
 </head>
-<body class="card nightMode">
+<body class="card nightMode resource-flashcards">
   <div class="site-shell">
-    <header class="site-intro"><div><p class="eyebrow">Flash-card review</p><h1>Italian for Beginners - BSE Course</h1><p>Choose a lesson, inspect the recall and answer sides, and leave a short comment wherever something needs checking.</p><p>Comments are sent privately to the site owner. A name or initials is enough.</p></div><button class="general-comment" type="button" data-comment-scope="general">General comment</button></header>
+    <header class="site-intro">
+      <div>
+        <p class="eyebrow">Italian learning and review</p>
+        <h1>Italian for Beginners - BSE Course</h1>
+        <p>Use Learn for private practice, or Review to inspect the same resources and send corrections.</p>
+        <p>The site is suitable for course members and independent beginner learners.</p>
+      </div>
+      <button class="general-comment" type="button" data-comment-scope="general">General comment</button>
+    </header>
+
     <div id="reviewerIdentityMount"></div>
-    <nav id="lessonNav" class="lesson-nav" aria-label="Lesson navigation"></nav>
-    <section class="study-sheets-section" aria-labelledby="studySheetsTitle"><div class="study-sheets-heading"><p class="eyebrow">Study resources</p><h2 id="studySheetsTitle">Study sheets</h2><p>Loading the interactive study guides…</p></div></section>
-    <div class="lesson-toolbar" id="lessonToolbar" hidden><select id="deck" aria-label="Filter by subdeck"><option value="">All subdecks</option></select><input id="search" type="search" placeholder="Search this lesson" aria-label="Search this lesson"><span id="count" aria-live="polite"></span><button id="expandAll" type="button">Open all subdecks</button></div>
-    <main id="app"><div class="loading">Loading cards…</div></main>
-    <footer class="site-footer">Italian for Beginners - BSE Course · <time datetime="2026-10-31">Last updated 31 October 2026</time></footer>
+    <div id="courseNavigationMount"></div>
+
+    <nav id="lessonNav" class="lesson-nav" aria-label="Flashcard lesson navigation"></nav>
+
+    <section class="study-sheets-section" aria-labelledby="studySheetsTitle" aria-hidden="true">
+      <div class="study-sheets-heading">
+        <p class="eyebrow">Study resources</p>
+        <h2 id="studySheetsTitle">Study sheets</h2>
+        <p>Loading the organised study guides…</p>
+      </div>
+    </section>
+
+    <div id="courseDataStatus" class="course-data-status">Loading all five lessons together…</div>
+
+    <div class="lesson-toolbar" id="lessonToolbar" hidden>
+      <select id="deck" aria-label="Filter by subdeck"><option value="">All subdecks</option></select>
+      <input id="search" type="search" placeholder="Search this lesson" aria-label="Search this lesson">
+      <span id="count" aria-live="polite"></span>
+      <button id="expandAll" type="button">Open all subdecks</button>
+    </div>
+
+    <main id="app"><div class="loading">Loading course flashcards…</div></main>
+
+    <footer class="site-footer">Italian for Beginners - BSE Course · <time datetime="2026-11-01">Last updated 1 November 2026</time></footer>
   </div>
+
   <iframe id="googleReviewSink" name="googleReviewSink" title="Comment submission target" aria-hidden="true"></iframe>
-  <div class="review-modal" id="reviewModal" hidden><div class="review-backdrop" data-close-modal></div><section class="review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle"><span class="scope-badge" id="scopeBadge">Card comment</span><h2 id="reviewTitle">Leave a comment</h2><p class="review-context" id="reviewContext"></p><form class="review-form" id="reviewForm" method="POST" action="https://script.google.com/macros/s/AKfycbyBZwlHEKrcPVnLRGKVgorqGf-3K9yU9GWcuoRSqAt1UwTdVauUW_ZmYWle7Z050uZbww/exec" target="googleReviewSink"><p class="hidden-field" aria-hidden="true"><label>Do not fill this in: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p><input type="hidden" name="scope" id="formScope"><input type="hidden" name="item_id" id="formItemId"><input type="hidden" name="lesson" id="formLesson"><input type="hidden" name="deck" id="formDeck"><input type="hidden" name="card_key" id="formCardKey"><input type="hidden" name="card_summary" id="formCardSummary"><input type="hidden" name="site_version" value="2026-10-31-expanded-study-sheets-v3"><label for="reviewer">Name or initials</label><input id="reviewer" name="reviewer" maxlength="80" autocomplete="name" required><label for="comment">Comment</label><textarea id="comment" name="comment" maxlength="4000" required placeholder="What should be checked or changed?"></textarea><div class="modal-buttons"><button class="modal-close" type="button" data-close-modal>Cancel</button><button class="modal-submit" type="submit">Send comment</button></div><div class="form-status" id="formStatus" aria-live="polite"></div></form></section></div>
-  <script src="google-review.js?v=6.0.2" defer></script><script src="app.js?v=6.0.2" defer></script><script src="site-v55.js?v=6.0.3" defer></script><script src="v60-bootstrap.js?v=1" defer></script><script src="lesson3-revisions.js?v=1" defer></script><script src="pronunciation-v62.js?v=2" defer></script><script src="article-progression-v62.js?v=1" defer></script><script src="compact-pronunciation-finalizer-v622.js?v=1" defer></script><script src="semantic-highlights-v623.js?v=2" defer></script><script src="mode-toggle.js?v=2" defer></script><script src="audit-tools.js?v=4" defer></script><script src="audit-overview.js?v=4" defer></script><script src="card-flip-experience-v624.js?v=1" defer></script><script src="final-content-integrity-v627.js?v=2" defer></script><script src="pronunciation-decisions-v628.js?v=1" defer></script><script src="lesson5-consolidation-review.js?v=6" defer></script>
-</body></html>
+
+  <div class="review-modal" id="reviewModal" hidden>
+    <div class="review-backdrop" data-close-modal></div>
+    <section class="review-dialog" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+      <span class="scope-badge" id="scopeBadge">Card comment</span>
+      <h2 id="reviewTitle">Leave a comment</h2>
+      <p class="review-context" id="reviewContext"></p>
+      <form class="review-form" id="reviewForm" method="POST" action="https://script.google.com/macros/s/AKfycbyBZwlHEKrcPVnLRGKVgorqGf-3K9yU9GWcuoRSqAt1UwTdVauUW_ZmYWle7Z050uZbww/exec" target="googleReviewSink">
+        <p class="hidden-field" aria-hidden="true"><label>Do not fill this in: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <input type="hidden" name="scope" id="formScope"><input type="hidden" name="item_id" id="formItemId"><input type="hidden" name="lesson" id="formLesson"><input type="hidden" name="deck" id="formDeck"><input type="hidden" name="card_key" id="formCardKey"><input type="hidden" name="card_summary" id="formCardSummary"><input type="hidden" name="site_version" value="2026-11-01-course-shell-v1">
+        <label for="reviewer">Name or initials</label><input id="reviewer" name="reviewer" maxlength="80" autocomplete="name" required>
+        <label for="comment">Comment</label><textarea id="comment" name="comment" maxlength="4000" required placeholder="What should be checked or changed?"></textarea>
+        <div class="modal-buttons"><button class="modal-close" type="button" data-close-modal>Cancel</button><button class="modal-submit" type="submit">Send comment</button></div>
+        <div class="form-status" id="formStatus" aria-live="polite"></div>
+      </form>
+    </section>
+  </div>
+
+  <script src="google-review.js?v=6.0.2" defer></script>
+  <script src="app.js?v=6.0.2" defer></script>
+  <script src="course-data-loader-v1.js?v=1" defer></script>
+  <script src="v60-bootstrap.js?v=1" defer></script>
+  <script src="lesson3-revisions.js?v=1" defer></script>
+  <script src="pronunciation-v62.js?v=2" defer></script>
+  <script src="article-progression-v62.js?v=1" defer></script>
+  <script src="compact-pronunciation-finalizer-v622.js?v=1" defer></script>
+  <script src="semantic-highlights-v623.js?v=2" defer></script>
+  <script src="mode-toggle.js?v=2" defer></script>
+  <script src="audit-tools.js?v=4" defer></script>
+  <script src="audit-overview.js?v=4" defer></script>
+  <script src="card-flip-experience-v624.js?v=1" defer></script>
+  <script src="final-content-integrity-v627.js?v=2" defer></script>
+  <script src="pronunciation-decisions-v628.js?v=1" defer></script>
+  <script src="course-navigation-v1.js?v=1" defer></script>
+</body>
+</html>
