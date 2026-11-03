@@ -129,7 +129,7 @@
   }
   function studyCard(sheet){
     const mode=getMode(),stats=studyStats(sheet.slug),percent=Math.round((stats.attempted/sheet.questions)*100);
-    const href=`study/study-sheets.html?mode=${mode}#${sheet.slug}`;
+    const href=`study/study-sheets.html?mode=${mode}&sheet=${encodeURIComponent(sheet.slug)}`;
     return `<article class="study-sheet-card" data-study-sheet="${sheet.slug}">
       <span class="study-sheet-type">${sheet.type}</span><h4>${sheet.title}</h4><p>${sheet.description}</p>
       <div class="study-sheet-card-progress"><div class="study-sheet-progress-track"><div class="study-sheet-progress-fill" style="width:${percent}%"></div></div><div class="study-sheet-progress-copy">${stats.attempted} / ${sheet.questions} attempted · ${stats.correct} correct this session</div></div>
