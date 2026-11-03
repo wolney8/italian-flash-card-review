@@ -11,7 +11,7 @@
   const legacy=decodeURIComponent(location.hash.slice(1));
   const requested=params.get("sheet")||legacy;
   const active=data.find(s=>s.slug===requested);
-  const listing=data.filter(s=>categories.some(c=>c.slugs.includes(s.slug)));
+  const listing=categories.flatMap(c=>c.slugs).map(slug=>data.find(s=>s.slug===slug)).filter(Boolean);
   const studyUrl=(slug)=>"study-sheets.html?mode="+mode+(slug?"&sheet="+encodeURIComponent(slug):"");
   const session=(()=>{try{return JSON.parse(sessionStorage.getItem("italianCourseSessionProgressV2")||"{}").study?.answers||{};}catch(_){return {};}})();
   const stats=(sheet)=>{const entries=Object.entries(session).filter(([key,value])=>key.startsWith(sheet.slug+"-q")&&value?.result);return {done:entries.length,correct:entries.filter(([,value])=>value.result==="correct").length};};
