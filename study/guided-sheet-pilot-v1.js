@@ -64,10 +64,26 @@
       learn: clamp(old.learn, learn.length),
       examples: clamp(old.examples, examples.length),
       question: clamp(old.question, questions.length),
-      finished: !!old.finished
+      finished: !!old.finished,
+      visitedLearn: Array.isArray(old.visitedLearn)
+        ? [...new Set(old.visitedLearn.filter(n => Number.isInteger(n) && n >= 0 && n < learn.length))]
+        : [],
+      visitedExamples: Array.isArray(old.visitedExamples)
+        ? [...new Set(old.visitedExamples.filter(n => Number.isInteger(n) && n >= 0 && n < examples.length))]
+        : []
     };
 
+    // Keep the hero a fixed height across steps. Teaching notes belong in Learn,
+    // not in the header where hiding a single line shifts the whole experience.
     const intro = [...hero.children].filter(c => c.tagName === 'P' && !c.classList.contains('lead'));
+    if (intro.length) {
+      const teachingNote = document.createElement('div');
+      teachingNote.className = 'guided-sheet-teaching-note';
+      for (const paragraph of intro) teachingNote.appendChild(paragraph);
+      const firstHeading = learn[0].querySelector('h2');
+      if (firstHeading) firstHeading.insertAdjacentElement('afterend', teachingNote);
+      else learn[0].prepend(teachingNote);
+    }
     const actions = hero.querySelector('.actions');
     const backLink = actions?.querySelector('a[href*="study-sheets.html"]');
     if (backLink) backLink.hidden = true; // The existing sheet selector already offers a route back.
@@ -82,7 +98,15 @@
 
     const steps = document.createElement('div');
     steps.className = 'guided-sheet-steps';
-    steps.innerHTML = '<nav class="guided-sheet-step-navigation" aria-label="Study stages">' +
+    steps.innerHTML =
+      '<div class="guided-sheet-progress">' +
+        '<div class="guided-sheet-progress-label"><span>Overall progress</span>' +
+          '<span class="guided-sheet-progress-count"></span></div>' +
+        '<div class="guided-sheet-progress-track" role="progressbar" ' +
+          'aria-label="Study sheet progress" aria-valuemin="0" aria-valuenow="0" aria-valuemax="100">' +
+          '<span class="guided-sheet-progress-fill"></span></div>' +
+      '</div>' +
+      '<nav class="guided-sheet-step-navigation" aria-label="Study stages">' +
       STEP_IDS.map((id, i) =>
         '<button type="button" data-guided-step="' + id + '"><span class="guided-sheet-step-number">' +
         (i + 1) + '</span><span class="guided-sheet-step-copy"><span>' + STEP_LABELS[i] +
@@ -103,6 +127,17 @@
       '<button type="button" class="guided-sheet-review-missed" data-guided-review-unanswered>Review unanswered questions</button>';
     quiz.insertAdjacentElement('afterend', finish);
 
+    // Use the existing ordered sheet navigation, not a second hard-coded list.
+    // When the current sheet is the final one, the follow-up opens flashcards.
+    const nextSheet = document.querySelector('#studyNav .sheet-route-pager > a:last-child');
+    const followup = document.createElement('a');
+    followup.className = 'guided-sheet-followup';
+    followup.href = nextSheet?.getAttribute('href') || '../?page=lessons';
+    followup.textContent = nextSheet
+      ? 'Next study sheet: ' + nextSheet.textContent.replace(/\s*→\s*$/, '').trim() + ' →'
+      : 'Continue to flashcards →';
+    finish.querySelector('[data-guided-review-unanswered]').before(followup);
+
     const pager = document.createElement('div');
     pager.className = 'guided-sheet-controls';
     pager.innerHTML = '<span class="guided-sheet-controls-status" aria-live="polite"></span>' +
@@ -115,6 +150,9 @@
     const status = steps.querySelector('.guided-sheet-position');
     const title = steps.querySelector('.guided-sheet-current-title');
     const instruction = steps.querySelector('.guided-sheet-instruction');
+    const progressCount = steps.querySelector('.guided-sheet-progress-count');
+    const progressTrack = steps.querySelector('.guided-sheet-progress-track');
+    const progressFill = steps.querySelector('.guided-sheet-progress-fill');
     const previousButton = pager.querySelector('[data-guided-action="back"]');
     const nextButton = pager.querySelector('[data-guided-action="next"]');
     const controlsStatus = pager.querySelector('.guided-sheet-controls-status');
@@ -133,9 +171,9 @@
     }
     function show() {
       const step = state.step;
-      const sectionList = step === 'learn' ? learn : examples;
-      const index = step === 'learn' ? state.learn : state.examples;
       const practice = step === 'practise';
+      if (step === 'learn' && !state.visitedLearn.includes(state.learn)) state.visitedLearn.push(state.learn);
+      if (step === 'examples' && !state.visitedExamples.includes(state.examples)) state.visitedExamples.push(state.examples);
       for (const [i, panel] of learn.entries()) panel.hidden = !(step === 'learn' && i === state.learn);
       for (const [i, panel] of examples.entries()) panel.hidden = !(step === 'examples' && i === state.examples);
       quiz.hidden = !(practice && !state.finished);
@@ -143,8 +181,6 @@
       for (const [i, question] of questions.entries()) {
         question.hidden = !(practice && !state.finished && i === state.question);
       }
-      for (const paragraph of intro) paragraph.hidden = !(step === 'learn' && state.learn === 0);
-
       for (const button of steps.querySelectorAll('[data-guided-step]')) {
         if (button.dataset.guidedStep === step) button.setAttribute('aria-current', 'step');
         else button.removeAttribute('aria-current');
@@ -152,6 +188,13 @@
 
       const pos = STEP_IDS.indexOf(step);
       const stat = stats();
+      const totalActivities = learn.length + examples.length + questions.length;
+      const covered = state.visitedLearn.length + state.visitedExamples.length + stat.attempted;
+      progressCount.textContent = covered + ' of ' + totalActivities + ' activities';
+      progressTrack.setAttribute('aria-valuenow', String(covered));
+      progressTrack.setAttribute('aria-valuemax', String(totalActivities));
+      progressTrack.setAttribute('aria-valuetext', covered + ' of ' + totalActivities + ' activities viewed or answered');
+      progressFill.style.width = (100 * covered / totalActivities).toFixed(1) + '%';
       const count = step === 'learn' ? learn.length : step === 'examples' ? examples.length : questions.length;
       const current = step === 'learn' ? state.learn : step === 'examples' ? state.examples : state.question;
       const unit = practice ? 'Question' : 'Part';
@@ -169,7 +212,7 @@
       previousButton.textContent = practice && state.finished ? 'Back to questions' : first ? 'Previous' : 'Back';
       if (step === 'learn') nextButton.textContent = state.learn < learn.length - 1 ? 'Next part' : 'Next: Examples';
       if (step === 'examples') nextButton.textContent = state.examples < examples.length - 1 ? 'Next example' : 'Next: Practise';
-      if (practice) nextButton.textContent = state.finished ? 'Restart practice' :
+      if (practice) nextButton.textContent = state.finished ? 'Review from start' :
         state.question < questions.length - 1 ? 'Next question' : 'Finish practice';
       finishTitle.textContent = stat.attempted === questions.length ? 'Practice complete' : 'Practice summary';
       finishScore.textContent = stat.correct + ' of ' + questions.length + ' correct';
@@ -178,6 +221,11 @@
         : 'You have attempted ' + stat.attempted + ' of ' + questions.length + ' questions.';
       reviewUnanswered.hidden = stat.firstUnanswered < 0;
       remember(state);
+    }
+    function focusCurrent() {
+      title.focus({preventScroll:true});
+      // Every stage starts at the same viewport anchor, even if content above differs.
+      steps.scrollIntoView({block:'start',behavior:'auto'});
     }
     function move(action) {
       if (action === 'back') {
@@ -204,8 +252,7 @@
         } else state.finished = true;
       }
       show();
-      title.focus({preventScroll: true});
-      steps.scrollIntoView({block:'start', behavior:'auto'});
+      focusCurrent();
     }
 
     steps.addEventListener('click', event => {
@@ -214,7 +261,7 @@
       state.step = button.dataset.guidedStep;
       state.finished = false;
       show();
-      title.focus({preventScroll:true});
+      focusCurrent();
     });
     pager.addEventListener('click', event => {
       const button = event.target.closest('[data-guided-action]');
@@ -227,8 +274,7 @@
       state.question = missing;
       state.finished = false;
       show();
-      title.focus({preventScroll:true});
-      steps.scrollIntoView({block:'start',behavior:'auto'});
+      focusCurrent();
     });
     // Existing answer and hint handlers remain unchanged; just refresh progress labels.
     article.addEventListener('click', event => {

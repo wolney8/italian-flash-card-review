@@ -42,3 +42,19 @@ assert.ok(html.indexOf('guided-sheet-pilot-v1.js')>html.indexOf('study-recovery-
 assert.ok(html.indexOf('guided-sheet-pilot-v1.js')>html.indexOf('study-editorial-v1.js'),'Run pilot after bilingual decoration');
 console.log('PASS pilot targets the intended sheet only ('+target.study_sections.length+' content sections, '+target.questions.length+' questions).');
 console.log('PASS learning stages, saved progress, standalone answer checker, fallback and print support.');
+
+// Layout stability, completion pathway and honest overall progress.
+assert.match(script, /firstHeading\.insertAdjacentElement\('afterend', teachingNote\)/, 'Teaching note must move into Learn content, not shift the header');
+assert.doesNotMatch(script, /paragraph\.hidden\s*=\s*!\(step === 'learn'/, 'The header must not change height across steps');
+assert.match(script, /function focusCurrent\(\)/, 'A uniform step scroll anchor is required');
+assert.match(script, /steps\.scrollIntoView\(\{block:'start',behavior:'auto'\}\)/, 'Each transition must restore the same position');
+assert.match(script, /visitedLearn/, 'Track lesson sections visited');
+assert.match(script, /visitedExamples/, 'Track examples visited');
+assert.match(script, /const covered = state\.visitedLearn\.length \+ state\.visitedExamples\.length \+ stat\.attempted/, 'Count covered activities without counting skipped questions');
+assert.match(script, /progressTrack\.setAttribute\('aria-valuenow'/, 'Expose accessible progress values');
+assert.match(script, /nextSheet\?\.getAttribute\('href'\) \|\| '\.\.\/\?page=lessons'/, 'Next study sheet must fall back to flashcards on the final sheet');
+assert.match(script, /finish\.querySelector\('\[data-guided-review-unanswered\]'\)\.before\(followup\)/, 'Completion screen must offer the next action');
+assert.match(style, /guided-sheet-current\{min-height:119px\}/, 'Reserve consistent heading space');
+assert.match(style, /guided-sheet-progress-fill/, 'Missing visual progress bar');
+assert.match(style, /guided-study-pilot \.study-pack-sheet > \.hero \.sheet-progress/, 'Hide duplicate legacy progress meter');
+console.log('PASS stable scroll anchor, activity progress, completion link, and final-sheet flashcard fallback.');

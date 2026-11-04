@@ -116,3 +116,21 @@ html[data-italian-theme="dark"] .guided-sheet-controls .guided-sheet-primary {
   .guided-study-pilot .study-pack-sheet .hero > p[hidden] {display:block!important}
   .guided-study-pilot .guided-sheet-tips .quiz-intro {display:block!important}
 }
+
+/* Steady frame: no stage-specific text in the header or duplicated quiz meter. */
+.guided-study-pilot .study-pack-sheet > .hero .sheet-progress{display:none!important}
+.guided-sheet-teaching-note{margin:14px 0 18px;padding:14px 16px;background:var(--paper2);border-left:3px solid var(--mint);border-radius:10px;color:var(--ink);font-size:16px;line-height:1.55}
+.guided-sheet-teaching-note p{margin:0}
+.guided-sheet-current{min-height:119px}
+.guided-sheet-progress{margin:2px 0 16px}
+.guided-sheet-progress-label{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 8px;font:400 14px/1.4 system-ui,-apple-system,sans-serif;color:var(--muted)}
+.guided-sheet-progress-count{font-variant-numeric:tabular-nums}
+.guided-sheet-progress-track{height:10px;overflow:hidden;border:1px solid var(--line);border-radius:999px;background:var(--paper2)}
+.guided-sheet-progress-fill{display:block;width:0;height:100%;border-radius:inherit;background:var(--mint);transition:width .18s ease}
+.guided-sheet-followup{display:inline-flex;align-items:center;min-height:48px;margin:15px 12px 8px 0;padding:11px 17px;max-width:100%;border:1px solid var(--mint);border-radius:10px;background:var(--mint);color:var(--paper)!important;text-decoration:none;font:500 15px/1.4 system-ui,-apple-system,sans-serif}
+html[data-italian-theme="dark"] .guided-sheet-followup{color:#1b2920!important}
+.guided-sheet-followup:hover{filter:brightness(.95)}
+.guided-sheet-followup:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+@media(max-width:680px){.guided-sheet-current{min-height:134px}.guided-sheet-progress-label{font-size:13px}.guided-sheet-followup{width:100%;justify-content:center;text-align:center}}
+@media(prefers-reduced-motion:reduce){.guided-sheet-progress-fill{transition:none}}
+@media print{.guided-sheet-teaching-note{background:transparent;border:0;padding:0}.guided-study-pilot .study-pack-sheet > .hero .sheet-progress{display:none!important}}
