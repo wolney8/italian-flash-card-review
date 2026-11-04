@@ -46,7 +46,7 @@ console.log('PASS learning stages, saved progress, standalone answer checker, fa
 // Layout stability, completion pathway and honest overall progress.
 assert.match(script, /firstHeading\.insertAdjacentElement\('afterend', teachingNote\)/, 'Teaching note must move into Learn content, not shift the header');
 assert.doesNotMatch(script, /paragraph\.hidden\s*=\s*!\(step === 'learn'/, 'The header must not change height across steps');
-assert.match(script, /function focusCurrent\(\)/, 'A uniform step scroll anchor is required');
+assert.match(script, /function focusCurrent\(previousQuestionTop = null\)/, 'Question-aware focus and scroll anchor required');
 assert.match(script, /steps\.scrollIntoView\(\{block:'start',behavior:'instant'\}\)/, 'Stage transitions must use an immediate scroll');
 assert.match(script, /focusCurrent\(oldQuestionTop\)/, 'Question navigation must retain its previous viewport anchor');
 assert.match(script, /currentQuestion\.getBoundingClientRect\(\)/, 'Question navigation must measure the current question');
