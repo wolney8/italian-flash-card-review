@@ -65,6 +65,10 @@ function auditClient(){
     const newTop=current().getBoundingClientRect().top;
     result.questionInView=newTop>=8&&newTop<=window.innerHeight-90;
     result.questionMovement=Math.round(newTop-oldTop);
+    result.questionBefore=Math.round(oldTop);
+    result.questionAfter=Math.round(newTop);
+    result.viewportHeight=window.innerHeight;
+    result.scrollPosition=Math.round(window.scrollY);
     const controls=[...document.querySelectorAll('.guided-sheet-controls-buttons button')];
     result.pairedButtons=controls.length===2&&Math.abs(controls[0].getBoundingClientRect().top-controls[1].getBoundingClientRect().top)<=3;
     result.buttonWidths=controls.map(b=>Math.round(b.getBoundingClientRect().width));
