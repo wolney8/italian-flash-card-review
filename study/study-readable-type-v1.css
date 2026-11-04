@@ -1,0 +1,119 @@
+/* Study sheets: readable type hierarchy without heavy display weights.
+   The shared site header is intentionally excluded. */
+.study-pack-sheet,
+.study-sheet-library .sheet-library-overview,
+.study-sheet-library .sheet-library-category,
+#studyNav,
+.study-course-shell {
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.study-pack-sheet .hero h1 {
+  font-weight:500;
+  letter-spacing:-.025em;
+}
+.study-pack-sheet .panel h2 {
+  font-family:inherit;
+  font-size:clamp(23px,2.65vw,31px);
+  font-weight:500;
+  line-height:1.32;
+  letter-spacing:-.015em;
+}
+.study-pack-sheet .panel .eyebrow,
+.study-pack-sheet .hero .eyebrow {
+  font-weight:500;
+  letter-spacing:.07em;
+}
+.study-pack-sheet .question-heading {
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+  font-weight:500;
+}
+.study-pack-sheet .question-heading label {
+  font-family:inherit;
+  font-size:19px;
+  font-weight:500;
+  line-height:1.48;
+  letter-spacing:0;
+}
+.study-pack-sheet .question-heading label strong {
+  font-weight:600;
+}
+.study-pack-sheet .question-number {
+  font-weight:600;
+}
+.study-pack-sheet :is(.hint-button,.check-button) {
+  font-family:inherit;
+  font-weight:500;
+  line-height:1.4;
+}
+.study-pack-sheet :is(.hint-button,.check-button) .editorial-label {
+  gap:2px;
+  align-items:center;
+}
+.study-pack-sheet :is(.hint-button,.check-button) .editorial-label-main {
+  font-family:inherit;
+  font-size:15px;
+  font-weight:500;
+  font-style:normal;
+  line-height:1.35;
+}
+.study-pack-sheet :is(.hint-button,.check-button) .editorial-label-sub {
+  font-family:inherit;
+  font-size:12px;
+  font-weight:400;
+  font-style:normal;
+  line-height:1.4;
+}
+.study-pack-sheet .check-button:disabled {
+  opacity:.7;
+}
+.study-pack-sheet .quiz-intro {
+  font-size:17px;
+  font-weight:400;
+  line-height:1.6;
+}
+.study-pack-sheet .quiz-intro strong,
+.study-pack-sheet .model-answer strong {
+  font-weight:600;
+}
+.study-pack-sheet .feedback {
+  font-weight:600;
+}
+.study-pack-sheet .actions .button,
+.study-course-shell .study-mode-button,
+.study-course-shell .study-session-reset,
+.study-course-shell .study-course-copy strong {
+  font-weight:500;
+}
+.study-sheet-library .sheet-library-overview h2,
+.study-sheet-library .sheet-library-category h3 {
+  font-family:inherit;
+  font-weight:500;
+  letter-spacing:-.01em;
+}
+.study-sheet-library .sheet-library-item strong,
+.study-sheet-library .sheet-library-item strong .editorial-label-main,
+.study-sheet-library .sheet-library-category h3 .editorial-label-main {
+  font-family:inherit;
+  font-weight:500;
+}
+#studyNav .sheet-route-label,
+#studyNav .sheet-route-select-label {
+  font-weight:500;
+}
+#studyNav :is(.sheet-route-back,.sheet-route-pager a,.sheet-route-categories a) {
+  font-weight:500;
+}
+#studyNav :is(.sheet-route-back,.sheet-route-pager a,.sheet-route-categories a) .editorial-label-main {
+  font-weight:500;
+}
+#studyNav :is(.sheet-route-back,.sheet-route-pager a,.sheet-route-categories a) .editorial-label-sub {
+  font-size:12px;
+  font-weight:400;
+  font-style:normal;
+}
+@media(max-width:720px) {
+  .study-pack-sheet .question-heading label {font-size:18px}
+  .study-pack-sheet .panel h2 {font-size:clamp(22px,5vw,27px)}
+}
