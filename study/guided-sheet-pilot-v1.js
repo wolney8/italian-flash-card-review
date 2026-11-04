@@ -1,9 +1,12 @@
-/* Pilot: one focused activity at a time for Di, da, dove and pronouns.
-   Progressive enhancement: if this script cannot initialise, the original sheet works. */
+/* Guided learning for all nine Study Sheets.
+   Progressive enhancement: the original complete sheet remains usable on error. */
 (function () {
   'use strict';
 
-  const TARGET = 'di-da-dove-pronouns';
+  const TARGET = new URLSearchParams(location.search).get('sheet')
+    || decodeURIComponent(location.hash.slice(1));
+  if (!TARGET) return; // Library remains unchanged.
+  // Preserve existing pilot session key, extending it per topic without losing progress.
   const VIEW_KEY = 'italianGuidedSheetPilotV1:' + TARGET;
   const STEP_IDS = ['learn', 'examples', 'practise'];
   const STEP_LABELS = ['Learn', 'Examples', 'Practise'];
@@ -17,8 +20,6 @@
     'Look for patterns in the examples, then try a question.',
     'Choose or type an answer, then select Check answer.'
   ];
-  const requested = new URLSearchParams(location.search).get('sheet') || decodeURIComponent(location.hash.slice(1));
-  if (requested !== TARGET) return; // Other eight sheets and the library remain unchanged.
   const root = document.getElementById('studySheets');
   if (!root) return;
 
@@ -40,21 +41,21 @@
     return null;
   }
   function initialise() {
-    const article = root.querySelector('.study-pack-sheet#' + TARGET);
-    if (!article) return false;
+    const article = root.querySelector('.study-pack-sheet');
+    if (!article || article.id !== TARGET) return false;
     if (article.dataset.guidedPilot === 'ready') return true;
 
     const hero = article.querySelector(':scope > header.hero');
     const quiz = article.querySelector(':scope > section[data-study-quiz]');
     const panels = [...article.querySelectorAll(':scope > section.panel')].filter(p => p !== quiz);
-    const learn = panels.filter(p => p.querySelector('.eyebrow')?.textContent.trim() !== 'Patterns');
-    let examples = panels.filter(p => p.querySelector('.eyebrow')?.textContent.trim() === 'Patterns');
-    // Some sheets (including this pilot) contain only Study tables, not a Patterns section.
-    // Keep the first explanation in Learn and put the remaining comparison tables in Examples.
-    if (!examples.length && learn.length > 1) examples = learn.splice(1);
+    // Every approved sheet contains 2–5 teaching sections.
+    // Keep source order: the first introduces the topic; the remainder are examples
+    // and pattern references, regardless of whether their source label says Study or Patterns.
+    const learn = panels.slice(0, 1);
+    const examples = panels.slice(1);
     const questions = quiz ? [...quiz.querySelectorAll('.quiz-question')] : [];
     if (!hero || !quiz || !learn.length || !examples.length || !questions.length) {
-      if (hero && quiz) console.warn('Guided study pilot: required content groups missing.');
+      if (hero && quiz) console.warn('Guided Study Sheet: missing content group for ' + TARGET);
       return false; // Existing full-length sheet remains available.
     }
 

@@ -2,7 +2,7 @@
 'use strict';
 /* Browser smoke: exercise the actual static site in Chromium, without dependencies. */
 const assert=require('node:assert/strict');
-const fs=require('node:fs'),http=require('node:http'),path=require('node:path');
+const fs=require('node:fs'),http=require('node:http'),path=require('node:path'),zlib=require('node:zlib');
 const {spawn,spawnSync}=require('node:child_process');
 const root=path.resolve(__dirname,'..');
 
@@ -17,7 +17,13 @@ function auditClient(){
     }
     if(!query('.guided-sheet-steps'))throw Error('Guided pilot did not initialise');
     const styles=selector=>getComputedStyle(query(selector)).display;
+    const article=query('.study-pack-sheet');
+    const teaching=[...article.querySelectorAll(':scope > section.panel:not([data-study-quiz])')];
+    const questions=[...article.querySelectorAll('.quiz-question')];
     const result={
+      slug:article.id,
+      teachingSections:teaching.length,
+      questions:questions.length,
       viewport:window.innerWidth,
       shellHidden:styles('.study-course-shell')==='none',
       legacyHeaderHidden:styles('main > header.hero')==='none',
@@ -28,10 +34,19 @@ function auditClient(){
       breadcrumbsEnglish:!query('.course-site-breadcrumb .editorial-label')
     };
     const selector=query('.guided-sheet-steps'),positions=[];
+    result.progressTotal=Number(query('.guided-sheet-progress-track')?.getAttribute('aria-valuemax'));
+    result.expectedProgressTotal=teaching.length+questions.length;
+    result.initialProgressLabel=query('.guided-sheet-progress-count')?.textContent;
+    result.sourceOrder=teaching.map(p=>p.querySelector('h2')?.textContent.trim());
     for(const stage of ['learn','examples','practise','learn']){
       query('[data-guided-step="'+stage+'"]').click();
       await frames();await sleep(40);
       positions.push(Math.round(selector.getBoundingClientRect().top));
+      const visible=teaching.filter(panel=>!panel.hidden);
+      const activeQuestions=questions.filter(question=>!question.hidden);
+      if(stage==='learn')result.learnOneSection=visible.length===1&&visible[0]===teaching[0];
+      if(stage==='examples')result.examplesOneSection=visible.length===1&&visible[0]===teaching[1];
+      if(stage==='practise')result.practiseOneQuestion=activeQuestions.length===1&&visible.length===0;
     }
     result.stagePositions=positions;
     result.stageStable=Math.max(...positions)-Math.min(...positions)<=5;
@@ -51,6 +66,8 @@ function auditClient(){
     result.pairedButtons=controls.length===2&&Math.abs(controls[0].getBoundingClientRect().top-controls[1].getBoundingClientRect().top)<=3;
     result.buttonWidths=controls.map(b=>Math.round(b.getBoundingClientRect().width));
     result.toolbarOverflow=query('.study-detail-tools').scrollWidth-query('.study-detail-tools').clientWidth;
+    result.hasNextAction=!!query('.guided-sheet-followup')?.getAttribute('href');
+    result.nextHref=query('.guided-sheet-followup')?.getAttribute('href');
     query('.study-detail-tools [data-study-mode="review"]').click();await sleep(50);
     result.reviewPressed=query('.study-detail-tools [data-study-mode="review"]')?.getAttribute('aria-pressed')==='true';
     query('.study-detail-tools [data-study-mode="learn"]').click();await sleep(50);
@@ -94,11 +111,11 @@ function chrome(){
   }
   throw Error('Chromium/Chrome not installed');
 }
-function run(browser,base,label,size){
+function run(browser,base,label,size,slug){
   return new Promise((resolve,reject)=>{
     const args=['--headless=new','--no-sandbox','--disable-gpu','--disable-dev-shm-usage',
       '--disable-background-networking','--hide-scrollbars','--virtual-time-budget=12000',
-      '--window-size='+size,'--dump-dom',base+'/study/study-sheets.html?mode=learn&sheet=di-da-dove-pronouns'];
+      '--window-size='+size,'--dump-dom',base+'/study/study-sheets.html?mode=learn&sheet='+encodeURIComponent(slug)];
     const child=spawn(browser,args,{env:{...process.env,HOME:'/tmp'}});
     let stdout='',stderr='';
     const timer=setTimeout(()=>child.kill('SIGKILL'),35000);
@@ -127,19 +144,35 @@ function run(browser,base,label,size){
   try{
     const base='http://127.0.0.1:'+server.address().port;
     const browser=chrome();
+    const packed=fs.readFileSync(path.join(root,'study/study-sheets-v5.js'),'utf8');
+    const source=packed.match(/const B="([^"]+)"/);
+    assert.ok(source,'Study Sheet data missing');
+    const sheets=JSON.parse(zlib.gunzipSync(Buffer.from(source[1],'base64')).toString('utf8'));
+    assert.equal(sheets.length,9,'Nine sheets must be represented');
     for(const [name,size] of [['desktop','1280,900'],['mobile','430,840']]){
-      const result=await run(browser,base,name,size);
-      console.log(name,JSON.stringify(result));
-      assert.ok(result.ok,name+' error: '+result.error);
-      for(const key of ['shellHidden','legacyHeaderHidden','sheetTitleVisible','toolbar',
-        'print','breadcrumbsEnglish','stageStable','questionInView','pairedButtons',
-        'reviewPressed','learnPressed']){
-        assert.equal(result[key],true,name+': '+key+' failed');
+      for(const sheet of sheets){
+        const result=await run(browser,base,name,size,sheet.slug);
+        console.log(name+' '+sheet.slug,JSON.stringify(result));
+        assert.ok(result.ok,name+'/'+sheet.slug+' error: '+result.error);
+        for(const key of ['shellHidden','legacyHeaderHidden','sheetTitleVisible','toolbar',
+          'print','breadcrumbsEnglish','stageStable','questionInView','pairedButtons',
+          'reviewPressed','learnPressed','learnOneSection','examplesOneSection',
+          'practiseOneQuestion','hasNextAction']){
+          assert.equal(result[key],true,name+'/'+sheet.slug+': '+key+' failed');
+        }
+        assert.equal(result.icons,4,'Expected 4 toolbar icons');
+        assert.equal(result.slug,sheet.slug,'Wrong sheet rendered');
+        assert.equal(result.teachingSections,sheet.study_sections.length,'Teaching sections lost');
+        assert.equal(result.questions,sheet.questions.length,'Questions lost');
+        assert.equal(result.progressTotal,result.expectedProgressTotal,'Progress denominator incorrect');
+        assert.deepEqual(result.sourceOrder,sheet.study_sections.map(s=>s.title),'Teaching content order changed');
+        assert.ok(result.toolbarOverflow<=3,'Toolbar overflows on '+name);
+        assert.ok(result.buttonWidths.every(w=>w>70),'Navigation buttons too narrow on '+name);
+        const idx=sheets.findIndex(s=>s.slug===sheet.slug);
+        // Sheet navigation follows the category order rather than source data order.
+        if(idx===sheets.length-1)assert.ok(result.nextHref?.startsWith('../?page=lessons'),'Final sheet must lead to Flashcards');
       }
-      assert.equal(result.icons,4,'Expected 4 toolbar icons');
-      assert.ok(result.toolbarOverflow<=3,'Toolbar overflows on '+name);
-      assert.ok(result.buttonWidths.every(w=>w>70),'Navigation buttons too narrow on '+name);
     }
-    console.log('PASS real desktop and mobile Chromium interaction smoke.');
+    console.log('PASS all nine Study Sheets in desktop and narrow/mobile Chromium.');
   }finally{server.close();}
 })().catch(error=>{console.error(error.stack||error);process.exitCode=1;server.close();});
