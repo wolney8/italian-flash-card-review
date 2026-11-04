@@ -1,0 +1,118 @@
+/* Three-stage guided pilot: Di, da, dove and pronouns only. */
+.guided-study-pilot.study-sheet-detail main > header.hero > h1,
+.guided-study-pilot .sheet-route-pager,
+.guided-study-pilot .study-pack-sheet .panel .eyebrow,
+.guided-study-pilot .study-pack-sheet [data-study-quiz] > h2,
+.guided-study-pilot .study-pack-sheet [data-study-quiz] > .quiz-summary {
+  display:none;
+}
+ .guided-study-pilot .study-pack-sheet .hero .actions a[hidden],
+.guided-study-pilot .study-pack-sheet [hidden],
+.guided-study-pilot .guided-sheet-finish[hidden],
+.guided-study-pilot .guided-sheet-review-missed[hidden] {
+  display:none!important;
+}
+.guided-study-pilot .study-pack-sheet .hero {margin-bottom:12px}
+.guided-study-pilot .study-pack-sheet .hero h1 {
+  font-size:clamp(25px,3.5vw,36px);
+  font-weight:500;
+}
+.guided-sheet-steps {margin:16px 0 10px;scroll-margin-top:18px}
+.guided-sheet-step-navigation {
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;
+}
+.guided-sheet-step-navigation button {
+  display:flex;align-items:center;gap:10px;min-width:0;
+  padding:13px;border:1px solid var(--line);border-radius:13px;
+  background:var(--paper);color:var(--ink);text-align:left;
+  font:400 15px/1.35 system-ui,-apple-system,sans-serif;cursor:pointer;
+}
+.guided-sheet-step-navigation button[aria-current="step"] {
+  background:var(--paper2);border-color:var(--mint);
+  box-shadow:inset 0 0 0 1px var(--mint);
+}
+.guided-sheet-step-navigation button:focus-visible,
+.guided-sheet-controls button:focus-visible,
+.guided-sheet-review-missed:focus-visible,
+.guided-sheet-tips summary:focus-visible {
+  outline:3px solid var(--pink);outline-offset:3px;
+}
+.guided-sheet-step-number {
+  display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;
+  border:1px solid var(--line);border-radius:50%;font-size:13px;font-weight:500;
+}
+.guided-sheet-step-navigation [aria-current="step"] .guided-sheet-step-number {
+  background:var(--mint);border-color:var(--mint);color:var(--paper);
+}
+html[data-italian-theme="dark"] .guided-sheet-step-navigation [aria-current="step"] .guided-sheet-step-number {
+  color:#1b2920;
+}
+.guided-sheet-step-copy {display:flex;flex-direction:column;min-width:0;gap:2px}
+.guided-sheet-step-copy>span {font-weight:500}
+.guided-sheet-step-copy small {
+  color:var(--muted);font-size:12px;font-weight:400;line-height:1.4;
+}
+.guided-sheet-current {
+  padding:18px 4px 9px;
+}
+.guided-sheet-position {
+  margin:0;color:var(--muted);font-size:13px;font-weight:400;
+}
+.guided-sheet-current-title {
+  margin:4px 0 3px;
+  font:500 clamp(23px,3vw,31px)/1.25 system-ui,-apple-system,sans-serif;
+}
+.guided-sheet-current-title:focus {outline:none}
+.guided-sheet-instruction {margin:0;color:var(--muted);font-size:15px}
+.guided-study-pilot .study-pack-sheet .panel {
+  margin:12px 0 14px;
+}
+.guided-sheet-controls {
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:16px 0;margin-top:8px;border-top:1px solid var(--line);
+}
+.guided-sheet-controls-status {
+  font-size:13px;color:var(--muted);
+}
+.guided-sheet-controls-buttons {display:flex;gap:9px;flex-wrap:wrap}
+.guided-sheet-controls button,.guided-sheet-review-missed {
+  min-height:44px;padding:10px 16px;
+  border:1px solid var(--line);border-radius:10px;
+  background:var(--paper2);color:var(--ink);cursor:pointer;
+  font:500 14px/1.3 system-ui,-apple-system,sans-serif;
+}
+.guided-sheet-controls button:disabled {opacity:.5;cursor:not-allowed}
+.guided-sheet-controls .guided-sheet-primary {
+  background:var(--mint);border-color:var(--mint);color:var(--paper);
+}
+html[data-italian-theme="dark"] .guided-sheet-controls .guided-sheet-primary {
+  color:#1b2920;
+}
+.guided-study-pilot .quiz-list {margin-top:13px}
+.guided-sheet-tips {
+  background:var(--paper2);border:1px solid var(--line);
+  border-radius:12px;margin:5px 0 16px;
+}
+.guided-sheet-tips summary {padding:12px 15px;cursor:pointer;color:var(--ink);font-size:14px;font-weight:500}
+.guided-sheet-tips .quiz-intro {
+  margin:0 12px 12px;padding:12px;
+  font-size:15px;line-height:1.5;
+}
+.guided-sheet-finish-score {font-size:23px;font-weight:500;color:var(--ink)}
+.guided-sheet-finish-explanation {color:var(--muted)}
+@media(max-width:680px){
+  .guided-sheet-step-navigation {gap:6px}
+  .guided-sheet-step-navigation button {padding:9px 7px;gap:6px;flex-direction:column;text-align:center}
+  .guided-sheet-step-navigation small {font-size:11px}
+  .guided-sheet-step-copy {align-items:center}
+  .guided-sheet-controls {flex-direction:column;align-items:stretch}
+  .guided-sheet-controls-buttons {display:grid;grid-template-columns:1fr 1fr}
+}
+@media print {
+  .guided-sheet-steps,.guided-sheet-controls,.guided-sheet-tips summary,.guided-sheet-finish,
+  .guided-study-pilot .study-pack-sheet .hero .actions {display:none!important}
+  .guided-study-pilot .study-pack-sheet > .panel[hidden],
+  .guided-study-pilot .study-pack-sheet .quiz-question[hidden] {display:block!important}
+  .guided-study-pilot .study-pack-sheet .hero > p[hidden] {display:block!important}
+  .guided-study-pilot .guided-sheet-tips .quiz-intro {display:block!important}
+}
