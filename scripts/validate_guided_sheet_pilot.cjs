@@ -14,25 +14,34 @@ const key=packed.match(/\bconst B="([^"]+)"/);
 assert.ok(key,'Cannot read existing sheet data');
 const sheets=JSON.parse(zlib.gunzipSync(Buffer.from(key[1],'base64')).toString('utf8'));
 assert.ok(Array.isArray(sheets),'Sheet data must be an array');
-const target=sheets.find(s=>s.slug==='di-da-dove-pronouns');
-assert.ok(target,'Pilot sheet missing');
-// The pilot source contains THREE Study tables and no Patterns sections.
-assert.equal(target.study_sections.length,3,'Expected three sections in this pilot lesson');
-assert.deepEqual(target.study_sections.map(s=>s.type),['table','table','table'],'Pilot section types changed');
-const studySections=target.study_sections.filter(s=>s.type!=='bullets');
-const patterns=target.study_sections.filter(s=>s.type==='bullets');
-const learnCount=patterns.length?studySections.length:1;
-const examplesCount=patterns.length?patterns.length:studySections.length-1;
-assert.ok(learnCount>=1 && examplesCount>=1,'Real lesson content must populate Learn and Examples');
-assert.match(script,/examples = learn\.splice\(1\)/,'Guided pilot must split Study-only sheets into Learn and Examples');
-assert.ok(target.questions.length>1,'Pilot needs multiple questions');
-assert.match(script,/requested !== TARGET/,'Pilot must not change other sheets');
+const expectedSlugs=[
+ 'conversation-foundations','di-da-dove-pronouns','subject-pronouns-present-tense',
+ 'known-verbs-and-forms','word-jobs-sentence-building','avere-numbers-family',
+ 'plural-articles','c-g-sounds-and-spelling','mixed-review-challenge'
+];
+assert.equal(sheets.length,expectedSlugs.length,'All nine Study Sheets must remain available');
+assert.deepEqual(new Set(sheets.map(s=>s.slug)),new Set(expectedSlugs),'Guide must cover every approved sheet');
+for(const sheet of sheets){
+ assert.ok(sheet.study_sections.length>=2,sheet.slug+' must have a Learn section and Examples section');
+ assert.ok(sheet.questions.length>=1,sheet.slug+' must have practice questions');
+ assert.ok(sheet.study_sections.every(s=>['table','bullets','town_grid','number_grid'].includes(s.type)),
+   sheet.slug+' has a new section type: update the guided renderer first');
+ const learn=sheet.study_sections.slice(0,1),examples=sheet.study_sections.slice(1);
+ assert.equal(learn.length,1,'One focused Learn section per sheet');
+ assert.equal(learn.length+examples.length,sheet.study_sections.length,'No learning sections lost');
+}
+assert.match(script,/const TARGET = new URLSearchParams\(location\.search\)\.get\('sheet'\)/,
+ 'Guide must determine active sheet from URL');
+assert.match(script,/article\.id !== TARGET/,'Only activate the matching sheet, not the library');
+assert.match(script,/const learn = panels\.slice\(0, 1\)/,'First teaching section is Learn');
+assert.match(script,/const examples = panels\.slice\(1\)/,'Remaining teaching sections are Examples');
+assert.doesNotMatch(script,/requested !== TARGET/,'No single-sheet pilot gate should remain');
 assert.match(script,/sessionStorage\.setItem\(VIEW_KEY/,'Pilot must remember position');
 assert.match(script,/question\.hidden\s*=/,'Pilot must show one question at a time');
 assert.match(script,/data-guided-step/,'Pilot must permit non-linear navigation');
 assert.match(script,/function stats\(/,'Pilot must display quiz progress');
 assert.match(script,/quiz\.hidden\s*=/,'Pilot must hide practice outside its step');
-assert.match(script,/return false/,'Pilot must preserve fallback');
+assert.match(script,/return false/,'Guided experience must preserve the original-page fallback');
 assert.match(script,/reviewUnanswered/,'Pilot must offer unanswered review');
 assert.match(style,/@media print/,'Printing must remain available');
 assert.match(style,/\.guided-study-pilot \.study-pack-sheet > \.panel\[hidden\]/,'Print must show all sections');
@@ -40,7 +49,7 @@ assert.match(html,/guided-sheet-pilot-v1\.css\?v=/,'Pilot CSS not loaded');
 assert.match(html,/guided-sheet-pilot-v1\.js\?v=/,'Pilot JS not loaded');
 assert.ok(html.indexOf('guided-sheet-pilot-v1.js')>html.indexOf('study-recovery-v1.js'),'Run pilot after existing progress restoration');
 assert.ok(html.indexOf('guided-sheet-pilot-v1.js')>html.indexOf('study-editorial-v1.js'),'Run pilot after bilingual decoration');
-console.log('PASS pilot targets the intended sheet only ('+target.study_sections.length+' content sections, '+target.questions.length+' questions).');
+console.log('PASS all nine approved sheets have ordered Learn, Examples and Practice content.');
 console.log('PASS learning stages, saved progress, standalone answer checker, fallback and print support.');
 
 // Layout stability, completion pathway and honest overall progress.
