@@ -241,7 +241,7 @@
       // This avoids sudden jumps when the next stage has less content.
       requestAnimationFrame(() => {
         const top=steps.getBoundingClientRect().top;
-        const safeMax=Math.min((window.innerHeight||document.documentElement.clientHeight)*0.45,300);
+        const safeMax=Math.max(160,(window.innerHeight||document.documentElement.clientHeight)-200);
         const stable=Number.isFinite(previousTop)&&previousTop>=12&&previousTop<=safeMax;
         if(!stable&&top>=12&&top<=safeMax)return;
         const target=stable?previousTop:16;
