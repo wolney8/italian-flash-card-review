@@ -12,7 +12,10 @@ function auditClient(){
   const query=s=>document.querySelector(s);
   async function test(){
     for(let i=0;i<150;i++){
-      if(document.body.classList.contains('guided-study-pilot')&&query('.study-detail-location-row'))break;
+      if(document.body.classList.contains('guided-study-pilot') &&
+         query('.study-detail-location-row .study-detail-tools') &&
+         query('.guided-sheet-steps') &&
+         query('.study-detail-tools [data-study-print]'))break;
       await sleep(40);
     }
     if(!query('.guided-sheet-steps'))throw Error('Guided pilot did not initialise');
