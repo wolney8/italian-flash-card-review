@@ -35,15 +35,33 @@
   function applyTheme(){dark=get(THEME_KEY,'light')!=='light';document.documentElement.dataset.italianTheme=dark?'dark':'light';document.documentElement.style.colorScheme=dark?'dark':'light';}
   function themeToggle(){set(THEME_KEY,dark?'light':'dark');applyTheme();renderHeader();}
   function labelToggle(){italianFirst=!italianFirst;set(LABEL_KEY,italianFirst?'it':'en');renderHeader();decoratePage();}
+  function studyMode(){
+    return new URLSearchParams(location.search).get('mode')==='review'?'review':'learn';
+  }
   function renderHeader(){
-    let header=document.getElementById('studyGuideHeader');if(!header){header=document.createElement('header');header.id='studyGuideHeader';header.className='study-guide-header';document.querySelector('main')?.insertAdjacentElement('beforebegin',header);}
-    header.innerHTML=`<a class="study-guide-brand" href="../?page=home"><span class="study-guide-mark" aria-hidden="true">it.</span><span><strong>Italian for Beginners</strong><small>BSE Course · Beginners · Semester 1</small></span></a><nav id="studyGuideNavigation" class="study-guide-navigation ${menuOpen?'is-open':''}" aria-label="Main navigation"><a href="../?page=home">${mapped('Home')}</a><a href="../?page=lessons">${mapped('Lessons')}</a><a href="study-sheets.html?mode=${new URLSearchParams(location.search).get('mode')==='review'?'review':'learn'}" aria-current="page">${mapped('Study sheets')}</a><button type="button" data-study-editorial-comment>${mapped('Comments')}</button></nav><div class="study-guide-tools"><button class="study-guide-language" type="button" data-study-editorial-language title="Switch label order" aria-label="Use ${italianFirst?'English':'Italian'} labels first"><span aria-hidden="true">⇄</span><span>${italianFirst?'IT · EN':'EN · IT'}</span></button><button type="button" class="study-guide-theme" data-study-editorial-theme title="Change colour theme" aria-label="Switch to ${dark?'light':'dark'} mode"><span aria-hidden="true">${dark?'☀':'☾'}</span><span>${dark?'Light':'Dark'}</span></button><button type="button" class="study-guide-menu" data-study-editorial-menu aria-expanded="${menuOpen}" aria-controls="studyGuideNavigation">☰ Menu</button></div>`;
+    let host=document.getElementById('studyGuideHeader');
+    if(!host){
+      host=document.createElement('div');
+      host.id='studyGuideHeader';
+      document.querySelector('main')?.insertAdjacentElement('beforebegin',host);
+    }
+    host.innerHTML=window.ItalianCourseChrome.header({
+      context:'study',current:'topics',mode:studyMode(),dark,italianFirst,menuOpen
+    });
   }
   function breadcrumb(){
-    let el=document.getElementById('studyGuideCrumbs');if(!el){el=document.createElement('nav');el.id='studyGuideCrumbs';el.className='study-guide-crumbs';el.setAttribute('aria-label','Breadcrumb');document.getElementById('studyGuideHeader')?.insertAdjacentElement('afterend',el);}
-    if(!el)return;
+    let host=document.getElementById('studyGuideCrumbs');
+    if(!host){
+      host=document.createElement('div');
+      host.id='studyGuideCrumbs';
+      document.getElementById('studyGuideHeader')?.insertAdjacentElement('afterend',host);
+    }
+    if(!host)return;
     const slug=currentSheet(),title=sheetTitle();
-    el.innerHTML=`<a href="../?page=home">${mapped('Home')}</a><span aria-hidden="true">›</span>${slug?`<a href="study-sheets.html?mode=${new URLSearchParams(location.search).get('mode')==='review'?'review':'learn'}">${mapped('Study sheets')}</a><span aria-hidden="true">›</span><span aria-current="page">${mapped(PAIRS[title]?title:'Study sheets')}</span>`:`<span aria-current="page">${mapped('Study sheets')}</span>`}`;
+    host.innerHTML=window.ItalianCourseChrome.breadcrumb({
+      homeHref:'../?page=home',
+      segments:slug?[{label:'Study sheets',href:'study-sheets.html?mode='+studyMode()},{label:title}]:[{label:'Study sheets'}]
+    });
   }
   function decoratePage(){
     breadcrumb();

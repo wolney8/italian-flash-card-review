@@ -155,26 +155,20 @@
     root.className = 'guided-experience';
     document.querySelector('.site-shell')?.prepend(root);
   }
-  function header() {
-    const current=state.page==='card'?'lessons':state.page;
-    return `<header class="guided-header editorial-header">
-      <a class="guided-brand" data-guide-to="home" href="?page=home"><span class="guided-brandmark" aria-hidden="true">it.</span><span><strong>Italian for Beginners</strong><small>BSE Course · Beginners · Semester 1</small></span></a>
-      <nav id="guidedNavigation" class="guided-navigation ${menuOpen?'is-open':''}" aria-label="Main navigation">
-        ${[['home','Home'],['lessons','Lessons'],['topics','Study sheets']].map(([key,label])=>`<a href="?page=${key}" data-guide-to="${key}" ${current===key?'aria-current="page"':''}>${uiLabel(label)}</a>`).join('')}
-        <button type="button" class="guided-nav-comment" data-guide-comment>${uiLabel('Give feedback')}</button>
-      </nav>
-      <div class="guided-tools">
-        <button class="guided-label-order" type="button" data-guide-label-order aria-label="Switch to ${italianFirst?'English':'Italian'} labels first" title="Switch label order"><span aria-hidden="true">⇄</span><span>${italianFirst?'IT · EN':'EN · IT'}</span></button>
-        <button class="guided-theme" type="button" data-guide-theme title="Change colour theme" aria-label="Switch to ${dark?'light':'dark'} mode"><span aria-hidden="true">${dark?'☀':'☾'}</span><span>${dark?'Light':'Dark'}</span></button>
-        <button class="guided-menu" type="button" data-guide-menu aria-controls="guidedNavigation" aria-expanded="${menuOpen}">☰ <span>Menu</span></button>
-      </div>
-    </header>`;
+  function header(){
+    return window.ItalianCourseChrome.header({
+      context:'guided',current:state.page,dark,italianFirst,menuOpen
+    });
   }
-  function crumbs(segments) {
-    return `<nav aria-label="Breadcrumb" class="guided-breadcrumb"><a data-guide-to="home" href="?page=home">${uiLabel('Home')}</a>${segments.map(segment=>{
-      const txt=segment.label.startsWith('Lesson ')?labelPair('Lezione '+segment.label.slice(7),segment.label):uiLabel(segment.label);
-      return `<span aria-hidden="true">›</span>${segment.to?`<a href="?page=${segment.to}" data-guide-to="${segment.to}">${txt}</a>`:`<span aria-current="page">${txt}</span>`}`;
-    }).join('')}</nav>`;
+  function crumbs(segments){
+    return window.ItalianCourseChrome.breadcrumb({
+      homeHref:'?page=home',homeRoute:true,
+      segments:segments.map(s=>({
+        label:s.label,
+        href:s.to?'?page='+encodeURIComponent(s.to):undefined,
+        route:s.to||undefined
+      }))
+    });
   }
   function coursePill() {return `<span class="guided-context">Beginners · Semester 1 of 3</span>`;}
   function home() {

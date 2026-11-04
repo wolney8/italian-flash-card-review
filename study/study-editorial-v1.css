@@ -99,3 +99,6 @@ html[data-italian-theme="light"] :is(
   font-weight:400;
   line-height:1.35;
 }
+
+/* Match the guided header's top alignment on individual study sheets. */
+body{padding-top:0}

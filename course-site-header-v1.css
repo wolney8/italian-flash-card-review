@@ -1,0 +1,40 @@
+/* Identical shared course header/navigation/breadcrumb styling on every screen. */
+.course-site-header{width:100%;max-width:1080px;margin:0 auto 16px;padding:22px 0 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:14px;color:var(--ink);font:500 16px/1.4 'Avenir Next',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.course-site-header *{box-sizing:border-box}
+.course-site-brand{display:flex;align-items:center;gap:12px;min-width:0;flex-shrink:0;color:var(--ink)!important;text-decoration:none}
+.course-site-brandmark{display:grid;place-items:center;width:43px;height:43px;flex:0 0 43px;background:var(--paper2);border:1px solid var(--line);border-radius:50%;color:var(--accent,var(--pink));font:600 21px/1 Georgia,serif}
+.course-site-brand-copy strong{display:block;font:600 23px/1.13 'Iowan Old Style',Georgia,serif;letter-spacing:-.03em;white-space:nowrap}
+.course-site-brand-copy small{display:block;margin-top:3px;color:var(--muted);font-size:12px;line-height:1.25}
+.course-site-navigation{display:flex;align-items:center;gap:5px;min-width:0}
+.course-site-navigation :is(a,button){display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;min-height:54px;padding:7px 10px;border:1px solid transparent;border-radius:10px;background:transparent;color:var(--ink);text-decoration:none;font-size:14px;font-weight:500;line-height:1.3;font-family:inherit;text-align:center;cursor:pointer;white-space:normal}
+.course-site-navigation :is(a,button):hover,.course-site-navigation a[aria-current="page"]{background:var(--paper2);border-color:var(--line)}
+.course-site-navigation .editorial-label{display:inline-flex;align-items:center;flex-direction:column;gap:2px;line-height:1.3;text-align:center;max-width:100%}
+.course-site-navigation .editorial-label-main{font-family:inherit;font-size:14px;line-height:1.3;font-weight:600}
+.course-site-navigation .editorial-label-sub{color:var(--muted);font-family:inherit;font-size:12px;line-height:1.35;font-weight:400;font-style:italic}
+.course-site-tools{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.course-site-tools button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:45px;padding:7px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font-size:13px;font-weight:500;line-height:1.35;font-family:inherit;white-space:nowrap;cursor:pointer}
+.course-site-tools button:hover{background:var(--paper2);border-color:var(--accent,var(--pink))}
+.course-site-menu{display:none!important}
+.course-site-breadcrumb{display:flex;flex-wrap:wrap;align-items:center;gap:9px;width:100%;max-width:1080px;margin:0 auto 20px;color:var(--muted);font:400 14px/1.4 'Avenir Next',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+.course-site-breadcrumb a{color:var(--accent,var(--pink));font-weight:500;text-decoration:none}
+.course-site-breadcrumb a:hover{text-decoration:underline}
+.course-site-breadcrumb [aria-current="page"],.course-site-breadcrumb-separator{color:var(--muted)}
+:is(.course-site-header,.course-site-breadcrumb) :is(a,button):focus-visible{outline:3px solid var(--editorial-focus,var(--pink,var(--accent)));outline-offset:3px}
+@media(max-width:960px){
+ .course-site-header{flex-wrap:wrap}
+ .course-site-tools{margin-left:auto}
+ .course-site-menu{display:flex!important}
+ .course-site-navigation{display:none;order:3;flex:1 0 100%;flex-direction:column;align-items:stretch;width:100%;padding:8px 0 0;border-top:1px solid var(--line)}
+ .course-site-navigation.is-open{display:flex}
+ .course-site-navigation :is(a,button){width:100%;align-items:flex-start;text-align:left;padding:11px 14px}
+ .course-site-navigation .editorial-label{align-items:flex-start;text-align:left}
+}
+@media(max-width:540px){
+ .course-site-header{gap:10px;padding-top:15px}
+ .course-site-brand{gap:8px}
+ .course-site-brand-copy strong{font-size:19px}
+ .course-site-brand-copy small{font-size:11px}
+ .course-site-brandmark{width:38px;height:38px;flex-basis:38px;font-size:19px}
+ .course-site-tools{width:100%;justify-content:flex-end}
+}
+@media print{.course-site-header,.course-site-breadcrumb{display:none!important}}

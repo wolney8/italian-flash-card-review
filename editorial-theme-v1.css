@@ -118,3 +118,6 @@ body.card.guided-enabled:not(.nightMode):not(.night_mode){
 .guided-card-options label .editorial-label-sub,
 .guided-choice b .editorial-label-sub {font-size:12px;font-weight:400}
 .guided-lesson-copy strong .editorial-label-sub {font-size:13px;font-weight:400}
+
+/* Match shared 1080px course header width across all guided views. */
+.guided-experience{max-width:1080px}

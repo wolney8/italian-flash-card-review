@@ -13,3 +13,4 @@ jobs:
         with:
           node-version: '22'
       - run: node scripts/validate_theme_contrast.cjs
+      - run: node scripts/validate_navigation_consistency.cjs
