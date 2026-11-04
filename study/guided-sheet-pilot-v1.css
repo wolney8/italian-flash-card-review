@@ -1,4 +1,11 @@
-/* Three-stage guided pilot: Di, da, dove and pronouns only. */
+/* Guided sequence shared by all nine Study Sheets. */
+.guided-study-pilot .study-pack-sheet {
+  /* Allow even short Examples sections to align at the same viewport anchor. */
+  padding-bottom:clamp(110px,22vh,220px);
+}
+@media print {
+  .guided-study-pilot .study-pack-sheet {padding-bottom:0!important}
+}
 .guided-study-pilot.study-sheet-detail main > header.hero > h1,
 .guided-study-pilot .sheet-route-pager,
 .guided-study-pilot .study-pack-sheet .panel .eyebrow,
