@@ -45,3 +45,31 @@ html[data-italian-theme="dark"] .button.secondary:focus-visible {
 @media(max-width:760px){.study-guide-header{flex-wrap:wrap}.study-guide-navigation.is-open{display:flex;width:100%}.study-guide-navigation :is(a,button){align-items:flex-start;text-align:left;width:100%;padding:10px 13px}.study-guide-tools{gap:5px}.study-guide-language{min-width:75px}}
 
 @media(min-width:761px){.study-guide-menu{display:none!important}}
+
+/* Light-mode readability: replace dark-only quiz surfaces and enforce legible control contrast. */
+html[data-italian-theme="light"] .quiz-intro,
+html[data-italian-theme="light"] .quiz-summary {
+  background: var(--paper2);
+  color: var(--ink);
+  border-color: var(--line);
+}
+html[data-italian-theme="light"] .quiz-intro {
+  border-left: 5px solid var(--mint);
+}
+html[data-italian-theme="light"] .study-mode-button[aria-pressed="true"] {
+  background: var(--mint);
+  color: #fff9e9;
+}
+html[data-italian-theme="light"] .hint-button {
+  color: #80531d;
+  border-color: #80531d;
+}
+html[data-italian-theme="light"] :is(
+  .button,.study-mode-button,.hint-button,.check-button,
+  .study-session-reset,.study-guide-navigation a,
+  .sheet-route-back,.sheet-route-pager a,.sheet-library-item,
+  .study-guide-theme,.study-guide-language,input,select,textarea
+):focus-visible {
+  outline: 3px solid #9f5038;
+  outline-offset: 3px;
+}
