@@ -48,3 +48,13 @@ assert.match(css,/\.course-site-navigation \.editorial-label-sub\{[^}]*font-size
 assert.match(css,/@media\(max-width:960px\)/);
 assert.match(css,/\.course-site-navigation\.is-open/);
 console.log('PASS '+variants+' identical header variants, responsive navigation and English-only breadcrumbs.');
+
+// Keep non-instructional metadata off live study pages.
+const detail=read('study/study-sheets-v5.js');
+const shell=read('study/study-sheets.html');
+for(const phrase of ['Resource type:', 'Study basis:', 'Nine independent guides.', 'sheet-library-tag']){
+ assert.ok(!detail.includes(phrase), 'Redundant study metadata remains: '+phrase);
+}
+assert.doesNotMatch(shell, /Study resources<\/p>|Browse nine focused study sheets/, 'Redundant study sheet introduction remains');
+assert.match(detail, /Typed answers accept punctuation and accent differences/, 'Useful quiz instructions must remain');
+console.log('PASS redundant study preambles removed; learning instructions preserved.');

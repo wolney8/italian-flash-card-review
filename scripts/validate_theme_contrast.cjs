@@ -11,6 +11,8 @@ const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const studyCSS = read('study/study-editorial-v1.css');
 const guidedCSS = read('editorial-theme-v1.css');
 const studyHTML = read('study/study-sheets.html');
+const studyBaseCSS = read('study/study-sheets-v4.css');
+const studyScript = read('study/study-sheets-v5.js');
 
 function extractTokens(css, pattern, name) {
   const match = css.match(pattern);
@@ -67,10 +69,9 @@ for (const mode of ['light', 'dark']) {
     check(palette, 'guided ' + mode, foreground, background);
   }
 }
-assert.match(studyHTML, /class="quiz-status quiz-status-correct"/, 'Missing theme-aware success class');
-assert.match(studyHTML, /class="quiz-status quiz-status-wrong"/, 'Missing theme-aware error class');
+assert.match(studyBaseCSS, /\.feedback\.correct\s*\{color:var\(--correct\)\}/, 'Correct answer feedback must use the theme');
+assert.match(studyBaseCSS, /\.feedback\.wrong\s*\{color:var\(--wrong\)\}/, 'Incorrect answer feedback must use the theme');
+assert.match(studyScript, /f\.className='feedback '\+\(ok\?'correct':'wrong'\)/, 'Quiz result must receive a semantic feedback class');
 assert.doesNotMatch(studyHTML, /style="color:#(?:65c992|ef777f)"/i, 'Old fixed-colour statuses remain');
-assert.match(studyCSS, /\.quiz-status-correct\s*\{color:var\(--correct\)\}/);
-assert.match(studyCSS, /\.quiz-status-wrong\s*\{color:var\(--wrong\)\}/);
-console.log('PASS semantic labels use theme colours');
+console.log('PASS answer feedback uses theme colours');
 console.log(checks + ' contrast combinations passed WCAG AA (4.5:1).');

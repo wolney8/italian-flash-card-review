@@ -74,11 +74,6 @@ html[data-italian-theme="light"] :is(
   outline-offset: 3px;
 }
 
-/* Theme-aware result labels: legible on both paper and tinted quiz surfaces. */
-.quiz-status {font-weight:600}
-.quiz-status-correct {color:var(--correct)}
-.quiz-status-wrong {color:var(--wrong)}
-
 /* Reduce navigation emphasis; retain a light semibold primary label only for translations. */
 .study-guide-navigation :is(a,button),
 .study-guide-tools :is(.study-guide-theme,.study-guide-language,.study-guide-menu),
