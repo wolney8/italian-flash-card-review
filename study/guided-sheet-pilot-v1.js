@@ -48,9 +48,15 @@
     const quiz = article.querySelector(':scope > section[data-study-quiz]');
     const panels = [...article.querySelectorAll(':scope > section.panel')].filter(p => p !== quiz);
     const learn = panels.filter(p => p.querySelector('.eyebrow')?.textContent.trim() !== 'Patterns');
-    const examples = panels.filter(p => p.querySelector('.eyebrow')?.textContent.trim() === 'Patterns');
+    let examples = panels.filter(p => p.querySelector('.eyebrow')?.textContent.trim() === 'Patterns');
+    // Some sheets (including this pilot) contain only Study tables, not a Patterns section.
+    // Keep the first explanation in Learn and put the remaining comparison tables in Examples.
+    if (!examples.length && learn.length > 1) examples = learn.splice(1);
     const questions = quiz ? [...quiz.querySelectorAll('.quiz-question')] : [];
-    if (!hero || !quiz || !learn.length || !examples.length || !questions.length) return false;
+    if (!hero || !quiz || !learn.length || !examples.length || !questions.length) {
+      if (hero && quiz) console.warn('Guided study pilot: required content groups missing.');
+      return false; // Existing full-length sheet remains available.
+    }
 
     const old = savedState();
     const state = {

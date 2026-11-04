@@ -16,8 +16,15 @@ const sheets=JSON.parse(zlib.gunzipSync(Buffer.from(key[1],'base64')).toString('
 assert.ok(Array.isArray(sheets),'Sheet data must be an array');
 const target=sheets.find(s=>s.slug==='di-da-dove-pronouns');
 assert.ok(target,'Pilot sheet missing');
-assert.ok(target.study_sections.some(s=>s.type==='bullets'),'Pilot must have Examples / Patterns sections');
-assert.ok(target.study_sections.some(s=>['table','number_grid','town_grid'].includes(s.type)),'Pilot must have Learn / Study sections');
+// The pilot source contains THREE Study tables and no Patterns sections.
+assert.equal(target.study_sections.length,3,'Expected three sections in this pilot lesson');
+assert.deepEqual(target.study_sections.map(s=>s.type),['table','table','table'],'Pilot section types changed');
+const studySections=target.study_sections.filter(s=>s.type!=='bullets');
+const patterns=target.study_sections.filter(s=>s.type==='bullets');
+const learnCount=patterns.length?studySections.length:1;
+const examplesCount=patterns.length?patterns.length:studySections.length-1;
+assert.ok(learnCount>=1 && examplesCount>=1,'Real lesson content must populate Learn and Examples');
+assert.match(script,/examples = learn\.splice\(1\)/,'Guided pilot must split Study-only sheets into Learn and Examples');
 assert.ok(target.questions.length>1,'Pilot needs multiple questions');
 assert.match(script,/requested !== TARGET/,'Pilot must not change other sheets');
 assert.match(script,/sessionStorage\.setItem\(VIEW_KEY/,'Pilot must remember position');
