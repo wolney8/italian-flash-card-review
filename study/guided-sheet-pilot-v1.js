@@ -238,15 +238,11 @@
     }
     function focusStage(previousTop=null) {
       title.focus({preventScroll:true});
-      // A visible stage selector stays in place. Only scroll when it is offscreen.
-      // This avoids sudden jumps when the next stage has less content.
+      // Stage changes deliberately anchor the three-stage navigation at one top
+      // position, so the next task is visible on small screens. Question-to-question
+      // navigation is handled separately and keeps the current question in place.
       requestAnimationFrame(() => {
-        const top=steps.getBoundingClientRect().top;
-        const safeMax=Math.max(160,(window.innerHeight||document.documentElement.clientHeight)-200);
-        const stable=Number.isFinite(previousTop)&&previousTop>=12&&previousTop<=safeMax;
-        if(!stable&&top>=12&&top<=safeMax)return;
-        const target=stable?previousTop:16;
-        const delta=top-target;
+        const delta=steps.getBoundingClientRect().top-16;
         if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:'instant'});
       });
     }
