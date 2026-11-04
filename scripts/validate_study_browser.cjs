@@ -102,7 +102,15 @@ function run(browser,base,label,size){
     child.on('close',code=>{
       clearTimeout(timer);
       const match=stdout.match(/<pre id="browser-audit-result">([\s\S]*?)<\/pre>/);
-      if(!match){reject(Error(label+' audit missing. code='+code+' '+stderr.slice(-650)));return;}
+      if(!match){
+        reject(Error(label+' audit missing. code='+code+
+          ' stdoutSize='+stdout.length+
+          ' pageMarker='+stdout.includes('guided-sheet-steps')+
+          ' injected='+stdout.includes('auditClient')+
+          ' tail='+stdout.slice(-1700)+
+          ' stderr='+stderr.slice(-450)));
+        return;
+      }
       try{resolve({label,...JSON.parse(match[1].replace(/&quot;/g,'"').replace(/&amp;/g,'&'))});}
       catch(error){reject(Error(label+' invalid JSON '+match[1].slice(0,300)));}
     });
