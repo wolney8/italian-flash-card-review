@@ -241,10 +241,8 @@
       // Stage changes deliberately anchor the three-stage navigation at one top
       // position, so the next task is visible on small screens. Question-to-question
       // navigation is handled separately and keeps the current question in place.
-      requestAnimationFrame(() => {
-        const delta=steps.getBoundingClientRect().top-16;
-        if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:'instant'});
-      });
+      const delta=steps.getBoundingClientRect().top-16;
+      if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:'instant'});
     }
     function focusCurrent(previousQuestionTop = null) {
       const currentQuestion = state.step === 'practise' && !state.finished
@@ -257,15 +255,13 @@
           heading.tabIndex = -1;
           heading.focus({preventScroll:true});
         }
-        requestAnimationFrame(() => {
-          const rect = currentQuestion.getBoundingClientRect();
-          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
-          const safeBottom = Math.max(18, viewportHeight - 110);
-          const desiredTop = previousQuestionTop === null ? rect.top : previousQuestionTop;
-          const targetTop = Math.max(18, Math.min(desiredTop, safeBottom));
-          const delta = rect.top - targetTop;
-          if (Math.abs(delta) > 2) window.scrollBy({top:delta,behavior:'instant'});
-        });
+        const rect = currentQuestion.getBoundingClientRect();
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const safeBottom = Math.max(18, viewportHeight - 110);
+        const desiredTop = previousQuestionTop === null ? rect.top : previousQuestionTop;
+        const targetTop = Math.max(18, Math.min(desiredTop, safeBottom));
+        const delta = rect.top - targetTop;
+        if (Math.abs(delta) > 2) window.scrollBy({top:delta,behavior:'instant'});
         return;
       }
       focusStage();
