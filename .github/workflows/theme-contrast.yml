@@ -17,6 +17,9 @@ jobs:
       - run: node scripts/validate_study_typography.cjs
       - run: node --check study/guided-sheet-pilot-v1.js
       - run: node scripts/validate_guided_sheet_pilot.cjs
+      - run: node --check study/study-editorial-v1.js
+      - run: node --check study/study-recovery-v1.js
+      - run: node scripts/validate_compact_study_chrome.cjs
       - run: node --check learning-session-v1.js
       - run: node --check guided-course-v2.js
       - run: node scripts/validate_learning_session.cjs

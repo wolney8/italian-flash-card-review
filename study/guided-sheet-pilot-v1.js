@@ -235,6 +235,15 @@
         (stat.wrong===1?'answer':'answers');
       remember(state);
     }
+    function focusStage() {
+      title.focus({preventScroll:true});
+      // All stage tabs must land on exactly the same stage selector anchor.
+      // One explicit position prevents browser scroll anchoring from causing jumps.
+      requestAnimationFrame(() => {
+        const offset=steps.getBoundingClientRect().top - 16;
+        if(Math.abs(offset)>2)window.scrollBy({top:offset,behavior:'instant'});
+      });
+    }
     function focusCurrent(previousQuestionTop = null) {
       const currentQuestion = state.step === 'practise' && !state.finished
         ? questions[state.question] : null;
@@ -257,11 +266,11 @@
         });
         return;
       }
-      title.focus({preventScroll:true});
-      // Stage transitions (not question changes) may return to the stage selector.
-      steps.scrollIntoView({block:'start',behavior:'instant'});
+      focusStage();
     }
     function move(action) {
+      const previousStep=state.step;
+      const wasFinished=state.finished;
       const oldQuestionTop = state.step === 'practise' && !state.finished
         ? questions[state.question]?.getBoundingClientRect().top ?? null : null;
       if (state.step === 'practise' && state.reviewIncorrect && !state.finished && state.reviewQueue.length) {
@@ -300,7 +309,8 @@
         } else state.finished = true;
       }
       show();
-      focusCurrent(oldQuestionTop);
+      if(previousStep!==state.step||wasFinished!==state.finished)focusStage();
+      else focusCurrent(oldQuestionTop);
     }
 
     steps.addEventListener('click', event => {
@@ -310,7 +320,7 @@
       state.finished = false;
       state.reviewIncorrect = false;
       show();
-      focusCurrent();
+      focusStage();
     });
     pager.addEventListener('click', event => {
       const button = event.target.closest('[data-guided-action]');
@@ -325,7 +335,7 @@
       state.question=queue[0];
       state.finished=false;
       show();
-      focusCurrent();
+      focusStage();
     });
     reviewUnanswered.addEventListener('click', () => {
       const missing = stats().firstUnanswered;
@@ -335,7 +345,7 @@
       state.finished = false;
       state.reviewIncorrect=false;
       show();
-      focusCurrent();
+      focusStage();
     });
     // Existing answer and hint handlers remain unchanged; just refresh progress labels.
     article.addEventListener('click', event => {

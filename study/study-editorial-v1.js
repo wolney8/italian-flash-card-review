@@ -49,6 +49,27 @@
       context:'study',current:'topics',mode:studyMode(),dark,italianFirst,menuOpen
     });
   }
+  const TOOL_ICON={
+    learn:'<path d="M12 7.5c-2.6-1.7-5-1.8-8-1.2v12c3-.6 5.4-.5 8 1.2m0-12c2.6-1.7 5-1.8 8-1.2v12c-3-.6-5.4-.5-8 1.2m0-12v12"/>',
+    review:'<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5h6M9 12l2 2 4-4"/>',
+    reset:'<path d="M3 11a9 9 0 1 1 2.8 6.4M3 4v7h7"/>',
+    print:'<path d="M7 8V3h10v5M7 17H5a2 2 0 0 1-2-2v-4a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v4a2 2 0 0 1-2 2h-2M7 14h10v7H7zM17 11h.01"/>'
+  };
+  function toolIcon(name){
+    return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" '+
+      'stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true" focusable="false">'+
+      TOOL_ICON[name]+'</svg>';
+  }
+  function detailTools(){
+    const mode=studyMode();
+    return '<div class="study-detail-tools" role="group" aria-label="Study sheet actions">'+
+      '<div class="study-detail-mode-toggle" role="group" aria-label="Learning mode">'+
+      '<button type="button" class="study-crumb-action" data-study-mode="learn" aria-pressed="'+(mode==='learn')+'" title="Learn mode">'+toolIcon('learn')+'<span>Learn</span></button>'+
+      '<button type="button" class="study-crumb-action" data-study-mode="review" aria-pressed="'+(mode==='review')+'" title="Review mode">'+toolIcon('review')+'<span>Review</span></button></div>'+
+      '<button type="button" class="study-crumb-action" data-reset-study-session title="Reset this session" aria-label="Reset this session">'+toolIcon('reset')+'<span>Reset</span></button>'+
+      '<button type="button" class="study-crumb-action study-print-action" data-study-print title="Print or save as PDF" aria-label="Print or save as PDF">'+toolIcon('print')+'</button>'+
+      '</div>';
+  }
   function breadcrumb(){
     let host=document.getElementById('studyGuideCrumbs');
     if(!host){
@@ -57,11 +78,19 @@
       document.getElementById('studyGuideHeader')?.insertAdjacentElement('afterend',host);
     }
     if(!host)return;
-    const slug=currentSheet(),title=sheetTitle();
-    host.innerHTML=window.ItalianCourseChrome.breadcrumb({
+    const isDetail=document.body.classList.contains('study-sheet-detail');
+    const title=sheetTitle();
+    // Do not destroy live toolbar buttons every time quiz feedback changes.
+    const renderKey=JSON.stringify([isDetail,title,studyMode()]);
+    if(host.dataset.renderKey===renderKey)return;
+    const nav=window.ItalianCourseChrome.breadcrumb({
       homeHref:'../?page=home',
-      segments:slug?[{label:'Study sheets',href:'study-sheets.html?mode='+studyMode()},{label:title}]:[{label:'Study sheets'}]
+      segments:isDetail?[{label:'Study sheets',href:'study-sheets.html?mode='+studyMode()},{label:title}]:[{label:'Study sheets'}]
     });
+    host.innerHTML=isDetail
+      ? '<div class="study-detail-location-row">'+nav+detailTools()+'</div>'
+      : nav;
+    host.dataset.renderKey=renderKey;
   }
   function decoratePage(){
     breadcrumb();
@@ -86,7 +115,13 @@
     else if(event.target.closest('[data-study-editorial-language]'))labelToggle();
     else if(event.target.closest('[data-study-editorial-menu]')){menuOpen=!menuOpen;renderHeader();}
     else if(event.target.closest('[data-study-editorial-comment]'))openComment();
+    else if(event.target.closest('[data-study-print]'))window.print();
     else if(event.target.closest('.hint-button'))setTimeout(decoratePage,0);
+  });
+  window.addEventListener('italian-study-mode-updated',()=>{
+    const focusMode=document.activeElement?.closest('[data-study-mode]')?.dataset.studyMode;
+    renderHeader();breadcrumb();
+    if(focusMode)document.querySelector('.study-detail-location-row [data-study-mode="'+focusMode+'"]')?.focus({preventScroll:true});
   });
   initialise();
 })();
