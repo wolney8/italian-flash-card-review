@@ -65,6 +65,10 @@
       examples: clamp(old.examples, examples.length),
       question: clamp(old.question, questions.length),
       finished: !!old.finished,
+      reviewIncorrect: !!old.reviewIncorrect,
+      reviewQueue: Array.isArray(old.reviewQueue)
+        ? old.reviewQueue.filter(n => Number.isInteger(n) && n >= 0 && n < questions.length)
+        : [],
       visitedLearn: Array.isArray(old.visitedLearn)
         ? [...new Set(old.visitedLearn.filter(n => Number.isInteger(n) && n >= 0 && n < learn.length))]
         : [],
@@ -98,14 +102,11 @@
 
     const steps = document.createElement('div');
     steps.className = 'guided-sheet-steps';
-    steps.innerHTML =
-      '<div class="guided-sheet-progress">' +
-        '<div class="guided-sheet-progress-label"><span>Overall progress</span>' +
-          '<span class="guided-sheet-progress-count"></span></div>' +
-        '<div class="guided-sheet-progress-track" role="progressbar" ' +
-          'aria-label="Study sheet progress" aria-valuemin="0" aria-valuenow="0" aria-valuemax="100">' +
-          '<span class="guided-sheet-progress-fill"></span></div>' +
-      '</div>' +
+    steps.innerHTML = window.ItalianLearningSession.progressMarkup({
+      label:'Overall progress',completed:0,
+      total:learn.length+examples.length+questions.length,
+      prefix:'guided-sheet-progress'
+    }) +
       '<nav class="guided-sheet-step-navigation" aria-label="Study stages">' +
       STEP_IDS.map((id, i) =>
         '<button type="button" data-guided-step="' + id + '"><span class="guided-sheet-step-number">' +
@@ -124,6 +125,7 @@
     finish.innerHTML = '<h2 class="guided-sheet-finish-title">Practice summary</h2>' +
       '<p class="guided-sheet-finish-score"></p>' +
       '<p class="guided-sheet-finish-explanation"></p>' +
+      '<button type="button" class="guided-sheet-review-missed" data-guided-review-incorrect>Review incorrect answers</button> ' +
       '<button type="button" class="guided-sheet-review-missed" data-guided-review-unanswered>Review unanswered questions</button>';
     quiz.insertAdjacentElement('afterend', finish);
 
@@ -141,7 +143,7 @@
     const pager = document.createElement('div');
     pager.className = 'guided-sheet-controls';
     pager.innerHTML = '<span class="guided-sheet-controls-status" aria-live="polite"></span>' +
-      '<div class="guided-sheet-controls-buttons">' +
+      '<div class="guided-sheet-controls-buttons learning-session-controls">' +
       '<button type="button" data-guided-action="back">Previous</button>' +
       '<button type="button" class="guided-sheet-primary" data-guided-action="next">Next</button>' +
       '</div>';
@@ -157,6 +159,7 @@
     const nextButton = pager.querySelector('[data-guided-action="next"]');
     const controlsStatus = pager.querySelector('.guided-sheet-controls-status');
     const reviewUnanswered = finish.querySelector('[data-guided-review-unanswered]');
+    const reviewIncorrect = finish.querySelector('[data-guided-review-incorrect]');
     const finishTitle = finish.querySelector('.guided-sheet-finish-title');
     const finishScore = finish.querySelector('.guided-sheet-finish-score');
     const finishExplanation = finish.querySelector('.guided-sheet-finish-explanation');
@@ -166,12 +169,15 @@
       return {
         attempted: states.filter(Boolean).length,
         correct: states.filter(x => x === 'correct').length,
+        wrong: states.filter(x => x === 'wrong').length,
+        incorrectIndices: states.map((x,i)=>x==='wrong'?i:-1).filter(i=>i>=0),
         firstUnanswered: states.indexOf(null)
       };
     }
     function show() {
       const step = state.step;
       const practice = step === 'practise';
+      const reviewing=practice&&state.reviewIncorrect&&!state.finished&&state.reviewQueue.length>0;
       if (step === 'learn' && !state.visitedLearn.includes(state.learn)) state.visitedLearn.push(state.learn);
       if (step === 'examples' && !state.visitedExamples.includes(state.examples)) state.visitedExamples.push(state.examples);
       for (const [i, panel] of learn.entries()) panel.hidden = !(step === 'learn' && i === state.learn);
@@ -195,9 +201,11 @@
       progressTrack.setAttribute('aria-valuemax', String(totalActivities));
       progressTrack.setAttribute('aria-valuetext', covered + ' of ' + totalActivities + ' activities viewed or answered');
       progressFill.style.width = (100 * covered / totalActivities).toFixed(1) + '%';
-      const count = step === 'learn' ? learn.length : step === 'examples' ? examples.length : questions.length;
-      const current = step === 'learn' ? state.learn : step === 'examples' ? state.examples : state.question;
-      const unit = practice ? 'Question' : 'Part';
+      const count = step === 'learn' ? learn.length : step === 'examples' ? examples.length
+        : reviewing ? state.reviewQueue.length : questions.length;
+      const current = step === 'learn' ? state.learn : step === 'examples' ? state.examples
+        : reviewing ? Math.max(0,state.reviewQueue.indexOf(state.question)) : state.question;
+      const unit = reviewing ? 'Incorrect answer' : practice ? 'Question' : 'Part';
       const position = practice && state.finished ? 'Summary' : unit + ' ' + (current + 1) + ' of ' + count;
       status.textContent = 'Step ' + (pos + 1) + ' of 3 · ' + position;
       title.textContent = practice && state.finished ? 'Your practice results' : STEP_LABELS[pos];
@@ -209,17 +217,22 @@
         : position;
       const first = step === 'learn' && state.learn === 0;
       previousButton.disabled = first;
-      previousButton.textContent = practice && state.finished ? 'Back to questions' : first ? 'Previous' : 'Back';
+      previousButton.textContent = practice && state.finished ? 'Back to questions'
+        : reviewing && current===0 ? 'Back to results' : first ? 'Previous' : 'Back';
       if (step === 'learn') nextButton.textContent = state.learn < learn.length - 1 ? 'Next part' : 'Next: Examples';
       if (step === 'examples') nextButton.textContent = state.examples < examples.length - 1 ? 'Next example' : 'Next: Practise';
-      if (practice) nextButton.textContent = state.finished ? 'Review from start' :
-        state.question < questions.length - 1 ? 'Next question' : 'Finish practice';
+      if (practice) nextButton.textContent = state.finished ? 'Review from start'
+        : reviewing ? (current < count - 1 ? 'Next incorrect' : 'Finish review')
+        : state.question < questions.length - 1 ? 'Next question' : 'Finish practice';
       finishTitle.textContent = stat.attempted === questions.length ? 'Practice complete' : 'Practice summary';
       finishScore.textContent = stat.correct + ' of ' + questions.length + ' correct';
       finishExplanation.textContent = stat.attempted === questions.length
         ? 'You have answered every question. You can revisit any of them.'
         : 'You have attempted ' + stat.attempted + ' of ' + questions.length + ' questions.';
       reviewUnanswered.hidden = stat.firstUnanswered < 0;
+      reviewIncorrect.hidden = stat.wrong === 0;
+      reviewIncorrect.textContent = 'Review ' + stat.wrong + ' incorrect ' +
+        (stat.wrong===1?'answer':'answers');
       remember(state);
     }
     function focusCurrent(previousQuestionTop = null) {
@@ -251,6 +264,18 @@
     function move(action) {
       const oldQuestionTop = state.step === 'practise' && !state.finished
         ? questions[state.question]?.getBoundingClientRect().top ?? null : null;
+      if (state.step === 'practise' && state.reviewIncorrect && !state.finished && state.reviewQueue.length) {
+        const cursor=state.reviewQueue.indexOf(state.question);
+        if (action==='back') {
+          if (cursor>0) state.question=state.reviewQueue[cursor-1];
+          else {state.finished=true;state.reviewIncorrect=false;}
+        } else if (cursor<state.reviewQueue.length-1) {
+          state.question=state.reviewQueue[cursor+1];
+        } else {state.finished=true;state.reviewIncorrect=false;}
+        show();
+        focusCurrent(oldQuestionTop);
+        return;
+      }
       if (action === 'back') {
         if (state.step === 'practise') {
           if (state.finished) state.finished = false;
@@ -283,6 +308,7 @@
       if (!button) return;
       state.step = button.dataset.guidedStep;
       state.finished = false;
+      state.reviewIncorrect = false;
       show();
       focusCurrent();
     });
@@ -290,12 +316,24 @@
       const button = event.target.closest('[data-guided-action]');
       if (button) move(button.dataset.guidedAction);
     });
+    reviewIncorrect.addEventListener('click', () => {
+      const queue=stats().incorrectIndices;
+      if(!queue.length)return;
+      state.reviewIncorrect=true;
+      state.reviewQueue=queue;
+      state.step='practise';
+      state.question=queue[0];
+      state.finished=false;
+      show();
+      focusCurrent();
+    });
     reviewUnanswered.addEventListener('click', () => {
       const missing = stats().firstUnanswered;
       if (missing < 0) return;
       state.step = 'practise';
       state.question = missing;
       state.finished = false;
+      state.reviewIncorrect=false;
       show();
       focusCurrent();
     });

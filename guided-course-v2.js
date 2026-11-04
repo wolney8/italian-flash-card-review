@@ -8,6 +8,7 @@
   const RESUME_KEY = 'italianGuidedResumeV1';
   const REVIEW_MODE_KEY = 'italianFlashCardSiteModeV1';
   const LABEL_KEY = 'italianCourseLabelOrderV1';
+  const FOCUS_KEY = 'italianFocusModeV1';
   const EDITORIAL_VERSION = '2026-11-04-editorial-v1';
   const TRANSLATIONS = {
     'Home':['Inizio','Home'], 'Lessons':['Lezioni','Lessons'],
@@ -77,6 +78,48 @@
   function topicLabel(label) {return labelPair(STUDY_ITALIAN[label]||label,label);}
   function toggleLabelOrder(){italianFirst=!italianFirst;safeSet(LABEL_KEY,italianFirst?'it':'en');document.getElementById('editorialCommentModal')?.remove();renderKeepingCardFace();}
   function topicSequence(lesson){return [...new Set(cardList(lesson).map(c=>c.deck))];}
+  function confidenceData(){
+    return sessionRead(PROGRESS_KEY,{}).flashcards?.confidence||{};
+  }
+  function reviewQueueKey(){return state.lesson+'::'+state.deck;}
+  function activeCardList(lesson=state.lesson,deck=state.deck){
+    const all=cardList(lesson,deck);
+    if(!state.reviewOnly)return all;
+    const queue=sessionRead(PROGRESS_KEY,{}).flashcards?.reviewQueues?.[reviewQueueKey()]||[];
+    const keys=new Set(queue);
+    return all.filter(card=>keys.has(card.key));
+  }
+  function focusActive(){
+    const pref=safeGet(FOCUS_KEY,'auto');
+    return pref==='on'||(pref==='auto'&&matchMedia('(max-width:740px)').matches);
+  }
+  function toggleFocus(){
+    safeSet(FOCUS_KEY,focusActive()?'off':'on');
+    renderKeepingCardFace();
+  }
+  function recordConfidence(rating){
+    if(state.page!=='card'||state.finished||!['again','known'].includes(rating))return;
+    const current=root?.querySelector('.guided-card-host .review-card');
+    if(!current?.classList.contains('show-answer'))return;
+    const card=currentCard();if(!card)return;
+    const progress=sessionRead(PROGRESS_KEY,{});
+    progress.flashcards=progress.flashcards||{viewed:{}};
+    progress.flashcards.confidence=progress.flashcards.confidence||{};
+    progress.flashcards.confidence[card.key]=rating;
+    sessionWrite(PROGRESS_KEY,progress);
+    moveCard(1);
+  }
+  function startReviewAgain(){
+    const confidence=confidenceData();
+    const keys=window.ItalianLearningSession.reviewKeys(cardList(state.lesson,state.deck),confidence);
+    if(!keys.length)return;
+    const progress=sessionRead(PROGRESS_KEY,{});
+    progress.flashcards=progress.flashcards||{viewed:{}};
+    progress.flashcards.reviewQueues=progress.flashcards.reviewQueues||{};
+    progress.flashcards.reviewQueues[reviewQueueKey()]=keys;
+    sessionWrite(PROGRESS_KEY,progress);
+    navigate({...state,reviewOnly:true,index:0,finished:false});
+  }
   function nextDestination(){
     const sequence=topicSequence(state.lesson);
     const idx=sequence.indexOf(state.deck);
@@ -86,6 +129,7 @@
     return null;
   }
   function markTopicCompleted(){
+    if(state.reviewOnly)return; // A targeted review is not a new full-topic completion.
     const progress=sessionRead(PROGRESS_KEY,{});
     if(!progress.flashcards)progress.flashcards={viewed:{}};
     if(!progress.flashcards.completed)progress.flashcards.completed={};
@@ -108,10 +152,11 @@
 
   function stateFromUrl() {
     const url = new URL(location.href);
+    const reviewOnly=url.searchParams.get('review')==='again';
     const page = url.searchParams.get('page');
     const legacy = url.hash.match(/^#lesson-(L\d+)$/i)?.[1]?.toUpperCase();
     const lesson = url.searchParams.get('lesson') || legacy;
-    if (lesson && LESSONS.some(l => l[0] === lesson)) return {page:'card',lesson,deck:url.searchParams.get('topic') || '',index:Math.max(0,Number(url.searchParams.get('card') || 0)),finished:url.searchParams.get('done')==='1'};
+    if (lesson && LESSONS.some(l => l[0] === lesson)) return {page:'card',lesson,deck:url.searchParams.get('topic') || '',index:Math.max(0,Number(url.searchParams.get('card') || 0)),finished:url.searchParams.get('done')==='1',reviewOnly};
     if (page === 'lessons' || page === 'topics' || page === 'feedback' || page === 'course') return {page,lesson:null,deck:'',index:0,finished:false};
     if (url.searchParams.get('view') === 'study') return {page:'topics',lesson:null,deck:'',index:0,finished:false};
     if (url.searchParams.get('view') === 'flashcards') return {page:'lessons',lesson:null,deck:'',index:0,finished:false};
@@ -119,7 +164,7 @@
   }
   function urlFor(next) {
     const u = new URL(location.href);
-    for (const key of ['view','page','lesson','topic','card','done']) u.searchParams.delete(key);
+    for (const key of ['view','page','lesson','topic','card','done','review']) u.searchParams.delete(key);
     u.hash = '';
     if (next.page !== 'home') u.searchParams.set('page',next.page);
     if (next.page === 'card' && next.lesson) {
@@ -127,16 +172,23 @@
       if (next.deck) u.searchParams.set('topic',next.deck);
       if (next.index) u.searchParams.set('card',String(next.index));
       if (next.finished) u.searchParams.set('done','1');
+      if (next.reviewOnly) u.searchParams.set('review','again');
     }
     return u.pathname + u.search;
   }
-  function navigate(next, push = true) {
-    state = {page:next.page || 'home',lesson:next.lesson || null,deck:next.deck || '',index:next.index || 0,finished:!!next.finished};
+  function navigate(next, push = true, preserveCardPosition = false) {
+    const previousTop=preserveCardPosition
+      ? root?.querySelector('.guided-card-host')?.getBoundingClientRect().top
+      : null;
+    state = {page:next.page || 'home',lesson:next.lesson || null,deck:next.deck || '',
+      index:next.index || 0,finished:!!next.finished,reviewOnly:!!next.reviewOnly};
     if (push) history.pushState(null,'',urlFor(state));
     menuOpen = false;
     render();
-    window.scrollTo({top:0,behavior:isReducedMotion()?'auto':'smooth'});
-    root.querySelector('.guided-title')?.focus({preventScroll:true});
+    if(preserveCardPosition&&state.page==='card'&&!state.finished&&typeof previousTop==='number'){
+      window.ItalianLearningSession.restoreAnchor(root.querySelector('.guided-card-host'),previousTop);
+    } else window.scrollTo({top:0,behavior:isReducedMotion()?'auto':'instant'});
+    if(!preserveCardPosition)root.querySelector('.guided-title')?.focus({preventScroll:true});
   }
   function themeApply() {
     dark = safeGet(THEME_KEY,'light') !== 'light';
@@ -204,37 +256,101 @@
   }
   function cardPage() {
     const lesson=state.lesson;
-    if(!ready)return `<main class="guided-main" id="guidedMain">${crumbs([{label:'Lessons',to:'lessons'},{label:'Loading'}])}<div role="status" class="guided-info">Loading flashcards…</div></main>`;
-    const [id,title]=lessonInfo(lesson);
-    const all=cardList(lesson), decks=topicSequence(lesson);
+    if(!ready)return '<main class="guided-main" id="guidedMain">'+
+      crumbs([{label:'Lessons',to:'lessons'},{label:'Loading'}])+
+      '<div role="status" class="guided-info">Loading flashcards…</div></main>';
+    const [id]=lessonInfo(lesson);
+    const all=cardList(lesson),decks=topicSequence(lesson);
     if(state.deck&&!decks.includes(state.deck))state.deck='';
     if(!state.deck&&decks.length){
       const previous=all[Math.min(state.index,Math.max(0,all.length-1))];
       state.deck=previous?.deck||decks[0];
-      const indexInDeck=cardList(lesson,state.deck).findIndex(c=>c.key===previous?.key);
-      state.index=Math.max(0,indexInDeck);
+      const idx=cardList(lesson,state.deck).findIndex(c=>c.key===previous?.key);
+      state.index=Math.max(0,idx);
       if(!state.finished)history.replaceState(null,'',urlFor(state));
     }
-    const selected=cardList(lesson,state.deck), total=selected.length;
+    const selected=activeCardList(lesson,state.deck);
+    const total=selected.length;
     if(state.index>=total)state.index=Math.max(0,total-1);
     const current=selected[state.index];
-    if(!current)return `<main class="guided-main" id="guidedMain">${crumbs([{label:'Lessons',to:'lessons'}])}<p>No flashcards are available.</p></main>`;
+    if(!current)return '<main class="guided-main" id="guidedMain">'+
+      crumbs([{label:'Lessons',to:'lessons'}])+
+      '<section class="guided-info"><p>No cards to review in this selection.</p>'+
+      '<button class="guided-secondary" data-guide-all-cards>Return to all cards</button></section></main>';
     const next=nextDestination();
     const viewed=sessionRead(PROGRESS_KEY,{}).flashcards?.viewed||{};
+    const confidence=confidenceData();
     const shown=selected.filter(c=>!!viewed[c.key]).length;
-    if(state.finished)return `<main class="guided-main" id="guidedMain">${crumbs([{label:'Lessons',to:'lessons'},{label:'Lesson '+id.slice(1)}])}<section class="guided-complete editorial-complete"><span aria-hidden="true" class="guided-big-icon">✓</span><h1 class="guided-title" tabindex="-1">${labelPair('Argomento completato','Topic complete')}</h1><p>${shown} / ${total} answers revealed this session. Completion records that you finished this topic, not mastery.</p><div class="guided-actions">${next?`<button class="guided-primary" data-guide-next-topic>${labelPair(next.type==='topic'?'Prossimo argomento':'Prossima lezione',next.type==='topic'?'Next topic':'Next lesson')} →</button>`:''}<button class="guided-secondary" data-guide-restart>${labelPair('Ripeti','Repeat topic')}</button><button class="guided-secondary" data-guide-to="lessons">${labelPair('Tutte le lezioni','All lessons')}</button></div></section></main>`;
-    const pct=(state.index+1)/total*100, isReviewed=!!viewed[current.key];
-    const cardMarkup=typeof renderCard==='function'?renderCard(current,state.index+1,total):'<p>Loading card template…</p>';
+    const confidenceSummary=window.ItalianLearningSession.confidenceSummary(selected,confidence);
+    const {known,again,rated}=confidenceSummary;
+    if(state.finished){
+      return '<main class="guided-main" id="guidedMain">'+
+        crumbs([{label:'Lessons',to:'lessons'},{label:'Lesson '+id.slice(1)}])+
+        '<section class="guided-complete editorial-complete">'+
+        '<span class="guided-big-icon" aria-hidden="true">✓</span>'+
+        '<h1 class="guided-title" tabindex="-1">'+
+        (state.reviewOnly?'Targeted review finished':labelPair('Argomento completato','Topic complete'))+'</h1>'+
+        '<p>'+shown+' / '+total+' answers revealed · '+rated+' rated.</p>'+
+        '<div class="guided-result-stats">'+
+        '<span><strong>'+known+'</strong> Got it</span>'+
+        '<span><strong>'+again+'</strong> Practise again</span>'+
+        '<span><strong>'+(total-rated)+'</strong> Unrated</span></div>'+
+        '<p class="guided-muted">Revealing a card records that you saw it, not that you remembered it.</p>'+
+        '<div class="guided-actions">'+
+        (again?'<button class="guided-primary" data-guide-review-again>Review '+again+' marked '+(again===1?'card':'cards')+'</button>':'')+
+        (state.reviewOnly?'<button class="guided-secondary" data-guide-all-cards>All cards</button>':'')+
+        (next?'<button class="guided-primary" data-guide-next-topic>'+labelPair(next.type==='topic'?'Prossimo argomento':'Prossima lezione',next.type==='topic'?'Next topic':'Next lesson')+' →</button>':'')+
+        '<button class="guided-secondary" data-guide-restart>'+labelPair('Ripeti','Repeat topic')+'</button>'+
+        '<button class="guided-secondary" data-guide-to="lessons">'+labelPair('Tutte le lezioni','All lessons')+'</button>'+
+        '</div></section></main>';
+    }
+    const isReviewed=!!viewed[current.key];
+    const cardMarkup=typeof renderCard==='function'
+      ?renderCard(current,state.index+1,total):'<p>Loading card template…</p>';
+    const progressLabel=state.reviewOnly?'Targeted review position':'Answers revealed';
+    const completed=state.reviewOnly?state.index+1:shown;
+    const progress=window.ItalianLearningSession.progressMarkup({
+      label:progressLabel,completed,total,
+      prefix:'guided-review-progress'
+    });
     const last=state.index===total-1;
-    return `<main class="guided-main" id="guidedMain">${crumbs([{label:'Beginners · Semester 1',to:'course'},{label:'Lessons',to:'lessons'},{label:'Lesson '+id.slice(1)}])}
-      <section class="guided-card-layout"><div class="guided-card-heading"><div><p class="guided-eyebrow">${labelPair('Lezione '+id.slice(1),'Lesson '+id.slice(1))}</p><h1 class="guided-title" tabindex="-1">${esc(current.deck)}</h1></div><span class="guided-card-count">${labelPair('Carta '+(state.index+1)+' di '+total,'Card '+(state.index+1)+' of '+total)}</span></div>
-      <div class="guided-card-options"><label for="guidedSubdeckSelect">${labelPair('Argomento','Topic')}</label><select id="guidedSubdeckSelect" aria-label="Choose a topic">${decks.map(d=>`<option value="${esc(d)}" ${state.deck===d?'selected':''}>${esc(d)}</option>`).join('')}</select></div>
-      <div role="progressbar" aria-label="Position in selected flashcards" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}" class="guided-progress-track"><span style="width:${pct}%"></span></div>
-      <section class="guided-card-host" aria-label="Current flashcard"><div class="subdeck-accordion is-open"><div class="card-list">${cardMarkup}</div></div></section>
-      <div class="guided-card-actions"><button class="guided-primary" data-guide-flip>${labelPair(isReviewed?'Mostra risposta / domanda':'Mostra la risposta',isReviewed?'Show answer / question':'Reveal answer')}</button><button class="guided-secondary" data-guide-prev ${state.index===0?'disabled':''}>${labelPair('Indietro','Previous')} ←</button>${last?`<button class="guided-secondary" data-guide-complete>${labelPair('Termina argomento','Complete topic')}</button>${next?`<button class="guided-primary" data-guide-next-topic>${next.type==='lesson'?labelPair('Completa e vai alla prossima lezione','Complete & next lesson'):labelPair('Completa e continua','Complete & next topic')} →</button>`:''}`:`<button class="guided-secondary" data-guide-next>${labelPair('Avanti','Next card')} →</button>`}<button class="guided-feedback" data-guide-card-feedback>${labelPair('Commenta questa carta','Comment on this card')}</button></div></section>
-    </main>`;
+    return '<main class="guided-main" id="guidedMain">'+
+      crumbs([{label:'Beginners · Semester 1',to:'course'},{label:'Lessons',to:'lessons'},{label:'Lesson '+id.slice(1)}])+
+      '<section class="guided-card-layout">'+
+      '<div class="guided-card-heading"><div><p class="guided-eyebrow">'+
+      labelPair('Lezione '+id.slice(1),'Lesson '+id.slice(1))+'</p>'+
+      '<h1 class="guided-title" tabindex="-1">'+esc(current.deck)+'</h1></div>'+
+      '<span class="guided-card-count">'+(state.reviewOnly?'Targeted review · ':'')+
+      labelPair('Carta '+(state.index+1)+' di '+total,'Card '+(state.index+1)+' of '+total)+
+      '</span></div>'+
+      '<div class="guided-card-options">'+
+      '<label for="guidedSubdeckSelect">'+labelPair('Argomento','Topic')+'</label>'+
+      '<select id="guidedSubdeckSelect" aria-label="Choose a topic">'+decks.map(d=>
+        '<option value="'+esc(d)+'" '+(state.deck===d?'selected':'')+'>'+esc(d)+'</option>').join('')+
+      '</select><button type="button" class="learning-session-focus-toggle" data-guide-focus aria-pressed="'+focusActive()+'">'+
+      (focusActive()?'Exit focus':'Focus mode')+'</button></div>'+
+      progress+
+      '<p class="guided-confidence-summary" aria-live="polite">Got it: '+known+
+      ' · Practise again: '+again+' · Not rated: '+(total-rated)+'</p>'+
+      '<section class="guided-card-host" aria-label="Current flashcard"><div class="subdeck-accordion is-open"><div class="card-list">'+
+      cardMarkup+'</div></div></section>'+
+      '<div class="guided-flashcard-actions">'+
+      '<button class="guided-primary guided-reveal" data-guide-flip>'+
+      labelPair(isReviewed?'Mostra risposta / domanda':'Mostra la risposta',
+        isReviewed?'Show answer / question':'Reveal answer')+'</button>'+
+      '<div class="guided-confidence" hidden aria-label="Recall confidence">'+
+      '<p>Could you recall it without looking?</p>'+
+      '<div class="guided-confidence-actions learning-session-controls">'+
+      '<button type="button" class="guided-secondary" data-guide-rate="again">Practise again</button>'+
+      '<button type="button" class="guided-primary" data-guide-rate="known">Got it</button></div></div>'+
+      '<div class="guided-review-navigation learning-session-controls">'+
+      '<button class="guided-secondary" data-guide-prev '+(state.index===0?'disabled':'')+'>← Previous</button>'+
+      '<button class="guided-secondary" data-guide-next>'+(last?'Finish topic':'Next card')+' →</button>'+
+      '</div>'+
+      '<button class="guided-feedback guided-card-comment" data-guide-card-feedback>'+labelPair('Commenta questa carta','Comment on this card')+'</button>'+
+      '</div></section></main>';
   }
-  function currentCard() { return cardList(state.lesson,state.deck)[state.index] || null; }
+  function currentCard() { return activeCardList()[state.index] || null; }
   function markViewed() {
     const card=currentCard(); if(!card)return;
     const progress=sessionRead(PROGRESS_KEY,{flashcards:{viewed:{}}});
@@ -243,7 +359,7 @@
     progress.flashcards.viewed[card.key]=Date.now();
     progress.flashcards.lastLesson=state.lesson;
     sessionWrite(PROGRESS_KEY,progress);
-    sessionWrite(RESUME_KEY,{lesson:state.lesson,deck:state.deck,index:state.index});
+    if(!state.reviewOnly)sessionWrite(RESUME_KEY,{lesson:state.lesson,deck:state.deck,index:state.index});
   }
   function flip() {
     const current=root.querySelector('.guided-card-host .review-card');
@@ -254,14 +370,16 @@
     if(willAnswer)markViewed();
     const b=root.querySelector('[data-guide-flip]');
     if(b)b.innerHTML=willAnswer?labelPair('Mostra la domanda','Show question'):labelPair('Mostra la risposta','Reveal answer');
+    const confidence=root.querySelector('.guided-confidence');
+    if(confidence)confidence.hidden=!willAnswer;
   }
   function syncCardHeight() { const current=root.querySelector('.guided-card-host .review-card'); if(current && typeof setFlipHeight==='function') requestAnimationFrame(()=>setFlipHeight(current,false,true)); }
   function moveCard(delta) {
-    const total=cardList(state.lesson,state.deck).length;
+    const total=activeCardList().length;
     if(delta>0 && state.index>=total-1){completeTopic(false);return;}
     state.index=Math.max(0,Math.min(total-1,state.index+delta));
-    sessionWrite(RESUME_KEY,{lesson:state.lesson,deck:state.deck,index:state.index});
-    navigate(state);
+    if(!state.reviewOnly)sessionWrite(RESUME_KEY,{lesson:state.lesson,deck:state.deck,index:state.index});
+    navigate(state,true,true);
   }
   function feedbackLocation(preferredCard=null) {
     const parts=['Italian for Beginners'];
@@ -324,10 +442,13 @@
       if(card){card.classList.add('show-answer');if(typeof updateCardSideControls==='function')updateCardSideControls(card,true);if(typeof setFlipHeight==='function')requestAnimationFrame(()=>setFlipHeight(card,true,true));}
       const button=root?.querySelector('[data-guide-flip]');
       if(button)button.innerHTML=labelPair('Mostra la domanda','Show question');
+      const confidence=root?.querySelector('.guided-confidence');
+      if(confidence)confidence.hidden=false;
     }
   }
   function render() {
     ensure();
+    document.body.classList.toggle('guided-focus-active',state.page==='card'&&focusActive());
     root.innerHTML=header()+ (state.page==='lessons'?lessons():state.page==='card'?cardPage():state.page==='topics'?topics():state.page==='feedback'?feedback():state.page==='course'?course():home()) + `<footer class="guided-footer">Italian for Beginners · Last updated 4 November 2026</footer>`;
     syncCardHeight();
   }
@@ -348,6 +469,11 @@
     if(event.target.closest('[data-guide-comment]')){openFeedback(state.page==='card'&&!state.finished?currentCard():null);return;}
     if(event.target.closest('[data-editorial-comment-close]')){closeFeedback();return;}
     if(event.target.closest('[data-guide-complete]')){completeTopic(false);return;}
+    if(event.target.closest('[data-guide-focus]')){toggleFocus();return;}
+    if(event.target.closest('[data-guide-review-again]')){startReviewAgain();return;}
+    if(event.target.closest('[data-guide-all-cards]')){navigate({...state,reviewOnly:false,index:0,finished:false});return;}
+    const rating=event.target.closest('[data-guide-rate]');
+    if(rating){recordConfidence(rating.dataset.guideRate);return;}
     if(event.target.closest('[data-guide-next-topic]')){completeTopic(true);return;}
     if(event.target.closest('[data-guide-menu]')){menuOpen=!menuOpen;renderKeepingCardFace();return;}
     if(event.target.closest('[data-guide-next]')){moveCard(1);return;}
@@ -361,13 +487,13 @@
     if(event.target.closest('.guided-card-host .reveal-button')){
       const card=root?.querySelector('.guided-card-host .review-card');
       if(card && !card.classList.contains('show-answer'))markViewed();
-      setTimeout(()=>{const b=root?.querySelector('[data-guide-flip]');const c=root?.querySelector('.guided-card-host .review-card');if(b&&c)b.innerHTML=c.classList.contains('show-answer')?labelPair('Mostra la domanda','Show question'):labelPair('Mostra la risposta','Reveal answer');},90);
+      setTimeout(()=>{const b=root?.querySelector('[data-guide-flip]');const c=root?.querySelector('.guided-card-host .review-card');const revealed=!!c?.classList.contains('show-answer');if(b&&c)b.innerHTML=revealed?labelPair('Mostra la domanda','Show question'):labelPair('Mostra la risposta','Reveal answer');const rating=root?.querySelector('.guided-confidence');if(rating)rating.hidden=!revealed;},90);
     }
   });
   document.addEventListener('submit',event=>{if(event.target.id==='editorialCommentForm')submitFeedback(event);});
   document.addEventListener('keydown',event=>{if(event.key==='Escape')closeFeedback();});
   document.addEventListener('change',event=>{
-    if(event.target.id==='guidedSubdeckSelect')navigate({...state,deck:event.target.value,index:0,finished:false});
+    if(event.target.id==='guidedSubdeckSelect')navigate({...state,deck:event.target.value,index:0,finished:false,reviewOnly:false});
   });
   window.addEventListener('popstate',()=>{state=stateFromUrl();render();});
   window.addEventListener('hashchange',()=>{if(location.hash.match(/^#lesson-L\d+$/i)){state=stateFromUrl();render();}});
