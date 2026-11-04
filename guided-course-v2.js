@@ -187,8 +187,13 @@
     render();
     if(preserveCardPosition&&state.page==='card'&&!state.finished&&typeof previousTop==='number'){
       window.ItalianLearningSession.restoreAnchor(root.querySelector('.guided-card-host'),previousTop);
-    } else window.scrollTo({top:0,behavior:isReducedMotion()?'auto':'instant'});
-    if(!preserveCardPosition)root.querySelector('.guided-title')?.focus({preventScroll:true});
+      requestAnimationFrame(()=>{
+        root.querySelector('.guided-card-heading .guided-title')?.focus({preventScroll:true});
+      });
+    } else {
+      window.scrollTo({top:0,behavior:isReducedMotion()?'auto':'instant'});
+      root.querySelector('.guided-title')?.focus({preventScroll:true});
+    }
   }
   function themeApply() {
     dark = safeGet(THEME_KEY,'light') !== 'light';
