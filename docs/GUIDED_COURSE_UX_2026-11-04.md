@@ -3,7 +3,7 @@
 ## Course structure
 - Beginners: 3 semesters. Current: Semester 1 with Lessons 1–5.
 - Intermediate: 3 future semesters.
-- Advanced: 3 future semesters.
+- Advanced: future level; semester structure not yet confirmed.
 - Never suggest untaught or future-semester content is already available.
 - Laura has explained that some material introduced early will make more sense as later lessons and semesters build on it. Present this as learning guidance, not a promise about exact future lesson content.
 
