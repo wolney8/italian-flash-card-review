@@ -47,7 +47,10 @@ console.log('PASS learning stages, saved progress, standalone answer checker, fa
 assert.match(script, /firstHeading\.insertAdjacentElement\('afterend', teachingNote\)/, 'Teaching note must move into Learn content, not shift the header');
 assert.doesNotMatch(script, /paragraph\.hidden\s*=\s*!\(step === 'learn'/, 'The header must not change height across steps');
 assert.match(script, /function focusCurrent\(\)/, 'A uniform step scroll anchor is required');
-assert.match(script, /steps\.scrollIntoView\(\{block:'start',behavior:'auto'\}\)/, 'Each transition must restore the same position');
+assert.match(script, /steps\.scrollIntoView\(\{block:'start',behavior:'instant'\}\)/, 'Stage transitions must use an immediate scroll');
+assert.match(script, /focusCurrent\(oldQuestionTop\)/, 'Question navigation must retain its previous viewport anchor');
+assert.match(script, /currentQuestion\.getBoundingClientRect\(\)/, 'Question navigation must measure the current question');
+assert.match(script, /window\.scrollBy\(\{top:delta,behavior:'instant'\}\)/, 'Question navigation must avoid scrolling to the stage header');
 assert.match(script, /visitedLearn/, 'Track lesson sections visited');
 assert.match(script, /visitedExamples/, 'Track examples visited');
 assert.match(script, /const covered = state\.visitedLearn\.length \+ state\.visitedExamples\.length \+ stat\.attempted/, 'Count covered activities without counting skipped questions');
@@ -58,3 +61,9 @@ assert.match(style, /guided-sheet-current\{min-height:119px\}/, 'Reserve consist
 assert.match(style, /guided-sheet-progress-fill/, 'Missing visual progress bar');
 assert.match(style, /guided-study-pilot \.study-pack-sheet > \.hero \.sheet-progress/, 'Hide duplicate legacy progress meter');
 console.log('PASS stable scroll anchor, activity progress, completion link, and final-sheet flashcard fallback.');
+
+// Responsive question controls must remain side by side even on narrow/mobile viewports.
+assert.match(style, /\.guided-sheet-controls-buttons \{\s*display:grid;\s*grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/, 'Question controls must use two equal columns');
+assert.match(style, /@media\(max-width:900px\)[\s\S]*?\.guided-sheet-controls-buttons \{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/, 'Mobile must retain two columns');
+assert.match(style, /\.guided-sheet-controls-buttons > button \{[\s\S]*?min-width:0;/, 'Buttons must shrink within narrow columns');
+console.log('PASS question scroll position and side-by-side mobile controls.');

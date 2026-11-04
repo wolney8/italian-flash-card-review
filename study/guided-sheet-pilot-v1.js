@@ -222,12 +222,35 @@
       reviewUnanswered.hidden = stat.firstUnanswered < 0;
       remember(state);
     }
-    function focusCurrent() {
+    function focusCurrent(previousQuestionTop = null) {
+      const currentQuestion = state.step === 'practise' && !state.finished
+        ? questions[state.question] : null;
+      if (currentQuestion) {
+        // Keep each question at the previous question's screen position.
+        // Do not scroll back to the stage navigation for Next/Previous question.
+        const heading = currentQuestion.querySelector('.question-heading');
+        if (heading) {
+          heading.tabIndex = -1;
+          heading.focus({preventScroll:true});
+        }
+        requestAnimationFrame(() => {
+          const rect = currentQuestion.getBoundingClientRect();
+          const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+          const safeBottom = Math.max(18, viewportHeight - 110);
+          const desiredTop = previousQuestionTop === null ? rect.top : previousQuestionTop;
+          const targetTop = Math.max(18, Math.min(desiredTop, safeBottom));
+          const delta = rect.top - targetTop;
+          if (Math.abs(delta) > 2) window.scrollBy({top:delta,behavior:'instant'});
+        });
+        return;
+      }
       title.focus({preventScroll:true});
-      // Every stage starts at the same viewport anchor, even if content above differs.
-      steps.scrollIntoView({block:'start',behavior:'auto'});
+      // Stage transitions (not question changes) may return to the stage selector.
+      steps.scrollIntoView({block:'start',behavior:'instant'});
     }
     function move(action) {
+      const oldQuestionTop = state.step === 'practise' && !state.finished
+        ? questions[state.question]?.getBoundingClientRect().top ?? null : null;
       if (action === 'back') {
         if (state.step === 'practise') {
           if (state.finished) state.finished = false;
@@ -252,7 +275,7 @@
         } else state.finished = true;
       }
       show();
-      focusCurrent();
+      focusCurrent(oldQuestionTop);
     }
 
     steps.addEventListener('click', event => {

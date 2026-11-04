@@ -134,3 +134,27 @@ html[data-italian-theme="dark"] .guided-sheet-followup{color:#1b2920!important}
 @media(max-width:680px){.guided-sheet-current{min-height:134px}.guided-sheet-progress-label{font-size:13px}.guided-sheet-followup{width:100%;justify-content:center;text-align:center}}
 @media(prefers-reduced-motion:reduce){.guided-sheet-progress-fill{transition:none}}
 @media print{.guided-sheet-teaching-note{background:transparent;border:0;padding:0}.guided-study-pilot .study-pack-sheet > .hero .sheet-progress{display:none!important}}
+
+/* Question navigation: predictable two-column controls at every viewport size. */
+.guided-sheet-controls-buttons {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  flex:0 1 360px;
+  width:min(100%,360px);
+  gap:9px;
+}
+.guided-sheet-controls-buttons > button {
+  width:100%;
+  min-width:0;
+  white-space:normal;
+  text-align:center;
+}
+@media(max-width:900px) {
+  .guided-sheet-controls {flex-direction:column;align-items:stretch}
+  .guided-sheet-controls-buttons {
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    flex:none;
+    width:100%;
+  }
+}
