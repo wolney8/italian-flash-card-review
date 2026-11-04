@@ -18,7 +18,7 @@ function auditClient(){
     if(!query('.guided-sheet-steps'))throw Error('Guided pilot did not initialise');
     const styles=selector=>getComputedStyle(query(selector)).display;
     const article=query('.study-pack-sheet');
-    const teaching=[...article.querySelectorAll(':scope > section.panel:not([data-study-quiz])')];
+    const teaching=[...article.querySelectorAll(':scope > section.panel:not([data-study-quiz]):not(.guided-sheet-finish)')];
     const questions=[...article.querySelectorAll('.quiz-question')];
     const result={
       slug:article.id,
