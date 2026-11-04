@@ -42,10 +42,10 @@ for(const value of ['learn','review']){
  assert.equal((markup.match(/<svg /g)||[]).length,4,'Expected Learn, Review, Reset, Print icons');
  assert.equal((markup.match(/data-study-mode=/g)||[]).length,2,'Only two modes');
 }
-assert.match(pilot,/function focusStage\(\)/,'Guided stages need a shared scroll anchor');
-assert.match(pilot,/steps\.getBoundingClientRect\(\)\.top - 16/,'Always land at the same viewport offset');
-assert.match(pilot,/steps\.addEventListener\('click'[\s\S]*?focusStage\(\)/,'Stage tabs must use the shared anchor');
-assert.match(pilot,/if\(previousStep!==state\.step\|\|wasFinished!==state\.finished\)focusStage\(\)/,'Previous and Next must align on crossing stages');
+assert.match(pilot,/function focusStage\(previousTop=null\)/,'Guided stages need a shared scroll anchor');
+assert.match(pilot,/const oldStageTop=steps\.getBoundingClientRect\(\)\.top/,'Capture previous stage viewport position');
+assert.match(pilot,/steps\.addEventListener\('click'[\s\S]*?focusStage\(oldStageTop\)/,'Stage tabs must preserve their visible position');
+assert.match(pilot,/if\(previousStep!==state\.step\|\|wasFinished!==state\.finished\)focusStage\(oldStageTop\)/,'Previous and Next must align on crossing stages');
 assert.match(pilot,/else focusCurrent\(oldQuestionTop\)/,'Previous and Next questions must retain scroll position');
 assert.doesNotMatch(pilot,/steps\.scrollIntoView/,'Avoid inconsistent native scroll alignment');
 assert.match(style,/\.guided-study-pilot \.study-pack-sheet\{\s*overflow-anchor:none/,'Prevent browser scroll anchoring shifting stage views');

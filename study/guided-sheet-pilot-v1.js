@@ -235,13 +235,18 @@
         (stat.wrong===1?'answer':'answers');
       remember(state);
     }
-    function focusStage() {
+    function focusStage(previousTop=null) {
       title.focus({preventScroll:true});
-      // All stage tabs must land on exactly the same stage selector anchor.
-      // One explicit position prevents browser scroll anchoring from causing jumps.
+      // A visible stage selector stays in place. Only scroll when it is offscreen.
+      // This avoids sudden jumps when the next stage has less content.
       requestAnimationFrame(() => {
-        const offset=steps.getBoundingClientRect().top - 16;
-        if(Math.abs(offset)>2)window.scrollBy({top:offset,behavior:'instant'});
+        const top=steps.getBoundingClientRect().top;
+        const safeMax=Math.min((window.innerHeight||document.documentElement.clientHeight)*0.45,300);
+        const stable=Number.isFinite(previousTop)&&previousTop>=12&&previousTop<=safeMax;
+        if(!stable&&top>=12&&top<=safeMax)return;
+        const target=stable?previousTop:16;
+        const delta=top-target;
+        if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:'instant'});
       });
     }
     function focusCurrent(previousQuestionTop = null) {
@@ -269,6 +274,7 @@
       focusStage();
     }
     function move(action) {
+      const oldStageTop=steps.getBoundingClientRect().top;
       const previousStep=state.step;
       const wasFinished=state.finished;
       const oldQuestionTop = state.step === 'practise' && !state.finished
@@ -309,18 +315,19 @@
         } else state.finished = true;
       }
       show();
-      if(previousStep!==state.step||wasFinished!==state.finished)focusStage();
+      if(previousStep!==state.step||wasFinished!==state.finished)focusStage(oldStageTop);
       else focusCurrent(oldQuestionTop);
     }
 
     steps.addEventListener('click', event => {
       const button = event.target.closest('[data-guided-step]');
       if (!button) return;
+      const oldStageTop=steps.getBoundingClientRect().top;
       state.step = button.dataset.guidedStep;
       state.finished = false;
       state.reviewIncorrect = false;
       show();
-      focusStage();
+      focusStage(oldStageTop);
     });
     pager.addEventListener('click', event => {
       const button = event.target.closest('[data-guided-action]');
