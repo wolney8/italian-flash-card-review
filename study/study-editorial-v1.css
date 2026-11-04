@@ -73,3 +73,29 @@ html[data-italian-theme="light"] :is(
   outline: 3px solid #9f5038;
   outline-offset: 3px;
 }
+
+/* Theme-aware result labels: legible on both paper and tinted quiz surfaces. */
+.quiz-status {font-weight:600}
+.quiz-status-correct {color:var(--correct)}
+.quiz-status-wrong {color:var(--wrong)}
+
+/* Reduce navigation emphasis; retain a light semibold primary label only for translations. */
+.study-guide-navigation :is(a,button),
+.study-guide-tools :is(.study-guide-theme,.study-guide-language,.study-guide-menu),
+.study-course-actions .button,.top-actions .button,
+.study-mode-button,.study-session-reset,
+.sheet-route-back,.sheet-route-pager a,.sheet-route-categories a {
+  font-weight:500;
+}
+.study-guide-navigation .editorial-label-main,
+.study-guide-crumbs .editorial-label-main,
+:is(.sheet-route-back,.sheet-route-pager a,.sheet-route-categories a,.study-course-actions .button,.top-actions .button) .editorial-label-main {
+  font-weight:600;
+}
+.study-guide-navigation .editorial-label-sub,
+.study-guide-crumbs .editorial-label-sub,
+:is(.sheet-route-back,.sheet-route-pager a,.sheet-route-categories a,.study-course-actions .button,.top-actions .button) .editorial-label-sub {
+  font-size:12px;
+  font-weight:400;
+  line-height:1.35;
+}

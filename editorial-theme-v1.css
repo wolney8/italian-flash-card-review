@@ -93,3 +93,28 @@ body.card.guided-enabled:not(.nightMode):not(.night_mode){
 @media(prefers-reduced-motion:reduce){.guided-choice,.guided-topic,.guided-lesson{transition:none}}
 
 @media(min-width:741px){.guided-menu{display:none!important}}
+/* Navigation typography: regular-weight controls; semibold only for bilingual primary labels. */
+.guided-navigation :is(a,button.guided-nav-comment),
+.guided-tools :is(.guided-theme,.guided-menu,.guided-label-order),
+.guided-breadcrumb a,
+.guided-primary,.guided-secondary,.guided-feedback {
+  font-weight:500;
+}
+.guided-navigation .editorial-label-main,
+.guided-breadcrumb .editorial-label-main,
+:is(.guided-primary,.guided-secondary,.guided-feedback) .editorial-label-main {
+  font-weight:600;
+}
+.guided-navigation .editorial-label-sub,
+.guided-breadcrumb .editorial-label-sub,
+:is(.guided-primary,.guided-secondary,.guided-feedback) .editorial-label-sub {
+  font-size:12px;
+  font-weight:400;
+  line-height:1.35;
+}
+.guided-footer .editorial-label-main {font-size:13px;font-weight:600}
+.guided-footer .editorial-label-sub,
+.guided-card-count .editorial-label-sub,
+.guided-card-options label .editorial-label-sub,
+.guided-choice b .editorial-label-sub {font-size:12px;font-weight:400}
+.guided-lesson-copy strong .editorial-label-sub {font-size:13px;font-weight:400}
