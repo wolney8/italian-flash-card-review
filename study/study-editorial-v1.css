@@ -20,6 +20,23 @@ main>header.hero h1,.sheet-library-overview h2,.sheet-library-category h3,.study
 .eyebrow,.sheet-library-tag{color:var(--pink)}
 .button{background:var(--mint);border-color:var(--mint);color:var(--paper)}.button.secondary{border-color:var(--pink);color:var(--pink)}
 html[data-italian-theme="dark"] .button{color:#1b2920}
+html[data-italian-theme="dark"] a.button.secondary,
+html[data-italian-theme="dark"] button.button.secondary,
+html[data-italian-theme="dark"] .button.secondary {
+  color: var(--pink);
+  background: transparent;
+  border-color: var(--pink);
+}
+html[data-italian-theme="dark"] .button.secondary:hover,
+html[data-italian-theme="dark"] .button.secondary:focus-visible {
+  background: rgba(224,162,132,.14);
+  color: #f8c5ac;
+  border-color: #f8c5ac;
+}
+html[data-italian-theme="dark"] .button.secondary:focus-visible {
+  outline: 2px solid #f8c5ac;
+  outline-offset: 3px;
+}
 .question-heading,.quiz-question label{color:var(--ink)}.quiz-question,.number-cell,.town-cell,.bullet{background:var(--paper2);border-color:var(--line)}
 .check-button{background:var(--teal);color:white;border-color:var(--teal2)}
 .check-button .editorial-label{align-items:center}.check-button .editorial-label-sub{font-size:11px;color:inherit;opacity:.87}
