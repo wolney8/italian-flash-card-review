@@ -38,6 +38,9 @@ function auditClient(){
     query('[data-guided-step="practise"]').click();
     await frames();
     const current=()=>query('.quiz-question:not([hidden])');
+    // Simulate the learner scrolling down to read the question before using Next.
+    current().scrollIntoView({block:'center',behavior:'instant'});
+    await frames();
     const oldTop=current().getBoundingClientRect().top;
     query('[data-guided-action="next"]').click();
     await frames();await sleep(40);
