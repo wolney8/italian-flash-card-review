@@ -1,0 +1,30 @@
+/* Italian Editorial — study sheets, shared appearance and bilingual navigation. */
+html[data-italian-theme="light"]{color-scheme:light;--bg:#faf7ee;--paper:#fffdf7;--paper2:#f2eadb;--ink:#302a25;--muted:#665d53;--line:#d8ccb7;--pink:#9f5038;--mint:#275e48;--teal:#275e48;--teal2:#356a54;--correct:#21664a;--wrong:#ab4134;--hint:#986420}
+html[data-italian-theme="dark"]{color-scheme:dark;--bg:#171b18;--paper:#232a23;--paper2:#303a2e;--ink:#f5ead5;--muted:#d2c4a8;--line:#58614d;--pink:#e0a284;--mint:#d1b781;--teal:#5a7e65;--teal2:#7da48a;--correct:#98e7b1;--wrong:#f19889;--hint:#f0ca79}
+body{background:var(--bg)!important;color:var(--ink)!important;background-image:linear-gradient(90deg,#b86c55 0 17%,#f9f1de 17% 36%,#52735d 36% 100%)!important;background-size:100% 4px!important;background-repeat:no-repeat!important;font-family:'Avenir Next',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+main>header.hero h1,.sheet-library-overview h2,.sheet-library-category h3,.study-pack-sheet h1,.panel h2{font-family:'Iowan Old Style',Georgia,serif;letter-spacing:-.03em}
+.study-guide-header{background:transparent;max-width:1080px;margin:0 auto;border-bottom-color:var(--line);padding-top:22px}
+.study-guide-brand{color:var(--ink)!important}.study-guide-brand strong{font-family:Georgia,serif;font-size:22px;font-weight:740}
+.study-guide-mark{border:1px solid var(--line);border-radius:50%;background:var(--paper2);color:var(--pink);font-family:Georgia,serif}
+.study-guide-navigation{gap:5px}
+.study-guide-navigation :is(a,button){display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;background:transparent;color:var(--ink);border:1px solid transparent;min-height:50px;padding:6px 10px;border-radius:10px;cursor:pointer;text-decoration:none;font:inherit;font-weight:800}
+.study-guide-navigation :is(a,button):hover,.study-guide-navigation a[aria-current="page"]{background:var(--paper2);border-color:var(--line)}
+.editorial-label{display:inline-flex;flex-direction:column;align-items:inherit;gap:2px;line-height:1.28;text-align:inherit}
+.editorial-label-main{font-size:inherit;font-weight:800;font-style:normal;line-height:1.28}
+.editorial-label-sub{color:var(--muted);font-size:.75em;font-style:italic;font-weight:450;line-height:1.25}
+.study-guide-navigation .editorial-label-main{font-size:14px}.study-guide-navigation .editorial-label-sub{font-size:11px}
+.study-guide-language,.study-guide-theme,.study-guide-menu{background:var(--paper);border:1px solid var(--line);border-radius:10px;color:var(--ink);padding:8px 12px;min-height:44px;display:flex;align-items:center;gap:6px;justify-content:center;font:inherit;font-weight:800;font-size:13px;cursor:pointer}
+.study-guide-crumbs .editorial-label-main{font-size:13px}.study-guide-crumbs .editorial-label-sub{font-size:10px}
+.study-sheet-library .sheet-library-item{background:var(--paper2);border-color:var(--line);color:var(--ink)}
+.sheet-library-category,.hero,.panel,.study-course-shell{background:var(--paper)!important;border-color:var(--line)!important;box-shadow:0 8px 25px rgba(60,42,18,.06)}
+.eyebrow,.sheet-library-tag{color:var(--pink)}
+.button{background:var(--mint);border-color:var(--mint);color:var(--paper)}.button.secondary{border-color:var(--pink);color:var(--pink)}
+html[data-italian-theme="dark"] .button{color:#1b2920}
+.question-heading,.quiz-question label{color:var(--ink)}.quiz-question,.number-cell,.town-cell,.bullet{background:var(--paper2);border-color:var(--line)}
+.check-button{background:var(--teal);color:white;border-color:var(--teal2)}
+.check-button .editorial-label{align-items:center}.check-button .editorial-label-sub{font-size:11px;color:inherit;opacity:.87}
+.hint-button .editorial-label{align-items:center}.hint-button .editorial-label-main{font-size:14px}.hint-button .editorial-label-sub{font-size:11px;color:var(--hint)}
+.study-pack-sheet .hero{border-radius:16px}.study-sheet-detail .study-pack-sheet .panel{border-radius:14px}
+@media(max-width:760px){.study-guide-header{flex-wrap:wrap}.study-guide-navigation.is-open{display:flex;width:100%}.study-guide-navigation :is(a,button){align-items:flex-start;text-align:left;width:100%;padding:10px 13px}.study-guide-tools{gap:5px}.study-guide-language{min-width:75px}}
+
+@media(min-width:761px){.study-guide-menu{display:none!important}}
