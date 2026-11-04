@@ -235,6 +235,20 @@
         (stat.wrong===1?'answer':'answers');
       remember(state);
     }
+    function focusStage(previousTop=null) {
+      title.focus({preventScroll:true});
+      // A visible stage selector stays in place. Only scroll when it is offscreen.
+      // This avoids sudden jumps when the next stage has less content.
+      requestAnimationFrame(() => {
+        const top=steps.getBoundingClientRect().top;
+        const safeMax=Math.min((window.innerHeight||document.documentElement.clientHeight)*0.45,300);
+        const stable=Number.isFinite(previousTop)&&previousTop>=12&&previousTop<=safeMax;
+        if(!stable&&top>=12&&top<=safeMax)return;
+        const target=stable?previousTop:16;
+        const delta=top-target;
+        if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:'instant'});
+      });
+    }
     function focusCurrent(previousQuestionTop = null) {
       const currentQuestion = state.step === 'practise' && !state.finished
         ? questions[state.question] : null;
@@ -257,11 +271,12 @@
         });
         return;
       }
-      title.focus({preventScroll:true});
-      // Stage transitions (not question changes) may return to the stage selector.
-      steps.scrollIntoView({block:'start',behavior:'instant'});
+      focusStage();
     }
     function move(action) {
+      const oldStageTop=steps.getBoundingClientRect().top;
+      const previousStep=state.step;
+      const wasFinished=state.finished;
       const oldQuestionTop = state.step === 'practise' && !state.finished
         ? questions[state.question]?.getBoundingClientRect().top ?? null : null;
       if (state.step === 'practise' && state.reviewIncorrect && !state.finished && state.reviewQueue.length) {
@@ -300,17 +315,19 @@
         } else state.finished = true;
       }
       show();
-      focusCurrent(oldQuestionTop);
+      if(previousStep!==state.step||wasFinished!==state.finished)focusStage(oldStageTop);
+      else focusCurrent(oldQuestionTop);
     }
 
     steps.addEventListener('click', event => {
       const button = event.target.closest('[data-guided-step]');
       if (!button) return;
+      const oldStageTop=steps.getBoundingClientRect().top;
       state.step = button.dataset.guidedStep;
       state.finished = false;
       state.reviewIncorrect = false;
       show();
-      focusCurrent();
+      focusStage(oldStageTop);
     });
     pager.addEventListener('click', event => {
       const button = event.target.closest('[data-guided-action]');
@@ -325,7 +342,7 @@
       state.question=queue[0];
       state.finished=false;
       show();
-      focusCurrent();
+      focusStage();
     });
     reviewUnanswered.addEventListener('click', () => {
       const missing = stats().firstUnanswered;
@@ -335,7 +352,7 @@
       state.finished = false;
       state.reviewIncorrect=false;
       show();
-      focusCurrent();
+      focusStage();
     });
     // Existing answer and hint handlers remain unchanged; just refresh progress labels.
     article.addEventListener('click', event => {

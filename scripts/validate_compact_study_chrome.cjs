@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const html=read('study/study-sheets.html');
+const chrome=read('study/study-editorial-v1.js');
+const mode=read('study/study-recovery-v1.js');
+const style=read('study/study-compact-chrome-v1.css');
+const pilot=read('study/guided-sheet-pilot-v1.js');
+
+assert.match(html,/study-compact-chrome-v1\.css\?v=/);
+assert.ok(html.indexOf('study-compact-chrome-v1.css')>html.indexOf('guided-sheet-pilot-v1.css'),'Compact layout styles must be last');
+assert.match(html,/id="studyNav"/,'Retain sheet chooser DOM for next sheet and fallback');
+assert.match(html,/id="studyModeLabel"/,'Preserve legacy mode and progress state for library');
+assert.match(style,/\.study-sheet-detail \.study-course-shell,\s*\.study-sheet-detail main > header\.hero\s*\{\s*display:none!important/,'Remove only detail-page duplicate panels');
+assert.doesNotMatch(style,/\.study-sheet-library[^{]*\{[^}]*display:none/,'Do not hide the library interface');
+assert.match(style,/\.study-detail-location-row\s*\{/);
+assert.match(style,/\.study-detail-tools\s*\{/);
+assert.match(style,/\.study-detail-tools \.study-crumb-action:focus-visible/);
+assert.match(style,/@media\(max-width:760px\)/);
+assert.match(style,/\.study-detail-tools\s*\{\s*width:100%;justify-content:flex-end;margin-left:0/);
+assert.match(chrome,/const renderKey=JSON\.stringify\(\[isDetail,title,studyMode\(\)\]\)/,'Do not replace toolbar on every quiz mutation');
+assert.match(chrome,/if\(host\.dataset\.renderKey===renderKey\)return/);
+assert.match(chrome,/host\.dataset\.renderKey=renderKey/);
+assert.match(chrome,/const isDetail=document\.body\.classList\.contains\('study-sheet-detail'\)/,'Do not show action toolbar on the library');
+assert.match(chrome,/else if\(event\.target\.closest\('\[data-study-print\]'\)\)window\.print\(\)/,'Print action must work');
+assert.match(mode,/dispatchEvent\(new Event\('italian-study-mode-updated'\)\)/,'Mode switch must refresh breadcrumb links');
+const start=chrome.indexOf('  const TOOL_ICON=');
+const end=chrome.indexOf('  function breadcrumb(){',start);
+assert.ok(start!==-1&&end>start,'Shared action buttons missing');
+const makeTools=new Function('mode',"'use strict';const studyMode=()=>mode;\n"+chrome.slice(start,end)+"\nreturn detailTools();");
+for(const value of ['learn','review']){
+ const markup=makeTools(value);
+ assert.match(markup,new RegExp('data-study-mode="'+value+'" aria-pressed="true"'));
+ assert.match(markup,/data-reset-study-session/);
+ assert.match(markup,/data-study-print/);
+ assert.match(markup,/aria-label="Print or save as PDF"/);
+ assert.match(markup,/role="group" aria-label="Learning mode"/);
+ assert.equal((markup.match(/<svg /g)||[]).length,4,'Expected Learn, Review, Reset, Print icons');
+ assert.equal((markup.match(/data-study-mode=/g)||[]).length,2,'Only two modes');
+}
+assert.match(pilot,/function focusStage\(previousTop=null\)/,'Guided stages need a shared scroll anchor');
+assert.match(pilot,/const oldStageTop=steps\.getBoundingClientRect\(\)\.top/,'Capture previous stage viewport position');
+assert.match(pilot,/steps\.addEventListener\('click'[\s\S]*?focusStage\(oldStageTop\)/,'Stage tabs must preserve their visible position');
+assert.match(pilot,/if\(previousStep!==state\.step\|\|wasFinished!==state\.finished\)focusStage\(oldStageTop\)/,'Previous and Next must align on crossing stages');
+assert.match(pilot,/else focusCurrent\(oldQuestionTop\)/,'Previous and Next questions must retain scroll position');
+assert.doesNotMatch(pilot,/steps\.scrollIntoView/,'Avoid inconsistent native scroll alignment');
+assert.match(style,/\.guided-study-pilot \.study-pack-sheet\{\s*overflow-anchor:none/,'Prevent browser scroll anchoring shifting stage views');
+console.log('PASS compact English breadcrumb controls, Learn/Review state, reset and print.');
+console.log('PASS stable stage anchor and preserved per-question navigation on mobile and desktop.');
+console.log('PASS study-sheet library fallback and existing progress selectors remain in DOM.');
