@@ -8,7 +8,7 @@ const root=path.resolve(__dirname,'..');
 
 function auditClient(){
   const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-  const frames=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  const frames=()=>new Promise(resolve=>setTimeout(resolve,110));
   const query=s=>document.querySelector(s);
   async function test(){
     for(let i=0;i<150;i++){
@@ -54,13 +54,16 @@ function auditClient(){
     result.learnPressed=query('.study-detail-tools [data-study-mode="learn"]')?.getAttribute('aria-pressed')==='true';
     return result;
   }
-  function report(data){
-    const el=document.createElement('pre');el.id='browser-audit-result';
-    el.textContent=JSON.stringify(data);document.body.appendChild(el);
-  }
-  window.addEventListener('load',()=>test()
-    .then(data=>report({ok:true,...data}))
-    .catch(e=>report({ok:false,error:String(e.stack||e)})));
+  const marker=document.createElement('pre');
+  marker.id='browser-audit-result';
+  marker.textContent=JSON.stringify({ok:false,error:'Audit did not finish'});
+  document.body.appendChild(marker);
+  function report(data){marker.textContent=JSON.stringify(data);}
+  const run=()=>test().then(data=>report({ok:true,...data}))
+    .catch(e=>report({ok:false,error:String(e.stack||e)}));
+  if(document.readyState==='loading')
+    document.addEventListener('DOMContentLoaded',run,{once:true});
+  else run();
 }
 const injected='('+auditClient.toString()+')();';
 function mime(name){
