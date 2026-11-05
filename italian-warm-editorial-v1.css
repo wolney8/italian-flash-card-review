@@ -1,0 +1,211 @@
+/* Warm Editorial v1 — restrained blend of Refined Editorial and Warm Notebook.
+   Visual-only overlay. No changes to route logic, learning state, card templates or controls.
+   Remove this stylesheet link from both HTML entrypoints to roll back. */
+
+/* Harmonised tokens for the guided Flashcards site. */
+body.card.guided-enabled:not(.nightMode):not(.night_mode) {
+  --bg:#F8F3EB;
+  --paper:#FFFCF7;
+  --paper2:#F3E8DB;
+  --ink:#332D28;
+  --muted:#675B52;
+  --line:#DACABE;
+  --accent:#8C4938;
+  --green:#285D47;
+  --primary:#285D47;
+  --primary-ink:#FFF9EF;
+  --recall:#FFFCF7;
+  --answer:#F3E8DB;
+  --editorial-focus:#8C4938;
+  --editorial-shadow:rgba(80,55,38,.075);
+  background-color:var(--bg);
+  color:var(--ink);
+  background-image:linear-gradient(90deg,#AE7563 0 16%,#F5E7D8 16% 37%,#6E8874 37% 100%);
+}
+body.card.guided-enabled:is(.nightMode,.night_mode) {
+  --bg:#1D1C1A;
+  --paper:#292622;
+  --paper2:#37302B;
+  --ink:#F6E8DC;
+  --muted:#D5C2B4;
+  --line:#65574C;
+  --accent:#F0B39A;
+  --green:#BCD4BD;
+  --primary:#BCD4BD;
+  --primary-ink:#213327;
+  --recall:#302C28;
+  --answer:#37302B;
+  --editorial-focus:#F0B39A;
+  --editorial-shadow:rgba(0,0,0,.16);
+  background-color:var(--bg);
+  color:var(--ink);
+  background-image:linear-gradient(90deg,#986557 0 16%,#C9B59C 16% 37%,#718875 37% 100%);
+}
+
+/* The Study Sheets page uses HTML theme attributes rather than body mode classes. */
+html[data-italian-theme="light"] {
+  --bg:#F8F3EB;--paper:#FFFCF7;--paper2:#F3E8DB;
+  --ink:#332D28;--muted:#675B52;--line:#DACABE;
+  --pink:#8C4938;--mint:#285D47;--teal:#285D47;--teal2:#376F56;
+  --correct:#245F47;--wrong:#A43B31;--hint:#8B561C;
+}
+html[data-italian-theme="dark"] {
+  --bg:#1D1C1A;--paper:#292622;--paper2:#37302B;
+  --ink:#F6E8DC;--muted:#D5C2B4;--line:#65574C;
+  --pink:#F0B39A;--mint:#BCD4BD;--teal:#4E725A;--teal2:#779780;
+  --correct:#A6E6C0;--wrong:#F4A69A;--hint:#F0C58B;
+}
+html[data-italian-theme="light"] body {
+  background-color:var(--bg)!important;
+  background-image:linear-gradient(90deg,#AE7563 0 16%,#F5E7D8 16% 37%,#6E8874 37% 100%)!important;
+}
+html[data-italian-theme="dark"] body {
+  background-color:var(--bg)!important;
+  background-image:linear-gradient(90deg,#986557 0 16%,#C9B59C 16% 37%,#718875 37% 100%)!important;
+}
+
+/* Typography: editorial identity in display headings, easy-to-scan learning text. */
+:is(.guided-experience .guided-title,
+    .guided-experience .editorial-hero-title,
+    .guided-experience .guided-choice strong,
+    .guided-experience .guided-lesson-copy strong,
+    .guided-experience .guided-topic strong,
+    .study-sheet-detail .study-pack-sheet > header.hero h1,
+    .study-sheet-library .sheet-library-overview h2,
+    .study-sheet-library .sheet-library-category h3) {
+  font-family:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  font-weight:600;
+  letter-spacing:-.026em;
+  line-height:1.22;
+}
+.guided-experience .guided-title .editorial-label-main {
+  font-weight:600;
+}
+.guided-experience :is(.guided-lesson-copy strong,.guided-topic strong) .editorial-label-main {
+  font-weight:600;
+}
+.study-sheet-detail .study-pack-sheet > header.hero h1 {
+  font-size:clamp(27px,3.6vw,38px);
+  line-height:1.22;
+}
+.study-sheet-library .sheet-library-item strong,
+.study-sheet-library .sheet-library-item strong .editorial-label-main {
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-weight:500;
+  letter-spacing:-.01em;
+}
+.study-pack-sheet .panel h2,
+.guided-sheet-current-title {
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-weight:500;
+  letter-spacing:-.013em;
+  line-height:1.35;
+}
+.study-pack-sheet :is(.question-heading label,.hint-button,.check-button) {
+  font-weight:500;
+}
+
+/* Quieter paper/card surfaces; warmth without decorative frames. */
+.guided-experience :is(.guided-choice,.guided-lesson,.guided-topic,.guided-course-stage,.guided-resume,.editorial-complete),
+.study-sheet-library :is(.sheet-library-category,.sheet-library-item),
+.study-pack-sheet :is(.panel,.quiz-question),
+.guided-sheet-step-navigation button,
+.guided-sheet-finish,
+.guided-confidence {
+  border-color:var(--line);
+  border-radius:15px;
+  box-shadow:0 3px 13px rgba(69,43,26,.055);
+}
+body.card.guided-enabled:is(.nightMode,.night_mode)
+  :is(.guided-choice,.guided-lesson,.guided-topic,.guided-course-stage,.guided-resume,.editorial-complete),
+html[data-italian-theme="dark"]
+  :is(.sheet-library-category,.sheet-library-item,.study-pack-sheet .panel,.study-pack-sheet .quiz-question) {
+  box-shadow:0 4px 14px rgba(0,0,0,.13);
+}
+.guided-experience .guided-card-host .review-card {
+  border-color:var(--line);
+  background:var(--paper);
+  box-shadow:0 4px 14px var(--editorial-shadow);
+}
+.guided-experience .guided-card-host .card-face {background:var(--recall)}
+.guided-experience .guided-card-host .answer-side {background:var(--answer)}
+.study-pack-sheet .quiz-question,
+.study-pack-sheet .number-cell,
+.study-pack-sheet .town-cell,
+.study-pack-sheet .bullet {
+  border-color:var(--line);
+  background:var(--paper2);
+}
+.guided-sheet-teaching-note,
+.guided-sheet-tips,
+.study-sheet-library .sheet-library-item {
+  background:var(--paper2);
+}
+
+/* Controls: sage green remains the action colour; terracotta is a restrained accent. */
+.guided-experience :is(.guided-primary,.guided-secondary,.guided-feedback),
+.study-pack-sheet :is(.button,.check-button,.hint-button),
+.guided-sheet-controls button,
+.guided-sheet-followup,
+.study-detail-tools .study-crumb-action {
+  border-radius:10px;
+  font-weight:500;
+}
+.guided-sheet-step-navigation button[aria-current="step"] {
+  border-color:var(--mint);
+  background:var(--paper2);
+  box-shadow:inset 0 0 0 1px var(--mint);
+}
+.study-detail-tools .study-crumb-action[aria-pressed="true"] {
+  background:var(--mint);
+  border-color:var(--mint);
+}
+.course-site-header {
+  border-bottom-color:var(--line);
+}
+.course-site-navigation :is(a,button):hover,
+.course-site-navigation a[aria-current="page"] {
+  background:var(--paper2);
+  border-color:var(--line);
+}
+.course-site-brandmark {
+  background:var(--paper2);
+  border-color:var(--line);
+  color:var(--accent,var(--pink));
+}
+.learning-session-progress-track,
+.guided-sheet-progress-track {
+  background:var(--paper2);
+  border-color:var(--line);
+}
+.learning-session-progress-fill {
+  background:var(--green,var(--mint));
+}
+.guided-sheet-progress-fill {background:var(--mint)}
+
+/* Accessible text and keyboard focus remain prominent in both themes. */
+:is(.study-detail-tools .study-crumb-action,
+    .guided-sheet-step-navigation button,
+    .guided-sheet-controls button,
+    .guided-experience .guided-primary,
+    .guided-experience .guided-secondary):focus-visible {
+  outline:3px solid var(--editorial-focus,var(--pink));
+  outline-offset:3px;
+}
+@media(max-width:740px) {
+  .guided-experience .guided-choice,
+  .study-sheet-library .sheet-library-item {box-shadow:none}
+  .study-sheet-detail .study-pack-sheet > header.hero h1 {
+    font-size:clamp(26px,6vw,32px);
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  .learning-session-progress-fill,
+  .guided-sheet-progress-fill {transition:none}
+}
+@media print {
+  :is(.guided-choice,.guided-lesson,.guided-topic,.guided-course-stage,.guided-resume,
+      .editorial-complete,.sheet-library-category,.sheet-library-item,.panel,.quiz-question) {
+    box-shadow:none!important;
+  }
+}

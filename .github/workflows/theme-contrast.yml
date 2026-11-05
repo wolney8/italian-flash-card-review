@@ -24,3 +24,4 @@ jobs:
       - run: node --check learning-session-v1.js
       - run: node --check guided-course-v2.js
       - run: node scripts/validate_learning_session.cjs
+      - run: node scripts/validate_warm_editorial.cjs
