@@ -15,7 +15,11 @@ function auditClient(){
       if(document.body.classList.contains('guided-study-pilot') &&
          query('.study-detail-location-row .study-detail-tools') &&
          query('.guided-sheet-steps') &&
-         query('.study-detail-tools [data-study-print]'))break;
+         query('.study-detail-tools [data-study-print]')) {
+        await sleep(90); // Wait for async bilingual decoration to settle.
+        if(query('.study-detail-location-row .study-detail-tools') &&
+           query('.study-detail-tools [data-study-print]')) break;
+      }
       await sleep(40);
     }
     if(!query('.guided-sheet-steps'))throw Error('Guided pilot did not initialise');
