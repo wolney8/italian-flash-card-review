@@ -16,14 +16,23 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Materialise verified review-source transfer
+      - name: Verify exact review-source transfer
         run: |
           python - <<'PY'
           from pathlib import Path
           import base64,hashlib,io,zipfile
           parts=[Path('lesson6-transfer/part%d.b64'%i) for i in range(1,5)]
           if all(p.exists() for p in parts):
-              data=base64.b64decode(''.join(p.read_text().strip() for p in parts),validate=True)
+              text=[p.read_text().strip() for p in parts]
+              gap=Path('lesson6-transfer/part1-gap.txt').read_text().strip()
+              assert text[0].count('DodPkp541/HgCur')==1
+              text[0]=text[0].replace('DodPkp541/HgCur','DodPkp'+gap+'541/HgCur')
+              repairs={0:[[3566,3568,'sq','']],1:[[5677,5678,'3','9'],[5686,5686,'','vu'],[11824,11827,'2yI','']]}
+              for index,edits in repairs.items():
+                  for a,b,old,new in reversed(edits):
+                      assert text[index][a:b]==old
+                      text[index]=text[index][:a]+new+text[index][b:]
+              data=base64.b64decode(''.join(text),validate=True)
               assert hashlib.sha256(data).hexdigest()=='eca6568900b95e04d15587cd3471a5159ee36718a5d6cf8a47eb9c649060152d'
               with zipfile.ZipFile(io.BytesIO(data)) as archive:
                   for name in archive.namelist():
@@ -45,19 +54,22 @@ jobs:
           node scripts/validate_lesson6.cjs
           node scripts/validate_theme_contrast.cjs
           node scripts/validate_warm_editorial.cjs
-          python lesson6/build.py
-          python scripts/validate_lesson6_browser.py
-      - name: Persist reviewed source on the feature branch only
+      - name: Persist candidate on feature branch only
         if: github.event_name == 'push' && github.ref_name == 'feature/lesson6-source-grounded-20261106' && hashFiles('lesson6/content.js') != ''
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add lesson6 scripts/validate_lesson6.cjs scripts/validate_lesson6_browser.py scripts/validate_study_browser.cjs index.html course-data-loader-v1.js guided-course-v2.js study/study-sheets.html study/study-sheets-v5.js study/study-editorial-v1.js
-          if [ -d lesson6-transfer ]; then git rm -r --ignore-unmatch lesson6-transfer; fi
+          git rm -r --ignore-unmatch lesson6-transfer .github/workflows/lesson6-transfer-audit.yml
           if ! git diff --cached --quiet; then
-            git commit -m 'Materialise and validate Lesson 6 review candidate'
+            git commit -m 'Add checksum-verified Lesson 6 review candidate'
             git push origin HEAD:feature/lesson6-source-grounded-20261106
           fi
+      - name: Build Anki and test actual web UI
+        if: hashFiles('lesson6/content.js') != ''
+        run: |
+          python lesson6/build.py
+          python scripts/validate_lesson6_browser.py
       - uses: actions/upload-artifact@v4
         if: always() && hashFiles('artifacts/lesson6/*') != ''
         with:
