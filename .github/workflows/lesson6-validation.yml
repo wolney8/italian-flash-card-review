@@ -17,10 +17,11 @@ jobs:
       - name: Validate Lesson 6 when content is present
         run: |
           if [ -f scripts/validate_lesson6.cjs ]; then node scripts/validate_lesson6.cjs; fi
-      - name: Preserve reproducible source snapshot
+      - name: Preserve reproducible source and build dependencies
         run: |
           mkdir -p /tmp/lesson6-source
           git archive HEAD | tar -x -C /tmp/lesson6-source
+          python -m pip install --target /tmp/lesson6-source/_build-deps genanki==0.13.1
       - uses: actions/upload-artifact@v4
         with:
           name: lesson6-source-snapshot
