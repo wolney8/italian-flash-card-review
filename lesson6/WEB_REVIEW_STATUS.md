@@ -20,7 +20,7 @@ The 62 supplementary pronunciation/IPA entries retain their provisional status. 
 
 - Website flashcards: `/?page=card&lesson=L6`
 - Study Sheets library: `/study/study-sheets.html?mode=learn`
-- Number-building patterns: `/study/study-sheets.html?mode=learn&sheet=l6-numbers`
+- Number-building patterns: `/study/study-sheets.html?mode=learn&sheet=l6-number-patterns`
 - Statement/question intonation: `/study/study-sheets.html?mode=learn&sheet=l6-intonation`
 
 Any content corrections arising from in-site review should update the canonical Lesson 6 dataset before Anki exports resume.
