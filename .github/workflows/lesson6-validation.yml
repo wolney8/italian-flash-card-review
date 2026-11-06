@@ -5,36 +5,21 @@ on:
   pull_request:
     paths: ['lesson6/**', 'scripts/*lesson6*', '.github/workflows/lesson6-validation.yml']
 permissions:
-  contents: write
+  contents: read
 jobs:
   lesson6:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install candidate dependencies
+      - name: Install pinned build and test dependencies
         run: python -m pip install genanki==0.13.1 playwright==1.57.0
-      - name: Repair pre-existing script parse failure
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('pronunciation-decisions-v628.js')
-          s=p.read_text()
-          old="const values = new Set(keys.map(key => stripHtml(cardsByKey.get(key)?.pron || ''));"
-          new="const values = new Set(keys.map(key => stripHtml(cardsByKey.get(key)?.pron || '')));"
-          if old in s:
-              assert s.count(old)==1
-              p.write_text(s.replace(old,new))
-          else:
-              assert new in s
-          PY
-      - name: Integrate and validate canonical lesson data
+      - name: Validate canonical lesson and preserved earlier data
         run: |
           python lesson6/install.py
+          git diff --exit-code
           node --check lesson6/content.js
           node --check course-data-loader-v1.js
           node --check guided-course-v2.js
@@ -43,20 +28,10 @@ jobs:
           node scripts/validate_lesson6.cjs
           node scripts/validate_theme_contrast.cjs
           node scripts/validate_warm_editorial.cjs
-      - name: Persist candidate on feature branch only
-        if: github.event_name == 'push' && github.ref_name == 'feature/lesson6-source-grounded-20261106'
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add lesson6 pronunciation-decisions-v628.js scripts/validate_lesson6.cjs scripts/validate_lesson6_browser.py scripts/validate_study_browser.cjs index.html course-data-loader-v1.js guided-course-v2.js study/study-sheets.html study/study-sheets-v5.js study/study-editorial-v1.js
-          if ! git diff --cached --quiet; then
-            git commit -m 'Repair legacy pronunciation syntax for Lesson 6 browser validation'
-            git push origin HEAD:feature/lesson6-source-grounded-20261106
-          fi
-      - name: Build Anki and test actual web UI
-        run: |
-          python lesson6/build.py
-          python scripts/validate_lesson6_browser.py
+      - name: Build Anki and interactive review preview
+        run: python lesson6/build.py
+      - name: Test integrated Lesson 6 on desktop and mobile
+        run: python scripts/validate_lesson6_browser.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
