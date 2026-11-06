@@ -1,0 +1,28 @@
+name: Lesson 6 validation
+on:
+  push:
+    branches: [feature/lesson6-source-grounded-20261106]
+  pull_request:
+    paths: ['lesson6/**', 'scripts/*lesson6*', '.github/workflows/lesson6-validation.yml']
+permissions:
+  contents: read
+jobs:
+  lesson6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Lesson 6 when content is present
+        run: |
+          if [ -f scripts/validate_lesson6.cjs ]; then node scripts/validate_lesson6.cjs; fi
+      - name: Preserve reproducible source snapshot
+        run: |
+          mkdir -p /tmp/lesson6-source
+          git archive HEAD | tar -x -C /tmp/lesson6-source
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lesson6-source-snapshot
+          path: /tmp/lesson6-source
+          retention-days: 7
