@@ -16,62 +16,49 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify exact review-source transfer
+      - name: Install candidate dependencies
+        run: python -m pip install genanki==0.13.1 playwright==1.57.0
+      - name: Repair pre-existing script parse failure
         run: |
           python - <<'PY'
           from pathlib import Path
-          import base64,hashlib,io,zipfile
-          parts=[Path('lesson6-transfer/part%d.b64'%i) for i in range(1,5)]
-          if all(p.exists() for p in parts):
-              text=[p.read_text().strip() for p in parts]
-              gap=Path('lesson6-transfer/part1-gap.txt').read_text().strip()
-              assert text[0].count('DodPkp541/HgCur')==1
-              text[0]=text[0].replace('DodPkp541/HgCur','DodPkp'+gap+'541/HgCur')
-              repairs={0:[[3566,3568,'sq','']],1:[[5677,5678,'3','9'],[5686,5686,'','vu'],[11824,11827,'2yI','']]}
-              for index,edits in repairs.items():
-                  for a,b,old,new in reversed(edits):
-                      assert text[index][a:b]==old
-                      text[index]=text[index][:a]+new+text[index][b:]
-              data=base64.b64decode(''.join(text),validate=True)
-              assert hashlib.sha256(data).hexdigest()=='eca6568900b95e04d15587cd3471a5159ee36718a5d6cf8a47eb9c649060152d'
-              with zipfile.ZipFile(io.BytesIO(data)) as archive:
-                  for name in archive.namelist():
-                      assert not name.startswith('/') and '..' not in Path(name).parts
-                      assert name.startswith('lesson6/') or name.startswith('scripts/validate_lesson6')
-                      target=Path(name);target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(archive.read(name))
+          p=Path('pronunciation-decisions-v628.js')
+          s=p.read_text()
+          old="const values = new Set(keys.map(key => stripHtml(cardsByKey.get(key)?.pron || ''));"
+          new="const values = new Set(keys.map(key => stripHtml(cardsByKey.get(key)?.pron || '')));"
+          if old in s:
+              assert s.count(old)==1
+              p.write_text(s.replace(old,new))
+          else:
+              assert new in s
           PY
-      - name: Install candidate dependencies
-        if: hashFiles('lesson6/build.py') != ''
-        run: python -m pip install genanki==0.13.1 playwright==1.57.0
       - name: Integrate and validate canonical lesson data
-        if: hashFiles('lesson6/content.js') != ''
         run: |
           python lesson6/install.py
           node --check lesson6/content.js
           node --check course-data-loader-v1.js
           node --check guided-course-v2.js
+          node --check pronunciation-decisions-v628.js
           node --check study/study-sheets-v5.js
           node scripts/validate_lesson6.cjs
           node scripts/validate_theme_contrast.cjs
           node scripts/validate_warm_editorial.cjs
       - name: Persist candidate on feature branch only
-        if: github.event_name == 'push' && github.ref_name == 'feature/lesson6-source-grounded-20261106' && hashFiles('lesson6/content.js') != ''
+        if: github.event_name == 'push' && github.ref_name == 'feature/lesson6-source-grounded-20261106'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add lesson6 scripts/validate_lesson6.cjs scripts/validate_lesson6_browser.py scripts/validate_study_browser.cjs index.html course-data-loader-v1.js guided-course-v2.js study/study-sheets.html study/study-sheets-v5.js study/study-editorial-v1.js
-          git rm -r --ignore-unmatch lesson6-transfer .github/workflows/lesson6-transfer-audit.yml
+          git add lesson6 pronunciation-decisions-v628.js scripts/validate_lesson6.cjs scripts/validate_lesson6_browser.py scripts/validate_study_browser.cjs index.html course-data-loader-v1.js guided-course-v2.js study/study-sheets.html study/study-sheets-v5.js study/study-editorial-v1.js
           if ! git diff --cached --quiet; then
-            git commit -m 'Add checksum-verified Lesson 6 review candidate'
+            git commit -m 'Repair legacy pronunciation syntax for Lesson 6 browser validation'
             git push origin HEAD:feature/lesson6-source-grounded-20261106
           fi
       - name: Build Anki and test actual web UI
-        if: hashFiles('lesson6/content.js') != ''
         run: |
           python lesson6/build.py
           python scripts/validate_lesson6_browser.py
       - uses: actions/upload-artifact@v4
-        if: always() && hashFiles('artifacts/lesson6/*') != ''
+        if: always()
         with:
           name: lesson6-review-candidate
           path: |
