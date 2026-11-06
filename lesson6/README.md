@@ -1,8 +1,11 @@
-# Lesson 6 — review candidate (3 November 2026)
+# Lesson 6 — web review (3 November 2026)
+
+## Release decision — 6 November 2026
+The user approved publishing the web UI for in-site review. Anki deck production and release are on hold until the user reviews the website and explicitly asks to resume. The earlier Anki package remains a draft. See `WEB_REVIEW_STATUS.md`.
 
 ## Scope
-One canonical `content.js` dataset generates the Anki candidate and website cards.
-- 66 recall cards in six ordered subdecks.
+One canonical `content.js` dataset supplies the web cards and can supply a later approved Anki export.
+- 66 recall cards in six ordered topics.
 - Nine Lesson 6 Study Sheet sets, 83 practice questions.
 - All 30 supplied homework tasks: 6 pronoun/form matches, 10 sentence gaps, 8 translations, 6 negative gaps.
 - 27 classroom/group tasks: 12 class gaps and the complete 15-item plural workshop.
@@ -16,17 +19,22 @@ The two original intonation diagrams are cropped from **Session 6 - 03.11.2026 -
 
 Homework is kept principally in Study Sheets. Its answers are derived from supplied conjugation/negative tables, whereas the plural workshop has an explicit teacher answer key. Every exercise records its source and answer origin.
 
-## Review boundary
-**Not a pronunciation-verified production release.** Sixty-two cards include supplementary English-friendly and IPA pronunciation fields marked `Provisional — verification pending`. The source PDFs contain no recordings. Full lexical verification and a native Anki import/round-trip remain outstanding. Four conceptual cards need no pronunciation line. No claim of RAI DOP/Treccani verification is made.
+## Content verification boundary
+Sixty-two cards include supplementary English-friendly and IPA pronunciation fields marked `Provisional — verification pending`. Web review approval does not mean those entries are dictionary-verified. Four conceptual cards need no pronunciation line. No claim of RAI DOP/Treccani verification is made.
 
 The duplicated `Sono italiani?` affirmative/question row is recorded but excluded from scored contrasts. Ambiguous `Sono a casa` is not turned into a single-answer subject-identification question. Referenced textbook pages and listening audio were not supplied and are not invented.
 
-## Build
-1. Install Python `genanki==0.13.1` and Node.js.
-2. `python lesson6/install.py` — idempotent integration of known entrypoints only.
-3. `node scripts/validate_lesson6.cjs`.
-4. `python lesson6/build.py` — writes Anki candidate, HTML preview and inventories to `artifacts/lesson6`.
-5. `python scripts/validate_lesson6_browser.py` — Playwright 1.57.0 plus Chromium/Chrome, actual static site at desktop and 390px widths.
+## Web validation
+1. `python lesson6/install.py` — idempotent integration of known entrypoints only.
+2. `node scripts/validate_lesson6.cjs` — canonical data and preserved earlier content.
+3. `python scripts/validate_lesson6_browser.py` — Playwright 1.57.0 plus Chromium/Chrome, actual static site at desktop and 390px widths.
+
+The automated Lesson 6 workflow does not install genanki, run `lesson6/build.py`, or generate/upload Anki packages while the hold is active. Existing Anki build code is retained for a later explicitly approved release; native Anki import and full pronunciation verification remain outstanding.
+
+## Review routes
+- Flashcards: `/?page=card&lesson=L6`
+- Number patterns: `/study/study-sheets.html?mode=learn&sheet=l6-number-patterns`
+- Intonation: `/study/study-sheets.html?mode=learn&sheet=l6-intonation`
 
 ## Rollback / existing progress
-Changes are isolated to this feature branch. Previous card data files are hashed in `baseline-integrity.json` and must not change. All new keys use `italian-l6-`. The dedicated Anki note type and deterministic GUIDs and integer IDs do not replace earlier notes. Rebuilds retain L6 identities. No main-branch deployment is approved by this candidate.
+Previous card data files are hashed in `baseline-integrity.json` and must not change. All new keys use `italian-l6-`. Existing lesson identities and learning progress are not replaced. Corrections from in-site review should update this canonical dataset before Anki exports resume.
