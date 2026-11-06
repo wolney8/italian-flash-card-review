@@ -1,0 +1,23 @@
+name: Study flow review
+on:
+  push:
+    branches: [fix/lesson-flow-and-study-navigation-20261106]
+  pull_request:
+    paths: ['study/**', 'lesson6/**', 'scripts/*study_flow*', '.github/workflows/study-flow-review.yml']
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Snapshot exact source for local inspection
+        run: git archive --format=zip HEAD -o /tmp/study-flow-source.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: study-flow-source
+          path: /tmp/study-flow-source.zip
+          retention-days: 2
