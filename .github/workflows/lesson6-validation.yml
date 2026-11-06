@@ -1,0 +1,45 @@
+name: Lesson 6 web validation
+on:
+  push:
+    branches: [main, feature/lesson6-source-grounded-20261106]
+    paths: ['lesson6/**', 'scripts/*lesson6*', '.github/workflows/lesson6-validation.yml', 'study/**', 'guided-course-v2.js', 'course-data-loader-v1.js', 'index.html']
+  pull_request:
+    paths: ['lesson6/**', 'scripts/*lesson6*', '.github/workflows/lesson6-validation.yml', 'study/**', 'guided-course-v2.js', 'course-data-loader-v1.js', 'index.html']
+permissions:
+  contents: read
+concurrency:
+  group: lesson6-web-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  lesson6:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned web-test dependency
+        run: python -m pip install playwright==1.57.0
+      - name: Validate canonical lesson and preserved earlier data
+        run: |
+          python lesson6/install.py
+          git diff --exit-code
+          node --check lesson6/content.js
+          node --check course-data-loader-v1.js
+          node --check guided-course-v2.js
+          node --check pronunciation-decisions-v628.js
+          node --check study/study-sheets-v5.js
+          node scripts/validate_lesson6.cjs
+          node scripts/validate_theme_contrast.cjs
+          node scripts/validate_warm_editorial.cjs
+      # Anki package generation is intentionally paused at the user's request.
+      # Do not call lesson6/build.py until the user has reviewed the web UI
+      # and explicitly approved resuming Anki deck production.
+      - name: Test integrated Lesson 6 on desktop and mobile
+        run: python scripts/validate_lesson6_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lesson6-web-validation
+          path: artifacts/lesson6-browser
+          retention-days: 14

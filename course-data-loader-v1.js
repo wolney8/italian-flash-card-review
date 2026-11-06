@@ -69,7 +69,12 @@
     if (finalCards.length !== EXPECTED_TOTAL_CARDS || keys.size !== EXPECTED_TOTAL_CARDS) {
       throw new Error(`Expected ${EXPECTED_TOTAL_CARDS} unique course cards, received ${finalCards.length} cards and ${keys.size} unique keys.`);
     }
-    return finalCards;
+    const lesson6Cards=window.ITALIAN_L6?.cards;
+    if(!Array.isArray(lesson6Cards)||!lesson6Cards.length)throw new Error('Lesson 6 data did not load.');
+    if(lesson6Cards.some(c=>c.lesson!=='L6'))throw new Error('Invalid Lesson 6 assignment.');
+    const expanded=finalCards.concat(lesson6Cards);
+    if(new Set(expanded.map(c=>c.key)).size!==expanded.length)throw new Error('Duplicate card keys in Lesson 6.');
+    return expanded;
   }
 
   function installV6Styles() {
@@ -99,6 +104,7 @@
         L4: { number: '4', title: 'Avere, Numbers, Plurals and Family', description: 'Avere, silent H, numbers 0–20, plural forms, articles and family vocabulary.' },
         L5: { number: '5', title: 'Consolidation Review', description: 'A mixed review of greetings, names, origins, avere, plurals, articles, family, C/G sounds and spelling.' }
       };
+      if(lesson==='L6')return {number:'6',title:'Numbers, Essere and Questions',description:'Number-building patterns, negatives, intonation and useful questions.'};
       return meta[lesson] || previous(lesson);
     };
     replacement.__courseShellV1 = true;

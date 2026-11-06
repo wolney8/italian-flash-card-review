@@ -181,7 +181,7 @@ function run(browser,base,label,size,slug){
         assert.ok(result.buttonWidths.every(w=>w>70),'Navigation buttons too narrow on '+name);
         const idx=sheets.findIndex(s=>s.slug===sheet.slug);
         // Sheet navigation follows the category order rather than source data order.
-        if(idx===sheets.length-1)assert.ok(result.nextHref?.startsWith('../?page=lessons'),'Final sheet must lead to Flashcards');
+        if(idx===sheets.length-1)assert.ok(result.nextHref?.includes('l6-essere-matching'),'Original sequence must continue to Lesson 6');
       }
     }
     console.log('PASS all nine Study Sheets in desktop and narrow/mobile Chromium.');

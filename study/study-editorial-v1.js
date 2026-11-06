@@ -29,7 +29,7 @@
   const set=(key,value)=>{try{localStorage.setItem(key,value);}catch(_e){}};
   function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
   function bi(it,en){const a=italianFirst?it:en,b=italianFirst?en:it;return `<span class="editorial-label"><span class="editorial-label-main" lang="${italianFirst?'it':'en'}">${escapeHtml(a)}</span><span class="editorial-label-sub" lang="${italianFirst?'en':'it'}">${escapeHtml(b)}</span></span>`;}
-  function mapped(value){const [it,en]=PAIRS[value]||[value,value];return bi(it,en);}
+  function mapped(value){const pair=PAIRS[value];return pair?bi(pair[0],pair[1]):escapeHtml(value);}
   function currentSheet(){const slug=new URLSearchParams(location.search).get('sheet');return slug||document.querySelector('.study-pack-sheet')?.id||'';}
   function sheetTitle(){return document.querySelector('.study-pack-sheet h1')?.textContent.trim()||'Study sheets library';}
   function applyTheme(){dark=get(THEME_KEY,'light')!=='light';document.documentElement.dataset.italianTheme=dark?'dark':'light';document.documentElement.style.colorScheme=dark?'dark':'light';}
@@ -109,7 +109,21 @@
     document.getElementById('studyReviewStatus').textContent='';
     modal.hidden=false;document.getElementById('studyReviewer')?.focus();
   }
-  function initialise(){italianFirst=get(LABEL_KEY,'it')!=='en';applyTheme();renderHeader();decoratePage();const root=document.getElementById('studySheets');if(root){let scheduled=false;new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;decoratePage();});}).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['aria-expanded']});}}
+  function initialise(){
+    italianFirst=get(LABEL_KEY,'it')!=='en';
+    applyTheme();renderHeader();decoratePage();
+    const root=document.getElementById('studySheets');
+    if(root){
+      let scheduled=false;
+      new MutationObserver(()=>{
+        if(scheduled)return;
+        scheduled=true;
+        // Structural controls must be ready with the lesson, even when animation
+        // frames are throttled. Coalesce mutations without waiting for a paint.
+        queueMicrotask(()=>{scheduled=false;decoratePage();});
+      }).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['aria-expanded']});
+    }
+  }
   document.addEventListener('click',event=>{
     if(event.target.closest('[data-study-editorial-theme]'))themeToggle();
     else if(event.target.closest('[data-study-editorial-language]'))labelToggle();
