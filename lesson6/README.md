@@ -5,7 +5,7 @@ The user approved publishing the web UI for in-site review. Anki deck production
 
 ## Scope
 One canonical `content.js` dataset supplies the web cards and can supply a later approved Anki export.
-- 66 recall cards in six ordered topics.
+- 66 recall cards in eight ordered topics.
 - Eight visible study topics; eleven retained exercise routes. Four Essere routes appear as practice sets inside one topic.
 - 83 earlier practice questions preserved, with eight source-derived warm-up/dialogue checks added (91 total).
 - All 30 supplied homework tasks: 6 pronoun/form matches, 10 sentence gaps, 8 translations, 6 negative gaps.
@@ -26,7 +26,7 @@ Sixty-two cards include supplementary English-friendly and IPA pronunciation fie
 The duplicated `Sono italiani?` affirmative/question row is recorded but excluded from scored contrasts. Ambiguous `Sono a casa` is not turned into a single-answer subject-identification question. Referenced textbook pages and listening audio were not supplied and are not invented.
 
 ## Web validation
-1. `python lesson6/install.py` — idempotent integration of known entrypoints only.
+1. `python lesson6/install.py` — read-only verification of committed integration points.
 2. `node scripts/validate_lesson6.cjs` — canonical data and preserved earlier content.
 3. `python scripts/validate_lesson6_browser.py` — Playwright 1.57.0 plus Chromium/Chrome, actual static site at desktop and 390px widths.
 

@@ -28,14 +28,14 @@
   const studyUrl=(slug,stage)=>"study-sheets.html?mode="+mode+(coursePath?"&path=L6":"")+(slug?"&sheet="+encodeURIComponent(slug):"")+(stage?"&stage="+stage:"");
   const visibleCategories=coursePath?[{id:'class-sequence',title:'Class order',slugs:window.ITALIAN_L6.flow}]:categories;
   const session=(()=>{try{return JSON.parse(sessionStorage.getItem("italianCourseSessionProgressV2")||"{}").study?.answers||{};}catch(_){return {};}})();
-  const stats=(sheet)=>{const entries=Object.entries(session).filter(([key,value])=>key.startsWith(sheet.slug+"-q")&&value?.result);return {done:entries.length,correct:entries.filter(([,value])=>value.result==="correct").length};};
+  const stats=(sheet)=>{const group=window.ITALIAN_L6?.practiceGroups?.[sheet.topicSlug||sheet.slug]||[{slug:sheet.slug}];const slugs=group.map(x=>x.slug);const entries=Object.entries(session).filter(([key,value])=>slugs.some(slug=>key.startsWith(slug+"-q"))&&value?.result);return {done:entries.length,correct:entries.filter(([,value])=>value.result==="correct").length,total:slugs.reduce((n,slug)=>n+(data.find(x=>x.slug===slug)?.questions.length||0),0),sets:slugs.length};};
   document.title=(active?active.title+" — ":"")+"Italian study sheets · Italian for Beginners";
   document.body.classList.toggle("study-sheet-detail",Boolean(active));
   document.body.classList.toggle("study-sheet-library",!active);
   if(!active){
     nav.innerHTML=`<div class="study-library-filter"><label for="studyPathPicker">Show</label><select id="studyPathPicker"><option value="all"${!coursePath?' selected':''}>All topics</option><option value="L6"${coursePath?' selected':''}>Session 6 — class order</option></select></div>`;
     nav.querySelector('#studyPathPicker').addEventListener('change',event=>{location.href='study-sheets.html?mode='+mode+(event.target.value==='L6'?'&path=L6':'');});
-    root.innerHTML=visibleCategories.map(c=>`<section class="sheet-library-category" id="category-${c.id}"><h2>${esc(c.title)}</h2><div class="sheet-library-cards">${c.slugs.map((slug,index)=>{const s=data.find(item=>item.slug===slug);if(!s||s.catalogue===false)return '';const p=stats(s);return `<a class="sheet-library-item" href="${studyUrl(s.slug)}">${coursePath?`<span class="study-topic-order">${index+1}</span>`:''}<strong>${esc(s.title)}</strong><span>${esc(s.subtitle)}</span><span class="sheet-library-progress">${p.done} / ${s.questions.length} attempted · ${p.correct} correct</span></a>`;}).join('')}</div></section>`).join('');
+    root.innerHTML=visibleCategories.map(c=>`<section class="sheet-library-category" id="category-${c.id}"><h2>${esc(c.title)}</h2><div class="sheet-library-cards">${c.slugs.map((slug,index)=>{const s=data.find(item=>item.slug===slug);if(!s||s.catalogue===false)return '';const p=stats(s);return `<a class="sheet-library-item" href="${studyUrl(s.slug)}">${coursePath?`<span class="study-topic-order">${index+1}</span>`:''}<strong>${esc(s.title)}</strong><span>${esc(s.subtitle)}</span><span class="sheet-library-progress">${p.done} / ${p.total} attempted · ${p.correct} correct${p.sets>1?" · "+p.sets+" practice sets":""}</span></a>`;}).join('')}</div></section>`).join('');
     return;
   }
   if(params.get("sheet")!==active.slug||location.hash){

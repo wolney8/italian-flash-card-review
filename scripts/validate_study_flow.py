@@ -78,6 +78,11 @@ try:
       assert page.locator('.quiz-question:not([hidden]) input[type=text]').input_value()=='sono'
       assert page.locator('.quiz-question:not([hidden]) .feedback').inner_text()=='Corretto'
       page.screenshot(path=str(OUT/f'homework-{width}-{theme}.png'),full_page=True)
+      page.goto(base+'/study/study-sheets.html?mode=learn&path=L6',wait_until='networkidle')
+      page.wait_for_selector('.sheet-library-item')
+      entry=page.locator('.sheet-library-item').filter(has=page.locator('strong',has_text='Essere in the present'))
+      assert '1 / 36 attempted' in entry.inner_text(),entry.inner_text()
+      assert '4 practice sets' in entry.inner_text(),entry.inner_text()
      if slug in ['l6-number-patterns','l6-intonation']:
       page.click('[data-guided-step="learn"]')
       if slug=='l6-intonation':
