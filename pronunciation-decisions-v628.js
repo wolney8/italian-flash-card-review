@@ -152,7 +152,7 @@
       if (String(cardsByKey.get(key)?.pron || '') !== expected) errors.push(`${key}: pronunciation patch mismatch`);
     });
     Object.entries(CONSISTENCY_GROUPS).forEach(([name, keys]) => {
-      const values = new Set(keys.map(key => stripHtml(cardsByKey.get(key)?.pron || ''));
+      const values = new Set(keys.map(key => stripHtml(cardsByKey.get(key)?.pron || '')));
       if (values.size !== 1) errors.push(`${name}: duplicate group is not standardised`);
     });
     window.__PRONUNCIATION_DECISION_ERRORS__ = errors;
