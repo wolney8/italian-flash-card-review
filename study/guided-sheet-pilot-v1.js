@@ -51,8 +51,9 @@
     // Every approved sheet contains 2–5 teaching sections.
     // Keep source order: the first introduces the topic; the remainder are examples
     // and pattern references, regardless of whether their source label says Study or Patterns.
-    const learn = panels.slice(0, 1);
-    const examples = panels.slice(1);
+    const explicitStages=panels.some(p=>p.dataset.studyStage);
+    const learn = explicitStages?panels.filter(p=>p.dataset.studyStage==='learn'):panels.slice(0, 1);
+    const examples = explicitStages?panels.filter(p=>p.dataset.studyStage==='examples'):panels.slice(1);
     const questions = quiz ? [...quiz.querySelectorAll('.quiz-question')] : [];
     if (!hero || !quiz || !learn.length || !examples.length || !questions.length) {
       if (hero && quiz) console.warn('Guided Study Sheet: missing content group for ' + TARGET);
@@ -61,7 +62,7 @@
 
     const old = savedState();
     const state = {
-      step: STEP_IDS.includes(old.step) ? old.step : 'learn',
+      step: STEP_IDS.includes(new URLSearchParams(location.search).get('stage')) ? new URLSearchParams(location.search).get('stage') : STEP_IDS.includes(old.step) ? old.step : 'learn',
       learn: clamp(old.learn, learn.length),
       examples: clamp(old.examples, examples.length),
       question: clamp(old.question, questions.length),
@@ -130,16 +131,27 @@
       '<button type="button" class="guided-sheet-review-missed" data-guided-review-unanswered>Review unanswered questions</button>';
     quiz.insertAdjacentElement('afterend', finish);
 
-    // Use the existing ordered sheet navigation, not a second hard-coded list.
-    // When the current sheet is the final one, the follow-up opens flashcards.
-    const nextSheet = document.querySelector('#studyNav .sheet-route-pager > a:last-child');
+    const context=window.ItalianStudyContext;
     const followup = document.createElement('a');
     followup.className = 'guided-sheet-followup';
-    followup.href = nextSheet?.getAttribute('href') || '../?page=lessons';
-    followup.textContent = nextSheet
-      ? 'Next study sheet: ' + nextSheet.textContent.replace(/\s*→\s*$/, '').trim() + ' →'
-      : 'Continue to flashcards →';
+    followup.href=context?.next?.href||context?.flashcards||'../?page=lessons';
+    followup.textContent=context?.next?'Next topic: '+context.next.title+' →':'Continue to flashcards →';
     finish.querySelector('[data-guided-review-unanswered]').before(followup);
+    const returnLink=document.createElement('a');returnLink.className='study-return-link';
+    returnLink.href=context?.library||'study-sheets.html';returnLink.textContent='Back to topics';finish.appendChild(returnLink);
+    const groups=window.ITALIAN_L6?.practiceGroups?.[context?.topic];
+    if(groups){
+      const chooser=document.createElement('div');chooser.className='study-practice-picker';
+      const label=document.createElement('label');label.htmlFor='studyPracticePicker';label.textContent='Practice set';
+      const select=document.createElement('select');select.id='studyPracticePicker';
+      for(const group of groups){const option=document.createElement('option');option.value=group.slug;option.textContent=group.label;option.selected=group.slug===TARGET;select.appendChild(option);}
+      chooser.append(label,select);quiz.prepend(chooser);
+      select.addEventListener('change',()=>{const url=new URL(location.href);url.searchParams.set('sheet',select.value);url.searchParams.set('stage','practise');location.href=url.pathname+url.search;});
+      const practiceLinks=document.createElement('div');practiceLinks.className='study-practice-links';
+      const heading=document.createElement('h3');heading.textContent='Other practice for this topic';practiceLinks.appendChild(heading);
+      for(const group of groups.filter(g=>g.slug!==TARGET)){const link=document.createElement('a');const url=new URL(location.href);url.searchParams.set('sheet',group.slug);url.searchParams.set('stage','practise');link.href=url.pathname+url.search;link.textContent=group.label;practiceLinks.appendChild(link);}
+      finish.appendChild(practiceLinks);
+    }
 
     const pager = document.createElement('div');
     pager.className = 'guided-sheet-controls';
@@ -219,8 +231,8 @@
       const first = step === 'learn' && state.learn === 0;
       previousButton.disabled = first;
       previousButton.textContent = practice && state.finished ? 'Back to questions'
-        : reviewing && current===0 ? 'Back to results' : first ? 'Previous' : 'Back';
-      if (step === 'learn') nextButton.textContent = state.learn < learn.length - 1 ? 'Next part' : 'Next: Examples';
+        : reviewing && current===0 ? 'Back to results' : practice ? (state.question?'Previous question':'Back to examples') : step==='examples' ? (state.examples?'Previous example':'Back to learn') : 'Previous section';
+      if (step === 'learn') nextButton.textContent = state.learn < learn.length - 1 ? 'Next section' : 'Next: Examples';
       if (step === 'examples') nextButton.textContent = state.examples < examples.length - 1 ? 'Next example' : 'Next: Practise';
       if (practice) nextButton.textContent = state.finished ? 'Review from start'
         : reviewing ? (current < count - 1 ? 'Next incorrect' : 'Finish review')
@@ -235,6 +247,7 @@
       reviewIncorrect.textContent = 'Review ' + stat.wrong + ' incorrect ' +
         (stat.wrong===1?'answer':'answers');
       remember(state);
+      const stepUrl=new URL(location.href);stepUrl.searchParams.set('stage',state.step);history.replaceState(null,'',stepUrl.pathname+stepUrl.search+stepUrl.hash);
     }
     function focusStage(previousTop=null) {
       title.focus({preventScroll:true});

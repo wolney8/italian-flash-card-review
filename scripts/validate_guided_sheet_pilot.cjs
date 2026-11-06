@@ -33,8 +33,8 @@ for(const sheet of sheets){
 assert.match(script,/const TARGET = new URLSearchParams\(location\.search\)\.get\('sheet'\)/,
  'Guide must determine active sheet from URL');
 assert.match(script,/article\.id !== TARGET/,'Only activate the matching sheet, not the library');
-assert.match(script,/const learn = panels\.slice\(0, 1\)/,'First teaching section is Learn');
-assert.match(script,/const examples = panels\.slice\(1\)/,'Remaining teaching sections are Examples');
+assert.match(script,/const learn = explicitStages\?panels\.filter\(p=>p\.dataset\.studyStage==='learn'\):panels\.slice\(0, 1\)/,'Explicit teaching stages take priority; earlier sheets keep their first-section fallback');
+assert.match(script,/const examples = explicitStages\?panels\.filter\(p=>p\.dataset\.studyStage==='examples'\):panels\.slice\(1\)/,'Explicit examples take priority; earlier sheets retain their fallback');
 assert.doesNotMatch(script,/requested !== TARGET/,'No single-sheet pilot gate should remain');
 assert.match(script,/sessionStorage\.setItem\(VIEW_KEY/,'Pilot must remember position');
 assert.match(script,/question\.hidden\s*=/,'Pilot must show one question at a time');
@@ -66,7 +66,7 @@ assert.match(script, /visitedLearn/, 'Track lesson sections visited');
 assert.match(script, /visitedExamples/, 'Track examples visited');
 assert.match(script, /const covered = state\.visitedLearn\.length \+ state\.visitedExamples\.length \+ stat\.attempted/, 'Count covered activities without counting skipped questions');
 assert.match(script, /progressTrack\.setAttribute\('aria-valuenow'/, 'Expose accessible progress values');
-assert.match(script, /nextSheet\?\.getAttribute\('href'\) \|\| '\.\.\/\?page=lessons'/, 'Next study sheet must fall back to flashcards on the final sheet');
+assert.ok(script.includes("context?.next?.href||context?.flashcards||'../?page=lessons'"), 'Completion follows the selected topic path, then Flashcards');
 assert.match(script, /finish\.querySelector\('\[data-guided-review-unanswered\]'\)\.before\(followup\)/, 'Completion screen must offer the next action');
 assert.match(style, /guided-sheet-current\{min-height:119px\}/, 'Reserve consistent heading space');
 assert.match(style, /guided-sheet-progress-fill/, 'Missing visual progress bar');

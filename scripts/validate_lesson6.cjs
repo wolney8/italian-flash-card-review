@@ -3,9 +3,9 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),zlib=require('node:zlib');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const d=require('../lesson6/content.js');
-assert.equal(d.cards.length,66);assert.equal(d.topics.length,6);assert.equal(d.sheets.length,9);
+assert.equal(d.cards.length,66);assert.equal(d.topics.length,8);assert.equal(d.sheets.length,11);
 assert.equal(new Set(d.cards.map(c=>c.key)).size,66);
-assert.equal(d.sheets.reduce((n,s)=>n+s.questions.length,0),83);
+assert.equal(d.sheets.reduce((n,s)=>n+s.questions.length,0),91);
 assert.equal(d.sheets.filter(s=>s.kind==='homework').reduce((n,s)=>n+s.questions.length,0),30);
 for(const c of d.cards){
  assert.equal(c.lesson,'L6');assert.ok(c.key.startsWith('italian-l6-'));
@@ -37,6 +37,6 @@ assert.ok(read('study/study-sheets.html').indexOf('../lesson6/content.js')<read(
 const baseline=JSON.parse(read('lesson6/baseline-integrity.json'));
 const crypto=require('node:crypto');
 for(const [file,hash]of Object.entries(baseline.unchangedFiles))assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,file))).digest('hex'),hash,'Earlier data modified: '+file);
-console.log('PASS Lesson 6: 66 cards / 6 subdecks / 9 study sets / 83 questions / 30 homework tasks.');
+console.log('PASS Lesson 6: 66 cards / 8 topics / 11 exercise routes / 91 questions / 30 homework tasks.');
 console.log('PASS source number patterns and original intonation media; exact accent and punctuation checks.');
 console.log('PASS earlier course-data files unchanged; pronunciation remains explicitly provisional.');

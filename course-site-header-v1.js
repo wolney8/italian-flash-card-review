@@ -8,7 +8,7 @@ function pair(it,en,italianFirst){
 }
 function header(o={}){
  const study=o.context==='study',base=study?'../':'';
- const href=key=>study&&key==='topics'?'study-sheets.html?mode='+(o.mode==='review'?'review':'learn'):base+'?page='+key;
+ const href=key=>key==='topics'?(study?'':'study/')+'study-sheets.html?mode='+(o.mode==='review'?'review':'learn'):base+'?page='+key;
  const active=o.current==='card'?'lessons':o.current||'home';
  const items=[['home','Inizio','Home'],['lessons','Lezioni','Lessons'],['topics','Schede di studio','Study sheets']];
  const nav=items.map(([key,it,en])=>'<a href="'+href(key)+'" data-guide-to="'+key+'"'+(active===key?' aria-current="page"':'')+'>'+pair(it,en,!!o.italianFirst)+'</a>').join('');
