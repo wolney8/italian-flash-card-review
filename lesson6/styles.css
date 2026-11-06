@@ -1,4 +1,6 @@
 /* Lesson 6 source visuals. Scoped additions: no global theme or navigation changes. */
+/* Older review-card variables must not replace the selected page palette. */
+.guided-card-host .review-card[data-lesson="L6"]{--paper:inherit;--paper2:inherit;--line:inherit;--muted:inherit;--green:inherit;--recall:inherit;--answer:inherit;color:var(--ink)}
 .l6-build{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0;font-size:clamp(20px,3vw,27px);line-height:1.45;font-weight:500}
 .l6-build>span{padding:4px 7px;border-radius:8px;background:var(--paper,#fffcf7)}
 .l6-build del{text-decoration-thickness:2px;text-decoration-color:var(--wrong,#a43b31);opacity:.7}
