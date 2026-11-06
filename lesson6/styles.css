@@ -1,0 +1,24 @@
+/* Lesson 6 source visuals. Scoped additions: no global theme or navigation changes. */
+.l6-build{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0;font-size:clamp(20px,3vw,27px);line-height:1.45;font-weight:500}
+.l6-build>span{padding:4px 7px;border-radius:8px;background:var(--paper,#fffcf7)}
+.l6-build del{text-decoration-thickness:2px;text-decoration-color:var(--wrong,#a43b31);opacity:.7}
+.l6-n-hundred{color:#a43b31;border-bottom:2px solid currentColor;font-weight:500}
+.l6-n-thousand{color:#875217;border-bottom:2px solid currentColor;font-weight:500}
+.l6-n-join{color:#216349;border-bottom:2px solid currentColor;font-weight:500}
+.l6-n-accent{color:#205ea2;border-bottom:2px solid currentColor;font-weight:500}
+.nightMode .l6-n-hundred,.night_mode .l6-n-hundred,html[data-italian-theme="dark"] .l6-n-hundred{color:#f4a69a}
+.nightMode .l6-n-thousand,.night_mode .l6-n-thousand,html[data-italian-theme="dark"] .l6-n-thousand{color:#f0c58b}
+.nightMode .l6-n-join,.night_mode .l6-n-join,html[data-italian-theme="dark"] .l6-n-join{color:#a6e6c0}
+.nightMode .l6-n-accent,.night_mode .l6-n-accent,html[data-italian-theme="dark"] .l6-n-accent{color:#9ac8ff}
+.l6-int-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0}
+.l6-intonation{margin:0;min-width:0;padding:12px;background:var(--paper2,#f3e8db);border:1px solid var(--line,#dacabe);border-radius:12px}
+.l6-intonation img{display:block;width:100%;height:auto;margin:8px 0 0;background:white;border-radius:7px}
+.l6-int-label{font:500 14px/1.4 system-ui,sans-serif;color:var(--ink,#332d28)}
+.l6-pitch{display:block;width:min(100%,300px);height:auto;max-height:76px;margin:0 auto 8px;color:var(--pink,var(--accent,#8c4938))}
+.l6-gloss{display:block;font-size:15px;line-height:1.5;font-weight:400;color:var(--muted,#675b52);margin:8px 0}
+.l6-number-value{display:block;color:var(--muted,#675b52);font-size:13px;font-variant-numeric:tabular-nums;line-height:1.5}
+.l6-feedback-explanation{display:block;border-top:1px solid var(--line,#dacabe);margin-top:12px;padding-top:12px;font-size:16px;line-height:1.5}
+.l6-feedback-explanation strong,.l6-feedback-explanation b{font-weight:500}
+.l6-source-detail{font-size:12px;line-height:1.5;color:var(--muted,#675b52)}
+@media(max-width:640px){.l6-int-pair{grid-template-columns:1fr}.l6-build{font-size:21px;gap:5px}.l6-intonation{padding:10px}}
+@media print{.l6-intonation{break-inside:avoid;background:white}.l6-int-pair{grid-template-columns:repeat(2,minmax(0,1fr))}}

@@ -22,7 +22,7 @@
   const LESSON_ITALIAN = {
     L1:'Presentazioni', L2:'Alfabeto, suoni e articoli',
     L3:'Origini, nazionalità e residenza', L4:'Avere, numeri, plurali e famiglia',
-    L5:'Ripasso'
+    L5:'Ripasso', L6:'Numeri, essere e domande'
   };
   const STUDY_ITALIAN = {
     'Conversation and context':'Conversazione e contesto',
@@ -45,7 +45,8 @@
     ['L2', 'Sounds and articles', 'Alphabet, pronunciation and articles'],
     ['L3', 'Origins and residence', 'Where you are from and where you live'],
     ['L4', 'Avere and plurals', 'To have, family, numbers and plural forms'],
-    ['L5', 'Consolidation review', 'Mixed practice from previous lessons']
+    ['L5', 'Consolidation review', 'Mixed practice from previous lessons'],
+    ['L6', 'Numbers, Essere and Questions', 'Number patterns, negatives, intonation and useful expressions']
   ];
   const TOPICS = [
     ['Conversation and context', [['conversation-foundations', 'Conversation foundations'], ['di-da-dove-pronouns', 'Di, da, dove and pronouns']]],
@@ -54,6 +55,9 @@
     ['Sounds and spelling', [['c-g-sounds-and-spelling', 'C/G sounds and spelling with towns']]],
     ['Mixed practice', [['mixed-review-challenge', 'Mixed review challenge']]]
   ];
+  if(window.ITALIAN_L6){
+    TOPICS.push(...window.ITALIAN_L6.categories.map(c=>[c.title,c.slugs.map(slug=>{const s=window.ITALIAN_L6.sheets.find(x=>x.slug===slug);return [slug,s.title];})]));
+  }
   const isReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   let state = {page: 'home', lesson: null, deck: '', index: 0, finished: false};
   let ready = false;
@@ -73,9 +77,9 @@
     return `<span class="editorial-label ${extraClass}"><span class="editorial-label-main" lang="${italianFirst?'it':'en'}">${esc(first)}</span><span class="editorial-label-sub" lang="${italianFirst?'en':'it'}">${esc(second)}</span></span>`;
   }
   function translated(label) {return TRANSLATIONS[label]||[label,label];}
-  function uiLabel(label) {const [it,en]=translated(label);return labelPair(it,en);}
+  function uiLabel(label) {const [it,en]=translated(label);return it===en?esc(en):labelPair(it,en);}
   function lessonLabel(id) {return labelPair(LESSON_ITALIAN[id]||'Lezione '+id.slice(1),lessonInfo(id)[1]);}
-  function topicLabel(label) {return labelPair(STUDY_ITALIAN[label]||label,label);}
+  function topicLabel(label) {return STUDY_ITALIAN[label]?labelPair(STUDY_ITALIAN[label],label):esc(label);}
   function toggleLabelOrder(){italianFirst=!italianFirst;safeSet(LABEL_KEY,italianFirst?'it':'en');document.getElementById('editorialCommentModal')?.remove();renderKeepingCardFace();}
   function topicSequence(lesson){return [...new Set(cardList(lesson).map(c=>c.deck))];}
   function confidenceData(){

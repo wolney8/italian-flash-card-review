@@ -1,0 +1,38 @@
+{
+  "earlier_cards": 445,
+  "new_cards": 66,
+  "identical_full_prompts": [],
+  "identical_answers": [
+    {
+      "new": "italian-l6-e-accent",
+      "earlier": "italian-l1-check_e",
+      "answer": "è"
+    }
+  ],
+  "decisions": [
+    {
+      "topic": "Conversation and age",
+      "decision": "Do not duplicate earlier Come stai/Come sta and informal age question. Add new expressions, formal age and supplied 34-year age sentence."
+    },
+    {
+      "topic": "Numbers",
+      "decision": "Add supplied 20+ patterns; earlier 0–20 recognition remains unchanged."
+    },
+    {
+      "topic": "Essere",
+      "decision": "Apply forms in contrasting meanings and accents, rather than reissue earlier bare conjugation cards."
+    },
+    {
+      "topic": "Negative and interrogative",
+      "decision": "Use transformation and speaking tasks, with source curves."
+    },
+    {
+      "topic": "Plural partitives",
+      "decision": "All 15 phrases in Study Sheets; only five contrast/application cards in the new subdeck. Existing noun article cards remain untouched."
+    },
+    {
+      "topic": "Accent è",
+      "decision": "Answer overlaps an earlier verb-gap card, but the L6 task tests e/è orthographic contrast. Retain as a different task."
+    }
+  ]
+}

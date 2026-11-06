@@ -29,7 +29,7 @@
   const set=(key,value)=>{try{localStorage.setItem(key,value);}catch(_e){}};
   function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
   function bi(it,en){const a=italianFirst?it:en,b=italianFirst?en:it;return `<span class="editorial-label"><span class="editorial-label-main" lang="${italianFirst?'it':'en'}">${escapeHtml(a)}</span><span class="editorial-label-sub" lang="${italianFirst?'en':'it'}">${escapeHtml(b)}</span></span>`;}
-  function mapped(value){const [it,en]=PAIRS[value]||[value,value];return bi(it,en);}
+  function mapped(value){const pair=PAIRS[value];return pair?bi(pair[0],pair[1]):escapeHtml(value);}
   function currentSheet(){const slug=new URLSearchParams(location.search).get('sheet');return slug||document.querySelector('.study-pack-sheet')?.id||'';}
   function sheetTitle(){return document.querySelector('.study-pack-sheet h1')?.textContent.trim()||'Study sheets library';}
   function applyTheme(){dark=get(THEME_KEY,'light')!=='light';document.documentElement.dataset.italianTheme=dark?'dark':'light';document.documentElement.style.colorScheme=dark?'dark':'light';}

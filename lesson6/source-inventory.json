@@ -1,0 +1,59 @@
+{
+  "lesson_date": "2026-11-03",
+  "files": [
+    {
+      "file": "Esercizi-verbo-essere (Class).pdf",
+      "sha256": "b1e686dc35ea9443095e6febf9f419388cc4d65e4030d5017604f8523cb5773c",
+      "bytes": 195375
+    },
+    {
+      "file": "Group activity - Plurali Indeterminativi.pdf",
+      "sha256": "2e603db396c6f34aae8a79fda7f62bc7191021009ef94f9026c483812098a806",
+      "bytes": 224838
+    },
+    {
+      "file": "Numeri 20+.pdf",
+      "sha256": "6028d54e7807175f22ecb96a4ab6fe0922fabf22d32121a52503fae9e15f9d9a",
+      "bytes": 65451
+    },
+    {
+      "file": "Homework-verbo-essere.pdf",
+      "sha256": "c946078ef2c41298f9a077e414c1402215ef05e3ff5b4f89e16aa101eb400370",
+      "bytes": 325484
+    },
+    {
+      "file": "Session 6 - 03.11.2026 - Minutes.pdf",
+      "sha256": "bc5efddc013d0403c49758d98fe179373f4997963bf8cbed1d0d0ea70bcc1799",
+      "bytes": 296175
+    },
+    {
+      "file": "Homework-verbo-essere-negativo.pdf",
+      "sha256": "c0be6edf623d5c3fe686d0344f03e49b2041c04343a72a231d2b740362da4fb1",
+      "bytes": 46659
+    },
+    {
+      "file": "Session 6 - 03.11.2026.pptx",
+      "sha256": "76a93dcd5d58d49f6a224714410640c65afc0e60950d5086e10f46d4e31af3e8",
+      "bytes": 1128166
+    },
+    {
+      "file": "Session 6 - 03.11.2026 - Tables.pdf",
+      "sha256": "ae14be83c9658d723c82b49300ea55f76d175e226538fcb810b89d833efe25d8",
+      "bytes": 251310
+    }
+  ],
+  "source_document_count": 8,
+  "source_files_not_republished": true,
+  "intonation_crop": {
+    "source": "Session 6 - 03.11.2026 - Tables.pdf",
+    "page": 2,
+    "files": [
+      "media/l6-intonation-statement.png",
+      "media/l6-intonation-question.png"
+    ]
+  },
+  "missing": [
+    "Textbook pages 20–21 and page 175 exercise 19",
+    "Audio recordings"
+  ]
+}
