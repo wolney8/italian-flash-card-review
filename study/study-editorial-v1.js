@@ -85,7 +85,7 @@
     if(host.dataset.renderKey===renderKey)return;
     const nav=window.ItalianCourseChrome.breadcrumb({
       homeHref:'../?page=home',
-      segments:isDetail?[{label:'Study sheets',href:'study-sheets.html?mode='+studyMode()},{label:title}]:[{label:'Study sheets'}]
+      segments:isDetail?[{label:'Study sheets',href:'study-sheets.html?mode='+studyMode()+((new URLSearchParams(location.search).get('path')==='L6'||currentSheet().startsWith('l6-'))?'&path=L6':'')},{label:title}]:[{label:'Study sheets'}]
     });
     host.innerHTML=isDetail
       ? '<div class="study-detail-location-row">'+nav+detailTools()+'</div>'

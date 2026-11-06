@@ -30,12 +30,11 @@ try:
    page.wait_for_selector('.guided-card-host .review-card')
    counts=page.evaluate('({total:cards.length,l6:cards.filter(c=>c.lesson==="L6").length,topics:ITALIAN_L6.topics})')
    assert counts['total']==511 and counts['l6']==66,counts
-   assert page.locator('#guidedSubdeckSelect option').count()==6
-   page.select_option('#guidedSubdeckSelect',label=counts['topics'][1]);reveal(page)
+   assert page.locator('#guidedSubdeckSelect option').count()==8
+   page.select_option('#guidedSubdeckSelect',label='Number-building patterns');reveal(page)
    assert page.locator('.show-answer .l6-n-join').count()>0
    shot(page,f'flashcard-numbers-{width}.png')
-   page.select_option('#guidedSubdeckSelect',label=counts['topics'][3])
-   for _ in range(6):page.click('[data-guide-next]')
+   page.select_option('#guidedSubdeckSelect',label='Statements and questions')
    reveal(page)
    page.wait_for_function('Array.from(document.querySelectorAll(".show-answer img")).every(i=>i.complete&&i.naturalWidth>0)')
    assert page.locator('.show-answer img').count()>0

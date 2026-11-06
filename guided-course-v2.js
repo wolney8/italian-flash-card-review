@@ -181,6 +181,7 @@
     return u.pathname + u.search;
   }
   function navigate(next, push = true, preserveCardPosition = false) {
+    if(next.page==='topics'){location.href='study/study-sheets.html?mode=learn';return;}
     const previousTop=preserveCardPosition
       ? root?.querySelector('.guided-card-host')?.getBoundingClientRect().top
       : null;
@@ -240,7 +241,7 @@
       <h1 tabindex="-1" class="guided-title editorial-hero-title">${labelPair('Scegli cosa studiare.','Choose what to study.')}</h1>
       <div class="guided-choices">
         <a href="?page=lessons" data-guide-to="lessons" class="guided-choice"><span class="guided-choice-icon" aria-hidden="true">▣</span><strong>${labelPair('Lezioni','Lesson flashcards')}</strong><b>${labelPair('Scegli una lezione','Choose a lesson')}</b></a>
-        <a href="?page=topics" data-guide-to="topics" class="guided-choice"><span class="guided-choice-icon" aria-hidden="true">▤</span><strong>${labelPair('Schede di studio','Study sheets')}</strong><b>${labelPair('Scegli un argomento','Choose a topic')}</b></a>
+        <a href="study/study-sheets.html?mode=learn" data-guide-to="topics" class="guided-choice"><span class="guided-choice-icon" aria-hidden="true">▤</span><strong>${labelPair('Schede di studio','Study sheets')}</strong><b>${labelPair('Scegli un argomento','Choose a topic')}</b></a>
       </div>
       ${validResume?`<section class="guided-resume"><div><strong>${labelPair('Continua','Continue')}</strong><span>Lesson ${last.lesson.slice(1)} · ${esc(lessonInfo(last.lesson)[1])} · ${totalViewed(last.lesson)} answers viewed</span></div><a href="${esc(urlFor({page:'card',...last}))}" data-guide-resume class="guided-primary">${labelPair('Riprendi','Resume')} →</a></section>`:''}
       <div class="editorial-context-link"><a href="?page=course" data-guide-to="course">${labelPair('Percorso del corso','Course pathway')} →</a></div>
@@ -270,7 +271,12 @@
       '<div role="status" class="guided-info">Loading flashcards…</div></main>';
     const [id]=lessonInfo(lesson);
     const all=cardList(lesson),decks=topicSequence(lesson);
-    if(state.deck&&!decks.includes(state.deck))state.deck='';
+    if(state.deck&&!decks.includes(state.deck)){
+      const keys=window.ITALIAN_L6?.legacyTopics?.[state.deck];
+      const previous=keys&&all.find(c=>c.key===keys[state.index]);
+      if(previous){state.deck=previous.deck;state.index=cardList(lesson,previous.deck).findIndex(c=>c.key===previous.key);history.replaceState(null,'',urlFor(state));}
+      else state.deck='';
+    }
     if(!state.deck&&decks.length){
       const previous=all[Math.min(state.index,Math.max(0,all.length-1))];
       state.deck=previous?.deck||decks[0];
@@ -332,6 +338,7 @@
       '<span class="guided-card-count">'+(state.reviewOnly?'Targeted review · ':'')+
       labelPair('Carta '+(state.index+1)+' di '+total,'Card '+(state.index+1)+' of '+total)+
       '</span></div>'+
+      (lesson==='L6'?'<a class="guided-study-lesson-link" href="study/study-sheets.html?mode=learn&path=L6">Study this lesson in class order →</a>':'')+
       '<div class="guided-card-options">'+
       '<label for="guidedSubdeckSelect">'+labelPair('Argomento','Topic')+'</label>'+
       '<select id="guidedSubdeckSelect" aria-label="Choose a topic">'+decks.map(d=>
@@ -456,6 +463,7 @@
     }
   }
   function render() {
+    if(state.page==='topics'){location.replace('study/study-sheets.html?mode=learn');return;}
     ensure();
     document.body.classList.toggle('guided-focus-active',state.page==='card'&&focusActive());
     root.innerHTML=header()+ (state.page==='lessons'?lessons():state.page==='card'?cardPage():state.page==='topics'?topics():state.page==='feedback'?feedback():state.page==='course'?course():home()) + `<footer class="guided-footer">Italian for Beginners · Last updated 4 November 2026</footer>`;

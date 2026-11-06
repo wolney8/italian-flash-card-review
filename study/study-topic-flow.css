@@ -1,0 +1,22 @@
+/* Topic navigation and selectable homework; no changes to the shared header. */
+.study-sheet-library .study-course-shell,.study-sheet-library .top-actions{display:none}
+.study-sheet-library main>header.hero{background:none;border:0;padding:12px 0;margin:0}
+.study-sheet-library main>header.hero h1{margin:0;font-size:32px;font-weight:500}
+#studyNav{margin:0 0 18px;padding:0}
+.study-topic-switch,.study-library-filter,.study-practice-picker{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.study-topic-switch label,.study-library-filter label,.study-practice-picker label{font:500 14px/1.4 system-ui,sans-serif;color:var(--ink)}
+.study-topic-switch select,.study-library-filter select,.study-practice-picker select{background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 12px;min-height:44px;font:400 15px/1.4 system-ui,sans-serif;min-width:0;max-width:100%}
+.study-topic-switch select{flex:1 1 300px}
+.study-topic-position{font-size:13px;color:var(--muted)}
+.study-topic-switch select:focus-visible,.study-library-filter select:focus-visible,.study-practice-picker select:focus-visible,.study-practice-links a:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+.study-practice-picker{margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.study-practice-picker select{flex:1 1 260px}
+.sheet-library-category h2{font:500 22px/1.35 system-ui,sans-serif;margin:0 0 14px}
+.study-topic-order{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.study-return-link{display:block;margin:16px 0;color:var(--pink)}
+.study-practice-links{border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
+.study-practice-links h3{font:500 18px/1.4 system-ui,sans-serif}
+.study-practice-links a{display:block;padding:10px 0;color:var(--pink)}
+.study-topic-switch~.sheet-route-pager{display:none!important}
+@media(max-width:640px){.study-topic-switch select{flex-basis:calc(100% - 64px)}.study-topic-position{flex-basis:100%}.study-library-filter select{flex:1}.study-practice-picker select{flex-basis:100%}}
+@media print{#studyNav,.study-practice-picker,.study-practice-links{display:none!important}}

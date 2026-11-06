@@ -5,11 +5,12 @@ The user approved publishing the web UI for in-site review. Anki deck production
 
 ## Scope
 One canonical `content.js` dataset supplies the web cards and can supply a later approved Anki export.
-- 66 recall cards in six ordered topics.
-- Nine Lesson 6 Study Sheet sets, 83 practice questions.
+- 66 recall cards in eight ordered topics.
+- Eight visible study topics; eleven retained exercise routes. Four Essere routes appear as practice sets inside one topic.
+- 83 earlier practice questions preserved, with eight source-derived warm-up/dialogue checks added (91 total).
 - All 30 supplied homework tasks: 6 pronoun/form matches, 10 sentence gaps, 8 translations, 6 negative gaps.
 - 27 classroom/group tasks: 12 class gaps and the complete 15-item plural workshop.
-- 26 clearly adapted number-pattern, intonation and useful-expression questions.
+- 26 existing adapted number-pattern, intonation and useful-expression questions, plus eight warm-up/dialogue checks.
 - Original 445 cards and original nine embedded Study Sheets are preserved.
 
 ## Visual source fidelity
@@ -25,7 +26,7 @@ Sixty-two cards include supplementary English-friendly and IPA pronunciation fie
 The duplicated `Sono italiani?` affirmative/question row is recorded but excluded from scored contrasts. Ambiguous `Sono a casa` is not turned into a single-answer subject-identification question. Referenced textbook pages and listening audio were not supplied and are not invented.
 
 ## Web validation
-1. `python lesson6/install.py` — idempotent integration of known entrypoints only.
+1. `python lesson6/install.py` — read-only verification of committed integration points.
 2. `node scripts/validate_lesson6.cjs` — canonical data and preserved earlier content.
 3. `python scripts/validate_lesson6_browser.py` — Playwright 1.57.0 plus Chromium/Chrome, actual static site at desktop and 390px widths.
 
@@ -38,3 +39,6 @@ The automated Lesson 6 workflow does not install genanki, run `lesson6/build.py`
 
 ## Rollback / existing progress
 Previous card data files are hashed in `baseline-integrity.json` and must not change. All new keys use `italian-l6-`. Existing lesson identities and learning progress are not replaced. Corrections from in-site review should update this canonical dataset before Anki exports resume.
+
+## Corrected web flow
+The Study Sheet catalogue is topic-based. A separate “Session 6 — class order” filter follows the minutes: greetings, plural revision, numbers, age/dialogue, essere, negatives, intonation, useful questions. Existing exercise URLs and progress keys are retained. Source-backed Learn/Examples assignments replace the first-section-only heuristic for this material.
