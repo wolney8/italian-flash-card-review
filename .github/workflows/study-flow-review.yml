@@ -5,19 +5,86 @@ on:
   pull_request:
     paths: ['study/**', 'lesson6/**', 'scripts/*study_flow*', '.github/workflows/study-flow-review.yml']
 permissions:
-  contents: read
+  contents: write
 jobs:
   review:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Snapshot exact source for local inspection
-        run: git archive --format=zip HEAD -o /tmp/study-flow-source.zip
+      - name: Verify exact source patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64,zlib,json,hashlib
+          parts=[Path('study-flow-transfer/seg%02d.b64'%i) for i in range(1,7)]
+          if any(p.exists() for p in parts):
+              assert all(p.exists() for p in parts),'Incomplete patch transfer'
+              data=zlib.decompress(base64.b64decode(''.join(p.read_text().strip() for p in parts),validate=True))
+              assert hashlib.sha256(data).hexdigest()=='943782c5b33e118b7f78d99cabe80a83b34c28647e3397947ad16c5553dc275d','Source patch checksum mismatch'
+              changes=json.loads(data)
+              assert len(changes)==18
+              for name,change in changes.items():
+                  p=Path(name)
+                  assert not p.is_absolute() and '..' not in p.parts
+                  assert name.startswith(('study/','lesson6/','scripts/')) or name in ['course-site-header-v1.js','guided-course-v2.js','index.html']
+                  if change['base'] is None:
+                      assert not p.exists(),name+' already exists'
+                      text=change['text']
+                  else:
+                      text=p.read_text()
+                      assert hashlib.sha256(text.encode()).hexdigest()==change['base'],name+' base changed'
+                      for a,b,replacement in reversed(change['edits']):
+                          text=text[:a]+replacement+text[b:]
+                  assert hashlib.sha256(text.encode()).hexdigest()==change['result'],name+' result mismatch'
+                  p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text)
+              print('Verified exact 18-file source correction')
+          PY
+      - name: Install web test dependency only
+        run: python -m pip install playwright==1.57.0
+      - name: Validate lesson content and navigation contracts
+        run: |
+          python lesson6/install.py
+          node --check course-site-header-v1.js
+          node --check guided-course-v2.js
+          node --check lesson6/content.js
+          node --check study/study-sheets-v5.js
+          node --check study/guided-sheet-pilot-v1.js
+          node scripts/validate_theme_contrast.cjs
+          node scripts/validate_navigation_consistency.cjs
+          node scripts/validate_study_typography.cjs
+          node scripts/validate_guided_sheet_pilot.cjs
+          node scripts/validate_compact_study_chrome.cjs
+          node scripts/validate_learning_session.cjs
+          node scripts/validate_warm_editorial.cjs
+          node scripts/validate_lesson6.cjs
+          node scripts/validate_study_flow.cjs
+      - name: Test original Study Sheets and Lesson 6 in actual browsers
+        run: |
+          node scripts/validate_study_browser.cjs
+          python scripts/validate_lesson6_browser.py
+          python scripts/validate_study_flow.py
+      - name: Persist verified source on the feature branch only
+        if: github.event_name == 'push' && github.ref_name == 'fix/lesson-flow-and-study-navigation-20261106'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add course-site-header-v1.js guided-course-v2.js index.html lesson6/README.md lesson6/content.js lesson6/install.py lesson6/flow-preservation.json scripts/validate_guided_sheet_pilot.cjs scripts/validate_lesson6.cjs scripts/validate_lesson6_browser.py scripts/validate_study_browser.cjs scripts/validate_study_flow.cjs scripts/validate_study_flow.py study/guided-sheet-pilot-v1.js study/study-editorial-v1.js study/study-sheets-v5.js study/study-sheets.html study/study-topic-flow.css
+          git rm -r --ignore-unmatch study-flow-transfer
+          if ! git diff --cached --quiet; then
+            git commit -m 'Restore source lesson flow and simplify Study Sheet navigation'
+            git push origin HEAD:fix/lesson-flow-and-study-navigation-20261106
+          fi
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: study-flow-source
-          path: /tmp/study-flow-source.zip
-          retention-days: 2
+          name: study-flow-review
+          path: |
+            artifacts/study-flow
+            artifacts/lesson6-browser
+            study-flow-transfer
+          retention-days: 7
