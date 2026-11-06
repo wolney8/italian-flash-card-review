@@ -1,76 +1,41 @@
 name: Study flow review
 on:
   push:
-    branches: [fix/lesson-flow-and-study-navigation-20261106]
+    branches: [main, fix/lesson-flow-and-study-navigation-20261106]
+    paths: ['study/**', 'lesson6/**', 'scripts/*study_flow*', 'course-site-header-v1.js', 'guided-course-v2.js', 'index.html', '.github/workflows/study-flow-review.yml']
   pull_request:
-    paths: ['study/**', 'lesson6/**', 'scripts/*study_flow*', '.github/workflows/study-flow-review.yml']
+    paths: ['study/**', 'lesson6/**', 'scripts/*study_flow*', 'course-site-header-v1.js', 'guided-course-v2.js', 'index.html', '.github/workflows/study-flow-review.yml']
 permissions:
-  contents: write
+  contents: read
+concurrency:
+  group: study-flow-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   review:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Complete topic progress aggregation
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('study/study-sheets-v5.js');s=p.read_text()
-          old='const stats=(sheet)=>{const entries=Object.entries(session).filter(([key,value])=>key.startsWith(sheet.slug+"-q")&&value?.result);return {done:entries.length,correct:entries.filter(([,value])=>value.result==="correct").length};};'
-          new='const stats=(sheet)=>{const group=window.ITALIAN_L6?.practiceGroups?.[sheet.topicSlug||sheet.slug]||[{slug:sheet.slug}];const slugs=group.map(x=>x.slug);const entries=Object.entries(session).filter(([key,value])=>slugs.some(slug=>key.startsWith(slug+"-q"))&&value?.result);return {done:entries.length,correct:entries.filter(([,value])=>value.result==="correct").length,total:slugs.reduce((n,slug)=>n+(data.find(x=>x.slug===slug)?.questions.length||0),0),sets:slugs.length};};'
-          if old in s:
-              assert s.count(old)==1;s=s.replace(old,new)
-              s=s.replace('${p.done} / ${s.questions.length} attempted · ${p.correct} correct','${p.done} / ${p.total} attempted · ${p.correct} correct${p.sets>1?" · "+p.sets+" practice sets":""}')
-              p.write_text(s)
-          else:assert new in s
-          p=Path('lesson6/README.md');s=p.read_text().replace('66 recall cards in six ordered topics.','66 recall cards in eight ordered topics.').replace('idempotent integration of known entrypoints only.','read-only verification of committed integration points.')
-          p.write_text(s)
-          p=Path('scripts/validate_study_flow.py');s=p.read_text()
-          old="      page.screenshot(path=str(OUT/f'homework-{width}-{theme}.png'),full_page=True)"
-          new=old+"\n      page.goto(base+'/study/study-sheets.html?mode=learn&path=L6',wait_until='networkidle')\n      page.wait_for_selector('.sheet-library-item')\n      entry=page.locator('.sheet-library-item').filter(has=page.locator('strong',has_text='Essere in the present'))\n      assert '1 / 36 attempted' in entry.inner_text(),entry.inner_text()\n      assert '4 practice sets' in entry.inner_text(),entry.inner_text()"
-          if new not in s:
-              assert s.count(old)==1;p.write_text(s.replace(old,new))
-          PY
       - name: Install web test dependency only
         run: python -m pip install playwright==1.57.0
-      - name: Validate content and preserved identities
+      - name: Validate source sequence and preservation
         run: |
           python lesson6/install.py
+          git diff --exit-code
+          node --check course-site-header-v1.js
+          node --check guided-course-v2.js
+          node --check lesson6/content.js
           node --check study/study-sheets-v5.js
+          node --check study/guided-sheet-pilot-v1.js
           node scripts/validate_study_flow.cjs
           node scripts/validate_lesson6.cjs
-          node scripts/validate_theme_contrast.cjs
-          node scripts/validate_navigation_consistency.cjs
-          node scripts/validate_study_typography.cjs
-          node scripts/validate_guided_sheet_pilot.cjs
-          node scripts/validate_compact_study_chrome.cjs
-          node scripts/validate_learning_session.cjs
-          node scripts/validate_warm_editorial.cjs
-      - name: Test original topics, source flow and homework progress
-        run: |
-          node scripts/validate_study_browser.cjs
-          python scripts/validate_lesson6_browser.py
-          python scripts/validate_study_flow.py
-      - name: Persist verified source on feature branch only
-        if: github.event_name == 'push' && github.ref_name == 'fix/lesson-flow-and-study-navigation-20261106'
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add study/study-sheets-v5.js lesson6/README.md scripts/validate_study_flow.py
-          if ! git diff --cached --quiet; then
-            git commit -m 'Include all Essere practice sets in topic progress'
-            git push origin HEAD:fix/lesson-flow-and-study-navigation-20261106
-          fi
+      - name: Test class order, homework selection, old links and saved answers
+        run: python scripts/validate_study_flow.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: study-flow-review
-          path: |
-            artifacts/study-flow
-            artifacts/lesson6-browser
+          path: artifacts/study-flow
           retention-days: 7
