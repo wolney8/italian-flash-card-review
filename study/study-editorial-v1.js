@@ -109,7 +109,21 @@
     document.getElementById('studyReviewStatus').textContent='';
     modal.hidden=false;document.getElementById('studyReviewer')?.focus();
   }
-  function initialise(){italianFirst=get(LABEL_KEY,'it')!=='en';applyTheme();renderHeader();decoratePage();const root=document.getElementById('studySheets');if(root){let scheduled=false;new MutationObserver(()=>{if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{scheduled=false;decoratePage();});}).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['aria-expanded']});}}
+  function initialise(){
+    italianFirst=get(LABEL_KEY,'it')!=='en';
+    applyTheme();renderHeader();decoratePage();
+    const root=document.getElementById('studySheets');
+    if(root){
+      let scheduled=false;
+      new MutationObserver(()=>{
+        if(scheduled)return;
+        scheduled=true;
+        // Structural controls must be ready with the lesson, even when animation
+        // frames are throttled. Coalesce mutations without waiting for a paint.
+        queueMicrotask(()=>{scheduled=false;decoratePage();});
+      }).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['aria-expanded']});
+    }
+  }
   document.addEventListener('click',event=>{
     if(event.target.closest('[data-study-editorial-theme]'))themeToggle();
     else if(event.target.closest('[data-study-editorial-language]'))labelToggle();
