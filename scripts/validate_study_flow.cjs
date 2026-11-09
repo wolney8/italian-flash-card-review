@@ -33,4 +33,4 @@ assert.ok(read('study/guided-sheet-pilot-v1.js').includes("select.id='studyPract
 assert.ok(read('study/guided-sheet-pilot-v1.js').includes("url.searchParams.set('stage','practise')"));
 const workflow=read('.github/workflows/lesson6-validation.yml');
 assert.doesNotMatch(workflow,/run:\s*python lesson6\/build\.py/,'Anki must remain paused');
-console.log('PASS class order, topic names, one Essere topic/four practice sets, all 66 card contents and 83 existing questions preserved.');
+console.log('PASS class order, topic names, one Essere topic/four practice sets, all 66 card contents, unchanged non-number questions and approved 41-question number set.');
