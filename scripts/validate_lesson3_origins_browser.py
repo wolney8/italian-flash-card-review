@@ -19,7 +19,7 @@ try:
    for theme in ['light','dark']:
     ctx=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
     ctx.route('**/*',lambda route:route.continue_() if route.request.url.startswith(base) else route.abort())
-    ctx.add_init_script('localStorage.setItem("italianCourseThemeV1",'+json.dumps(theme)+');sessionStorage.setItem("italianCourseSessionProgressV2",JSON.stringify({flashcards:{viewed:{origin_di_tu:true},confidence:{origin_di_tu:"known"}}}));')
+    ctx.add_init_script('if(window===window.top&&location.origin==='+json.dumps(base)+'){localStorage.setItem("italianCourseThemeV1",'+json.dumps(theme)+');sessionStorage.setItem("italianCourseSessionProgressV2",JSON.stringify({flashcards:{viewed:{origin_di_tu:true},confidence:{origin_di_tu:"known"}}}));}')
     page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto(base+'/?page=card&lesson=L3&topic=03%20Origins%20%26%20questions',wait_until='networkidle')
     page.wait_for_function('!!window.__L3_ORIGINS_SINGULAR__')
