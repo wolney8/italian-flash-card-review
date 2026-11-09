@@ -168,11 +168,15 @@ sheet('l6-negative-homework','Negative essere','Homework · 6 sentences','Comple
 const classGaps=[['Io ___ a casa.','sono','I am at home.'],['Io ___ contento.','sono','I am happy.'],['Tu ___ molto simpatico.','sei','You are very nice.'],['Tu ___ in biblioteca.','sei','You are in the library.'],['Luca ___ un bravo ragazzo.','è','Luca is a good boy.'],['Il gatto ___ nero.','è','The cat is black.'],['La mela ___ rossa e dolce.','è','The apple is red and sweet.'],['Noi ___ a Milano.','siamo','We are in Milan.'],['Noi ___ fratelli.','siamo','We are brothers.'],['Voi ___ al parco.','siete','You all are at the park.'],['I libri ___ sul tavolo.','sono','The books are on the table.'],['Le stelle ___ nel cielo.','sono','The stars are in the sky.']];
 sheet('l6-essere-class','Essere classroom practice','Class worksheet · 12 sentences','Apply the six forms to the sentences used in class.',essence,classGaps.map((x,i)=>q('l6-class-'+(i+1),esc(x[0])+'<small class="l6-gloss">'+esc(x[2])+'</small>',x[1],'Choose the form that agrees with the subject.',{explanation:esc(x[0].replace('___',x[1])),source:sourceText('class',1)})),'class',1,'class');
 const numMap=new Map(numberRows.flatMap(r=>[[r[0],r[1]],[r[2],r[3]],[r[4],r[5]],[r[6],r[7]]]));
+// Requested expansion: every integer 0–30 (31 tasks), plus ten larger values.
+const basicNumberWords=["zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove", "dieci", "undici", "dodici", "tredici", "quattordici", "quindici", "sedici", "diciassette", "diciotto", "diciannove", "venti"];
+basicNumberWords.forEach((word,n)=>numMap.set(n,word));
+const numberPracticeValues=[...Array.from({length:31},(_,n)=>n),40,50,60,70,80,90,100,200,1000,10000];
 sheet('l6-number-patterns','Number-building patterns','Numbers 20+ · patterns and age','Use the highlighted repeated parts rather than memorising each long word separately.',[
  bullets('The joins and repeating parts',numberPatterns),
  table('The four source columns',['UNITÀ','DECINE','CENTINAIA','MIGLIAIA'],numberRows.map(r=>[0,2,4,6].map(i=>'<span class="l6-number-value">'+r[i].toLocaleString('en-GB')+'</span> '+num(r[i+1])))),
  table('Age and larger numbers',['Meaning','Italian'],[['How old are you? — informal','Quanti anni hai?'],['How old are you? — formal','Quanti anni ha?'],['I am 34 years old.','Io ho trentaquattro anni.'],['1 million / 2 million','Un milione / Due milioni'],['1 billion / 2 billion','Un miliardo / Due miliardi']])
-],[21,23,28,40,200,600,800,1000,2000,4000,9000,10000].map((n,i)=>q('l6-number-practice-'+(i+1),'Write <b>'+n.toLocaleString('en-GB')+'</b> in Italian.',numMap.get(n),n>=1000?'Compare mille with the repeating mila ending.':n>=100?'Look for the repeated cento part.':n===23?'Keep the accented final vowel.':'Look at the join between the number parts.',{explanation:num(numMap.get(n)),source:sourceText('numbers',1),origin:'Adapted recall task using the exact supplied number'})),'numbers',1,'pattern');
+],numberPracticeValues.map(n=>q('l6-number-write-'+n,'Write <b>'+n.toLocaleString('en-GB')+'</b> in Italian.',numMap.get(n),n===23?'Remember the accent on the final vowel.':n===21||n===28?'Think about the final vowel of venti before uno or otto.':n>=1000?'Compare mille with the repeating mila ending.':n>=100?'Use the repeated cento part.':n>=40?'Use the tens column of the handout.':'Write the number as one Italian word.',{explanation:num(numMap.get(n)),source:n<=20?'Earlier course reference · Avere, numbers and family · Numbers 0–20':sourceText('numbers',1),origin:n<=20?'User-requested revision using the existing 0–20 course reference':'User-requested writing practice using the supplied number handout'})),'numbers',1,'pattern');
 const intPairs=[['Sei inglese.','Sei inglese?','Are you English?'],['Sei studente.','Sei studente?','Are you a student?'],['È italiano.','È italiano?','Is he Italian?'],['Siamo pronti.','Siamo pronti?','Are we ready?'],['Siete inglesi.','Siete inglesi?','Are you English? (plural)']];
 sheet('l6-intonation','Statement or question?','Intonation · see the curve, then say it','Keep the words and notice how the pitch ends in the source diagram.',[
  bullets('Same words, different intonation',[pairFigure,'The source’s statement curve finishes downwards; its question curve finishes upwards. This diagram illustrates these examples, not a universal pitch rule for every Italian question.']),
@@ -312,7 +316,35 @@ function normalise(value,mode='accent'){
  return text;
 }
 function checkAnswer(value,answers,mode='accent'){return (answers||[]).some(a=>normalise(a,mode)===normalise(value,mode));}
-const api={version,title:'Numbers, Essere and Questions',deckName:'Italian - Lesson 6 - Numbers, Essere and Questions',sources,topics,cards,sheets,categories,flow,practiceGroups,legacyTopics,numberRows,issues,checkAnswer,normalise};
+function migrateNumberPractice(storage){
+ if(!storage)return;
+ try{
+  const key='italianCourseSessionProgressV2',viewKey='italianGuidedSheetPilotV1:l6-number-patterns';
+  const progress=JSON.parse(storage.getItem(key)||'{}');
+  progress.study=progress.study||{answers:{}};
+  if(progress.study.numberPracticeVersion===2)return;
+  const answers=progress.study.answers||{};
+  const previousValues=[21,23,28,40,200,600,800,1000,2000,4000,9000,10000];
+  const archive={};
+  previousValues.forEach((n,i)=>{const id='l6-number-patterns-q'+(i+1);if(answers[id])archive[id]=answers[id];});
+  Object.keys(answers).filter(k=>/^l6-number-patterns-q\d+$/.test(k)).forEach(k=>delete answers[k]);
+  previousValues.forEach((n,i)=>{const saved=archive['l6-number-patterns-q'+(i+1)],next=numberPracticeValues.indexOf(n);if(saved&&next>=0)answers['l6-number-patterns-q'+(next+1)]=saved;});
+  progress.study.answers=answers;
+  if(Object.keys(archive).length)progress.study.numberPracticeArchiveV1=archive;
+  const rawView=storage.getItem(viewKey);
+  if(rawView){
+   const view=JSON.parse(rawView);
+   if(view.numberPracticeVersion!==2){
+    view.question=Math.max(0,numberPracticeValues.indexOf(previousValues[view.question]));
+    view.finished=false;view.reviewIncorrect=false;view.reviewQueue=[];view.numberPracticeVersion=2;
+    storage.setItem(viewKey,JSON.stringify(view));
+   }
+  }
+  progress.study.numberPracticeVersion=2;
+  storage.setItem(key,JSON.stringify(progress));
+ }catch(_){/* Storage unavailable: practice still works without erasing user data. */}
+}
+const api={numberPracticeValues,migrateNumberPractice,version,title:'Numbers, Essere and Questions',deckName:'Italian - Lesson 6 - Numbers, Essere and Questions',sources,topics,cards,sheets,categories,flow,practiceGroups,legacyTopics,numberRows,issues,checkAnswer,normalise};
 if(typeof module!=='undefined'&&module.exports)module.exports=api;
-if(root)root.ITALIAN_L6=api;
+if(root){root.ITALIAN_L6=api;try{migrateNumberPractice(root.sessionStorage);}catch(_){}}
 })(typeof window!=='undefined'?window:undefined);

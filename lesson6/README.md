@@ -7,10 +7,10 @@ The user approved publishing the web UI for in-site review. Anki deck production
 One canonical `content.js` dataset supplies the web cards and can supply a later approved Anki export.
 - 66 recall cards in eight ordered topics.
 - Eight visible study topics; eleven retained exercise routes. Four Essere routes appear as practice sets inside one topic.
-- 83 earlier practice questions preserved, with eight source-derived warm-up/dialogue checks added (91 total).
+- 120 practice questions: 79 unchanged non-number questions and 41 number-writing tasks (0–30 inclusive plus ten larger values).
 - All 30 supplied homework tasks: 6 pronoun/form matches, 10 sentence gaps, 8 translations, 6 negative gaps.
 - 27 classroom/group tasks: 12 class gaps and the complete 15-item plural workshop.
-- 26 existing adapted number-pattern, intonation and useful-expression questions, plus eight warm-up/dialogue checks.
+- 55 adapted number-writing, intonation and useful-expression questions, plus eight warm-up/dialogue checks.
 - Original 445 cards and original nine embedded Study Sheets are preserved.
 
 ## Visual source fidelity

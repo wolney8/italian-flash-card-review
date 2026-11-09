@@ -89,9 +89,17 @@
     "l6-essere-translation": "9a9e012dbce928ae8d5600777d257ceda966b4f354eb293fc9a037e279581a51",
     "l6-negative-homework": "013ba495bee74657e9649a669b377d2c3670802519042a0417e6f2ee5f2e94da",
     "l6-essere-class": "7939ce43de9e7fe0c9ad68de84fefe70460379b8cabf4c8f0469759b53c7f2e1",
-    "l6-number-patterns": "582f25dcbe35e5ffca4ef9623d61887d9c98b7bb4bcd7ad30644e80fcfecad7e",
+    "l6-number-patterns": "ab82a002e6ee138a924a4322640000d9f485c283b360112b2ee41e0c088b852e",
     "l6-intonation": "9ae9327c6e6b935cc551039aa469ea6d053da08f9b39a3b90e1bec1daf7335e1",
     "l6-plural-workshop": "7ce10cc21a5a23f84032f54c7c26909004c14a0d3d077d80394a36f13242d9c0",
     "l6-useful-questions": "c8efd3a38dbee49b4e8634a676700ea1f3a94e2168b98caf20c9b44feaf2752b"
+  },
+  "approved_replacements": {
+    "l6-number-patterns": {
+      "date": "2026-11-09",
+      "reason": "User requested 0–30 writing practice plus 10 larger numbers; 41 inclusive tasks.",
+      "previous_sha256": "582f25dcbe35e5ffca4ef9623d61887d9c98b7bb4bcd7ad30644e80fcfecad7e",
+      "current_sha256": "ab82a002e6ee138a924a4322640000d9f485c283b360112b2ee41e0c088b852e"
+    }
   }
 }
