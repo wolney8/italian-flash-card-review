@@ -35,11 +35,14 @@ try:
      current=page.locator('.guided-card-host .review-card')
      assert current.get_attribute('data-key')==c['key'],(width,theme,i,c['key'])
      assert page.locator('.l3-topic-primer').count()==1
-     page.locator('[data-guide-flip]').click();page.wait_for_timeout(450)
+     page.locator('[data-guide-flip]').click()
+     page.wait_for_selector('.guided-card-host .review-card.show-answer')
+     page.wait_for_timeout(450)
      if c['key']!='origin_where':
       assert current.locator('.l3-singular-forms tbody tr').count()==3
-      assert 'Complete reply' in current.inner_text()
+      assert 'complete reply' in current.inner_text().lower(),(width,theme,c['key'],'reply not visible')
       assert current.locator('.l3-dialogue').count()==1
+      assert current.locator('.l3-dialogue').is_visible()
      assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),(width,theme,c['key'],'overflow')
      prev=page.locator('[data-guide-prev]').bounding_box();nxt=page.locator('[data-guide-next]').bounding_box()
      assert abs(prev['y']-nxt['y'])<=3
