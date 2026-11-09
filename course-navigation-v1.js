@@ -61,8 +61,9 @@
     try{
       const parsed=JSON.parse(sessionStorage.getItem(PROGRESS_KEY)||'{}');
       return {
-        flashcards:{viewed:parsed.flashcards?.viewed||{},lastLesson:parsed.flashcards?.lastLesson||null},
-        study:{answers:parsed.study?.answers||{},lastSheet:parsed.study?.lastSheet||null}
+        ...parsed,
+        flashcards:{...parsed.flashcards,viewed:parsed.flashcards?.viewed||{},lastLesson:parsed.flashcards?.lastLesson||null},
+        study:{...parsed.study,answers:parsed.study?.answers||{},lastSheet:parsed.study?.lastSheet||null}
       };
     }catch(_error){return{flashcards:{viewed:{},lastLesson:null},study:{answers:{},lastSheet:null}};}
   }

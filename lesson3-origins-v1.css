@@ -1,0 +1,11 @@
+/* Scope to the revised topic; legacy card tokens must not replace the chosen theme. */
+.guided-card-host .review-card[data-lesson="L3"][data-deck="03 Origins & questions"] {
+  --paper:inherit;
+  --paper2:inherit;
+  --line:inherit;
+  --muted:inherit;
+  --green:inherit;
+  --recall:inherit;
+  --answer:inherit;
+  color:var(--ink);
+}

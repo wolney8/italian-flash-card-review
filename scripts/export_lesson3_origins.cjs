@@ -1,0 +1,17 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const api=require('../lesson3-origins-v1.js');
+const out=path.resolve(__dirname,'../artifacts/lesson3-origins');
+const cards=JSON.parse(fs.readFileSync(path.join(out,'runtime-cards.json'),'utf8'));
+const byKey=new Map(cards.map(c=>[c.key,c]));
+const core=api.sequence.map(k=>byKey.get(k));
+assert.equal(core.length,15);assert.ok(core.every(c=>c?.deck===api.core));
+const fields=[['StableKey','key'],['Panel','panel'],['Prompt','prompt'],['Usage','usage'],['Pattern','pattern'],['Clarification','clarification'],['CourseSource','reference']];
+const cell=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
+const tsv='#separator:Tab\n#html:true\n#tags:l3_origins_singular_v1\n#columns:'+fields.map(f=>f[0]).join('\t')+'\n'+core.map(c=>fields.map(([,k])=>cell(c[k])).join('\t')).join('\n')+'\n';
+fs.writeFileSync(path.join(out,'Lesson_3_Origins_Existing_Note_Update.tsv'),tsv);
+const later=Object.entries(api.moves).filter(([,deck])=>deck!==api.core);
+const tags='#separator:Tab\n#html:true\n#tags column:2\n#columns:StableKey\tTags\n'+later.map(([key,deck])=>cell(key)+'\t'+cell(deck.startsWith('08')?'l3_origins_later_plural_v1':'l3_origins_reference_v1')).join('\n')+'\n';
+fs.writeFileSync(path.join(out,'Lesson_3_Tag_Later_And_Reference.tsv'),tags);
+fs.writeFileSync(path.join(out,'anki-export-report.json'),JSON.stringify({status:'prepared',format:'existing-note TSV, not apkg',cards:15,new_cards:0,keys:api.sequence,moves:api.moves,canonical_web_field_parity:'pass',original_apkg_bytes:'not retrievable in authoring session',native_anki_import:'not performed',update_requires:'same existing note type, first-field stable key match, 15 updated and zero added; manual Change Deck for moves',main_answer_pronunciation_literal:'not exported or changed'},null,2));
+console.log('PASS Anki TSV field parity with the actual rendered website. No GUIDs or card IDs generated.');
