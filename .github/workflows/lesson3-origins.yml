@@ -1,0 +1,35 @@
+name: Lesson 3 origins
+on:
+  push:
+    branches: [main, fix/lesson3-origins-singular-20261109]
+    paths: ['lesson3-origins-v1.js', 'index.html', 'scripts/*lesson3_origins*', '.github/workflows/lesson3-origins.yml']
+  pull_request:
+    paths: ['lesson3-origins-v1.js', 'index.html', 'scripts/*lesson3_origins*', '.github/workflows/lesson3-origins.yml']
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate scoped content and retained card identities
+        env:
+          L3_REPORT_PATH: artifacts/lesson3-origins/content-validation.json
+        run: |
+          node --check lesson3-origins-v1.js
+          node scripts/validate_lesson3_origins.cjs
+      - name: Install browser test dependency
+        run: python -m pip install playwright==1.57.0
+      - name: Test real web cards on desktop and mobile
+        run: python scripts/validate_lesson3_origins_browser.py
+      - name: Export existing-note Anki text update
+        run: node scripts/export_lesson3_origins.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lesson3-origins-review
+          path: artifacts/lesson3-origins
+          retention-days: 14
