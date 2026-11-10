@@ -1,0 +1,50 @@
+/* Scoped, web-only study additions; reuse the approved warm editorial palette. */
+.study-ready-shortcuts{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 20px}
+.study-ready-shortcuts a,.study-reference-link{display:inline-flex;align-items:center;min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font:400 15px/1.4 system-ui,sans-serif;text-decoration:none}
+.study-reference-link{margin-top:12px}
+.number-practice-modes,.number-view-switch,.number-reveal-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+:is(.number-practice-modes,.number-view-switch,.number-reveal-actions) button{min-height:44px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);font:400 15px/1.4 system-ui,sans-serif;cursor:pointer}
+:is(.number-practice-modes,.number-view-switch) button[aria-pressed=true]{border-color:var(--mint);box-shadow:inset 0 0 0 1px var(--mint);background:var(--paper2)}
+.study-pack-sheet[data-number-mode=flip] [data-study-quiz]>.quiz-list,.study-pack-sheet[data-number-mode=flip] [data-study-quiz]>.guided-sheet-tips{display:none!important}
+.study-pack-sheet[data-number-mode=flip]:has(>[data-study-quiz]:not([hidden]))>.guided-sheet-controls{display:none!important}
+.number-reveal-board[hidden],[data-number-panel][hidden]{display:none!important}
+.number-reveal-note,.number-reveal-status{font:400 14px/1.5 system-ui,sans-serif;color:var(--muted)}
+.number-reveal-status{align-self:center;margin-left:auto;font-variant-numeric:tabular-nums}
+.number-flip-group{margin:20px 0}
+.number-flip-group h3{font:500 18px/1.4 system-ui,sans-serif;margin:10px 0}
+.number-flip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;align-items:start}
+.number-flip-card{border:1px solid var(--line);border-radius:12px;background:var(--paper);overflow:hidden;min-width:0}
+.number-flip-card>summary{display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:105px;padding:16px;cursor:pointer;list-style:none}
+.number-flip-card>summary::-webkit-details-marker{display:none}
+.number-flip-numeral{font:500 29px/1.3 system-ui,sans-serif;font-variant-numeric:tabular-nums;color:var(--ink)}
+.number-flip-cue{font:400 13px/1.5 system-ui,sans-serif;color:var(--muted)}
+.number-flip-card[open] .number-flip-cue{font-size:0}
+.number-flip-card[open] .number-flip-cue:after{content:'Hide Italian';font-size:13px}
+.number-flip-answer{border-top:1px solid var(--line);background:var(--paper2);padding:14px;overflow-wrap:anywhere}
+.number-flip-answer>p[lang=it]{font:500 23px/1.4 system-ui,sans-serif;margin:0 0 8px;color:var(--ink)}
+.number-flip-answer .number-flip-help,.number-flip-answer small{font:400 13px/1.55 system-ui,sans-serif;color:var(--muted);display:block;margin:6px 0}
+.number-pattern-columns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.number-pattern-columns .number-flip-grid{grid-template-columns:1fr}
+:is(.number-flip-card>summary,.number-practice-modes button,.number-view-switch button,.number-reveal-actions button,.study-ready-shortcuts a,.study-reference-link):focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+@media(max-width:850px){.number-pattern-columns{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.number-flip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.number-flip-answer>p[lang=it]{font-size:20px}.number-practice-modes,.number-view-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.number-practice-modes button,.number-view-switch button{min-width:0;padding:10px 8px}.number-reveal-status{width:100%;margin-left:0}.number-pattern-columns{gap:9px}.number-flip-card>summary{padding:12px}.number-flip-answer{padding:10px}.study-ready-shortcuts a{width:100%;box-sizing:border-box}}
+@media print{.number-practice-modes,.number-view-switch,.number-reveal-actions,.study-ready-shortcuts{display:none!important}.number-flip-card{break-inside:avoid}.number-flip-card>div{display:block!important}}
+.verb-reference>h2{margin-top:0}
+.verb-support-note{font:400 14px/1.6 system-ui,sans-serif;color:var(--muted)}
+.verb-entry,.verb-explainer,.verb-original{margin:12px 0;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.verb-entry>summary,.verb-explainer>summary,.verb-original>summary{padding:16px;cursor:pointer;font:500 17px/1.5 system-ui,sans-serif;min-height:44px;box-sizing:border-box}
+.verb-entry>summary small{display:block;color:var(--muted);font:400 13px/1.5 system-ui,sans-serif;margin-left:20px}
+.verb-entry-content,.verb-explainer>p,.verb-original>*:not(summary){padding:0 16px 12px}
+.verb-form-table{width:100%;table-layout:fixed;border-collapse:collapse}
+.verb-form-table th,.verb-form-table td{padding:12px 9px!important;overflow-wrap:anywhere;font:400 15px/1.5 system-ui,sans-serif!important;vertical-align:top}
+.verb-form-table th{font-weight:500!important}
+.verb-form-wrap{max-width:100%;overflow-x:auto}
+.verb-example{font-size:21px;line-height:1.5}
+.verb-plurals>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font:500 14px/1.5 system-ui,sans-serif}
+.verb-comparison{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0 16px}
+.verb-comparison article{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:14px;min-width:0;overflow-wrap:anywhere}
+.verb-comparison h3{font:500 17px/1.4 system-ui,sans-serif;margin:0 0 12px}
+.verb-comparison p{font:400 16px/1.6 system-ui,sans-serif}
+:is(.verb-entry,.verb-explainer,.verb-plurals,.verb-original)>summary:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+@media(max-width:600px){.verb-comparison{grid-template-columns:1fr}.verb-form-table th,.verb-form-table td{font-size:13px!important;padding:10px 6px!important}.verb-entry-content{padding:0 10px 10px}.verb-entry>summary,.verb-explainer>summary{font-size:16px}}
+@media print{.verb-entry-content,.verb-comparison{display:block!important}.verb-plurals>div{display:block!important}}
