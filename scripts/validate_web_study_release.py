@@ -61,6 +61,7 @@ try:
     assert page.locator('.quiz-question').count()==41
     q=page.locator('.quiz-question:not([hidden])');q.locator('input').fill('zero');q.locator('.check-button').click()
     assert q.get_attribute('data-result')=='correct'
+    page.wait_for_function('JSON.parse(sessionStorage.getItem("italianCourseSessionProgressV2"))?.study?.answers?.["l6-number-patterns-q1"]?.result === "correct"')
     saved=page.evaluate('sessionStorage.getItem("italianCourseSessionProgressV2")')
     page.click('[data-number-reveal-mode="flip"]')
     board=page.locator('.number-reveal-board');assert board.is_visible()
