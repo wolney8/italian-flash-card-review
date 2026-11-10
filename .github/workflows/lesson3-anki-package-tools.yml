@@ -1,0 +1,24 @@
+name: Lesson 3 Anki package tools
+on:
+  push:
+    branches: [build/lesson3-anki-package-20261110]
+    paths: [.github/workflows/lesson3-anki-package-tools.yml]
+permissions:
+  contents: read
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Prepare official Anki backend and compatible dependencies
+        run: |
+          python -m pip install --target /tmp/anki-tools anki==26.8.1 zstandard
+          PYTHONPATH=/tmp/anki-tools python -c 'from anki.collection import Collection; print("Official Anki backend import OK")'
+          python -m pip freeze --path /tmp/anki-tools > /tmp/anki-tools/BUILD_DEPENDENCIES.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lesson3-anki-validation-tools
+          path: /tmp/anki-tools
+          retention-days: 1
