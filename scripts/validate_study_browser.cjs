@@ -16,7 +16,7 @@ function auditClient(){
          query('.study-detail-location-row .study-detail-tools') &&
          query('.guided-sheet-steps') &&
          query('.study-detail-tools [data-study-print]')) {
-        await sleep(90); // Wait for async bilingual decoration to settle.
+        await sleep(90);
         if(query('.study-detail-location-row .study-detail-tools') &&
            query('.study-detail-tools [data-study-print]')) break;
       }
@@ -44,7 +44,8 @@ function auditClient(){
     result.progressTotal=Number(query('.guided-sheet-progress-track')?.getAttribute('aria-valuemax'));
     result.expectedProgressTotal=teaching.length+questions.length;
     result.initialProgressLabel=query('.guided-sheet-progress-count')?.textContent;
-    result.sourceOrder=teaching.map(p=>p.querySelector('h2')?.textContent.trim());
+    // The consolidated verb reference retains the original teaching block in an expandable section.
+    result.sourceOrder=teaching.map(p=>(p.querySelector('.verb-original h2')||p.querySelector('h2'))?.textContent.trim());
     for(const stage of ['learn','examples','practise','learn']){
       query('[data-guided-step="'+stage+'"]').click();
       await frames();await sleep(40);
@@ -60,7 +61,6 @@ function auditClient(){
     query('[data-guided-step="practise"]').click();
     await frames();
     const current=()=>query('.quiz-question:not([hidden])');
-    // Simulate the learner scrolling down to read the question before using Next.
     current().scrollIntoView({block:'center',behavior:'instant'});
     await frames();
     const oldTop=current().getBoundingClientRect().top;
@@ -180,7 +180,6 @@ function run(browser,base,label,size,slug){
         assert.ok(result.toolbarOverflow<=3,'Toolbar overflows on '+name);
         assert.ok(result.buttonWidths.every(w=>w>70),'Navigation buttons too narrow on '+name);
         const idx=sheets.findIndex(s=>s.slug===sheet.slug);
-        // Sheet navigation follows the category order rather than source data order.
         if(idx===sheets.length-1)assert.ok(result.nextHref?.startsWith('../?page=lessons'),'Reference path ends at Flashcards, not an unrelated homework route');
       }
     }
