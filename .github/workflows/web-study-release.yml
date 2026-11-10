@@ -1,0 +1,45 @@
+name: Web study release
+on:
+  push:
+    branches: [release/web-study-complete-20261110, main]
+    paths: ['.github/workflows/web-study-release.yml', 'study/**', 'scripts/validate_web_study_release.py', 'lesson6/**']
+  pull_request:
+    paths: ['study/**', 'scripts/validate_web_study_release.py']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source snapshot and live HTTP audit
+        run: |
+          mkdir -p artifacts/web-study-release
+          git archive --format=zip HEAD -o artifacts/web-study-release/source.zip
+          python - <<'PY'
+          import json,urllib.request,hashlib
+          from pathlib import Path
+          base='https://italian-flash-card-review.netlify.app/'
+          result={}
+          for name in ['index.html','lesson6/content.js','study/study-sheets.html','study/guided-sheet-pilot-v1.js','lesson3-origins-v1.js']:
+              try:
+                  req=urllib.request.Request(base+name,headers={'Cache-Control':'no-cache','User-Agent':'CourseReleaseCheck/1.0'})
+                  with urllib.request.urlopen(req,timeout=25) as response:
+                      data=response.read()
+                      local=Path(name).read_bytes()
+                      result[name]={'status':response.status,'bytes':len(data),'matches_checkout':data==local,'sha256':hashlib.sha256(data).hexdigest()}
+              except Exception as error: result[name]={'error':str(error)}
+          Path('artifacts/web-study-release/production-http.json').write_text(json.dumps(result,indent=2))
+          print(json.dumps(result,indent=2))
+          PY
+      - name: Validate updated web learning features
+        if: hashFiles('scripts/validate_web_study_release.py') != ''
+        run: |
+          python -m pip install playwright==1.57.0
+          python scripts/validate_web_study_release.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-study-release
+          path: artifacts/web-study-release
+          retention-days: 7
