@@ -1,0 +1,55 @@
+name: Web study release
+on:
+  push:
+    branches: [fix/web-study-ready-20261110]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser checks
+        run: python -m pip install playwright==1.57.0
+      - name: Inspect actual public deployment
+        run: |
+          mkdir -p artifacts/web-study
+          python - <<'PY'
+          import json,shutil,urllib.request,traceback
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          out=Path('artifacts/web-study');base='https://italian-flash-card-review.netlify.app'
+          result={'base':base,'pages':[]}
+          with sync_playwright() as p:
+            browser=p.chromium.launch(executable_path=shutil.which('google-chrome') or shutil.which('chromium'),headless=True,args=['--no-sandbox'])
+            page=browser.new_page(viewport={'width':1280,'height':900})
+            for name,route in [('lesson6','/?page=card&lesson=L6'),('numbers','/study/study-sheets.html?mode=learn&sheet=l6-number-patterns'),('catalogue','/study/study-sheets.html'),('verbs','/study/study-sheets.html?sheet=known-verbs-and-forms')]:
+              record={'name':name,'url':base+route}
+              try:
+                response=page.goto(base+route,wait_until='networkidle',timeout=45000)
+                page.wait_for_timeout(1000)
+                record.update(status=response.status,body=page.locator('body').inner_text()[:18000])
+                if name=='lesson6':record['l6_cards']=page.evaluate('cards.filter(c=>c.lesson==="L6").length')
+                if name=='numbers':record['questions']=page.locator('.quiz-question').count()
+                page.screenshot(path=str(out/(name+'-live.png')),full_page=True)
+              except Exception as e:record['error']=str(e)
+              result['pages'].append(record)
+            browser.close()
+          (out/'production-audit.json').write_text(json.dumps(result,indent=2))
+          print(json.dumps([{k:v for k,v in x.items() if k!='body'} for x in result['pages']],indent=2))
+          PY
+      - name: Validate new release locally when present
+        run: |
+          if [ -f scripts/validate_study_release.py ]; then python scripts/validate_study_release.py; fi
+      - name: Archive exact public sources
+        run: git archive --format=zip HEAD -o artifacts/web-study/source.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-study-release
+          path: artifacts/web-study
+          retention-days: 7
