@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script>(function(){var h=document.documentElement;h.classList.add('course-booting');try{var t=localStorage.getItem('italianCourseThemeV1')||'light',l=localStorage.getItem('italianCourseLanguageV1')||'en';h.dataset.italianTheme=t;h.dataset.uiLanguage=l;h.style.colorScheme=t;h.style.backgroundColor=t==='dark'?'#1d1c1a':'#f8f3eb';}catch(e){h.dataset.italianTheme='light';}})();</script>
+  <style>html.course-booting body>:not(#courseBoot){visibility:hidden!important}html{background:#f8f3eb}html[data-italian-theme=dark]{background:#1d1c1a}</style>
+
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Italian study topics with guided learning, classroom practice and homework.">
   <title>Italian study sheets — Italian for Beginners</title>
@@ -22,10 +25,16 @@
   <script src="../course-ui-italian-v1.js?v=20261111a" defer></script>
   <script src="../course-ui-guidance-v1.js?v=20261111a" defer></script>
   <script src="practice-language-v1.js?v=20261111r1" defer></script>
-  <script src="../course-ui-language-v1.js?v=20261111a" defer></script>
+  <script src="../course-ui-language-v1.js?v=20261111library" defer></script>
   <link rel="stylesheet" href="practice-session-v1.css?v=20261111r1">
+  <link rel="stylesheet" href="../course-shell-boot-v1.css?v=20261111library">
+  <script src="../course-shell-boot-v1.js?v=20261111library" defer></script>
+  <link rel="stylesheet" href="library-v1.css?v=20261111library">
 </head>
 <body>
+<div id="courseBoot" role="status" aria-live="polite"><strong>Italian for Beginners</strong><span>Loading your study space…</span><div class="boot-line"></div><div class="boot-line"></div></div>
+<noscript><style>html.course-booting body>:not(#courseBoot){visibility:visible!important}#courseBoot{display:none!important}</style><p>Enable JavaScript to use the interactive exercises.</p></noscript>
+
 <main id="top">
   <section class="study-course-shell" aria-label="Choose Learn or Review">
     <div class="study-course-copy">
@@ -76,14 +85,18 @@
 <script src="../lesson6/content.js?v=20261109numbers" defer></script>
 <script src="verb-reference-v1.js?v=20261111language&practice=1" defer></script>
 <script src="practice-options-v1.js?v=20261111r1" defer></script>
-<script src="practice-bank-v1.js?v=20261111r1" defer></script>
-<script src="practice-session-v1.js?v=20261111r1" defer></script>
-<script src="study-sheets-v5.js?v=20261106flow&practice=1" defer></script>
-<script src="study-recovery-v1.js?v=20261111language" defer></script>
-<script src="../course-site-header-v1.js?v=20261106flow" defer></script>
-<script src="study-editorial-v1.js?v=20261111language" defer></script>
+<script src="practice-bank-v1.js?v=20261111library" defer></script>
+<script src="practice-session-v1.js?v=20261111library" defer></script>
+<script src="library-content-v1.js?v=20261111library" defer></script>
+<script src="library-map-v1.js?v=20261111library" defer></script>
+<script src="library-v1.js?v=20261111library" defer></script>
+<script src="library-order-v1.js?v=20261111library" defer></script>
+<script src="study-sheets-v5.js?v=20261111library" defer></script>
+<script src="study-recovery-v1.js?v=20261111library" defer></script>
+<script src="../course-site-header-v1.js?v=20261111library" defer></script>
+<script src="study-editorial-v1.js?v=20261111library" defer></script>
 <script src="../learning-session-v1.js?v=20261104a" defer></script>
-<script src="guided-sheet-pilot-v1.js?v=20261106flow" defer></script>
-<script src="study-ready-tools.js?v=20261110a" defer></script>
+<script src="guided-sheet-pilot-v1.js?v=20261111library" defer></script>
+<script src="study-ready-tools.js?v=20261111library" defer></script>
 </body>
 </html>

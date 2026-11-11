@@ -27,7 +27,7 @@
   let dark=true,italianFirst=true,menuOpen=false;
   const get=(key,fallback)=>{try{return localStorage.getItem(key)||fallback;}catch(_e){return fallback;}};
   const set=(key,value)=>{try{localStorage.setItem(key,value);}catch(_e){}};
-  function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
+  function escapeHtml(v){return String(v??'').replace(/\s*\u2014\s*/g,': ').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));}
   function bi(it,en){const a=italianFirst?it:en,b=italianFirst?en:it;return `<span class="editorial-label"><span class="editorial-label-main" lang="${italianFirst?'it':'en'}">${escapeHtml(a)}</span><span class="editorial-label-sub" lang="${italianFirst?'en':'it'}">${escapeHtml(b)}</span></span>`;}
   function mapped(value){const pair=PAIRS[value];return pair?bi(pair[0],pair[1]):window.ItalianUI?window.ItalianUI.pair(value):escapeHtml(value);}
   function currentSheet(){const slug=new URLSearchParams(location.search).get('sheet');return slug||document.querySelector('.study-pack-sheet')?.id||'';}
@@ -81,11 +81,11 @@
     const isDetail=document.body.classList.contains('study-sheet-detail');
     const title=sheetTitle();
     // Do not destroy live toolbar buttons every time quiz feedback changes.
-    const renderKey=JSON.stringify([isDetail,title,studyMode()]);
+    const renderKey=JSON.stringify([isDetail,title,studyMode(),window.ItalianStudyContext?.breadcrumbs]);
     if(host.dataset.renderKey===renderKey)return;
     const nav=window.ItalianCourseChrome.breadcrumb({
       homeHref:'../?page=home',
-      segments:isDetail?[{label:'Study sheets',href:'study-sheets.html?mode='+studyMode()+((new URLSearchParams(location.search).get('path')==='L6'||currentSheet().startsWith('l6-'))?'&path=L6':'')},{label:title}]:[{label:'Study sheets'}]
+      segments:window.ItalianStudyContext?.breadcrumbs||(isDetail?[{label:'Study sheets',href:'study-sheets.html?mode='+studyMode()},{label:title}]:[{label:'Study sheets'}])
     });
     host.innerHTML=isDetail
       ? '<div class="study-detail-location-row">'+nav+detailTools()+'</div>'
@@ -137,5 +137,6 @@
     renderHeader();breadcrumb();
     if(focusMode)document.querySelector('.study-detail-location-row [data-study-mode="'+focusMode+'"]')?.focus({preventScroll:true});
   });
+  window.addEventListener('italian-library-ready',breadcrumb);
   initialise();
 })();

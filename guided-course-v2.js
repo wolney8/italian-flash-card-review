@@ -71,7 +71,7 @@
   function safeSet(key, value) { try { localStorage.setItem(key, value); } catch (_e) {} }
   function sessionRead(key, fallback) { try { return JSON.parse(sessionStorage.getItem(key) || 'null') || fallback; } catch (_e) { return fallback; } }
   function sessionWrite(key, value) { try { sessionStorage.setItem(key, JSON.stringify(value)); } catch (_e) {} }
-  function esc(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'}[c])); }
+  function esc(value) { return String(value ?? '').replace(/\s*\u2014\s*/g,': ').replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'}[c])); }
   function labelPair(italian,english,extraClass='') {
     const first=italianFirst?italian:english,second=italianFirst?english:italian;
     return `<span class="editorial-label ${extraClass}"><span class="editorial-label-main" lang="${italianFirst?'it':'en'}">${esc(first)}</span><span class="editorial-label-sub" lang="${italianFirst?'en':'it'}">${esc(second)}</span></span>`;
@@ -205,6 +205,7 @@
     document.body.classList.toggle('nightMode',dark);
     document.body.classList.toggle('night_mode',dark);
     document.documentElement.style.colorScheme = dark?'dark':'light';
+    document.documentElement.dataset.italianTheme=dark?'dark':'light';
   }
   function themeToggle() { safeSet(THEME_KEY,dark?'light':'dark'); themeApply(); renderKeepingCardFace(); }
   function ensure() {
@@ -467,7 +468,9 @@
     ensure();
     document.body.classList.toggle('guided-focus-active',state.page==='card'&&focusActive());
     root.innerHTML=header()+ (state.page==='lessons'?lessons():state.page==='card'?cardPage():state.page==='topics'?topics():state.page==='feedback'?feedback():state.page==='course'?course():home()) + `<footer class="guided-footer">Italian for Beginners · Last updated 4 November 2026</footer>`;
+    window.ItalianStudyLinks?.decorate();
     syncCardHeight();
+    if(ready)window.ItalianCourseBoot?.ready();
   }
   function activate() {
     ensure();

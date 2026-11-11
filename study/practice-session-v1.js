@@ -17,7 +17,7 @@ function hydrate(q){let saved=[];try{saved=JSON.parse(q.querySelector('input[typ
  if(q.querySelector('.feedback.correct,.feedback.wrong'))checkMatch(q);
 }
 const PKEY='italianCourseSessionProgressV2';
-function newRound(article){const slug=article.id,lang=root.ItalianUI?.language||'en';
+function newRound(article){if(root.ItalianGuidedStudy){root.ItalianGuidedStudy.newRound();return;}const slug=article.id,lang=root.ItalianUI?.language||'en';
  const questions=[...article.querySelectorAll('.quiz-question')];
  const unfinished=questions.some(q=>q.querySelector('input[type=text]')?.value||q.querySelector('input[type=radio]:checked'));
  if(unfinished&&!confirm(lang==='it'?'Iniziare un nuovo giro per questa scheda? Le altre schede non cambiano. Il risultato attuale verrà conservato.':'Start a fresh round for this sheet? Other sheets are unchanged. The current result will be saved.'))return;
@@ -40,6 +40,7 @@ function mount(){const article=document.querySelector('.study-pack-sheet');
  if(!article||article.dataset.guidedPilot!=='ready'||article.dataset.repeatPractice)return;
  const quiz=article.querySelector('[data-study-quiz]');if(!quiz)return;
  article.dataset.repeatPractice='ready';
+ if(root.ItalianStudyContext?.set){setTimeout(()=>article.querySelectorAll('[data-type=match]').forEach(hydrate),0);return;}
  const toolbar=document.createElement('div');toolbar.className='practice-round-toolbar';
  toolbar.innerHTML='<button type="button" data-new-practice-round>'+pair('New practice round','Nuovo giro di esercizi')+'</button><a href="study-sheets.html?mode=learn&path=verbs">'+pair('All verb practice','Tutti gli esercizi sui verbi')+'</a><p>'+pair('Choices stay in place while you work. A new round shuffles them and resets only this sheet.','Le opzioni restano ferme durante il lavoro. Un nuovo giro le mescola e azzera solo questa scheda.')+'</p>';
  quiz.prepend(toolbar);

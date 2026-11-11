@@ -4,7 +4,7 @@
 (function(root){
 'use strict';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const pair=(en,it)=>'<span class="editorial-label"><span lang="en" class="editorial-label-main">'+en+'</span><span lang="it" class="editorial-label-sub">'+it+'</span></span>';
+const pair=(en,it)=>'<span class="editorial-label"><span lang="en" class="editorial-label-main">'+String(en).replace(/\s*\u2014\s*/g,': ')+'</span><span lang="it" class="editorial-label-sub">'+String(it).replace(/\s*\u2014\s*/g,': ')+'</span></span>';
 const SUBJECTS=['Io','Tu','Lei','Noi','Voi','Loro'];
 const V={
  essere:{forms:['sono','sei','è','siamo','siete','sono'],en:'to be',kind:'irregular',tail:'a casa',gloss:'at home',reds:['ho','vengo']},
