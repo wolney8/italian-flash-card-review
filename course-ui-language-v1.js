@@ -132,9 +132,8 @@
     scheduled=false;if(!document.body)return;
     observer?.disconnect();flushes++;
     document.documentElement.dataset.uiLanguage=locale;document.documentElement.lang=locale;
-    for(const label of document.querySelectorAll('.editorial-label')){
-      for(const span of label.querySelectorAll(':scope > [lang]'))span.setAttribute('aria-hidden',String(span.lang!==locale));
-    }
+    // display:none removes the other language from both layout and the accessibility tree.
+    // Leave bilingual source markup intact: legacy decorators compare its exact HTML.
     for(const button of document.querySelectorAll(CONTROL)){
       if(!button.dataset.uiLanguageToggle){
         button.dataset.uiLanguageToggle='true';
