@@ -52,7 +52,6 @@ function questionCopy(q){
   ['Change only the exact quantity into “some”: ', 'Sostituisci solo la quantità precisa con “some”: '],
   ['Which sentence means ', 'Quale frase significa ']
  ];
- // Existing bilingual matching/ordering prompts retain their source markup.
  if(en.includes('editorial-label')){
   en=en.replace('Riordina il dialogo. Formal introductions','Riordina il dialogo. Presentazioni formali')
        .replace('Riordina il dialogo. Informal conversation','Riordina il dialogo. Conversazione informale')
@@ -62,13 +61,11 @@ function questionCopy(q){
  for(const [from,to] of swaps)it=it.replaceAll(from,to);
  return {...q,prompt:it===en?en:'<span class="editorial-label"><span class="editorial-label-main" lang="en">'+en+'</span><span class="editorial-label-sub" lang="it">'+it+'</span></span>'};
 }
-
 function enhance(data){
  DATA=data.concat((root.ItalianLibraryContent?.sheets||[]).map(s=>({...s,questions:s.questions.map(questionCopy)})));
  sets={};
  for(const sheet of DATA){const names=M.labels[sheet.slug];sets[sheet.slug]={id:sheet.slug,sheet:sheet.slug,title:names?.[0]||sheet.title,it:names?.[1]||sheet.titleIt||root.ItalianUI?.translate(sheet.title,'it')||sheet.title,indices:sheet.questions.map((_,i)=>i),kind:sheet.sourceKind||(/homework|gaps|translation|matching/.test(sheet.slug)?'Homework':sheet.practice?'Extra practice':'Class practice')};}
  for(const [id,s] of Object.entries(M.subsets))sets[id]={...s,id};
- // Same source IDs, later practice with plurals intact. Only the learning order changes.
  sets['di-da-dove-pronouns'].indices=[0,3,4,5,8,9,1,2,6,7];
  root.ItalianUILibraryMessages=root.ItalianUILibraryMessages||{};for(const s of DATA)if(s.titleIt)root.ItalianUILibraryMessages[s.title]=s.titleIt;for(const t of M.topics)root.ItalianUILibraryMessages[t.title]=t.it;for(const l of M.lessons)root.ItalianUILibraryMessages[l.title]=l.it;for(const label of Object.values(M.labels))root.ItalianUILibraryMessages[label[0]]=label[1];for(const sub of Object.values(M.subsets))root.ItalianUILibraryMessages[sub.title]=sub.it;
  root.ItalianStudyData=DATA;return DATA;
@@ -114,6 +111,17 @@ function context(active,params){
  const courseLesson=lesson?.id||null;
  const related=topic?.flashcards||{lesson:'L3',deck:'02 Verb forms'};
  let flashcards={...related};
+ const verbCards={
+  'practice-essere':courseLesson==='L1'?['L1','05 Sentence & pattern practice']:['L6','Essere in the present'],
+  'practice-avere':['L4','01 Avere - present tense'],
+  'practice-venire':['L3','03 Origins & questions'],
+  'practice-vivere':['L3','03 Origins & questions'],
+  'practice-abitare':['L3','03 Origins & questions'],
+  'practice-chiamarsi':['L1','02 Introductions'],
+  'practice-stare':courseLesson==='L6'?['L6','Greetings and responses']:['L2','00 Greetings & wellbeing'],
+  'practice-andare':['L6','Greetings and responses']
+ };
+ if(verbCards[set.id])flashcards={lesson:verbCards[set.id][0],deck:verbCards[set.id][1]};
  if(topic?.id==='partitives'&&courseLesson==='L6')flashcards={lesson:'L6',deck:'Plural partitives — revision'};
  if(topic?.id==='wellbeing'&&courseLesson==='L6')flashcards={lesson:'L6',deck:'Greetings and responses'};
  if(topic?.id==='age'&&set.sheet==='l6-age-dialogue')flashcards={lesson:'L6',deck:'Age and introductions'};
