@@ -56,6 +56,16 @@ try:
      radios=q.locator('input[type=radio]');target=next(r for r in radios.all() if r.input_value()==expected);target.check()
     elif kind=='match':
      for select,value in zip(q.locator('[data-match-select]').all(),json.loads(expected)):select.select_option(value)
+    elif kind=='order':
+     # Use the same visible move controls as a learner, not the hidden JSON field.
+     for target_index,item_id in enumerate(json.loads(expected)):
+      row=q.locator('.library-order-list > li[data-order-id="'+item_id+'"]')
+      for _ in range(q.locator('.library-order-list > li').count()):
+       position=row.evaluate('(el)=>Array.from(el.parentElement.children).indexOf(el)')
+       if position==target_index:break
+       assert position>target_index
+       row.locator('[data-order-up]').click()
+      assert row.evaluate('(el)=>Array.from(el.parentElement.children).indexOf(el)')==target_index
     else:q.locator('input[type=text]').fill(expected if correct else 'wrong')
    for slug in ['class4-avere-homework','l6-essere-gaps','l6-negative-homework','l6-number-patterns','class4-silent-h','practice-essere','class4-family','class3-dialogues','l6-plural-workshop','class2-c-sounds']:
     visit(slug)
