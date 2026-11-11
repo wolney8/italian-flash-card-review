@@ -51,3 +51,6 @@ html[data-italian-theme=dark] .library-actions .library-primary{color:#213327}
 .library-finish-rounds{border-top:1px solid var(--line);padding-top:16px;margin-top:20px}
 .library-finish-rounds h3{font:500 16px/1.4 system-ui,sans-serif;margin:0 0 12px}
 .library-finish-rounds button{min-height:44px;padding:10px;border:1px solid var(--line);border-radius:10px;color:var(--ink);cursor:pointer}
+.study-pack-sheet .guided-sheet-finish .guided-sheet-primary{background:var(--mint);border-color:var(--mint);color:var(--paper)}
+html[data-italian-theme=dark] .study-pack-sheet .guided-sheet-finish .guided-sheet-primary{color:#213327}
+.study-pack-sheet .guided-sheet-finish .guided-sheet-followup.guided-sheet-secondary{background:var(--paper2);color:var(--ink)!important;border-color:var(--line)}
