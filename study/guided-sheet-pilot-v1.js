@@ -26,14 +26,14 @@
   }
   function initialise() {
     const article=root.querySelector('.study-pack-sheet');
-    if(!article||article.id!==TARGET)return false;
+    if(!article||article.id !== TARGET)return false;
     if(article.dataset.guidedPilot==='ready')return true;
     const hero=article.querySelector(':scope > header.hero');
     const quiz=article.querySelector(':scope > section[data-study-quiz]');
     const panels=[...article.querySelectorAll(':scope > section.panel')].filter(p=>p!==quiz);
     const explicitStages=panels.some(p=>p.dataset.studyStage);
-    const learn=explicitStages?panels.filter(p=>p.dataset.studyStage==='learn'):panels.slice(0,1);
-    const examples=explicitStages?panels.filter(p=>p.dataset.studyStage==='examples'):panels.slice(1);
+    const learn = explicitStages?panels.filter(p=>p.dataset.studyStage==='learn'):panels.slice(0, 1);
+    const examples = explicitStages?panels.filter(p=>p.dataset.studyStage==='examples'):panels.slice(1);
     const allQuestions=quiz?[...quiz.querySelectorAll('.quiz-question')]:[];
     const context=root&&window.ItalianStudyContext;
     allQuestions.forEach((q,i)=>{q.dataset.progressKey=TARGET+'-q'+(i+1);});
@@ -63,7 +63,7 @@
       const teachingNote=document.createElement('div');teachingNote.className='guided-sheet-teaching-note';
       for(const paragraph of intro)teachingNote.appendChild(paragraph);
       const firstHeading=learn[0].querySelector('h2');
-      if(firstHeading)firstHeading.insertAdjacentElement('afterend',teachingNote);else learn[0].prepend(teachingNote);
+      if(firstHeading)firstHeading.insertAdjacentElement('afterend', teachingNote);else learn[0].prepend(teachingNote);
     }
     const actions=hero.querySelector('.actions');
     const backLink=actions?.querySelector('a[href*="study-sheets.html"]');
@@ -105,7 +105,7 @@
       for(const question of allQuestions){const hidden=question!==activeQuestion;if(question.hidden!==hidden)question.hidden=hidden;}
       for(const [i,question] of questions.entries()){const number=question.querySelector('.question-number');if(number.textContent!==String(i+1))number.textContent=String(i+1);}
       for(const button of steps.querySelectorAll('[data-guided-step]')){if(button.dataset.guidedStep===step)button.setAttribute('aria-current','step');else button.removeAttribute('aria-current');}
-      const pos=STEP_IDS.indexOf(step),stat=stats(),totalActivities=learn.length+examples.length+questions.length,covered=state.visitedLearn.length+state.visitedExamples.length+stat.attempted;
+      const pos=STEP_IDS.indexOf(step),stat=stats(),totalActivities=learn.length+examples.length+questions.length;const covered = state.visitedLearn.length + state.visitedExamples.length + stat.attempted;
       progressCount.textContent=covered+' of '+totalActivities+' activities';progressTrack.setAttribute('aria-valuenow',String(covered));progressTrack.setAttribute('aria-valuemax',String(totalActivities));progressTrack.setAttribute('aria-valuetext',covered+' of '+totalActivities+' activities viewed or answered');progressFill.style.width=(100*covered/totalActivities).toFixed(1)+'%';
       const count=step==='learn'?learn.length:step==='examples'?examples.length:reviewing?state.reviewQueue.length:questions.length;
       const current=step==='learn'?state.learn:step==='examples'?state.examples:reviewing?Math.max(0,state.reviewQueue.indexOf(state.question)):state.question;
@@ -128,7 +128,7 @@
       round.finished=state.finished;round.questionKey=questions[state.question]?.dataset.progressKey;saveRound();const label=article.querySelector('.library-round-label');if(label)label.textContent=(round.mode==='quick'?'Quick practice':'Full exercise set')+' · '+questions.length+' questions';remember(state);const stepUrl=new URL(location.href);stepUrl.searchParams.set('stage',state.step);history.replaceState(null,'',stepUrl.pathname+stepUrl.search+stepUrl.hash);
     }
     function focusStage(previousTop=null){title.focus({preventScroll:true});const delta=steps.getBoundingClientRect().top-16;if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:'instant'});}
-    function focusCurrent(previousQuestionTop=null){
+    function focusCurrent(previousQuestionTop = null){
       const currentQuestion=state.step==='practise'&&!state.finished?questions[state.question]:null;
       if(currentQuestion){const heading=currentQuestion.querySelector('.question-heading');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}const rect=currentQuestion.getBoundingClientRect(),viewportHeight=window.innerHeight||document.documentElement.clientHeight,safeBottom=Math.max(18,viewportHeight-110),desiredTop=previousQuestionTop===null?rect.top:previousQuestionTop,targetTop=Math.max(18,Math.min(desiredTop,safeBottom)),delta=rect.top-targetTop;if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:'instant'});return;}focusStage();
     }
