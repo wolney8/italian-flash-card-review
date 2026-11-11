@@ -2,29 +2,51 @@ name: Interface language
 on:
   push:
     branches: [main, feature/site-ui-language-20261111]
-    paths: ['course-ui-*', 'index.html', 'study/**', 'scripts/validate_ui_language.py', '.github/workflows/ui-language.yml']
+    paths: ['course-ui-*', 'index.html', 'study/**', 'scripts/*ui_language*', '.github/workflows/ui-language.yml']
   pull_request:
-    paths: ['course-ui-*', 'index.html', 'study/**', 'scripts/validate_ui_language.py', '.github/workflows/ui-language.yml']
+    paths: ['course-ui-*', 'index.html', 'study/**', 'scripts/*ui_language*', '.github/workflows/ui-language.yml']
 permissions:
   contents: read
 jobs:
   language:
     runs-on: ubuntu-latest
     timeout-minutes: 12
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: python -m pip install playwright==1.57.0
-      - name: Test language switching when present
+      - name: Integrate the shared interface language
+        run: python scripts/install_ui_language.py
+      - name: Persist scoped integration on the feature branch
+        if: github.event_name == 'push' && github.ref_name == 'feature/site-ui-language-20261111'
         run: |
-          if [ -f scripts/validate_ui_language.py ]; then
-            node --check course-ui-language-v1.js
-            node --check course-ui-italian-v1.js
-            python scripts/validate_ui_language.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html study/study-sheets.html study/study-editorial-v1.js study/study-recovery-v1.js study/verb-reference-v1.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'Integrate the shared locale while preserving exercise state'
+            git push origin HEAD:feature/site-ui-language-20261111
           fi
-      - name: Preserve exact public source and test results
+      - name: Check source and translations
+        run: |
+          node --check course-ui-language-v1.js
+          node --check course-ui-italian-v1.js
+          node --check course-ui-guidance-v1.js
+          node --check study/study-recovery-v1.js
+          node scripts/validate_lesson6.cjs
+          node scripts/validate_warm_editorial.cjs
+      - name: Test language switching across the actual UI
+        run: python scripts/validate_ui_language.py
+      - name: Verify deployed interface after merge
+        if: github.ref_name == 'main'
+        run: python scripts/validate_ui_language.py --live
+      - name: Preserve exact source and results
         if: always()
         run: |
           mkdir -p artifacts/ui-language

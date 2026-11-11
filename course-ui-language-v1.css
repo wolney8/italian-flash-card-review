@@ -1,0 +1,13 @@
+/* Single-language interface; lesson translation targets stay unchanged. */
+html[data-ui-language="it"] .editorial-label>[lang="en"],
+html[data-ui-language="en"] .editorial-label>[lang="it"]{display:none!important}
+html[data-ui-language] .editorial-label>[lang]{font-style:normal}
+html[data-ui-language="it"] .editorial-label>[lang="it"],
+html[data-ui-language="en"] .editorial-label>[lang="en"]{display:block;font-size:inherit;line-height:inherit;font-weight:inherit}
+html[data-ui-language] .course-site-language{min-height:44px;white-space:nowrap;font-size:14px;font-weight:400}
+html[data-ui-language="it"] .course-site-language [lang="it"],
+html[data-ui-language="en"] .course-site-language [lang="en"]{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px;font-weight:500}
+html[data-ui-language] .number-flip-card[open] .number-flip-cue:after{content:var(--ui-number-hide,"Hide Italian")}
+html[data-ui-language] :is(.guided-card-heading,.guided-sheet-current,.course-site-brand-copy){min-width:0}
+html[data-ui-language] :is(.course-site-navigation a,.guided-sheet-controls button,.guided-review-navigation button){overflow-wrap:anywhere}
+html[data-ui-language="it"] .ui-study-gloss{display:none!important}
