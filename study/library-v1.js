@@ -7,8 +7,64 @@ const pair=(en,it)=>'<span class="editorial-label"><span lang="en" class="editor
 const get=(k,def={})=>{try{return JSON.parse(sessionStorage.getItem(k)||'null')||def;}catch(_){return def;}};
 const put=(k,v)=>{try{sessionStorage.setItem(k,JSON.stringify(v));}catch(_){}};
 let DATA=[],sets={},current=null;
+// Translate only authored task instructions. English recall targets and Italian answers stay intact.
+function questionCopy(q){
+ let en=q.prompt.replace(/<b>(Napoli|Italia):/g,'<b>$1</b>:');
+ let it=en;
+ const swaps=[
+  ['Write “My name is Marco” using ', 'Scrivi “My name is Marco” usando '],
+  ['Ask one person informally for their name, using ', 'Chiedi il nome a una persona in modo informale, usando '],
+  ['Ask one person formally for their name, using ', 'Chiedi il nome a una persona in modo formale, usando '],
+  ['Choose the <b>formal</b> way to ask one person their name.', 'Scegli la forma <b>formale</b> per chiedere il nome a una persona.'],
+  ['Choose the <b>informal</b> way to ask one person their name.', 'Scegli la forma <b>informale</b> per chiedere il nome a una persona.'],
+  ['Replace tu with formal Lei: ', 'Sostituisci tu con il Lei formale: '],
+  ['Replace formal Lei with tu: ', 'Sostituisci il Lei formale con tu: '],
+  ['Complete the informal question: ', 'Completa la domanda informale: '],
+  ['Complete the formal question: ', 'Completa la domanda formale: '],
+  [' Use stare.', ' Usa stare.'],
+  ['Write the Italian letter name for ', 'Scrivi il nome italiano della lettera '],
+  ['Spell <b>LUCA</b> using Italian letter names, separated by spaces.', 'Scrivi i nomi italiani delle lettere di <b>LUCA</b>, separati da spazi.'],
+  ['Complete the Italian word meaning ', 'Completa la parola italiana che significa '],
+  ['Write only the definite article (“the”): ', 'Scrivi solo l’articolo determinativo (“the”): '],
+  ['Write only the indefinite article (“a/an”): ', 'Scrivi solo l’articolo indeterminativo (“a/an”): '],
+  ['Give the complete <b>io</b> reply using ', 'Scrivi la risposta completa con <b>io</b>, usando '],
+  ['</b> and <b>', '</b> e <b>'],
+  ['Complete with the preposition: ', 'Completa con la preposizione: '],
+  ['Join these syllables into the country name: ', 'Unisci le sillabe per formare il nome del paese: '],
+  ['Two male speakers: ', 'Due persone di genere maschile: '],
+  ['Two female speakers: ', 'Due persone di genere femminile: '],
+  [' Use italiano.', ' Usa italiano.'],
+  [' Use inglese.', ' Usa inglese.'],
+  [' Write the word meaning “or”.', ' Scrivi la parola che significa “or”.'],
+  ['Rewrite the complete sentence, spelling the numbers: ', 'Riscrivi la frase completa con i numeri in lettere: '],
+  ['Use avere: ', 'Usa avere: '],
+  ['Write the complete sentence: ', 'Scrivi la frase completa: '],
+  [' Use io and non.', ' Usa io e non.'],
+  [' Use io.', ' Usa io.'],
+  ['Make the whole phrase plural: ', 'Trasforma l’intera espressione al plurale: '],
+  ['Write only the definite plural article: ', 'Scrivi solo l’articolo determinativo plurale: '],
+  ['Make the whole phrase singular: ', 'Trasforma l’intera espressione al singolare: '],
+  ['Correct <b>', 'Correggi <b>'],
+  ['. Keep the worksheet meaning: ', '. Mantieni il significato indicato nel compito: '],
+  ['Write the partitive meaning ', 'Scrivi il partitivo che significa '],
+  ['Translate using ', 'Traduci usando '],
+  ['Write the phrase from the essere reference: ', 'Scrivi la frase dalla guida a essere: '],
+  ['Change only the exact quantity into “some”: ', 'Sostituisci solo la quantità precisa con “some”: '],
+  ['Which sentence means ', 'Quale frase significa ']
+ ];
+ // Existing bilingual matching/ordering prompts retain their source markup.
+ if(en.includes('editorial-label')){
+  en=en.replace('Riordina il dialogo. Formal introductions','Riordina il dialogo. Presentazioni formali')
+       .replace('Riordina il dialogo. Informal conversation','Riordina il dialogo. Conversazione informale')
+       .replace('Riordina il dialogo. Formal conversation','Riordina il dialogo. Conversazione formale');
+  return {...q,prompt:en};
+ }
+ for(const [from,to] of swaps)it=it.replaceAll(from,to);
+ return {...q,prompt:it===en?en:'<span class="editorial-label"><span class="editorial-label-main" lang="en">'+en+'</span><span class="editorial-label-sub" lang="it">'+it+'</span></span>'};
+}
+
 function enhance(data){
- DATA=data.concat(root.ItalianLibraryContent?.sheets||[]);
+ DATA=data.concat((root.ItalianLibraryContent?.sheets||[]).map(s=>({...s,questions:s.questions.map(questionCopy)})));
  sets={};
  for(const sheet of DATA){const names=M.labels[sheet.slug];sets[sheet.slug]={id:sheet.slug,sheet:sheet.slug,title:names?.[0]||sheet.title,it:names?.[1]||sheet.titleIt||root.ItalianUI?.translate(sheet.title,'it')||sheet.title,indices:sheet.questions.map((_,i)=>i),kind:sheet.sourceKind||(/homework|gaps|translation|matching/.test(sheet.slug)?'Homework':sheet.practice?'Extra practice':'Class practice')};}
  for(const [id,s] of Object.entries(M.subsets))sets[id]={...s,id};
@@ -57,7 +113,6 @@ function context(active,params){
  const browse=params.get('browse')==='topic'||(!lesson&&params.get('path')!=='L6')?'topic':'lesson';
  const courseLesson=lesson?.id||null;
  const related=topic?.flashcards||{lesson:'L3',deck:'02 Verb forms'};
- // Choose exact card groups where the same topic is revised in another class.
  let flashcards={...related};
  if(topic?.id==='partitives'&&courseLesson==='L6')flashcards={lesson:'L6',deck:'Plural partitives — revision'};
  if(topic?.id==='wellbeing'&&courseLesson==='L6')flashcards={lesson:'L6',deck:'Greetings and responses'};
@@ -73,7 +128,6 @@ function context(active,params){
  if(!nextId&&lesson&&topic){const following=M.topics.find(t=>t.id===lesson.topics[lesson.topics.indexOf(topic.id)+1]);if(following)nextId=topicSets(following,lesson.id)[0];}
  const nextTopic=nextId&&M.topics.find(t=>topicSets(t,courseLesson).includes(nextId));
  const flash='../?page=card&lesson='+flashcards.lesson+'&topic='+encodeURIComponent(flashcards.deck);
- const returnLesson=courseLesson||flashcards.lesson;
  current={slug:active.slug,topic:topic?.id||active.slug,coursePath:!!lesson,lesson:courseLesson,browse,set,scopeIndices:set.indices,groups:ids.map(id=>sets[id]),library:libraryURL(courseLesson,browse),flashcards:flash,
   flashcardTarget:flashcards,next:nextId?{href:href(nextId,courseLesson,nextTopic?.id,browse),title:sets[nextId].title}:null,
   breadcrumbs:[{label:'Study sheets',href:libraryURL(null,browse)},...(lesson?[{label:'Lesson '+lesson.id.slice(1),href:libraryURL(lesson.id)}]:[]),{label:topic?.title||clean(active.title)}]};
@@ -95,8 +149,15 @@ function mountDetail(article){if(!current||article.dataset.libraryDetail)return;
  const learn=article.querySelector('[data-study-stage=learn]')||article.querySelector(':scope>section.panel');learn?.appendChild(connections);
  const groups=article.querySelector('.study-practice-picker');if(groups)groups.hidden=true;
  const old=article.querySelector('.study-practice-links');if(old)old.hidden=true;
- // Context actions are visible throughout without duplicating the large legacy panels.
  const title=article.querySelector('header.hero h1');if(title)title.innerHTML=pair(current.set.title,current.set.it);
+ const lead=article.querySelector('header.hero .lead'),kinds={'Adapted practice':'Esercizi adattati','Homework':'Compiti','Adapted homework':'Compiti adattati','Adapted classroom exercise':'Esercizio in classe adattato','Class practice':'Esercizi in classe','Extra practice':'Esercizi aggiuntivi'};
+ if(lead&&kinds[lead.textContent.trim()])lead.innerHTML=pair(lead.textContent.trim(),kinds[lead.textContent.trim()]);
+ const finish=article.querySelector('.guided-sheet-finish');
+ if(finish){
+  const restart=document.createElement('div');restart.className='library-finish-rounds';
+  restart.innerHTML='<h3>'+pair('Start another round','Inizia un altro giro')+'</h3><div class="library-round-buttons"><button type="button" data-library-finish-round="quick">'+pair('Quick practice','Esercizi rapidi')+'</button><button type="button" data-library-finish-round="full">'+pair('Full exercise set','Tutti gli esercizi')+'</button></div>';
+  restart.addEventListener('click',e=>{const b=e.target.closest('[data-library-finish-round]');if(b)root.ItalianGuidedStudy?.newRound(b.dataset.libraryFinishRound);});finish.append(restart);
+ }
  root.ItalianUI?.refresh();
 }
 document.addEventListener('click',e=>{const link=e.target.closest('[data-related-flashcards]');if(!link)return;
