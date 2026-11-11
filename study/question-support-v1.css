@@ -1,0 +1,12 @@
+/* Learning support is separate from interface translation and answer scoring. */
+.question-prompt-support{margin:0 0 14px;padding:0 0 0 0;color:var(--muted)}
+.question-language-line{min-width:0;overflow-wrap:anywhere}
+.question-language-line p{margin:6px 0;font-family:system-ui,-apple-system,sans-serif;font-weight:400;line-height:1.55}
+.question-support-italian{font-size:20px;color:var(--ink)}
+.question-support-pron{font-size:15px;color:var(--muted);letter-spacing:.015em}
+.question-support-english{font-size:16px;color:var(--ink)}
+.question-answer-support{padding:12px 0 0;border-top:1px solid var(--line);margin-top:12px}
+.question-answer-support .question-language-line+.question-language-line{padding-top:10px;margin-top:10px;border-top:1px solid var(--line)}
+.question-pron-note{display:block;margin-top:12px;font:400 12px/1.5 system-ui,sans-serif;color:var(--muted)}
+.quiz-question .hint{font-weight:400;line-height:1.6}
+@media(max-width:600px){.question-support-italian{font-size:19px}.question-support-pron{font-size:14px}.question-support-english{font-size:15px}}

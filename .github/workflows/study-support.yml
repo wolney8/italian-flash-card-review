@@ -1,0 +1,47 @@
+name: Study navigation and support
+on:
+  push:
+    branches: [main, fix/study-navigation-support-20261111]
+    paths: ['study/**', 'scripts/*study_support*', '.github/workflows/study-support.yml']
+  pull_request:
+    paths: ['study/**', 'scripts/*study_support*', '.github/workflows/study-support.yml']
+permissions:
+  contents: read
+concurrency:
+  group: study-support-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  support:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify support, answer identity and source preservation
+        run: |
+          node --check study/question-support-v1.js
+          node --check study/guided-sheet-pilot-v1.js
+          node --check study/study-sheets-v5.js
+          node scripts/validate_study_support.cjs
+          node scripts/validate_guided_sheet_pilot.cjs
+          node scripts/validate_course_library.cjs
+      - name: Install browser test dependency
+        run: python -m pip install playwright==1.57.0
+      - name: Check single-click, touch and keyboard navigation
+        run: python scripts/validate_study_support.py
+      - name: Verify actual Netlify deployment after merge
+        if: github.ref_name == 'main'
+        run: python scripts/validate_study_support.py --live
+      - name: Save reproducible source snapshot
+        if: always()
+        run: |
+          mkdir -p artifacts/study-support
+          git archive HEAD -o artifacts/study-support/source.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: study-support-review
+          path: artifacts/study-support
+          retention-days: 7
