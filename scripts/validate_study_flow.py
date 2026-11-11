@@ -26,7 +26,7 @@ try:
     page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto(base+'/?page=topics',wait_until='networkidle')
     page.wait_for_url('**/study/study-sheets.html?mode=learn')
-    page.wait_for_selector('.sheet-library-item');assert page.locator('.sheet-library-item').count()==17
+    page.wait_for_selector('.sheet-library-item');assert page.locator('.sheet-library-item').count()==28
     # Check what a learner sees, not the hidden alternate-language source spans.
     assert page.locator('.sheet-library-item strong').all_inner_texts().count('Essere in the present')==1
     assert not any(t.startswith('Lesson 6') for t in page.locator('.sheet-library-item strong').all_inner_texts())
