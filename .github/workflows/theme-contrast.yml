@@ -20,6 +20,7 @@ jobs:
       - run: node --check study/study-editorial-v1.js
       - run: node --check study/study-recovery-v1.js
       - run: node scripts/validate_compact_study_chrome.cjs
+      - run: python -m pip install playwright==1.57.0
       - run: node scripts/validate_study_browser.cjs
       - run: node --check learning-session-v1.js
       - run: node --check guided-course-v2.js
