@@ -1,0 +1,19 @@
+/* Homework-style practice, using the site's existing theme and type weights. */
+.practice-round-toolbar{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:12px 0 18px;border-bottom:1px solid var(--line);padding-bottom:14px}
+.practice-round-toolbar button,.practice-round-toolbar>a,[data-new-practice-round]{min-height:44px;border:1px solid var(--line);border-radius:10px;padding:10px 14px;background:var(--paper);color:var(--ink);font:400 15px/1.4 system-ui,sans-serif;cursor:pointer;text-decoration:none}
+.practice-round-toolbar p{flex-basis:100%;margin:0;font:400 13px/1.5 system-ui,sans-serif;color:var(--muted)}
+.practice-round-toolbar .editorial-label{align-items:inherit}
+.practice-match-pairs{display:grid;gap:12px}
+.practice-match-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 16px;align-items:center;border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:14px}
+.practice-match-row>label{font:400 16px/1.5 system-ui,sans-serif;overflow-wrap:anywhere;color:var(--ink)}
+.practice-match-row select{width:100%;min-width:0;min-height:46px;font:400 15px/1.4 system-ui,sans-serif;padding:10px;background:var(--paper2);color:var(--ink);border:1px solid var(--line);border-radius:8px}
+.practice-match-feedback{grid-column:1/-1;font:400 14px/1.5 system-ui,sans-serif}
+.practice-match-feedback:empty{display:none}
+.quiz-question[data-type=match] .answer-row{display:block}
+.quiz-question[data-type=match] input[hidden]{display:none!important}
+.quiz-question[data-type=match] .check-button{margin-top:14px;min-height:46px;width:100%}
+.practice-match-key p{font-size:16px;line-height:1.6}
+.practice-match-row select:focus-visible,.practice-round-toolbar button:focus-visible,[data-new-practice-round]:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+@media(min-width:800px){.quiz-question[data-type=choice] .choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.quiz-question[data-type=choice] .choice{min-width:0;margin:0}.quiz-question[data-type=choice] .choice span{overflow-wrap:anywhere}}
+@media(max-width:600px){.practice-match-row{grid-template-columns:minmax(0,1fr);padding:12px}.practice-round-toolbar>button,.practice-round-toolbar>a{flex:1 1 130px}.practice-round-toolbar p{font-size:13px}.practice-match-row select{font-size:16px}}
+@media print{.practice-round-toolbar{display:none!important}}
