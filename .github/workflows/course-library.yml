@@ -2,9 +2,9 @@ name: Lesson-first study library
 on:
   push:
     branches: [main, feature/lesson-first-library-20261111]
-    paths: ['study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', '.github/workflows/course-library.yml']
+    paths: ['study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', 'scripts/validate_library_finish.py', '.github/workflows/course-library.yml']
   pull_request:
-    paths: ['study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', '.github/workflows/course-library.yml']
+    paths: ['study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', 'scripts/validate_library_finish.py', '.github/workflows/course-library.yml']
 permissions:
   contents: read
 concurrency:
@@ -28,10 +28,14 @@ jobs:
           node scripts/validate_study_flow.cjs
           node scripts/validate_warm_editorial.cjs
       - name: Exercise library, rounds and flashcard return paths
-        run: python scripts/validate_course_library_browser.py
+        run: |
+          python scripts/validate_course_library_browser.py
+          python scripts/validate_library_finish.py
       - name: Verify the actual Netlify production release
         if: github.ref_name == 'main'
-        run: python scripts/validate_course_library_browser.py --live
+        run: |
+          python scripts/validate_course_library_browser.py --live
+          python scripts/validate_library_finish.py --live
       - uses: actions/upload-artifact@v4
         if: always()
         with:
