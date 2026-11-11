@@ -1,0 +1,36 @@
+name: Study navigation and support
+on:
+  push:
+    branches: [main, fix/study-navigation-support-20261111]
+    paths: ['study/**', 'scripts/*study_support*', '.github/workflows/study-support.yml']
+  pull_request:
+    paths: ['study/**', 'scripts/*study_support*', '.github/workflows/study-support.yml']
+permissions:
+  contents: read
+jobs:
+  support:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preserve exact source for reproducible diagnosis
+        run: |
+          mkdir -p artifacts/study-support
+          git archive HEAD -o artifacts/study-support/source.zip
+      - name: Validate study support when present
+        run: |
+          if [ -f scripts/validate_study_support.cjs ]; then node scripts/validate_study_support.cjs; fi
+          if [ -f scripts/validate_study_support.py ]; then
+            python -m pip install playwright==1.57.0
+            python scripts/validate_study_support.py
+            if [ "$GITHUB_REF_NAME" = main ]; then python scripts/validate_study_support.py --live; fi
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: study-support-review
+          path: artifacts/study-support
+          retention-days: 7
