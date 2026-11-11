@@ -1,13 +1,11 @@
 /* Interface language only. Canonical cards, answers, IDs, URLs and learner data are never translated. */
 (function (root) {
   'use strict';
-  const KEY='italianCourseLanguageV1';
-  const OLD_KEY='italianCourseLabelOrderV1';
-  const C=root.ItalianUICatalogue;
+  const KEY='italianCourseLanguageV1',OLD_KEY='italianCourseLabelOrderV1',C=root.ItalianUICatalogue;
   if(!C)return;
   const norm=s=>String(s??'').replace(/\s+/g,' ').trim();
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const messages=C.messages, blocks=C.blocks;
+  const messages=C.messages,blocks=C.blocks;
   let locale='en';
   try{const saved=localStorage.getItem(KEY)||localStorage.getItem(OLD_KEY);if(saved==='it'||saved==='en')locale=saved;}catch(_){}
   const nodeState=new WeakMap(),blockState=new WeakMap(),attributeState=new WeakMap();
@@ -31,7 +29,7 @@
   const COPY=[
     '.hint','.quiz-intro','.guided-sheet-instruction','.guided-sheet-finish-explanation',
     '.guided-sheet-finish-score','.guided-sheet-teaching-note p','.study-pack-sheet .lead',
-    '.study-pack-sheet .bullet','.number-flip-help','.number-reveal-note',
+    '.study-pack-sheet .bullet','.study-pack-sheet .panel p','.number-flip-help','.number-reveal-note',
     '.verb-reference p:not([lang="it"])','.verb-support-note','.verb-entry-content>p:not([lang="it"])',
     '.guided-lede','.guided-learning-note p','.guided-info p','.guided-muted','.guided-confidence>p',
     '.l3-topic-primer p','.study-pack-sheet .l6-source-detail','.l6-int-label'
@@ -50,6 +48,7 @@
     if(lang==='en')return s;
     if(messages[s])return messages[s];
     if(blocks[s])return blocks[s];
+    if(s==='Numbers')return 'Numeri';
     if(/^[←→]\s/.test(s))return s[0]+' '+translate(s.slice(2),lang);
     if(/\s[←→]$/.test(s))return translate(s.slice(0,-2),lang)+' '+s.slice(-1);
     if(/^\d{2} /.test(s))return s.slice(0,3)+translate(s.slice(3),lang);
@@ -62,7 +61,7 @@
     if((m=s.match(/^(Class order|Reference topics) · (.+)$/)))return (m[1]==='Class order'?'Ordine della lezione':'Argomenti di riferimento')+' · '+translate(m[2],lang);
     if((m=s.match(/^(\d+) of (\d+) activities( viewed or answered)?$/)))return m[1]+' di '+m[2]+' attività'+(m[3]?' viste o svolte':'');
     if((m=s.match(/^(\d+) of (\d+) attempted · (\d+) correct$/)))return m[1]+' di '+m[2]+' tentativi · '+m[3]+' risposte corrette';
-    if((m=s.match(/^(\d+) \/ (\d+) attempted · (\d+) correct this session$/)))return m[1]+' / '+m[2]+' tentativi · '+m[3]+' risposte corrette nella sessione';
+    if((m=s.match(/^(\d+) \/ (\d+) attempted · (\d+) correct(?: this session)?(?: · (\d+) practice sets)?$/)))return m[1]+' / '+m[2]+' tentativi · '+m[3]+' risposte corrette'+(s.includes('this session')?' nella sessione':'')+(m[4]?' · '+m[4]+' gruppi di esercizi':'');
     if((m=s.match(/^(\d+) of (\d+) correct$/)))return m[1]+' di '+m[2]+' risposte corrette';
     if((m=s.match(/^(\d+) of (\d+)$/)))return m[1]+' di '+m[2];
     if((m=s.match(/^(\d+) \/ (\d+) revealed$/)))return m[1]+' / '+m[2]+' mostrate';
@@ -109,7 +108,7 @@
     if(node.data!==output)node.data=output;
   }
   function translateBlock(el){
-    if(el.closest('.editorial-label,[data-bilingual-source]')||el.querySelector('input,button,a,select,details,svg,img,.l6-build,.l6-int-pair'))return;
+    if(el.closest(PROTECTED)||el.querySelector('input,button,a,select,details,svg,img,.l6-build,.l6-int-pair'))return;
     const old=blockState.get(el);
     let source,original;
     if(old&&el.innerHTML===old.output){source=old.source;original=old.original;}
@@ -132,8 +131,8 @@
     scheduled=false;if(!document.body)return;
     observer?.disconnect();flushes++;
     document.documentElement.dataset.uiLanguage=locale;document.documentElement.lang=locale;
-    // display:none removes the other language from both layout and the accessibility tree.
-    // Leave bilingual source markup intact: legacy decorators compare its exact HTML.
+    // CSS removes the alternate label from layout and the accessibility tree.
+    // Leave bilingual source markup intact: legacy decorators compare exact HTML.
     for(const button of document.querySelectorAll(CONTROL)){
       if(!button.dataset.uiLanguageToggle){
         button.dataset.uiLanguageToggle='true';
@@ -145,7 +144,8 @@
     }
     for(const option of document.querySelectorAll('select option'))if(!option.hasAttribute('value'))option.setAttribute('value',sourceText(option));
     for(const el of document.querySelectorAll(COPY+',[data-ui-block]'))translateBlock(el);
-    const roots=[document.getElementById('guidedExperience'),document.getElementById('studyGuideHeader'),document.querySelector('body>main'),document.getElementById('editorialCommentModal'),document.getElementById('studyReviewModal')].filter(Boolean);
+    // Breadcrumbs stay plain English, as previously requested; the adjacent toolbar follows the locale.
+    const roots=[document.getElementById('guidedExperience'),document.getElementById('studyGuideHeader'),document.querySelector('.study-detail-tools'),document.querySelector('body>main'),document.getElementById('editorialCommentModal'),document.getElementById('studyReviewModal')].filter(Boolean);
     for(const area of roots){const walk=document.createTreeWalker(area,NodeFilter.SHOW_TEXT);let n;while((n=walk.nextNode()))translateNode(n);}
     for(const el of document.querySelectorAll('[title],[aria-label],[aria-valuetext],[placeholder],optgroup[label]')){
       if(el.closest('.choice,textarea,[contenteditable=true]'))continue;
@@ -160,12 +160,9 @@
   function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(refresh);}
   function setLanguage(next,persist=true){
     if(next!=='it'&&next!=='en')return;
-    locale=next;
-    if(persist){try{localStorage.setItem(KEY,locale);}catch(_) {}}
+    locale=next;if(persist){try{localStorage.setItem(KEY,locale);}catch(_) {}}
     const active=document.activeElement,top=root.scrollY;
-    refresh();
-    active?.focus?.({preventScroll:true});
-    root.scrollTo({top,behavior:'instant'});
+    refresh();active?.focus?.({preventScroll:true});root.scrollTo({top,behavior:'instant'});
     root.dispatchEvent(new CustomEvent('italian-interface-language-changed',{detail:{language:locale}}));
   }
   root.ItalianUI=Object.freeze({translate,pair,sourceText,setLanguage,refresh,get language(){return locale;},get flushes(){return flushes;},version:'2026-11-11-ui-language-v1'});
