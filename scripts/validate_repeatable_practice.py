@@ -100,7 +100,7 @@ try:
    visit('/study/study-sheets.html?sheet=practice-things-pronouns&stage=practise');page.wait_for_selector('.practice-round-toolbar')
    page.click('[data-guided-action=next]');q=page.locator('.quiz-question:not([hidden])');q.locator('input[type=text]').fill('e');q.locator('.check-button').click();assert q.get_attribute('data-result')=='wrong'
    q.locator('input[type=text]').fill('è');q.locator('.check-button').click();assert q.get_attribute('data-result')=='correct'
-   visit('/study/study-sheets.html?sheet=practice-essere&stage=learn');page.wait_for_selector('.practice-round-toolbar')
+   visit('/study/study-sheets.html?sheet=practice-essere&stage=learn');page.wait_for_selector('.practice-round-toolbar',state='attached')
    assert 'esso / essa' in page.locator('.study-pack-sheet .matrix-wrap').first.inner_text()
    assert 'essi / esse' in page.locator('.study-pack-sheet .matrix-wrap').first.inner_text()
    page.screenshot(path=str(OUT/f'{"live-" if LIVE else ""}pronouns-{width}-{theme}.png'),full_page=True)
