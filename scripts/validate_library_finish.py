@@ -3,13 +3,20 @@
 from pathlib import Path
 from functools import partial
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
-import json, shutil, sys, threading
+from urllib.parse import urlparse, parse_qs
+import json, re, shutil, sys, threading
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'artifacts/course-library';OUT.mkdir(parents=True,exist_ok=True)
 live='--live' in sys.argv
 class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
+def contrast(colours):
+ def luminance(rgb):
+  values=[float(v)/255 for v in re.findall(r'[\d.]+',rgb)[:3]]
+  linear=[v/12.92 if v<=0.04045 else ((v+0.055)/1.055)**2.4 for v in values]
+  return sum(a*b for a,b in zip(linear,[0.2126,0.7152,0.0722]))
+ a,b=map(luminance,colours);return (max(a,b)+0.05)/(min(a,b)+0.05)
 server=None
 if live:base='https://italian-flash-card-review.netlify.app'
 else:
@@ -48,16 +55,36 @@ try:
    assert page.locator('[data-library-finish-round=quick]').is_visible()
    assert page.locator('[data-library-finish-round=full]').is_visible()
    assert page.locator('.guided-sheet-finish button').first.get_attribute('data-guided-review-incorrect') is not None
+   ratios={}
+   for selector in ['.guided-sheet-primary','.guided-sheet-followup']:
+    colours=page.locator('.guided-sheet-finish '+selector).first.evaluate('(e)=>{const s=getComputedStyle(e);return [s.color,s.backgroundColor]}')
+    ratios[selector]=round(contrast(colours),2)
+    assert ratios[selector]>=4.5,(theme,selector,colours,ratios)
    page.screenshot(path=str(OUT/f'{"live-" if live else ""}results-{width}-{theme}.png'),full_page=True,animations='disabled')
    with page.expect_navigation(wait_until='domcontentloaded'):page.click('[data-library-finish-round=quick]')
    page.wait_for_function('window.ItalianGuidedStudy && !document.documentElement.classList.contains("course-booting")')
    assert page.evaluate('ItalianGuidedStudy.getState().round.mode')=='quick'
    assert len(page.evaluate('ItalianGuidedStudy.getState().round.keys'))==10
+   verb_targets={
+    'practice-avere':('L4','01 Avere - present tense'),
+    'practice-essere':('L6','Essere in the present'),
+    'practice-venire':('L3','03 Origins & questions'),
+    'practice-vivere':('L3','03 Origins & questions'),
+    'practice-abitare':('L3','03 Origins & questions'),
+    'practice-chiamarsi':('L1','02 Introductions'),
+    'practice-stare':('L2','00 Greetings & wellbeing'),
+    'practice-andare':('L6','Greetings and responses')
+   }
+   for slug,(lesson,deck) in verb_targets.items():
+    page.goto(base+'/study/study-sheets.html?sheet='+slug,wait_until='domcontentloaded')
+    page.wait_for_function('window.ItalianGuidedStudy && !document.documentElement.classList.contains("course-booting")')
+    params=parse_qs(urlparse(page.locator('[data-related-flashcards]').get_attribute('href')).query)
+    assert params['lesson']==[lesson] and params['topic']==[deck],(slug,params)
    assert not errors,errors
-   results.append({'width':width,'theme':theme,'normal_motion':'pass','translated_instruction':'pass','result_restart':'pass','status':'pass'})
+   results.append({'width':width,'theme':theme,'normal_motion':'pass','translated_instruction':'pass','result_restart':'pass','verb_links':len(verb_targets),'button_contrast':ratios,'status':'pass'})
    context.close()
   browser.close()
  (OUT/('live-finish-results.json' if live else 'finish-results.json')).write_text(json.dumps(results,indent=2))
- print('PASS translated instructions, fixed-width normal-motion language switch and result restart.')
+ print('PASS translated instructions, fixed-width normal-motion language switch, result restart, contrast and verb links.')
 finally:
  if server:server.shutdown()
