@@ -1,0 +1,57 @@
+name: Repeatable study practice
+on:
+  push:
+    branches: [main, feature/repeatable-verb-practice-20261111]
+    paths: ['study/**', 'scripts/*repeatable_practice*', '.github/workflows/repeatable-practice.yml']
+  pull_request:
+    paths: ['study/**', 'scripts/*repeatable_practice*', '.github/workflows/repeatable-practice.yml']
+permissions:
+  contents: write
+jobs:
+  practice:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install playwright==1.57.0
+      - name: Integrate scoped practice support
+        run: python scripts/install_repeatable_practice.py
+      - name: Check original content and expanded practice
+        run: |
+          node --check study/study-sheets-v5.js
+          node --check study/practice-bank-v1.js
+          node --check study/practice-session-v1.js
+          node scripts/validate_repeatable_practice.cjs
+          node scripts/validate_lesson6.cjs
+          node scripts/validate_warm_editorial.cjs
+      - name: Persist integration on feature branch only
+        if: github.event_name == 'push' && github.ref_name == 'feature/repeatable-verb-practice-20261111'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add study/study-sheets-v5.js study/study-sheets.html study/verb-reference-v1.js scripts/validate_study_flow.py
+          if ! git diff --cached --quiet; then
+            git commit -m 'Integrate repeatable verb exercises without changing source answer identities'
+            git push origin HEAD:feature/repeatable-verb-practice-20261111
+          fi
+      - name: Test exercises, matching and topic-only resets
+        run: python scripts/validate_repeatable_practice.py
+      - name: Verify live production after merge
+        if: github.ref_name == 'main'
+        run: python scripts/validate_repeatable_practice.py --live
+      - name: Preserve source and results
+        if: always()
+        run: |
+          mkdir -p artifacts/repeatable-practice
+          git archive HEAD -o artifacts/repeatable-practice/source.zip
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: repeatable-practice-review
+          path: artifacts/repeatable-practice
+          retention-days: 7
