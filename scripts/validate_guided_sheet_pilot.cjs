@@ -66,7 +66,7 @@ assert.match(script, /visitedLearn/, 'Track lesson sections visited');
 assert.match(script, /visitedExamples/, 'Track examples visited');
 assert.match(script, /const covered = state\.visitedLearn\.length \+ state\.visitedExamples\.length \+ stat\.attempted/, 'Count covered activities without counting skipped questions');
 assert.match(script, /progressTrack\.setAttribute\('aria-valuenow'/, 'Expose accessible progress values');
-assert.ok(script.includes("context?.next?.href||context?.flashcards||'../?page=lessons'"), 'Completion follows the selected topic path, then Flashcards');
+assert.ok(script.includes("context?.next?.href||context?.library||'study-sheets.html'"), 'Completion follows the next set, then returns to the lesson');
 assert.match(script, /finish\.querySelector\('\[data-guided-review-unanswered\]'\)\.before\(followup\)/, 'Completion screen must offer the next action');
 assert.match(style, /guided-sheet-current\{min-height:119px\}/, 'Reserve consistent heading space');
 assert.match(style, /guided-sheet-progress-fill/, 'Missing visual progress bar');

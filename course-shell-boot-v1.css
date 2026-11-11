@@ -1,0 +1,20 @@
+/* Theme is applied in the head before any legacy HTML can paint. */
+html.course-booting{background:#f8f3eb!important}html.course-booting[data-italian-theme=dark]{background:#1d1c1a!important}
+html.course-booting body{background:transparent!important}
+html.course-booting body>:not(#courseBoot){visibility:hidden!important}
+#courseBoot{position:fixed;inset:0;z-index:10000;display:grid;align-content:start;gap:16px;padding:32px max(24px,calc((100vw - 1080px)/2));background:#f8f3eb;color:#332d28;font:400 16px/1.5 system-ui,sans-serif;box-sizing:border-box}
+html[data-italian-theme=dark] #courseBoot{background:#1d1c1a;color:#f6e8dc}
+#courseBoot strong{font:500 26px/1.4 Georgia,serif}#courseBoot .boot-line{height:48px;border-radius:10px;background:#ece3d9;max-width:650px}#courseBoot .boot-line:last-child{max-width:420px}
+html[data-italian-theme=dark] #courseBoot .boot-line{background:#37302b}
+#courseBoot button{min-height:44px;max-width:180px;border-radius:8px;font:inherit}
+.course-site-language{width:112px!important;min-width:112px!important;min-height:48px!important;box-sizing:border-box;font-variant-numeric:tabular-nums}
+.course-site-theme{min-width:96px;min-height:48px;box-sizing:border-box}
+.course-site-navigation a{min-width:84px;box-sizing:border-box;text-align:center}
+.course-site-navigation a[data-guide-to=topics]{min-width:148px}
+html.ui-language-changing :is(.guided-main,body>main,#studyGuideCrumbs){opacity:.22}
+:is(.guided-main,body>main,#studyGuideCrumbs){transition:opacity 110ms ease}
+html.ui-language-changing :is(.flip-shell,.review-card,.card-face){transition:none!important}
+.guided-sheet-step-navigation button{min-height:72px;min-width:0}
+.guided-sheet-controls-buttons>button{min-height:48px}
+@media(max-width:760px){.course-site-language{width:102px!important;min-width:102px!important}.course-site-theme{min-width:82px}.course-site-navigation a{text-align:left}}
+@media(prefers-reduced-motion:reduce){:is(.guided-main,body>main,#studyGuideCrumbs){transition:none!important}}

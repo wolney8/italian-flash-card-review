@@ -1,0 +1,44 @@
+name: Lesson-first study library
+on:
+  push:
+    branches: [main, feature/lesson-first-library-20261111]
+    paths: ['study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', 'scripts/validate_library_finish.py', '.github/workflows/course-library.yml']
+  pull_request:
+    paths: ['study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', 'scripts/validate_library_finish.py', '.github/workflows/course-library.yml']
+permissions:
+  contents: read
+concurrency:
+  group: course-library-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  library:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install playwright==1.57.0
+      - name: Verify content, source boundaries and stable question identities
+        run: |
+          node scripts/validate_course_library.cjs
+          node scripts/validate_repeatable_practice.cjs
+          node scripts/validate_lesson6.cjs
+          node scripts/validate_study_flow.cjs
+          node scripts/validate_warm_editorial.cjs
+      - name: Exercise library, rounds and flashcard return paths
+        run: |
+          python scripts/validate_course_library_browser.py
+          python scripts/validate_library_finish.py
+      - name: Verify the actual Netlify production release
+        if: github.ref_name == 'main'
+        run: |
+          python scripts/validate_course_library_browser.py --live
+          python scripts/validate_library_finish.py --live
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: course-library-review
+          path: artifacts/course-library
+          retention-days: 7

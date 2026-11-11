@@ -30,6 +30,7 @@ function tile(n,w,index,items){
 }
 function group(title,items){return '<section class="number-flip-group"><h3>'+esc(title)+'</h3><div class="number-flip-grid">'+items.map(([n,w],i)=>tile(n,w,i,items)).join('')+'</div></section>';}
 function catalogueLinks(){
+ if(window.ItalianStudyLibrary)return;
  if(!document.body.classList.contains('study-sheet-library')||root.querySelector('.study-ready-shortcuts'))return;
  const bar=document.createElement('nav');bar.className='study-ready-shortcuts';bar.setAttribute('aria-label','Course shortcuts');
  bar.innerHTML='<a href="study-sheets.html?mode=learn&path=L6">Session 6 — class order</a><a href="study-sheets.html?mode=learn&sheet=l6-number-patterns&stage=practise&practice=flip">Numbers — flip & reveal</a><a href="study-sheets.html?mode=learn&sheet=known-verbs-and-forms&stage=learn">Verb reference</a>';

@@ -13,7 +13,7 @@
   const SCOPE=[
     'h1','h2','h3','h4','h5','h6','th','caption','legend','summary','button','a','option',
     'label:not(.choice):not(.question-heading label)',
-    '.eyebrow','.guided-eyebrow','.field-heading','.panel-title','.panel-subtitle','.instruction',
+    '.library-round-label','.eyebrow','.guided-eyebrow','.field-heading','.panel-title','.panel-subtitle','.instruction',
     '.answer-label','.side-label','.section>.label','.answer-body .label','.deck-label',
     '.course-site-brand small','.course-site-breadcrumb','.guided-context','.guided-footer',
     '.guided-card-count','.guided-lesson-copy small','.guided-confidence-summary',
@@ -43,16 +43,27 @@
   ].join(',');
   const aliases={Corretto:'Correct',Sbagliato:'Incorrect',Controlla:'Check answer',Risposta:'Answer','Risposta:':'Answer:',
     'Mostra suggerimento':'Show hint','Nascondi suggerimento':'Hide hint'};
-  function translate(source,lang=locale){
+  function translateSource(source,lang=locale){
     const raw=norm(source),s=aliases[raw]||raw;
     if(lang==='en')return s;
+    if(root.ItalianUILibraryMessages?.[s])return root.ItalianUILibraryMessages[s];
     if(messages[s])return messages[s];
     if(blocks[s])return blocks[s];
+    if(s==='Explanation')return 'Spiegazione';
+    if(s==='Quick round completed')return 'Giro rapido completato';
+    if(s==='Back to lesson')return 'Torna alla lezione';
+    if(s==='By lesson')return 'Per lezione';
+    if(s==='By topic')return 'Per argomento';
+    if(s==='Move up')return 'Sposta su';
+    if(s==='Move down')return 'Sposta giù';
     if(s==='Numbers')return 'Numeri';
     if(/^[←→]\s/.test(s))return s[0]+' '+translate(s.slice(2),lang);
     if(/\s[←→]$/.test(s))return translate(s.slice(0,-2),lang)+' '+s.slice(-1);
     if(/^\d{2} /.test(s))return s.slice(0,3)+translate(s.slice(3),lang);
     let m;
+    if((m=s.match(/^Next practice set: (.+)$/)))return 'Prossimi esercizi: '+translate(m[1],lang);
+    if((m=s.match(/^Retry mistakes \((\d+)\)$/)))return 'Riprova gli errori ('+m[1]+')';
+    if((m=s.match(/^(Quick practice|Full exercise set) · (\d+) questions$/)))return (m[1]==='Quick practice'?'Esercizi rapidi':'Tutti gli esercizi')+' · '+m[2]+' domande';
     if((m=s.match(/^L(\d+) · (.+)$/)))return 'L'+m[1]+' · '+translate(m[2],lang);
     if((m=s.match(/^Lesson (\d+)( subdeck)?$/)))return 'Lezione '+m[1]+(m[2]?' — mazzo':'');
     if((m=s.match(/^Card (\d+) (?:of|di) (\d+)$/)))return 'Carta '+m[1]+' di '+m[2];
@@ -80,6 +91,7 @@
     if((m=s.match(/^Lesson (\d+) · (.+) · (\d+) answers viewed$/)))return 'Lezione '+m[1]+' · '+translate(m[2],lang)+' · '+m[3]+' risposte viste';
     return s;
   }
+  function translate(source,lang=locale){return translateSource(source,lang).replace(/\s*\u2014\s*/g,': ');}
   function sourceText(el){
     if(!el)return '';
     if(blockState.has(el))return blockState.get(el).source;
@@ -88,7 +100,7 @@
     return norm(out);
   }
   function pair(en,it=translate(en,'it')){
-    return '<span class="editorial-label"><span class="editorial-label-main" lang="en">'+esc(en)+'</span><span class="editorial-label-sub" lang="it">'+esc(it)+'</span></span>';
+    return '<span class="editorial-label"><span class="editorial-label-main" lang="en">'+esc(String(en).replace(/\s*\u2014\s*/g,': '))+'</span><span class="editorial-label-sub" lang="it">'+esc(String(it).replace(/\s*\u2014\s*/g,': '))+'</span></span>';
   }
   let observer,scheduled=false,flushes=0;
   const safePrompts=new Set(['Write','in Italian.','Choose the correct translation:','Choose the pronoun and form for','Make the whole phrase plural:','What does this source curve signal?']);
@@ -136,7 +148,7 @@
     for(const button of document.querySelectorAll(CONTROL)){
       if(!button.dataset.uiLanguageToggle){
         button.dataset.uiLanguageToggle='true';
-        button.innerHTML='<span class="ui-language-choice" lang="en">EN</span><span aria-hidden="true"> / </span><span class="ui-language-choice" lang="it">IT</span>';
+        button.innerHTML='<span class="ui-language-choice" lang="it">ITA</span><span aria-hidden="true"> / </span><span class="ui-language-choice" lang="en">ENG</span>';
       }
       button.setAttribute('aria-label',locale==='it'?'Lingua: italiano. Passa all’inglese.':'Language: English. Switch to Italian.');
       button.title=locale==='it'?'Passa all’inglese':'Switch to Italian';
@@ -158,12 +170,20 @@
     if(typeof root.scheduleVisibleFlipHeights==='function')root.scheduleVisibleFlipHeights();
   }
   function schedule(){if(scheduled)return;scheduled=true;queueMicrotask(refresh);}
+  let switching=false;
   function setLanguage(next,persist=true){
-    if(next!=='it'&&next!=='en')return;
-    locale=next;if(persist){try{localStorage.setItem(KEY,locale);}catch(_) {}}
-    const active=document.activeElement,top=root.scrollY;
-    refresh();active?.focus?.({preventScroll:true});root.scrollTo({top,behavior:'instant'});
-    root.dispatchEvent(new CustomEvent('italian-interface-language-changed',{detail:{language:locale}}));
+    if(next!=='it'&&next!=='en'||switching)return;
+    const active=document.activeElement;
+    const anchor=[...document.querySelectorAll('.quiz-question:not([hidden]),.guided-card-host,.guided-sheet-steps,.library-view-tabs,.guided-title')].find(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.top<innerHeight;});
+    const anchorTop=anchor?.getBoundingClientRect().top,top=root.scrollY;
+    const commit=()=>{locale=next;if(persist){try{localStorage.setItem(KEY,locale);}catch(_) {}}refresh();active?.focus?.({preventScroll:true});
+      requestAnimationFrame(()=>{if(anchor?.isConnected)root.scrollBy({top:anchor.getBoundingClientRect().top-anchorTop,behavior:'instant'});else root.scrollTo({top,behavior:'instant'});
+        root.dispatchEvent(new CustomEvent('italian-interface-language-changed',{detail:{language:locale}}));
+        document.documentElement.classList.remove('ui-language-changing');switching=false;
+      });
+    };
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){commit();return;}
+    switching=true;document.documentElement.classList.add('ui-language-changing');setTimeout(commit,90);
   }
   root.ItalianUI=Object.freeze({translate,pair,sourceText,setLanguage,refresh,get language(){return locale;},get flushes(){return flushes;},version:'2026-11-11-ui-language-v1'});
   document.documentElement.dataset.uiLanguage=locale;document.documentElement.lang=locale;

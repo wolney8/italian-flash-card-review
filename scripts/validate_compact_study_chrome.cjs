@@ -22,7 +22,7 @@ assert.match(style,/\.study-detail-tools\s*\{/);
 assert.match(style,/\.study-detail-tools \.study-crumb-action:focus-visible/);
 assert.match(style,/@media\(max-width:760px\)/);
 assert.match(style,/\.study-detail-tools\s*\{\s*width:100%;justify-content:flex-end;margin-left:0/);
-assert.match(chrome,/const renderKey=JSON\.stringify\(\[isDetail,title,studyMode\(\)\]\)/,'Do not replace toolbar on every quiz mutation');
+assert.match(chrome,/const renderKey=JSON\.stringify\(\[isDetail,title,studyMode\(\),window\.ItalianStudyContext\?\.breadcrumbs\]\)/,'Do not replace toolbar on every quiz mutation');
 assert.match(chrome,/if\(host\.dataset\.renderKey===renderKey\)return/);
 assert.match(chrome,/host\.dataset\.renderKey=renderKey/);
 assert.match(chrome,/const isDetail=document\.body\.classList\.contains\('study-sheet-detail'\)/,'Do not show action toolbar on the library');
