@@ -98,8 +98,8 @@
     // Only navigational labels are translated. Answers, grammar and exercises remain unchanged.
     const elements=[['.sheet-library-category h3',v=>mapped(v)],['.sheet-library-item strong',v=>mapped(v)],['.sheet-route-back',v=>'← '+mapped('All study sheets')],['.sheet-route-label',v=>mapped('Browse by category')],['.sheet-route-select-label',v=>mapped('Choose a sheet')]];
     for(const [selector,transform] of elements){for(const el of document.querySelectorAll(selector)){const raw=el.dataset.bilingualSource||el.textContent.trim();el.dataset.bilingualSource=raw;const output=transform(raw);if(el.innerHTML!==output)el.innerHTML=output;}}
-    for(const button of root.querySelectorAll('.check-button')){const output=bi('Controlla','Check answer');if(button.innerHTML!==output)button.innerHTML=output;}
-    for(const button of root.querySelectorAll('.hint-button')){const expanded=button.getAttribute('aria-expanded')==='true';const output=bi(expanded?'Nascondi suggerimento':'Mostra suggerimento',expanded?'Hide hint':'Show hint');if(button.innerHTML!==output)button.innerHTML=output;}
+    for(const button of root.querySelectorAll('.check-button:not([data-ui-no-translate])')){const output=bi('Controlla','Check answer');if(button.innerHTML!==output)button.innerHTML=output;}
+    for(const button of root.querySelectorAll('.hint-button:not([data-ui-no-translate])')){const expanded=button.getAttribute('aria-expanded')==='true';const output=bi(expanded?'Nascondi suggerimento':'Mostra suggerimento',expanded?'Hide hint':'Show hint');if(button.innerHTML!==output)button.innerHTML=output;}
   }
   function openComment(){
     const slug=currentSheet()||'study-library';const modal=document.getElementById('studyReviewModal');if(!modal)return;

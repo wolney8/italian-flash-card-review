@@ -30,7 +30,7 @@ assert.match(markup,/width:30\.0%/);
 assert.match(markup,/class="learning-session-progress-track example-track"/);
 assert.doesNotMatch(shared.progressMarkup({label:'<img src=x>',completed:0,total:2}),/<img/,'Escape user-facing labels');
 assert.deepEqual(shared.confidenceSummary([{key:'a'},{key:'b'},{key:'c'}],{a:'known',b:'again'}),{
-  total:3,known:1,again:1,rated:2,unrated:1
+  total:3,known:1,again:1,unsure:0,rated:2,unrated:1
 });
 assert.deepEqual(shared.reviewKeys([{key:'a'},{key:'b'},{key:'c'}],{a:'known',b:'again'}),['b']);
 
@@ -61,3 +61,6 @@ assert.doesNotMatch(guidedCss,/\.course-site-header\s*\{/,'Shared header must re
 console.log('PASS shared UI resources, progress semantics and pure confidence logic.');
 console.log('PASS Flashcard reveal vs recall, missed-card queue, and safe navigation.');
 console.log('PASS mobile focus controls, paired buttons and Study Sheet incorrect review.');
+
+assert.equal(shared.confidenceSummary([{key:'a'}],{a:'unsure'}).unsure,1);
+assert.deepEqual(shared.reviewKeys([{key:'a'}],{a:'unsure'}),['a']);
