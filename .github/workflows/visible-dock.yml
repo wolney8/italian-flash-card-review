@@ -7,6 +7,9 @@ on:
     paths: ['learning-controls-v2.js', 'learning-controls-v2.css', 'scripts/validate_visible_dock.py', '.github/workflows/visible-dock.yml']
 permissions:
   contents: read
+concurrency:
+  group: visible-dock-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   hit-targets:
     runs-on: ubuntu-latest
@@ -14,7 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: python -m pip install playwright==1.57.0
-      - name: Check native controls on the public website
+      - name: Test candidate in the real production layout
+        if: github.ref_name != 'main'
+        run: python scripts/validate_visible_dock.py --candidate
+      - name: Verify deployed assets and native controls
+        if: github.ref_name == 'main'
         run: python scripts/validate_visible_dock.py
       - uses: actions/upload-artifact@v4
         if: always()
