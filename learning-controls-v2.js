@@ -6,6 +6,8 @@ const t=(en,it)=>lang()==='it'?it:en;
 function label(el,en,it){if(!el)return;el.dataset.uiNoTranslate='';const text=t(en,it);if(el.textContent!==text)el.textContent=text;}
 function button(attr,en,it){const b=document.createElement('button');b.type='button';b.setAttribute(attr,'');b.dataset.en=en;b.dataset.it=it;label(b,en,it);return b;}
 const editing=e=>e.target.closest?.('input,textarea,select,[contenteditable=true]');
+const shortcutsEnabled=()=>{try{return localStorage.getItem('italianLearningShortcutsV2')!=='off';}catch(_){return true;}};
+function shortcutOption(){const el=document.createElement('label');el.className='flow-shortcut-option';el.innerHTML='<input type="checkbox" data-flow-shortcuts><span></span>';el.querySelector('input').checked=shortcutsEnabled();label(el.querySelector('span'),'Keyboard shortcuts','Scorciatoie da tastiera');return el;}
 const modal=()=>!!$('dialog[open],.study-review-modal:not([hidden]),.editorial-comment-modal:not([hidden])');
 let dock=null,resizeObserver;
 function viewport(){
@@ -79,7 +81,7 @@ function tools(){
  const box=document.createElement('div');box.className='flow-study-tools';
  const quit=button('data-flow-quit','Quit and save','Esci e salva'),results=button('data-flow-results','Results','Risultati');
  const details=document.createElement('details');details.className='flow-settings';const summary=document.createElement('summary');label(summary,'Practice options','Opzioni degli esercizi');details.append(summary);
- const auto=document.createElement('label');auto.innerHTML='<input type="checkbox" data-flow-auto><span data-flow-auto-label></span>';auto.querySelector('input').checked=autoEnabled();details.append(auto);
+ const auto=document.createElement('label');auto.innerHTML='<input type="checkbox" data-flow-auto><span data-flow-auto-label></span>';auto.querySelector('input').checked=autoEnabled();details.append(auto,shortcutOption());
  const help=document.createElement('p');help.className='flow-shortcuts';help.dataset.uiNoTranslate='';help.innerHTML='';details.append(help);
  for(const [scope,en,it] of [['set','Reset this set','Azzera questi esercizi'],['topic','Reset this topic','Azzera questo argomento'],['lesson','Reset lesson pathway','Azzera il percorso della lezione']]){
   if(scope==='lesson'&&!root.ItalianStudyContext?.lesson)continue;const b=button('data-flow-reset',en,it);b.dataset.flowReset=scope;details.append(b);
@@ -108,7 +110,7 @@ function refreshStudy(){
   const stats=a.stats();label(pager.querySelector('.guided-sheet-controls-status'),stats.attempted+' answered · '+stats.correct+' correct · '+stats.skipped+' skipped',stats.attempted+' risposte · '+stats.correct+' corrette · '+stats.skipped+' saltate');
  }
  label(pager.querySelector('.flow-countdown-help'),remaining?'Click anywhere to pause.':'',remaining?'Fai clic per mettere in pausa.':'');
- const options=studyArticle.querySelector('.flow-study-tools');if(options){options.querySelectorAll('button[data-en]').forEach(b=>label(b,b.dataset.en,b.dataset.it));label(options.querySelector('summary'),'Practice options','Opzioni degli esercizi');label(options.querySelector('[data-flow-auto-label]'),'Advance after 5 seconds','Avanza dopo 5 secondi');label(options.querySelector('.flow-shortcuts'),'Enter: check. Alt+S: skip. Alt+H: hint. Alt+←/→: previous/next. Escape: pause. 1–9: select a choice when not typing. Tab: move between answers.','Invio: controlla. Alt+S: salta. Alt+H: suggerimento. Alt+←/→: precedente/successiva. Esc: pausa. 1–9: scegli un’opzione. Tab: passa alle risposte.');}
+ const options=studyArticle.querySelector('.flow-study-tools');if(options){options.querySelectorAll('button[data-en]').forEach(b=>label(b,b.dataset.en,b.dataset.it));label(options.querySelector('summary'),'Practice options','Opzioni degli esercizi');label(options.querySelector('[data-flow-auto-label]'),'Advance after 5 seconds','Avanza dopo 5 secondi');label(options.querySelector('.flow-shortcut-option span'),'Keyboard shortcuts','Scorciatoie da tastiera');label(options.querySelector('.flow-shortcuts'),'Enter: check. Alt+S: skip. Alt+H: hint. Alt+←/→: previous/next. Escape: pause. 1–9: select a choice when not typing. Tab: move between answers.','Invio: controlla. Alt+S: salta. Alt+H: suggerimento. Alt+←/→: precedente/successiva. Esc: pausa. 1–9: scegli un’opzione. Tab: passa alle risposte.');}
 }
 function mountStudy(){const el=$('.study-pack-sheet[data-guided-pilot=ready]');if(!el||!guide())return;if(studyArticle!==el){studyArticle=el;tools();setTimeout(()=>{
  const s=guide().getState();for(const q of guide().questions()){if(s.round.retryPending.includes(q.dataset.progressKey)){q.dataset.result='';q.querySelector('.feedback').textContent='';q.querySelector('.feedback').className='feedback';q.querySelector('.model-answer').hidden=true;}else if(q.dataset.result)s.round.last[q.dataset.progressKey]=q.dataset.result;}
@@ -128,7 +130,7 @@ document.addEventListener('click',e=>{
  if(target.closest('[data-guided-action=next]')&&pausedClick){pausedClick=false;e.preventDefault();e.stopImmediatePropagation();return;}
  if(timer)pause();pausedClick=false;
 },true);
-document.addEventListener('change',e=>{if(e.target.matches('[data-flow-auto]')){try{localStorage.setItem('italianAutoAdvanceV2',e.target.checked?'on':'off');}catch(_){}pause();}queueMicrotask(refreshStudy);});
+document.addEventListener('change',e=>{if(e.target.matches('[data-flow-shortcuts]')){try{localStorage.setItem('italianLearningShortcutsV2',e.target.checked?'on':'off');}catch(_){}document.querySelectorAll('[data-flow-shortcuts]').forEach(x=>x.checked=e.target.checked);pause();}if(e.target.matches('[data-flow-auto]')){try{localStorage.setItem('italianAutoAdvanceV2',e.target.checked?'on':'off');}catch(_){}pause();}queueMicrotask(refreshStudy);});
 document.addEventListener('input',e=>{if(e.target.closest('.quiz-question')){pause();queueMicrotask(refreshStudy);}});
 const flash=()=>root.ItalianFlashcards;
 let flashScope='',repeatState=null;
@@ -136,9 +138,10 @@ function flashKey(){const s=flash()?.getState();return 'italianFlashPracticeV2:'
 function currentKey(){return flash()?.currentCard()?.key;}
 function schedule(){const a=flash(),s=a?.getState();if(!s||s.page!=='card'||s.finished)return null;const key=flashKey();if(flashScope!==key){flashScope=key;repeatState=get(key,{seen:[],pending:[],tick:0,history:[]});}
  repeatState.seen=repeatState.seen||[];repeatState.pending=repeatState.pending||[];repeatState.history=repeatState.history||[];repeatState.tick=repeatState.tick||0;
- const k=currentKey();if(k&&!repeatState.seen.includes(k))repeatState.seen.push(k);put(key,repeatState);return repeatState;}
+ // Rendering and asynchronous content decoration are not learner actions.
+ return repeatState;}
 function goKey(k){const a=flash(),s=a.getState(),idx=a.activeCardList().findIndex(c=>c.key===k);if(idx<0)return false;a.navigate({...s,index:idx,finished:false},true,true);checkpoint();return true;}
-function nextFlash(){const r=schedule(),a=flash();if(!r)return false;const k=currentKey();r.history.push(k);r.history=r.history.slice(-300);r.tick++;
+function nextFlash(){const r=schedule(),a=flash();if(!r)return false;const k=currentKey();if(k&&!r.seen.includes(k))r.seen.push(k);r.history.push(k);r.history=r.history.slice(-300);r.tick++;
  const cards=a.activeCardList(),valid=new Set(cards.map(c=>c.key));r.pending=r.pending.filter(x=>valid.has(x.key));
  const due=[...r.pending].sort((x,y)=>x.due-y.due).find(x=>x.due<=r.tick&&x.key!==k);
  const unseen=cards.find(c=>!r.seen.includes(c.key));const pick=due?.key||unseen?.key||[...r.pending].sort((x,y)=>x.due-y.due)[0]?.key;
@@ -150,7 +153,7 @@ function mountFlash(){const a=flash(),s=a?.getState();if(!s)return;const on=s.pa
  schedule();const actions=$('.guided-flashcard-actions');if(!actions)return;
  actions.classList.add('flow-flash-rail');if(innerWidth<900)setDock(actions);
  if(!actions.querySelector('[data-flow-flash-help]')){
-  const help=document.createElement('details');help.dataset.flowFlashHelp='';help.className='flow-flash-help';help.innerHTML='<summary></summary><p data-ui-no-translate></p>';actions.append(help);
+  const help=document.createElement('details');help.dataset.flowFlashHelp='';help.className='flow-flash-help';help.innerHTML='<summary></summary><p data-ui-no-translate></p>';help.append(shortcutOption());actions.append(help);
   const focus=button('data-flow-focus','Focus mode','Modalità concentrazione');const quit=button('data-flow-flash-quit','Quit and save','Esci e salva');actions.append(focus,quit);
  }
  label(actions.querySelector('[data-guide-rate=again]'),'1 · Again','1 · Ancora');label(actions.querySelector('[data-guide-rate=unsure]'),'2 · Not sure','2 · Non sono sicuro');label(actions.querySelector('[data-guide-rate=known]'),'3 · Got it','3 · Lo so');
@@ -160,7 +163,7 @@ function mountFlash(){const a=flash(),s=a?.getState();if(!s)return;const on=s.pa
  const status=$('.guided-confidence-summary');if(status){const c=get('italianCourseSessionProgressV2').flashcards?.confidence||{},cards=a.activeCardList(),count=x=>cards.filter(y=>c[y.key]===x).length;label(status,'Got it: '+count('known')+' · Again: '+count('again')+' · Not sure: '+count('unsure'),'Lo so: '+count('known')+' · Ancora: '+count('again')+' · Non sono sicuro: '+count('unsure'));}
  label(actions.querySelector('[data-guide-prev]'),'Previous','Indietro');label(actions.querySelector('[data-guide-next]'),'Next','Avanti');
  const prev=actions.querySelector('[data-guide-prev]');if(prev&&repeatState?.history.length)prev.disabled=false;
- requestAnimationFrame(viewport);
+ document.querySelectorAll('.flow-shortcut-option span').forEach(el=>label(el,'Keyboard shortcuts','Scorciatoie da tastiera'));requestAnimationFrame(viewport);
 }
 root.addEventListener('italian-flashcard-rendered',mountFlash);
 document.addEventListener('click',e=>{const a=flash(),s=a?.getState();if(s?.page!=='card')return;const b=e.target.closest?.('[data-guide-next],[data-guide-prev],[data-flow-focus],[data-flow-flash-quit],[data-guide-restart],[data-guide-review-again]');if(!b)return;
@@ -173,6 +176,7 @@ document.addEventListener('click',e=>{const a=flash(),s=a?.getState();if(s?.page
 },true);
 document.addEventListener('keydown',e=>{
  if(e.repeat||e.isComposing||e.ctrlKey||e.metaKey||modal())return;
+ if(!shortcutsEnabled()&&e.key!=='Escape')return;
  if(guide()&&studyArticle){
   const q=question();if(!q)return;
   if(e.key==='Escape'){e.preventDefault();pause();return;}
