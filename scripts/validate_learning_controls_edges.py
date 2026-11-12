@@ -34,7 +34,7 @@ try:
    page.keyboard.press('Alt+KeyS');page.wait_for_timeout(100);assert q().get_attribute('data-result')=='skipped'
    page.keyboard.press('Alt+ArrowRight');assert page.evaluate('ItalianGuidedStudy.getState().question')==2
    visit('class4-silent-h')
-   page.locator('.question-heading').click();page.keyboard.press('1')
+   q().locator('.question-heading').click();page.keyboard.press('1')
    options=q().locator('input[type=radio]');assert options.nth(0).is_checked()
    page.keyboard.press('2');assert options.nth(1).is_checked()
    page.keyboard.press('Enter');page.wait_for_timeout(120);assert q().get_attribute('data-result') in ['correct','wrong']
@@ -68,8 +68,14 @@ try:
    if not page.evaluate('document.body.classList.contains("guided-focus-active")'):page.keyboard.press('f')
    assert page.evaluate('document.body.classList.contains("guided-focus-active")')
    page.keyboard.press('Escape');assert not page.evaluate('document.body.classList.contains("guided-focus-active")')
+   page.locator('[data-flow-flash-help]>summary').click();page.locator('[data-flow-shortcuts]').uncheck()
+   page.locator('.guided-card-heading .guided-title').focus()
+   old=key();page.keyboard.press('ArrowRight');page.keyboard.press('f');page.wait_for_timeout(150)
+   assert key()==old and not page.evaluate('document.body.classList.contains("guided-focus-active")')
+   page.locator('[data-flow-shortcuts]').check();page.locator('.guided-card-heading .guided-title').focus();page.keyboard.press('f')
+   assert page.evaluate('document.body.classList.contains("guided-focus-active")')
    assert not errors,errors
-   checks.append({'width':width,'enter_check_next':'pass','hint_skip_shortcuts':'pass','choice_digit_shortcuts':'pass','matching_retry_blank_and_resumable':'pass','lesson_reset_preserves_other_lessons_and_flashcards':'pass','not_sure_three_intervening_cards':'pass','focus_keyboard':'pass'})
+   checks.append({'width':width,'enter_check_next':'pass','hint_skip_shortcuts':'pass','choice_digit_shortcuts':'pass','matching_retry_blank_and_resumable':'pass','lesson_reset_preserves_other_lessons_and_flashcards':'pass','not_sure_three_intervening_cards':'pass','focus_keyboard':'pass','hotkeys_can_be_disabled':'pass'})
    ctx.close()
   browser.close()
  (OUT/('live-edge-results.json' if live else 'edge-results.json')).write_text(json.dumps({'status':'pass','checks':checks},indent=2));print(json.dumps(checks,indent=2))
