@@ -9,4 +9,16 @@
 .question-answer-support .question-language-line+.question-language-line{padding-top:10px;margin-top:10px;border-top:1px solid var(--line)}
 .question-pron-note{display:block;margin-top:12px;font:400 12px/1.5 system-ui,sans-serif;color:var(--muted)}
 .quiz-question .hint{font-weight:400;line-height:1.6}
+/* A production-only floating hosting badge occupies the bottom-right corner.
+   Keep the existing navigation row outside that region. Do not hide the badge,
+   intercept clicks or change scoring to compensate for an obscured button. */
+.guided-study-pilot .guided-sheet-controls{
+  position:sticky;
+  bottom:calc(76px + env(safe-area-inset-bottom,0px));
+  z-index:5;
+  background:var(--bg);
+  padding:12px 0;
+}
+.guided-study-pilot .guided-sheet-controls button{scroll-margin-block:100px}
 @media(max-width:600px){.question-support-italian{font-size:19px}.question-support-pron{font-size:14px}.question-support-english{font-size:15px}}
+@media print{.guided-study-pilot .guided-sheet-controls{position:static}}
