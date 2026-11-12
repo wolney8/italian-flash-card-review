@@ -38,7 +38,7 @@ try:
                 elif r.request.url.startswith(base):r.continue_()
                 else:r.abort()
             ctx.route('**/*',route)
-            ctx.add_init_script('if(window===top){try{localStorage.setItem("italianCourseThemeV1",'+json.dumps(theme)+');localStorage.setItem("italianCourseLanguageV1",'+json.dumps(lang)+');}catch(e){}}')
+            ctx.add_init_script('if(window===top){try{localStorage.setItem("italianAutoAdvanceV2","off");localStorage.setItem("italianCourseThemeV1",'+json.dumps(theme)+');localStorage.setItem("italianCourseLanguageV1",'+json.dumps(lang)+');}catch(e){}}')
             page=ctx.new_page();page.set_default_timeout(15000);errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
             def index():return page.evaluate('ItalianGuidedStudy.getState().question')
             def activate(button):
@@ -53,7 +53,7 @@ try:
                 page.goto(base+'/study/study-sheets.html?sheet='+slug,wait_until='networkidle',timeout=60000)
                 page.wait_for_function('window.ItalianGuidedStudy && !document.documentElement.classList.contains("course-booting")')
                 if not REMOTE:
-                    page.evaluate('''() => {const badge=document.createElement('div');badge.id='test-hosting-badge';badge.style.cssText='position:fixed;right:16px;bottom:20px;width:170px;height:40px;z-index:2147483647;background:#123;color:white;border-radius:20px;text-align:center';badge.textContent='Hosting badge fixture';document.body.append(badge);}''')
+                    page.evaluate('''() => {const badge=document.createElement('div');badge.id='test-hosting-badge';badge.style.cssText='position:fixed;right:16px;bottom:20px;width:170px;height:40px;z-index:2147483647;background:#123;color:white;border-radius:20px;text-align:center';badge.textContent='Hosting badge fixture';document.body.append(badge);window.dispatchEvent(new Event('resize'));}''')
                 for step in range(4):
                     q=page.locator('.quiz-question:not([hidden])');key=q.get_attribute('data-progress-key');before=index();expected=json.loads(q.get_attribute('data-answers'))[0]
                     if q.get_attribute('data-type')=='choice':next(r for r in q.locator('input[type=radio]').all() if r.input_value()==expected).check()
