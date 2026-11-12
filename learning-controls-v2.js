@@ -107,7 +107,7 @@ function refreshStudy(){
   label(back,state.reviewIncorrect&&state.reviewQueue[0]===state.question?'Back to results':'Previous question',state.reviewIncorrect&&state.reviewQueue[0]===state.question?'Torna ai risultati':'Domanda precedente');
   const stats=a.stats();label(pager.querySelector('.guided-sheet-controls-status'),stats.attempted+' answered · '+stats.correct+' correct · '+stats.skipped+' skipped',stats.attempted+' risposte · '+stats.correct+' corrette · '+stats.skipped+' saltate');
  }
- label(pager.querySelector('.flow-countdown-help'),remaining?'Click anywhere to pause.':remaining,remaining?'Fai clic per mettere in pausa.':'');
+ label(pager.querySelector('.flow-countdown-help'),remaining?'Click anywhere to pause.':'',remaining?'Fai clic per mettere in pausa.':'');
  const options=studyArticle.querySelector('.flow-study-tools');if(options){options.querySelectorAll('button[data-en]').forEach(b=>label(b,b.dataset.en,b.dataset.it));label(options.querySelector('summary'),'Practice options','Opzioni degli esercizi');label(options.querySelector('[data-flow-auto-label]'),'Advance after 5 seconds','Avanza dopo 5 secondi');label(options.querySelector('.flow-shortcuts'),'Enter: check. Alt+S: skip. Alt+H: hint. Alt+←/→: previous/next. Escape: pause. 1–9: select a choice when not typing. Tab: move between answers.','Invio: controlla. Alt+S: salta. Alt+H: suggerimento. Alt+←/→: precedente/successiva. Esc: pausa. 1–9: scegli un’opzione. Tab: passa alle risposte.');}
 }
 function mountStudy(){const el=$('.study-pack-sheet[data-guided-pilot=ready]');if(!el||!guide())return;if(studyArticle!==el){studyArticle=el;tools();setTimeout(()=>{
