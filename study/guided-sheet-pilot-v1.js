@@ -19,6 +19,7 @@
   function remember(state) {try{sessionStorage.setItem(VIEW_KEY,JSON.stringify(state));}catch(_){}}
   function clamp(n,size) {return Number.isInteger(n)&&n>=0&&n<size?n:0;}
   function result(question) {
+    if(question.dataset.result==='skipped')return 'skipped';
     const feedback=question.querySelector('.feedback');
     if(feedback&&feedback.classList.contains('correct'))return 'correct';
     if(feedback&&feedback.classList.contains('wrong'))return 'wrong';
@@ -42,7 +43,7 @@
     const validKeys=new Set(scope.map(q=>q.dataset.progressKey));
     let round=storedRound.keys?.length&&storedRound.keys.every(k=>validKeys.has(k))?storedRound:{id:String(Date.now()),mode:'full',keys:scope.map(q=>q.dataset.progressKey),first:{},finished:false};
     const questions=round.keys.map(k=>scope.find(q=>q.dataset.progressKey===k));
-    round.first=round.first||{};
+    round.first=round.first||{}; round.last=round.last||{}; round.retryPending=round.retryPending||[];
     const saveRound=()=>window.ItalianStudyLibrary.put(ROUND_KEY,round);
     saveRound();
     if(!hero||!quiz||!learn.length||!examples.length||!questions.length){
@@ -53,7 +54,7 @@
     const state={
       step:STEP_IDS.includes(new URLSearchParams(location.search).get('stage'))?new URLSearchParams(location.search).get('stage'):'practise',
       learn:clamp(old.learn,learn.length),examples:clamp(old.examples,examples.length),question:clamp(old.question,questions.length),finished:!!round.finished,
-      reviewIncorrect:!!old.reviewIncorrect,
+      reviewIncorrect:!!old.reviewIncorrect, reviewKind:old.reviewKind||'mistakes',
       reviewQueue:Array.isArray(old.reviewQueue)?old.reviewQueue.filter(n=>Number.isInteger(n)&&n>=0&&n<questions.length):[],
       visitedLearn:Array.isArray(old.visitedLearn)?[...new Set(old.visitedLearn.filter(n=>Number.isInteger(n)&&n>=0&&n<learn.length))]:[],
       visitedExamples:Array.isArray(old.visitedExamples)?[...new Set(old.visitedExamples.filter(n=>Number.isInteger(n)&&n>=0&&n<examples.length))]:[]
@@ -91,7 +92,13 @@
     const pager=document.createElement('div');pager.className='guided-sheet-controls';pager.innerHTML='<span class="guided-sheet-controls-status" aria-live="polite"></span><div class="guided-sheet-controls-buttons learning-session-controls"><button type="button" data-guided-action="back">Previous</button><button type="button" class="guided-sheet-primary" data-guided-action="next">Next</button></div>';finish.insertAdjacentElement('afterend',pager);
     const status=steps.querySelector('.guided-sheet-position'),title=steps.querySelector('.guided-sheet-current-title'),instruction=steps.querySelector('.guided-sheet-instruction'),progressCount=steps.querySelector('.guided-sheet-progress-count'),progressTrack=steps.querySelector('.guided-sheet-progress-track'),progressFill=steps.querySelector('.guided-sheet-progress-fill');
     const previousButton=pager.querySelector('[data-guided-action="back"]'),nextButton=pager.querySelector('[data-guided-action="next"]'),controlsStatus=pager.querySelector('.guided-sheet-controls-status'),reviewUnanswered=finish.querySelector('[data-guided-review-unanswered]'),reviewIncorrect=finish.querySelector('[data-guided-review-incorrect]'),finishTitle=finish.querySelector('.guided-sheet-finish-title'),finishScore=finish.querySelector('.guided-sheet-finish-score'),finishExplanation=finish.querySelector('.guided-sheet-finish-explanation');
-    function stats(){const states=questions.map(result);return {attempted:states.filter(Boolean).length,correct:states.filter(x=>x==='correct').length,wrong:states.filter(x=>x==='wrong').length,incorrectIndices:states.map((x,i)=>x==='wrong'?i:-1).filter(i=>i>=0),firstUnanswered:states.indexOf(null)};}
+    function stats(){
+      const states=questions.map(q=>result(q)||round.last[q.dataset.progressKey]||null);
+      const missing=states.map((x,i)=>!x||x==='skipped'?i:-1).filter(i=>i>=0);
+      return {attempted:states.filter(x=>x&&x!=='skipped').length,correct:states.filter(x=>x==='correct').length,
+        skipped:states.filter(x=>x==='skipped').length,wrong:states.filter(x=>x==='wrong').length,
+        incorrectIndices:states.map((x,i)=>x==='wrong'?i:-1).filter(i=>i>=0),unansweredIndices:missing,firstUnanswered:missing[0]??-1};
+    }
     function show(){
       const step=state.step,practice=step==='practise',reviewing=practice&&state.reviewIncorrect&&!state.finished&&state.reviewQueue.length>0;
       if(step==='learn'&&!state.visitedLearn.includes(state.learn))state.visitedLearn.push(state.learn);
@@ -109,7 +116,7 @@
       progressCount.textContent=covered+' of '+totalActivities+' activities';progressTrack.setAttribute('aria-valuenow',String(covered));progressTrack.setAttribute('aria-valuemax',String(totalActivities));progressTrack.setAttribute('aria-valuetext',covered+' of '+totalActivities+' activities viewed or answered');progressFill.style.width=(100*covered/totalActivities).toFixed(1)+'%';
       const count=step==='learn'?learn.length:step==='examples'?examples.length:reviewing?state.reviewQueue.length:questions.length;
       const current=step==='learn'?state.learn:step==='examples'?state.examples:reviewing?Math.max(0,state.reviewQueue.indexOf(state.question)):state.question;
-      const unit=reviewing?'Incorrect answer':practice?'Question':'Part';
+      const unit=reviewing?(state.reviewKind==='unanswered'?'Unanswered question':'Retry question'):practice?'Question':'Part';
       const position=practice&&state.finished?'Summary':unit+' '+(current+1)+' of '+count;
       status.textContent='Step '+(pos+1)+' of 3 · '+position;title.textContent=practice&&state.finished?'Your practice results':STEP_LABELS[pos];instruction.textContent=practice&&state.finished?'Review your progress or return to a question.':INSTRUCTIONS[pos];
       controlsStatus.textContent=practice?stat.attempted+' of '+questions.length+' attempted · '+stat.correct+' correct':position;
@@ -118,6 +125,7 @@
       if(step==='learn')nextButton.textContent=state.learn<learn.length-1?'Next section':'Next: Examples';
       if(step==='examples')nextButton.textContent=state.examples<examples.length-1?'Next example':'Next: Practise';
       if(practice)nextButton.textContent=state.finished?'Review from start':reviewing?(current<count-1?'Next incorrect':'Finish review'):state.question<questions.length-1?'Next question':'Finish practice';
+      nextButton.disabled=practice&&!state.finished&&!result(questions[state.question]);
       finishTitle.textContent=stat.attempted===questions.length?(round.mode==='quick'?'Quick round completed':'Practice complete'):'Practice summary';finishScore.textContent=stat.correct+' of '+questions.length+' correct';
       finishExplanation.textContent=stat.attempted===questions.length?'You have answered every question. You can revisit any of them.':'You have attempted '+stat.attempted+' of '+questions.length+' questions.';
       reviewUnanswered.hidden=stat.firstUnanswered<0;reviewIncorrect.hidden=stat.wrong===0;reviewIncorrect.textContent='Retry mistakes ('+stat.wrong+')';reviewIncorrect.classList.toggle('guided-sheet-primary',stat.wrong>0);reviewUnanswered.classList.toggle('guided-sheet-primary',stat.wrong===0&&stat.firstUnanswered>=0);followup.classList.toggle('guided-sheet-secondary',stat.wrong>0||stat.firstUnanswered>=0);
@@ -126,6 +134,7 @@
       const corrected=questions.filter(q=>round.first?.[q.dataset.progressKey]==='wrong'&&result(q)==='correct').length;
       finishExplanation.innerHTML=window.ItalianStudyLibrary.pair('Attempted: '+stat.attempted+' / '+questions.length+'. First checks: '+firstCorrect+' correct. Corrected after retry: '+corrected+'. Unanswered: '+(questions.length-stat.attempted)+'.','Svolti: '+stat.attempted+' / '+questions.length+'. Prime risposte corrette: '+firstCorrect+'. Correzioni dopo un errore: '+corrected+'. Senza risposta: '+(questions.length-stat.attempted)+'.');
       round.finished=state.finished;round.questionKey=questions[state.question]?.dataset.progressKey;saveRound();const label=article.querySelector('.library-round-label');if(label)label.textContent=(round.mode==='quick'?'Quick practice':'Full exercise set')+' · '+questions.length+' questions';remember(state);const stepUrl=new URL(location.href);stepUrl.searchParams.set('stage',state.step);history.replaceState(null,'',stepUrl.pathname+stepUrl.search+stepUrl.hash);
+      window.dispatchEvent(new CustomEvent('italian-study-view-changed'));
     }
     function focusStage(previousTop=null){title.focus({preventScroll:true});const delta=steps.getBoundingClientRect().top-16;if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:'instant'});}
     function focusCurrent(previousQuestionTop = null){
@@ -133,6 +142,7 @@
       if(currentQuestion){const heading=currentQuestion.querySelector('.question-heading');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}const rect=currentQuestion.getBoundingClientRect(),viewportHeight=window.innerHeight||document.documentElement.clientHeight,safeBottom=Math.max(18,viewportHeight-110),desiredTop=previousQuestionTop===null?rect.top:previousQuestionTop,targetTop=Math.max(18,Math.min(desiredTop,safeBottom)),delta=rect.top-targetTop;if(Math.abs(delta)>2)window.scrollBy({top:delta,behavior:'instant'});return;}focusStage();
     }
     function move(action){
+      if(action!=='back'&&state.step==='practise'&&!state.finished&&!result(questions[state.question]))return false;
       const oldStageTop=steps.getBoundingClientRect().top,previousStep=state.step,wasFinished=state.finished;
       const oldQuestionTop=state.step==='practise'&&!state.finished?questions[state.question]?.getBoundingClientRect().top??null:null;
       if(state.step==='practise'&&state.reviewIncorrect&&!state.finished&&state.reviewQueue.length){const cursor=state.reviewQueue.indexOf(state.question);if(action==='back'){if(cursor>0)state.question=state.reviewQueue[cursor-1];else{state.finished=true;state.reviewIncorrect=false;}}else if(cursor<state.reviewQueue.length-1)state.question=state.reviewQueue[cursor+1];else{state.finished=true;state.reviewIncorrect=false;}show();focusCurrent(oldQuestionTop);return;}
@@ -153,10 +163,10 @@
     reviewIncorrect.addEventListener('click',()=>{const queue=stats().incorrectIndices;if(!queue.length)return;state.reviewIncorrect=true;state.reviewQueue=queue;state.step='practise';state.question=queue[0];state.finished=false;show();focusStage();});
     reviewUnanswered.addEventListener('click',()=>{const missing=stats().firstUnanswered;if(missing<0)return;state.step='practise';state.question=missing;state.finished=false;state.reviewIncorrect=false;show();focusStage();});
     // An edit is not navigation. Avoid stage redraws between pointer down and up.
-    function refreshAnswer(question){if(!question)return;setTimeout(()=>{recordFirst(question);show();window.ItalianStudySupport?.refreshQuestion(question);},0);}
+    function refreshAnswer(question){if(!question)return;setTimeout(()=>{recordFirst(question);show();window.ItalianStudySupport?.refreshQuestion(question);window.dispatchEvent(new CustomEvent('italian-study-answer-checked',{detail:{question}}));},0);}
     article.addEventListener('click',event=>{if(event.target.closest('.check-button'))refreshAnswer(event.target.closest('.quiz-question'));});
     article.addEventListener('input',event=>{const question=event.target.closest('.quiz-question');if(question)window.ItalianStudySupport?.refreshQuestion(question);});
-    function recordFirst(q){if(!q)return;const r=result(q);if(r&&!round.first[q.dataset.progressKey]){round.first[q.dataset.progressKey]=r;saveRound();}}
+    function recordFirst(q){if(!q)return;const r=result(q),k=q.dataset.progressKey;if(r){if(!round.first[k])round.first[k]=r;round.last[k]=r;round.retryPending=round.retryPending.filter(x=>x!==k);saveRound();}}
     function newRound(mode=round.mode){
       if(!['quick','full'].includes(mode))mode='full';const latest=questions.map(q=>({key:q.dataset.progressKey,result:result(q)}));
       if(latest.some(q=>q.result)&&!confirm(window.ItalianUI?.language==='it'?'Iniziare un nuovo giro? Gli altri esercizi non cambiano.':'Start a new round? Other exercise sets are unchanged.'))return;
@@ -168,7 +178,7 @@
       const url=new URL(location.href);url.searchParams.set('stage','practise');url.searchParams.delete('round');location.href=url.pathname+url.search;
     }
     article.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('input[type=text]:not([hidden])'))refreshAnswer(e.target.closest('.quiz-question'));});
-    window.ItalianGuidedStudy={newRound,remember:()=>{remember(state);saveRound();},getState:()=>({...state,round}),questions:()=>questions};
+    window.ItalianGuidedStudy={newRound,move,show,stats,recordFirst,remember:()=>{remember(state);saveRound();},getState:()=>({...state,round}),setState:patch=>{Object.assign(state,patch);show();},focusCurrent,questions:()=>questions,scope:()=>scope};
     article.dataset.guidedPilot='ready';document.body.classList.add('guided-study-pilot');show();
     setTimeout(()=>{show();window.ItalianStudyLibrary.mountDetail(article);window.ItalianUI?.refresh();window.ItalianCourseBoot?.ready();},0);
     return true;

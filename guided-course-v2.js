@@ -102,7 +102,7 @@
     renderKeepingCardFace();
   }
   function recordConfidence(rating){
-    if(state.page!=='card'||state.finished||!['again','known'].includes(rating))return;
+    if(state.page!=='card'||state.finished||!['again','unsure','known'].includes(rating))return;
     const current=root?.querySelector('.guided-card-host .review-card');
     if(!current?.classList.contains('show-answer'))return;
     const card=currentCard();if(!card)return;
@@ -111,7 +111,7 @@
     progress.flashcards.confidence=progress.flashcards.confidence||{};
     progress.flashcards.confidence[card.key]=rating;
     sessionWrite(PROGRESS_KEY,progress);
-    moveCard(1);
+    if(!window.ItalianFlashFlow?.graded(card,rating))moveCard(1);
   }
   function startReviewAgain(){
     const confidence=confidenceData();
@@ -298,7 +298,7 @@
     const confidence=confidenceData();
     const shown=selected.filter(c=>!!viewed[c.key]).length;
     const confidenceSummary=window.ItalianLearningSession.confidenceSummary(selected,confidence);
-    const {known,again,rated}=confidenceSummary;
+    const {known,again,unsure=0,rated}=confidenceSummary;
     if(state.finished){
       return '<main class="guided-main" id="guidedMain">'+
         crumbs([{label:'Lessons',to:'lessons'},{label:'Lesson '+id.slice(1)}])+
@@ -309,11 +309,11 @@
         '<p>'+shown+' / '+total+' answers revealed · '+rated+' rated.</p>'+
         '<div class="guided-result-stats">'+
         '<span><strong>'+known+'</strong> Got it</span>'+
-        '<span><strong>'+again+'</strong> Practise again</span>'+
+        '<span><strong>'+again+'</strong> Again</span><span><strong>'+unsure+'</strong> Not sure</span>'+
         '<span><strong>'+(total-rated)+'</strong> Unrated</span></div>'+
         '<p class="guided-muted">Revealing a card records that you saw it, not that you remembered it.</p>'+
         '<div class="guided-actions">'+
-        (again?'<button class="guided-primary" data-guide-review-again>Review '+again+' marked '+(again===1?'card':'cards')+'</button>':'')+
+        (again+unsure?'<button class="guided-primary" data-guide-review-again>Review '+(again+unsure)+' marked cards</button>':'')+
         (state.reviewOnly?'<button class="guided-secondary" data-guide-all-cards>All cards</button>':'')+
         (next?'<button class="guided-primary" data-guide-next-topic>'+labelPair(next.type==='topic'?'Prossimo argomento':'Prossima lezione',next.type==='topic'?'Next topic':'Next lesson')+' →</button>':'')+
         '<button class="guided-secondary" data-guide-restart>'+labelPair('Ripeti','Repeat topic')+'</button>'+
@@ -348,7 +348,7 @@
       (focusActive()?'Exit focus':'Focus mode')+'</button></div>'+
       progress+
       '<p class="guided-confidence-summary" aria-live="polite">Got it: '+known+
-      ' · Practise again: '+again+' · Not rated: '+(total-rated)+'</p>'+
+      ' · Again: '+again+' · Not sure: '+unsure+' · Not rated: '+(total-rated)+'</p>'+
       '<section class="guided-card-host" aria-label="Current flashcard"><div class="subdeck-accordion is-open"><div class="card-list">'+
       cardMarkup+'</div></div></section>'+
       '<div class="guided-flashcard-actions">'+
@@ -358,7 +358,8 @@
       '<div class="guided-confidence" hidden aria-label="Recall confidence">'+
       '<p>Could you recall it without looking?</p>'+
       '<div class="guided-confidence-actions learning-session-controls">'+
-      '<button type="button" class="guided-secondary" data-guide-rate="again">Practise again</button>'+
+      '<button type="button" class="guided-secondary" data-guide-rate="again">Again</button>'+
+      '<button type="button" class="guided-secondary" data-guide-rate="unsure">Not sure</button>'+
       '<button type="button" class="guided-primary" data-guide-rate="known">Got it</button></div></div>'+
       '<div class="guided-review-navigation learning-session-controls">'+
       '<button class="guided-secondary" data-guide-prev '+(state.index===0?'disabled':'')+'>← Previous</button>'+
@@ -471,6 +472,7 @@
     window.ItalianStudyLinks?.decorate();
     syncCardHeight();
     if(ready)window.ItalianCourseBoot?.ready();
+    window.dispatchEvent(new CustomEvent('italian-flashcard-rendered'));
   }
   function activate() {
     ensure();
@@ -519,5 +521,6 @@
   window.addEventListener('hashchange',()=>{if(location.hash.match(/^#lesson-L\d+$/i)){state=stateFromUrl();render();}});
   window.addEventListener('italian-course-data-ready',()=>{ready=true;render();});
   window.addEventListener('pageshow',()=>{ready=Boolean(window.__COURSE_DATA_READY__);render();});
+  window.ItalianFlashcards={getState:()=>({...state}),currentCard,cardList,activeCardList,navigate,moveCard,flip,recordConfidence,toggleFocus,renderKeepingCardFace};
   activate();
 })();

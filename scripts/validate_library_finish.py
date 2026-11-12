@@ -28,6 +28,7 @@ try:
   browser=p.chromium.launch(executable_path=shutil.which('google-chrome') or shutil.which('chromium'),headless=True,args=['--no-sandbox'])
   for width,height,theme in [(1280,900,'light'),(390,844,'dark')]:
    context=browser.new_context(viewport={'width':width,'height':height},reduced_motion='no-preference')
+   context.add_init_script("try{localStorage.setItem('italianAutoAdvanceV2','off')}catch(_){}")
    context.route('**/*',lambda r:r.continue_() if r.request.url.startswith(base) else r.abort())
    context.add_init_script('if(window===top&&location.origin==='+json.dumps(base)+'){if(!sessionStorage.getItem("finishTest")){localStorage.setItem("italianCourseThemeV1",'+json.dumps(theme)+');localStorage.setItem("italianCourseLanguageV1","it");sessionStorage.setItem("finishTest","yes");}}')
    page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.on('dialog',lambda d:d.accept())
@@ -48,9 +49,7 @@ try:
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
    assert max(widths)-min(widths)<1
    q.locator('input[type=text]').fill('wrong');q.locator('.check-button').click()
-   for _ in range(12):
-    if page.locator('.guided-sheet-finish').is_visible():break
-    page.click('[data-guided-action=next]')
+   page.click('[data-flow-results]')
    assert page.locator('.guided-sheet-finish').is_visible()
    assert page.locator('[data-library-finish-round=quick]').is_visible()
    assert page.locator('[data-library-finish-round=full]').is_visible()

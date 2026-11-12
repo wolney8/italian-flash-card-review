@@ -31,11 +31,12 @@
     const list=Array.isArray(cards)?cards:[];
     const known=list.filter(card=>confidence[card.key]==='known').length;
     const again=list.filter(card=>confidence[card.key]==='again').length;
-    return {total:list.length,known,again,rated:known+again,unrated:list.length-known-again};
+    const unsure=list.filter(card=>confidence[card.key]==='unsure').length;
+    return {total:list.length,known,again,unsure,rated:known+again+unsure,unrated:list.length-known-again-unsure};
   }
   function reviewKeys(cards,confidence={}) {
     return (Array.isArray(cards)?cards:[])
-      .filter(card=>confidence[card.key]==='again').map(card=>card.key);
+      .filter(card=>['again','unsure'].includes(confidence[card.key])).map(card=>card.key);
   }
   const api=Object.freeze({progressMarkup,restoreAnchor,confidenceSummary,reviewKeys});
   if(typeof module!=='undefined'&&module.exports)module.exports=api;

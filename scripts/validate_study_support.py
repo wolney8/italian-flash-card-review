@@ -31,6 +31,7 @@ try:
    req.dispose()
   for width,height,theme,lang in [(1280,900,'light','en'),(1280,900,'dark','it'),(390,844,'light','en'),(390,844,'dark','it')]:
    ctx=browser.new_context(viewport={'width':width,'height':height},has_touch=width<600,is_mobile=width<600,reduced_motion='reduce')
+   ctx.add_init_script("try{localStorage.setItem('italianAutoAdvanceV2','off')}catch(_){}")
    ctx.route('**/*',lambda r:r.continue_() if r.request.url.startswith(base) else r.abort())
    ctx.add_init_script('if(window===top&&location.origin==='+json.dumps(base)+'){localStorage.setItem("italianCourseThemeV1",'+json.dumps(theme)+');}')
    page=ctx.new_page();page.set_default_timeout(15000);errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
