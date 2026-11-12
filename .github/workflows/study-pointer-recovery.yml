@@ -1,65 +1,40 @@
 name: Study pointer recovery
 on:
   push:
-    branches: [fix/study-click-recovery-20261112]
+    branches: [main, fix/study-click-recovery-20261112]
+    paths: ['study/**', 'scripts/*study_pointer*', '.github/workflows/study-pointer-recovery.yml']
+  pull_request:
     paths: ['study/**', 'scripts/*study_pointer*', '.github/workflows/study-pointer-recovery.yml']
 permissions:
   contents: read
+concurrency:
+  group: study-pointer-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 jobs:
   pointer:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - run: python -m pip install playwright==1.57.0
-      - name: Record real pointer and focus behaviour
-        run: |
-          mkdir -p artifacts/study-pointer
-          python - <<'PY'
-          from pathlib import Path
-          from functools import partial
-          from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
-          from threading import Thread
-          from playwright.sync_api import sync_playwright
-          import json,shutil
-          ROOT=Path.cwd();OUT=ROOT/'artifacts/study-pointer'
-          class Quiet(SimpleHTTPRequestHandler):
-              def log_message(self,*a):pass
-          s=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)))
-          Thread(target=s.serve_forever,daemon=True).start()
-          findings=[]
-          with sync_playwright() as p:
-              b=p.chromium.launch(executable_path=shutil.which('google-chrome') or shutil.which('chromium'),headless=True,args=['--no-sandbox'])
-              for env,base in [('local',f'http://127.0.0.1:{s.server_port}'),('live','https://italian-flash-card-review.netlify.app')]:
-                  for rate in [1,4]:
-                      ctx=b.new_context(viewport={'width':1280,'height':900},reduced_motion='reduce')
-                      ctx.route('**/*',lambda r:r.continue_() if r.request.url.startswith(base) else r.abort())
-                      page=ctx.new_page();page.set_default_timeout(15000)
-                      c=ctx.new_cdp_session(page);c.send('Emulation.setCPUThrottlingRate',{'rate':rate})
-                      page.goto(base+'/study/study-sheets.html?sheet=l6-essere-gaps',wait_until='networkidle')
-                      page.wait_for_function('window.ItalianGuidedStudy && !document.documentElement.classList.contains("course-booting")')
-                      page.evaluate('''() => { window.ev=[]; const pos =()=>{const b=document.querySelector('[data-guided-action=next]')?.getBoundingClientRect();return b ? {y:b.y,h:b.height,scroll:scrollY} : null;}; for(const type of ['pointerdown','pointerup','click','focusin','focusout','change','input','scroll'])document.addEventListener(type,e=>ev.push({type,target:e.target.outerHTML?.slice(0,170),...pos(),q:ItalianGuidedStudy.getState().question,t:performance.now()}),true); }''')
-                      for step in range(5):
-                          q=page.locator('.quiz-question:not([hidden])');q.locator('input[type=text]').fill(json.loads(q.get_attribute('data-answers'))[0])
-                          for kind,button in [('check',q.locator('.check-button')),('next',page.locator('[data-guided-action=next]'))]:
-                              if kind=='next':q.locator('input').focus();q.locator('input').dispatch_event('change')
-                              button.scroll_into_view_if_needed();box=button.bounding_box();xy=(box['x']+box['width']/2,box['y']+box['height']/2)
-                              page.mouse.move(*xy);page.mouse.down();page.wait_for_timeout(120);page.mouse.up();page.wait_for_timeout(90)
-                              idx=page.evaluate('ItalianGuidedStudy.getState().question')
-                              record={'env':env,'rate':rate,'step':step,'kind':kind,'index':idx,'box_before':box,'box_after':button.bounding_box()}
-                              findings.append(record);print(json.dumps(record),flush=True)
-                              if kind=='next' and idx!=step+1:
-                                  events=page.evaluate('ev');(OUT/f'{env}-{rate}-{step}-events.json').write_text(json.dumps(events,indent=2))
-                                  print('FAILED EVENTS',json.dumps(events[-25:]),flush=True)
-                                  page.screenshot(path=str(OUT/f'{env}-{rate}-{step}.png'),full_page=True)
-                                  button.focus();button.press('Enter');page.wait_for_timeout(200)
-                      ctx.close()
-              b.close()
-          (OUT/'diagnosis.json').write_text(json.dumps(findings,indent=2));s.shutdown()
-          PY
+      - name: Preserve source questions and verify learning support
+        run: node scripts/validate_study_support.cjs
+      - name: Test real clicks and taps with a local floating-badge fixture
+        run: python scripts/validate_study_pointer.py
+      - name: Test candidate stylesheet with the real production badge
+        if: github.ref_name != 'main'
+        run: python scripts/validate_study_pointer.py --candidate
+      - name: Verify actual deployment after merge
+        if: github.ref_name == 'main'
+        run: python scripts/validate_study_pointer.py --live
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: study-pointer-diagnosis
-          path: artifacts/study-pointer
+          name: study-pointer-review
+          path: |
+            artifacts/study-pointer
+            artifacts/study-support
           retention-days: 7
