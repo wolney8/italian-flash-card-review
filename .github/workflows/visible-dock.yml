@@ -1,0 +1,24 @@
+name: Visible control hit targets
+on:
+  push:
+    branches: [main, fix/learning-controls-live-edge-20261112]
+    paths: ['learning-controls-v2.js', 'learning-controls-v2.css', 'scripts/validate_visible_dock.py', '.github/workflows/visible-dock.yml']
+  pull_request:
+    paths: ['learning-controls-v2.js', 'learning-controls-v2.css', 'scripts/validate_visible_dock.py', '.github/workflows/visible-dock.yml']
+permissions:
+  contents: read
+jobs:
+  hit-targets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install playwright==1.57.0
+      - name: Check native controls on the public website
+        run: python scripts/validate_visible_dock.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visible-dock-review
+          path: artifacts/visible-dock
+          retention-days: 7
