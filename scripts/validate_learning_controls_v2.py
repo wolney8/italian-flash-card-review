@@ -42,7 +42,10 @@ try:
     el=q();expected=json.loads(el.get_attribute('data-answers'))[0]
     if el.get_attribute('data-type')=='choice':next(i for i in el.locator('input[type=radio]').all() if i.input_value()==expected).check()
     else:el.locator('input[type=text]').fill(expected if text is None else text)
+    print('BEFORE_CHECK',page.evaluate('({question:ItalianGuidedStudy.getState().question,current:document.querySelector(".quiz-question:not([hidden])")?.outerHTML})'),flush=True)
     el.locator('.check-button').click();page.wait_for_timeout(150)
+    print('AFTER_CHECK',page.evaluate('({question:ItalianGuidedStudy.getState().question,current:document.querySelector(".quiz-question:not([hidden])")?.outerHTML})'),errors,flush=True)
+    page.screenshot(path=str(OUT/f'diagnostic-{width}-{theme}.png'),full_page=True)
    def pause():page.keyboard.press('Escape');page.wait_for_timeout(100)
    def nextq():page.locator('[data-guided-action=next]').click();page.wait_for_timeout(120)
    visit('class2-alphabet')
@@ -51,7 +54,7 @@ try:
    assert q().locator('.check-button').is_disabled()
    q().locator('input').fill('a');assert not q().locator('.check-button').is_disabled()
    assert page.locator('[data-guided-action=next]').is_disabled()
-   answer();assert q().get_attribute('data-result')=='correct'
+   answer();assert q().get_attribute('data-result')=='correct', (idx(),q().get_attribute('data-result'),q().inner_text(),errors)
    assert q().locator('.check-button').is_disabled()
    assert q().locator('.model-answer>strong').inner_text()==('Answer:' if language=='en' else 'Risposta:')
    page.wait_for_timeout(5400);assert idx()==1,('auto advance',idx())
@@ -97,7 +100,10 @@ try:
       while el.locator('li[data-order-id]').all()[pos].get_attribute('data-order-id')!=wanted:el.locator('li[data-order-id="'+wanted+'"] [data-order-up]').click()
     elif kind=='choice':next(i for i in el.locator('input[type=radio]').all() if i.input_value()==expected).check()
     else:el.locator('input[type=text]').fill(expected)
-    el.locator('.check-button').click();page.wait_for_timeout(150);assert el.get_attribute('data-result')=='correct',(slug,kind)
+    print('BEFORE_CHECK',page.evaluate('({question:ItalianGuidedStudy.getState().question,current:document.querySelector(".quiz-question:not([hidden])")?.outerHTML})'),flush=True)
+    el.locator('.check-button').click();page.wait_for_timeout(150)
+    print('AFTER_CHECK',page.evaluate('({question:ItalianGuidedStudy.getState().question,current:document.querySelector(".quiz-question:not([hidden])")?.outerHTML})'),errors,flush=True)
+    page.screenshot(path=str(OUT/f'diagnostic-{width}-{theme}.png'),full_page=True);assert el.get_attribute('data-result')=='correct',(slug,kind)
     n=idx();nextq();assert idx()==n+1
    page.goto(base+'/?page=card&lesson=L6',wait_until='networkidle');page.wait_for_selector('[data-guide-flip]')
    def key():return page.locator('.guided-card-host .review-card').get_attribute('data-key')

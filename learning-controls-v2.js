@@ -111,7 +111,7 @@ function refreshStudy(){
  const options=studyArticle.querySelector('.flow-study-tools');if(options){options.querySelectorAll('button[data-en]').forEach(b=>label(b,b.dataset.en,b.dataset.it));label(options.querySelector('summary'),'Practice options','Opzioni degli esercizi');label(options.querySelector('[data-flow-auto-label]'),'Advance after 5 seconds','Avanza dopo 5 secondi');label(options.querySelector('.flow-shortcuts'),'Enter: check. Alt+S: skip. Alt+H: hint. Alt+←/→: previous/next. Escape: pause. 1–9: select a choice when not typing. Tab: move between answers.','Invio: controlla. Alt+S: salta. Alt+H: suggerimento. Alt+←/→: precedente/successiva. Esc: pausa. 1–9: scegli un’opzione. Tab: passa alle risposte.');}
 }
 function mountStudy(){const el=$('.study-pack-sheet[data-guided-pilot=ready]');if(!el||!guide())return;if(studyArticle!==el){studyArticle=el;tools();setTimeout(()=>{
- const s=guide().getState();for(const q of guide().questions()){if(s.round.retryPending.includes(q.dataset.progressKey))blank(q);else if(q.dataset.result)s.round.last[q.dataset.progressKey]=q.dataset.result;}
+ const s=guide().getState();for(const q of guide().questions()){if(s.round.retryPending.includes(q.dataset.progressKey)){q.dataset.result='';q.querySelector('.feedback').textContent='';q.querySelector('.feedback').className='feedback';q.querySelector('.model-answer').hidden=true;}else if(q.dataset.result)s.round.last[q.dataset.progressKey]=q.dataset.result;}
  guide().show();root.ItalianStudyPersistence?.captureAll();refreshStudy();},0);}refreshStudy();}
 root.addEventListener('italian-study-view-changed',mountStudy);
 root.addEventListener('italian-study-answer-checked',e=>{const q=e.detail.question;if(q?.dataset.result){q.dataset.flowChecked=value(q);root.ItalianStudyPersistence?.captureAll();checkpoint();startTimer(q);}refreshStudy();});
@@ -178,7 +178,7 @@ document.addEventListener('keydown',e=>{
   if(e.altKey&&e.code==='KeyS'){e.preventDefault();e.stopImmediatePropagation();skip();return;}
   if(e.altKey&&e.code==='KeyH'){e.preventDefault();pause();q.querySelector('.hint-button')?.click();return;}
   if((e.altKey||!editing(e))&&['ArrowLeft','ArrowRight'].includes(e.key)){e.preventDefault();e.stopImmediatePropagation();if(pause())return;guide().move(e.key==='ArrowLeft'?'back':'next');return;}
-  if(!editing(e)&&/^[1-9]$/.test(e.key)&&q.dataset.type==='choice'){e.preventDefault();pause();const r=q.querySelectorAll('input[type=radio]')[Number(e.key)-1];if(r){r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));r.focus({preventScroll:true});}return;}
+  if((!editing(e)||e.target.matches('input[type=radio]'))&&/^[1-9]$/.test(e.key)&&q.dataset.type==='choice'){e.preventDefault();pause();const r=q.querySelectorAll('input[type=radio]')[Number(e.key)-1];if(r){r.checked=true;r.dispatchEvent(new Event('change',{bubbles:true}));r.focus({preventScroll:true});}return;}
   if(e.key==='Enter'&&(e.target.matches('input[type=text]:not([hidden]),input[type=radio]')||(!editing(e)&&!e.target.closest('button,a,summary')))){e.preventDefault();e.stopImmediatePropagation();if(pause())return;if(q.dataset.result)guide().move('next');else if(ready(q))q.querySelector('.check-button').click();return;}
   if(e.code==='Space'&&!editing(e)&&timer){e.preventDefault();e.stopImmediatePropagation();pause();return;}
   return;
