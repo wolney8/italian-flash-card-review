@@ -194,5 +194,6 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Escape'&&document.body.classList.contains('guided-focus-active')){e.preventDefault();a.toggleFocus();}
 },true);
 root.addEventListener('resize',mountFlash);
+new MutationObserver(ms=>{if(dock&&ms.some(m=>[...m.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('iframe')||n.querySelector?.('iframe')))))requestAnimationFrame(viewport);}).observe(document.documentElement,{childList:true,subtree:true});
 const start=()=>{mountStudy();mountFlash();};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })(window);
