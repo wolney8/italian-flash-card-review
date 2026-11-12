@@ -1,0 +1,40 @@
+name: Study pointer recovery
+on:
+  push:
+    branches: [main, fix/study-click-recovery-20261112]
+    paths: ['study/**', 'scripts/*study_pointer*', '.github/workflows/study-pointer-recovery.yml']
+  pull_request:
+    paths: ['study/**', 'scripts/*study_pointer*', '.github/workflows/study-pointer-recovery.yml']
+permissions:
+  contents: read
+concurrency:
+  group: study-pointer-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  pointer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install playwright==1.57.0
+      - name: Preserve source questions and verify learning support
+        run: node scripts/validate_study_support.cjs
+      - name: Test real clicks and taps with a local floating-badge fixture
+        run: python scripts/validate_study_pointer.py
+      - name: Test candidate stylesheet with the real production badge
+        if: github.ref_name != 'main'
+        run: python scripts/validate_study_pointer.py --candidate
+      - name: Verify actual deployment after merge
+        if: github.ref_name == 'main'
+        run: python scripts/validate_study_pointer.py --live
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: study-pointer-review
+          path: |
+            artifacts/study-pointer
+            artifacts/study-support
+          retention-days: 7
