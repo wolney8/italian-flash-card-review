@@ -29,7 +29,7 @@ body.flow-flashcards .flow-flash-rail{position:fixed;right:max(16px,calc((100vw 
 .flow-flash-help>summary{font-size:12px;padding:8px}
 .flow-flash-help p{font:400 13px/1.6 system-ui;color:var(--muted)}
 body.flow-flashcards.guided-focus-active .guided-card-layout{max-width:none;min-height:calc(100dvh - 30px);margin:0;padding-top:8px}
-body.flow-flashcards.guided-focus-active .guided-card-options,body.flow-flashcards.guided-focus-active .study-flash-return,body.flow-flashcards.guided-focus-active .guided-study-lesson-link{display:none!important}
+body.flow-flashcards.guided-focus-active .guided-card-options,body.flow-flashcards.guided-focus-active .guided-study-lesson-link{display:none!important}
 body.flow-flashcards.guided-focus-active .guided-main{max-width:1200px;width:100%;padding-top:0!important}
 body.flow-flashcards.guided-focus-active .flow-flash-rail{top:16px;max-height:calc(100dvh - 32px)}
 body.flow-flashcards.guided-focus-active .course-site-header,body.flow-flashcards.guided-focus-active .guided-header{display:none!important}
@@ -65,3 +65,5 @@ body.flow-flashcards .guided-card-host .word-tile small{margin-top:6px!important
  .guided-study-pilot .panel{padding:12px}.guided-study-pilot .quiz-question{padding:12px}
 }
 @media print{.flow-study-tools,.flow-bottom-dock,.flow-flash-rail{display:none!important}body.flow-flashcards .guided-card-layout{padding-right:0}}
+
+.flow-flash-rail .guided-review-navigation button{overflow-wrap:normal!important;word-break:normal!important;white-space:nowrap}

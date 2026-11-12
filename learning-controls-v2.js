@@ -112,7 +112,7 @@ function refreshStudy(){
 }
 function mountStudy(){const el=$('.study-pack-sheet[data-guided-pilot=ready]');if(!el||!guide())return;if(studyArticle!==el){studyArticle=el;tools();setTimeout(()=>{
  const s=guide().getState();for(const q of guide().questions()){if(s.round.retryPending.includes(q.dataset.progressKey)){q.dataset.result='';q.querySelector('.feedback').textContent='';q.querySelector('.feedback').className='feedback';q.querySelector('.model-answer').hidden=true;}else if(q.dataset.result)s.round.last[q.dataset.progressKey]=q.dataset.result;}
- guide().show();root.ItalianStudyPersistence?.captureAll();refreshStudy();},0);}refreshStudy();}
+ guide().show();root.ItalianStudyPersistence?.captureAll();refreshStudy();if(guide().getState().step==='practise'&&!guide().getState().finished&&scrollY<50)requestAnimationFrame(()=>guide().focusCurrent(24));},0);}refreshStudy();}
 root.addEventListener('italian-study-view-changed',mountStudy);
 root.addEventListener('italian-study-answer-checked',e=>{const q=e.detail.question;if(q?.dataset.result){q.dataset.flowChecked=value(q);root.ItalianStudyPersistence?.captureAll();checkpoint();startTimer(q);}refreshStudy();});
 root.addEventListener('italian-interface-language-changed',()=>{pause();refreshStudy();mountFlash();});
@@ -158,6 +158,7 @@ function mountFlash(){const a=flash(),s=a?.getState();if(!s)return;const on=s.pa
  label(actions.querySelector('[data-flow-focus]'),document.body.classList.contains('guided-focus-active')?'Exit focus':'Focus mode',document.body.classList.contains('guided-focus-active')?'Esci dalla concentrazione':'Modalità concentrazione');
  label(actions.querySelector('[data-flow-flash-quit]'),'Quit and save','Esci e salva');
  const status=$('.guided-confidence-summary');if(status){const c=get('italianCourseSessionProgressV2').flashcards?.confidence||{},cards=a.activeCardList(),count=x=>cards.filter(y=>c[y.key]===x).length;label(status,'Got it: '+count('known')+' · Again: '+count('again')+' · Not sure: '+count('unsure'),'Lo so: '+count('known')+' · Ancora: '+count('again')+' · Non sono sicuro: '+count('unsure'));}
+ label(actions.querySelector('[data-guide-prev]'),'Previous','Indietro');label(actions.querySelector('[data-guide-next]'),'Next','Avanti');
  const prev=actions.querySelector('[data-guide-prev]');if(prev&&repeatState?.history.length)prev.disabled=false;
  requestAnimationFrame(viewport);
 }

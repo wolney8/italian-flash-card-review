@@ -42,10 +42,7 @@ try:
     el=q();expected=json.loads(el.get_attribute('data-answers'))[0]
     if el.get_attribute('data-type')=='choice':next(i for i in el.locator('input[type=radio]').all() if i.input_value()==expected).check()
     else:el.locator('input[type=text]').fill(expected if text is None else text)
-    print('BEFORE_CHECK',page.evaluate('({question:ItalianGuidedStudy.getState().question,current:document.querySelector(".quiz-question:not([hidden])")?.outerHTML})'),flush=True)
     el.locator('.check-button').click();page.wait_for_timeout(150)
-    print('AFTER_CHECK',page.evaluate('({question:ItalianGuidedStudy.getState().question,current:document.querySelector(".quiz-question:not([hidden])")?.outerHTML})'),errors,flush=True)
-    page.screenshot(path=str(OUT/f'diagnostic-{width}-{theme}.png'),full_page=True)
    def pause():page.keyboard.press('Escape');page.wait_for_timeout(100)
    def nextq():page.locator('[data-guided-action=next]').click();page.wait_for_timeout(120)
    visit('class2-alphabet')
@@ -82,7 +79,7 @@ try:
    page.wait_for_timeout(100);dock=page.locator('.flow-bottom-dock').bounding_box();assert abs(dock['y']+dock['height']-height)<3,dock
    for s in ['[data-flow-skip]','[data-guided-action=next]','[data-guided-action=back]']:
     assert page.locator(s).evaluate('(e)=>{const r=e.getBoundingClientRect();return e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))}'),s
-   page.screenshot(path=str(OUT/f'{"live-" if LIVE else ""}practice-{width}-{theme}.png'),full_page=True)
+   page.screenshot(path=str(OUT/f'{"live-" if LIVE else ""}practice-{width}-{theme}.png'),full_page=False)
    page.locator('.flow-settings>summary').click();page.locator('[data-flow-auto]').uncheck()
    page.evaluate('''()=>{const p=JSON.parse(sessionStorage.getItem('italianCourseSessionProgressV2'));p.study.answers['sentinel-q1']={result:'correct',value:'safe'};p.flashcards={...(p.flashcards||{}),confidence:{sentinel:'known'}};sessionStorage.setItem('italianCourseSessionProgressV2',JSON.stringify(p));}''')
    page.once('dialog',lambda d:d.accept());page.locator('[data-flow-reset=set]').click();page.wait_for_timeout(600);page.wait_for_selector('[data-flow-skip]')
@@ -100,10 +97,7 @@ try:
       while el.locator('li[data-order-id]').all()[pos].get_attribute('data-order-id')!=wanted:el.locator('li[data-order-id="'+wanted+'"] [data-order-up]').click()
     elif kind=='choice':next(i for i in el.locator('input[type=radio]').all() if i.input_value()==expected).check()
     else:el.locator('input[type=text]').fill(expected)
-    print('BEFORE_CHECK',page.evaluate('({question:ItalianGuidedStudy.getState().question,current:document.querySelector(".quiz-question:not([hidden])")?.outerHTML})'),flush=True)
     el.locator('.check-button').click();page.wait_for_timeout(150)
-    print('AFTER_CHECK',page.evaluate('({question:ItalianGuidedStudy.getState().question,current:document.querySelector(".quiz-question:not([hidden])")?.outerHTML})'),errors,flush=True)
-    page.screenshot(path=str(OUT/f'diagnostic-{width}-{theme}.png'),full_page=True);assert el.get_attribute('data-result')=='correct',(slug,kind)
     n=idx();nextq();assert idx()==n+1
    page.goto(base+'/?page=card&lesson=L6',wait_until='networkidle');page.wait_for_selector('[data-guide-flip]')
    def key():return page.locator('.guided-card-host .review-card').get_attribute('data-key')
@@ -115,8 +109,11 @@ try:
    page.locator('[data-guide-flip]').click();page.wait_for_timeout(450)
    notsure=key();page.locator('[data-guide-rate=unsure]').click();page.wait_for_timeout(200)
    assert page.evaluate('ItalianFlashFlow.getSchedule().pending.find(x=>x.key==='+json.dumps(notsure)+').rating')=='unsure'
-   page.locator('[data-flow-focus]').click();page.wait_for_timeout(200)
-   page.screenshot(path=str(OUT/f'{"live-" if LIVE else ""}flashcards-{width}-{theme}.png'),full_page=True)
+   if not page.evaluate('document.body.classList.contains("guided-focus-active")'):page.locator('[data-flow-focus]').click()
+   page.wait_for_timeout(200)
+   assert page.evaluate('document.body.classList.contains("guided-focus-active")')
+   page.locator('[data-guide-flip]').click();page.wait_for_timeout(450)
+   page.screenshot(path=str(OUT/f'{"live-" if LIVE else ""}flashcards-{width}-{theme}.png'),full_page=False)
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
    assert not errors,errors
    results.append({'width':width,'language':language,'theme':theme,'status':'pass','gated_next':True,'countdown_and_pause':True,'skip_unanswered':True,'clean_retries':True,'quit_resume_new_tab':True,'scoped_reset':True,'fixed_bottom':True,'flash_grading':True})

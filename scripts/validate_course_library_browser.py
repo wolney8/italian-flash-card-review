@@ -36,6 +36,7 @@ try:
   if FOCUS in ['legacy','lesson6','numbers']:variants=variants[:2]
   for width,height,theme,lang in variants:
    ctx=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
+   ctx.add_init_script("try{localStorage.setItem('italianAutoAdvanceV2','off')}catch(_){}")
    ctx.route('**/*',lambda r:r.continue_() if r.request.url.startswith(base) else r.abort())
    ctx.add_init_script('if(window===top&&location.origin==='+json.dumps(base)+'){if(!sessionStorage.getItem("libraryTestInit")){localStorage.setItem("italianCourseThemeV1",'+json.dumps(theme)+');localStorage.setItem("italianCourseLanguageV1",'+json.dumps(lang)+');sessionStorage.setItem("libraryTestInit","yes");}window.__oldFrame=[];function watch(){for(const e of document.querySelectorAll(".study-course-shell,body:not(.guided-enabled)>.site-shell")){if(getComputedStyle(e).display!=="none"&&getComputedStyle(e).visibility==="visible"&&e.getBoundingClientRect().height>0)window.__oldFrame.push(e.className);}requestAnimationFrame(watch);}requestAnimationFrame(watch);}')
    page=ctx.new_page();page.set_default_timeout(20000);errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
@@ -115,7 +116,7 @@ try:
    # Partial draft and hint must survive a real navigation to flashcards and back.
    visit('/study/study-sheets.html?lesson=L3&topic=origins&sheet=class3-complete-replies&set=class3-complete-replies')
    new_round('full')
-   page.click('[data-guided-action=next]');q=page.locator('.quiz-question:not([hidden])');qid=q.get_attribute('data-progress-key')
+   page.click('[data-flow-skip]');page.click('[data-guided-action=next]');q=page.locator('.quiz-question:not([hidden])');qid=q.get_attribute('data-progress-key')
    q.locator('input').fill('Io sono di Na');q.locator('.hint-button').click();page.wait_for_timeout(80)
    old_button=page.locator('.course-site-language').bounding_box()
    language('en');language('it')
@@ -130,9 +131,7 @@ try:
    assert q.locator('.hint').is_visible()
    # Wrong answer, results, then retry without rewriting first-check history.
    q.locator('input').fill('wrong');q.locator('.check-button').click();page.wait_for_timeout(80)
-   for _ in range(12):
-    if page.locator('.guided-sheet-finish').is_visible():break
-    page.locator('[data-guided-action=next]').click()
+   page.locator('[data-flow-results]').click()
    assert page.locator('.guided-sheet-finish').is_visible()
    assert page.locator('[data-guided-review-incorrect]').is_visible()
    page.click('[data-guided-review-incorrect]');q=page.locator('.quiz-question:not([hidden])');assert q.get_attribute('data-progress-key')==qid
