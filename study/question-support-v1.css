@@ -9,9 +9,10 @@
 .question-answer-support .question-language-line+.question-language-line{padding-top:10px;margin-top:10px;border-top:1px solid var(--line)}
 .question-pron-note{display:block;margin-top:12px;font:400 12px/1.5 system-ui,sans-serif;color:var(--muted)}
 .quiz-question .hint{font-weight:400;line-height:1.6}
-/* A production-only floating hosting badge occupies the bottom-right corner.
-   Keep the existing navigation row outside that region. Do not hide the badge,
-   intercept clicks or change scoring to compensate for an obscured button. */
+/* Keep native focus/scroll operations clear of both our action row and the
+   production hosting badge. The question controls must not sit behind the row. */
+html:has(body.guided-study-pilot){scroll-padding-bottom:calc(210px + env(safe-area-inset-bottom,0px))}
+.guided-study-pilot .quiz-question :is(input,select,button,summary){scroll-margin-block:100px}
 .guided-study-pilot .guided-sheet-controls{
   position:sticky;
   bottom:calc(76px + env(safe-area-inset-bottom,0px));
