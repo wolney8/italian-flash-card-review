@@ -9,20 +9,39 @@ const editing=e=>e.target.closest?.('input,textarea,select,[contenteditable=true
 const shortcutsEnabled=()=>{try{return localStorage.getItem('italianLearningShortcutsV2')!=='off';}catch(_){return true;}};
 function shortcutOption(){const el=document.createElement('label');el.className='flow-shortcut-option';el.innerHTML='<input type="checkbox" data-flow-shortcuts><span></span>';el.querySelector('input').checked=shortcutsEnabled();label(el.querySelector('span'),'Keyboard shortcuts','Scorciatoie da tastiera');return el;}
 const modal=()=>!!$('dialog[open],.study-review-modal:not([hidden]),.editorial-comment-modal:not([hidden])');
-let dock=null,resizeObserver;
+let dock=null,resizeObserver,viewportFrame=0;
+const watchedFrames=new WeakSet();
+function setPixel(el,name,n){const value=Math.round(n*100)/100+'px';if(el.style.getPropertyValue(name)!==value)el.style.setProperty(name,value);}
+function requestViewport(){if(!viewportFrame)viewportFrame=requestAnimationFrame(()=>{viewportFrame=0;viewport();});}
+const hostingResize=new ResizeObserver(requestViewport);
+const hostingAttributes=new MutationObserver(requestViewport);
+function watchHostingFrames(){
+ for(const el of document.querySelectorAll('iframe,#test-hosting-badge'))if(!watchedFrames.has(el)){
+  watchedFrames.add(el);hostingResize.observe(el);
+  hostingAttributes.observe(el,{attributes:true,attributeFilter:['style','class','width','height','hidden']});
+  el.addEventListener('load',requestViewport);
+ }
+}
 function viewport(){
- const v=root.visualViewport,offset=v?Math.max(0,innerHeight-v.height-v.offsetTop):0;
- document.documentElement.style.setProperty('--flow-keyboard',offset+'px');
+ const v=root.visualViewport,visibleBottom=v?v.height+v.offsetTop:innerHeight;
+ const offset=Math.max(0,innerHeight-visibleBottom);
+ setPixel(document.documentElement,'--flow-keyboard',offset);
  if(!dock)return;
+ watchHostingFrames();
  let reserve=0;
  for(const el of document.querySelectorAll('iframe,#test-hosting-badge')){
-  const r=el.getBoundingClientRect();if(r.width>40&&r.width<320&&r.height>15&&r.height<110&&r.bottom>innerHeight-90&&r.left>innerWidth/2)reserve=Math.max(reserve,innerHeight-r.top+8);
+  const r=el.getBoundingClientRect(),style=getComputedStyle(el);
+  const fixed=style.position==='fixed'||el.id==='nl-badge-frame'||el.id==='test-hosting-badge';
+  // A right-aligned badge can cross the midpoint of a narrow viewport.
+  // Measure its intersection with the visible bottom edge, not its left position.
+  if(fixed&&style.visibility!=='hidden'&&style.display!=='none'&&r.width>40&&r.width<=Math.min(600,innerWidth+1)&&r.height>15&&r.height<180&&r.right>0&&r.left<innerWidth&&r.top<visibleBottom&&r.bottom>visibleBottom-100)
+   reserve=Math.max(reserve,visibleBottom-r.top+8);
  }
- dock.style.setProperty('--flow-hosting',offset>0?'0px':reserve+'px');
- document.documentElement.style.setProperty('--flow-dock-height',dock.getBoundingClientRect().height+'px');
+ setPixel(dock,'--flow-hosting',reserve);
+ setPixel(document.documentElement,'--flow-dock-height',dock.getBoundingClientRect().height);
 }
-function setDock(el){if(dock===el){viewport();return;}resizeObserver?.disconnect();dock=el;if(el){resizeObserver=new ResizeObserver(viewport);resizeObserver.observe(el);}viewport();}
-root.addEventListener('resize',viewport);root.visualViewport?.addEventListener('resize',viewport);root.visualViewport?.addEventListener('scroll',viewport);
+function setDock(el){if(dock===el){viewport();return;}resizeObserver?.disconnect();dock=el;if(el){resizeObserver=new ResizeObserver(requestViewport);resizeObserver.observe(el);}viewport();}
+root.addEventListener('resize',requestViewport);root.visualViewport?.addEventListener('resize',requestViewport);root.visualViewport?.addEventListener('scroll',requestViewport);
 let timer=null,timerKey=null,remaining=0,pausedClick=false,studyArticle=null,activeKey=null;
 const guide=()=>root.ItalianGuidedStudy;
 const question=()=>{const a=guide(),s=a?.getState();return s?.step==='practise'&&!s.finished?a.questions()[s.question]:null;};
@@ -198,6 +217,6 @@ document.addEventListener('keydown',e=>{
  if(e.key==='Escape'&&document.body.classList.contains('guided-focus-active')){e.preventDefault();a.toggleFocus();}
 },true);
 root.addEventListener('resize',mountFlash);
-new MutationObserver(ms=>{if(dock&&ms.some(m=>[...m.addedNodes].some(n=>n.nodeType===1&&(n.matches?.('iframe')||n.querySelector?.('iframe')))))requestAnimationFrame(viewport);}).observe(document.documentElement,{childList:true,subtree:true});
+new MutationObserver(ms=>{if(dock&&ms.some(m=>[...m.addedNodes,...m.removedNodes].some(n=>n.nodeType===1&&(n.matches?.('iframe,#test-hosting-badge')||n.querySelector?.('iframe,#test-hosting-badge')))))requestViewport();}).observe(document.documentElement,{childList:true,subtree:true});
 const start=()=>{mountStudy();mountFlash();};if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })(window);
