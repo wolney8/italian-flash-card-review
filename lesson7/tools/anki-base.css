@@ -1,0 +1,40 @@
+
+.card { --bg:#f8f3eb;--paper:#fffcf7;--paper2:#f3e8db;--ink:#332d28;--muted:#675b52;--line:#dacabe;--green:#285d47;--accent:#8c4938;--pink:#8c4938;background:var(--bg);color:var(--ink);font:18px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-align:left;margin:0;padding:22px 16px; }
+.card.nightMode,.card.night_mode {--bg:#1d1c1a;--paper:#292622;--paper2:#37302b;--ink:#f6e8dc;--muted:#d5c2b4;--line:#65574c;--green:#bcd4bd;--accent:#f0b39a;--pink:#f0b39a}
+.l6-card{max-width:760px;margin:auto;border:1px solid var(--line);border-radius:17px;background:var(--paper);padding:25px}
+.l6-kicker{color:var(--muted);font-size:12px;letter-spacing:.06em;margin-bottom:12px}
+.panel-head{display:flex;align-items:center;gap:12px;margin-bottom:24px}.panel-badge{display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;font-size:13px;width:38px;height:38px;flex:none}.panel-title{font:500 25px/1.25 Georgia,serif}
+.instruction{font-size:16px;color:var(--muted);margin:0 0 10px}.focus{font-size:29px;line-height:1.4;font-weight:500;margin:6px 0 18px}.clue{font-size:15px;color:var(--muted)}
+.italian{font-size:30px;font-weight:500;line-height:1.35;margin:0 0 8px}.pron-guide-line{font-size:21px;line-height:1.5;color:var(--green)}.pron-ipa-line{font-size:17px;color:var(--muted);line-height:1.5;margin:3px 0 20px}.pron-guide-line strong{font-weight:600}
+.section{border-top:1px solid var(--line);margin-top:20px;padding-top:15px}.label{font-size:12px;color:var(--muted);letter-spacing:.03em;margin-bottom:8px}.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;align-items:stretch}.word-tile{display:flex;flex-direction:column;justify-content:space-between;gap:10px;padding:12px;background:var(--paper2);border-radius:9px}.word-tile small{font-size:13px;color:var(--muted)}
+.extra{margin-top:20px;font-size:14px;color:var(--muted)}.extra summary{padding:8px 0;cursor:pointer}.extra .inside{padding:8px 0}b,strong{font-weight:600}.gram{border-bottom:2px solid currentColor;font-weight:500}.gram.formal{color:#6741a3}.gram.informal{color:#8a4b00}.gram.masc{color:#165da6}.gram.fem{color:#9d2e62}.gram.sing{color:#775500}.gram.plur{color:#146a56}.nightMode .gram.formal{color:#d2b5ff}.nightMode .gram.informal{color:#ffbf69}.nightMode .gram.masc{color:#9ac8ff}.nightMode .gram.fem{color:#ffb3d1}.nightMode .gram.sing{color:#ffd166}.nightMode .gram.plur{color:#9ee3cf}
+@media(max-width:500px){.card{padding:12px 8px}.l6-card{padding:19px 16px}.focus{font-size:25px}.italian{font-size:27px}.panel-title{font-size:22px}}
+/* Lesson 6 source visuals. Scoped additions: no global theme or navigation changes. */
+/* Older review-card variables must not replace the selected page palette. */
+.guided-card-host .review-card[data-lesson="L6"]{--paper:inherit;--paper2:inherit;--line:inherit;--muted:inherit;--green:inherit;--recall:inherit;--answer:inherit;color:var(--ink)}
+.l6-build{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:12px 0;font-size:clamp(20px,3vw,27px);line-height:1.45;font-weight:500}
+.l6-build>span{padding:4px 7px;border-radius:8px;background:var(--paper,#fffcf7)}
+.l6-build del{text-decoration-thickness:2px;text-decoration-color:var(--wrong,#a43b31);opacity:.7}
+.l6-n-hundred{color:#a43b31;border-bottom:2px solid currentColor;font-weight:500}
+.l6-n-thousand{color:#875217;border-bottom:2px solid currentColor;font-weight:500}
+.l6-n-join{color:#216349;border-bottom:2px solid currentColor;font-weight:500}
+.l6-n-accent{color:#205ea2;border-bottom:2px solid currentColor;font-weight:500}
+.nightMode .l6-n-hundred,.night_mode .l6-n-hundred,html[data-italian-theme="dark"] .l6-n-hundred{color:#f4a69a}
+.nightMode .l6-n-thousand,.night_mode .l6-n-thousand,html[data-italian-theme="dark"] .l6-n-thousand{color:#f0c58b}
+.nightMode .l6-n-join,.night_mode .l6-n-join,html[data-italian-theme="dark"] .l6-n-join{color:#a6e6c0}
+.nightMode .l6-n-accent,.night_mode .l6-n-accent,html[data-italian-theme="dark"] .l6-n-accent{color:#9ac8ff}
+.l6-int-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0}
+.l6-intonation{margin:0;min-width:0;padding:12px;background:var(--paper2,#f3e8db);border:1px solid var(--line,#dacabe);border-radius:12px}
+.l6-intonation img{display:block;width:100%;height:auto;margin:8px 0 0;background:white;border-radius:7px}
+.l6-int-label{font:500 14px/1.4 system-ui,sans-serif;color:var(--ink,#332d28)}
+.l6-pitch{display:block;width:min(100%,300px);height:auto;max-height:76px;margin:0 auto 8px;color:var(--pink,var(--accent,#8c4938))}
+.l6-gloss{display:block;font-size:15px;line-height:1.5;font-weight:400;color:var(--muted,#675b52);margin:8px 0}
+.l6-number-value{display:block;color:var(--muted,#675b52);font-size:13px;font-variant-numeric:tabular-nums;line-height:1.5}
+.l6-feedback-explanation{display:block;border-top:1px solid var(--line,#dacabe);margin-top:12px;padding-top:12px;font-size:16px;line-height:1.5}
+.l6-feedback-explanation strong,.l6-feedback-explanation b{font-weight:500}
+.l6-source-detail{font-size:12px;line-height:1.5;color:var(--muted,#675b52)}
+@media(max-width:640px){.l6-int-pair{grid-template-columns:1fr}.l6-build{font-size:21px;gap:5px}.l6-intonation{padding:10px}}
+@media print{.l6-intonation{break-inside:avoid;background:white}.l6-int-pair{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Final release readability and source references. */
+.l6-card{box-sizing:border-box;overflow-wrap:anywhere}.l6-card p{margin:8px 0}.l6-card summary{min-height:36px;cursor:pointer;font-weight:500}.l6-card .inside{line-height:1.55}.l6-kicker{font-weight:400}.panel-title{font-weight:500}.italian{font-weight:500}.l6-table-scroll{max-width:100%;overflow:auto}.l6-table-scroll table{width:100%;min-width:510px;border-collapse:collapse;font:14px/1.5 system-ui,sans-serif}.l6-table-scroll td,.l6-table-scroll th{border:1px solid var(--line);padding:9px;vertical-align:top;font-weight:400}.l6-table-scroll th{background:var(--paper2);font-weight:500}.l6-number-reference{margin-top:12px}.pron-ipa-line{font-family:Arial,Helvetica,sans-serif}.pron-guide-line{overflow-wrap:anywhere}.l6-intonation img{max-width:100%;height:auto}.night_mode .gram.formal{color:#d2b5ff}.night_mode .gram.informal{color:#ffbf69}.night_mode .gram.masc{color:#9ac8ff}.night_mode .gram.fem{color:#ffb3d1}.night_mode .gram.sing{color:#ffd166}.night_mode .gram.plur{color:#9ee3cf}

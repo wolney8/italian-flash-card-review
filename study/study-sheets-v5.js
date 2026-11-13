@@ -16,6 +16,7 @@
     // Canonical card paths are relative to the site root; study pages are one level down.
     data=data.map(s=>s.lesson==='L6'?JSON.parse(JSON.stringify(s),(_,v)=>typeof v==='string'?v.replaceAll('src="lesson6/media/','src="../lesson6/media/'):v):s);
   }
+  if(window.ItalianLesson7Integration)data=data.concat(window.ItalianLesson7Integration.sheets());
   if(window.ItalianPracticeBank)data=window.ItalianPracticeBank.enhance(data,categories,window.ItalianPracticeOptions,window.ItalianVerbReference?.verbs);
   if(window.ItalianStudyLibrary)data=window.ItalianStudyLibrary.enhance(data);
   const params=new URLSearchParams(location.search);
@@ -33,7 +34,7 @@
   const studyUrl=()=>context.library;
   document.title=window.ItalianStudyLibrary.clean(active.title)+" · Italian study sheets";
   root.innerHTML=[active].map(s=>`<article id="${s.slug}" class="study-pack-sheet"><header class="hero"><h1>${esc(s.title)}</h1><p class="lead">${esc(s.subtitle)}</p><p>${s.intro}</p><div class="actions"><a class="button" href="${studyUrl()}">All study sheets</a><button class="button secondary" type="button" onclick="window.print()">Print / save as PDF</button></div></header>${s.study_sections.map(section).join("")}<section class="panel" data-study-quiz><p class="eyebrow">Practice</p><h2>Answer, use a hint if needed, then check</h2><div class="quiz-intro">Typed answers accept punctuation and accent differences. Where the subject pronoun is optional, both <strong>Ho fame</strong> and <strong>Io ho fame</strong> are accepted. Answers stay hidden until an attempt.</div><div class="quiz-list">${s.questions.map((q,i)=>question(s.slug,q,i+1)).join("")}</div><div class="quiz-summary"></div></section></article>`).join("");
-  if(active.lesson==='L6'){
+  if(active.lesson==='L6'||active.lesson==='L7'){
     const tips=root.querySelector('.quiz-intro');
     if(tips)tips.textContent='Enter only the requested answer. Accents matter here: è and e are different. When a task asks you to turn a statement into a question, include the question mark. Answers and explanations stay hidden until an attempt.';
   }
