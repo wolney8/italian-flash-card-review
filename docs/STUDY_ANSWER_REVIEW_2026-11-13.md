@@ -20,4 +20,6 @@ The update changes study controls and presentation. It retains canonical lesson 
 
 `scripts/validate_answer_review.py` exercises the actual browser UI at narrow phone and desktop widths, in English/light and Italian/dark, plus reduced motion. It checks explicit native Pause, keyboard Resume, retained comparison content, remaining time, automatic and manual navigation, auto-off persistence, final-question completion and long matching answers.
 
-The `--live` mode first compares the deployed JavaScript, stylesheet, guided-sheet script and study-page HTML with the checkout. Existing learning-controls, Lesson 7, pointer, dock, language and content-preservation gates continue to cover the surrounding application.
+The `--live` mode first compares the deployed JavaScript, stylesheet, guided-sheet script and study-page HTML with the checkout. Netlify can add a hosting promotion comment and its public HUD script to HTML responses. The verifier recognises only those two exact observed additions for this site, records the raw response and authored HTML hashes, and still requires byte-for-byte agreement for all authored content. Unknown additions and application changes fail verification.
+
+Pull requests run all seven browser cases against the checkout. Main runs the same full suite against production after the asset check, avoiding a duplicate local run. Existing learning-controls, Lesson 7, pointer, dock, language and content-preservation gates continue to cover the surrounding application.
