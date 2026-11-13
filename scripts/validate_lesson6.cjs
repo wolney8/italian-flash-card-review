@@ -30,7 +30,7 @@ assert.ok(!intonation.questions.some(q=>q.answers.includes('Sono italiani?')),'A
 const sourceText=read('study/study-sheets-v5.js');const match=sourceText.match(/const B="([^"]+)"/);assert.ok(match);
 const old=JSON.parse(zlib.gunzipSync(Buffer.from(match[1],'base64')).toString());assert.equal(old.length,9,'Original embedded study set altered');
 assert.match(sourceText,/data=data.concat\(window.ITALIAN_L6.sheets\)/);assert.match(sourceText,/answerMode!=='legacy'/);
-assert.match(read('course-data-loader-v1.js'),/finalCards.concat\(lesson6Cards\)/);
+assert.match(read('course-data-loader-v1.js'),/finalCards\.concat\(lesson6Cards,\s*lesson7Cards,\s*lesson6Supplements\)/,'Append Lesson 7 after the unchanged Lesson 6 cards');
 assert.match(read('guided-course-v2.js'),/\['L6', 'Numbers, Essere and Questions'/);
 assert.ok(read('index.html').indexOf('lesson6/content.js')<read('index.html').indexOf('course-data-loader-v1.js'));
 assert.ok(read('study/study-sheets.html').indexOf('../lesson6/content.js')<read('study/study-sheets.html').indexOf('study-sheets-v5.js'));

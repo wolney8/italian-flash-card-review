@@ -1,0 +1,53 @@
+name: Lesson 7 release validation
+on:
+  push:
+    branches: [main]
+    paths: ['lesson7/**', 'lesson6/**', 'study/**', 'course-data-loader-v1.js', 'guided-course-v2.js', 'index.html', 'learning-*.js', 'learning-*.css', 'scripts/*lesson7*', 'scripts/fixtures/lesson7-identities.json', 'docs/library-source-preservation.json', '.github/workflows/lesson7-validation.yml']
+  pull_request:
+    paths: ['lesson7/**', 'lesson6/**', 'study/**', 'course-data-loader-v1.js', 'guided-course-v2.js', 'index.html', 'learning-*.js', 'learning-*.css', 'scripts/*lesson7*', 'scripts/fixtures/lesson7-identities.json', 'docs/library-source-preservation.json', '.github/workflows/lesson7-validation.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lesson7-release-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  lesson7:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Lesson 7 and retained course models
+        run: |
+          node --check lesson7/content.js
+          node --check lesson7/integration.js
+          node --check course-data-loader-v1.js
+          node scripts/validate_lesson7.cjs
+          python lesson6/install.py
+          node scripts/validate_lesson6.cjs
+          node scripts/validate_course_library.cjs
+          node scripts/validate_study_support.cjs
+          node scripts/validate_learning_session.cjs
+      - name: Install pinned Playwright and official Chromium dependencies
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Test integrated Lesson 7 at phone and desktop widths
+        run: python scripts/validate_lesson7_browser.py
+      - name: Verify the exact deployed Lesson 7 release
+        if: github.ref_name == 'main'
+        run: python scripts/validate_lesson7_browser.py --live
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lesson7-release-validation
+          path: |
+            artifacts/lesson7
+            artifacts/lesson7-browser
+          retention-days: 14

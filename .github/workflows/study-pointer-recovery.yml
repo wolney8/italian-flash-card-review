@@ -2,9 +2,9 @@ name: Study pointer recovery
 on:
   push:
     branches: [main, fix/study-click-recovery-20261112]
-    paths: ['study/**', 'scripts/*study_pointer*', '.github/workflows/study-pointer-recovery.yml']
+    paths: ['lesson7/**', 'study/**', 'scripts/*study_pointer*', '.github/workflows/study-pointer-recovery.yml']
   pull_request:
-    paths: ['study/**', 'scripts/*study_pointer*', '.github/workflows/study-pointer-recovery.yml']
+    paths: ['lesson7/**', 'study/**', 'scripts/*study_pointer*', '.github/workflows/study-pointer-recovery.yml']
 permissions:
   contents: read
 concurrency:

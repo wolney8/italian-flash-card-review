@@ -1,0 +1,882 @@
+{
+  "version": "2026-11-13-lesson6-recap-review-1",
+  "cards": [],
+  "sheets": [
+    {
+      "slug": "l6-recap-useful-requests",
+      "title": "Useful expressions and reminders: complete recap",
+      "titleIt": "Espressioni utili e promemoria: ripasso completo",
+      "subtitle": "Adapted practice · 12 questions",
+      "subtitleIt": "Pratica adattata · 12 domande",
+      "intro": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">Recall all six useful expressions, give the three supplied replies, then check context and register.</span><span class=\"editorial-label-sub\" lang=\"it\">Ripassa le sei espressioni utili, formula le tre risposte della dispensa e controlla contesto e registro.</span></span>",
+      "lesson": "L6",
+      "courseLesson": "L6",
+      "scope": "Lesson 6 revision",
+      "kind": "adapted",
+      "sourceKind": "Adapted practice",
+      "source_class": "ADAPTED PRACTICE",
+      "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 1–5",
+      "source_id": "l6-minutes",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "libraryAdded": true,
+      "study_sections": [
+        {
+          "type": "bullets",
+          "title": "Remember: essere has its own forms",
+          "titleIt": "Ricorda: le forme di essere",
+          "stage": "learn",
+          "items": [
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Essere is irregular.</b> Learn its forms individually. The regular -ARE ending pattern does not apply.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Essere è irregolare.</b> Impara le sue forme. Non segue le desinenze regolari in -ARE.</span></span>",
+            "<div data-ui-no-translate><b lang=\"it\">io sono · tu sei · lui / lei / Lei è</b><br><span lang=\"en\">I am · you are · he / she is / formal you are</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">noi siamo · voi siete · loro sono</b><br><span lang=\"en\">we are · you all are · they are</span></div>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Sono has two jobs:</b> io sono and loro sono. Use the rest of the sentence to identify who is meant.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Sono ha due usi:</b> io sono e loro sono. Il resto della frase aiuta a capire il soggetto.</span></span>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 2",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Remember: the subject can be left out",
+          "titleIt": "Ricorda: il soggetto può essere sottinteso",
+          "stage": "learn",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">Sono inglese. / Sono inglesi.</b><br><span lang=\"en\">I am English. / They are English.</span></div>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>The adjective ending is the clue:</b> inglese is singular; inglesi is plural. Italian often leaves out io, tu, noi and other subject pronouns.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>La desinenza dell’aggettivo è l’indizio:</b> inglese è singolare; inglesi è plurale. In italiano il pronome soggetto è spesso sottinteso.</span></span>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Sono a casa.</b> This can mean “I am at home” or “They are at home”. Here the context must identify the subject.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Sono a casa.</b> Può significare “Io sono a casa” oppure “Loro sono a casa”. Qui il contesto deve chiarire il soggetto.</span></span>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 2,3",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Remember: è and e do different jobs",
+          "titleIt": "Ricorda: è ed e hanno funzioni diverse",
+          "stage": "learn",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">è = is / formal you are; e = and</b><br><span lang=\"en\">Keep the written accent when you need the verb.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Lei è italiana.</b><br><span lang=\"en\">You are Italian. Speaking politely to one woman.</span></div>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Formal Lei uses the same verb form as lui / lei.</b> The polite meaning comes from the conversation context.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Il Lei formale usa la stessa forma verbale di lui / lei.</b> Il contesto chiarisce il significato formale.</span></span>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 3",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Remember: adjectives agree",
+          "titleIt": "Ricorda: gli aggettivi concordano",
+          "stage": "learn",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">Sono italiano. / Sono italiana.</b><br><span lang=\"en\">I am Italian. Male speaker / female speaker.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Siamo italiani. / Siamo italiane.</b><br><span lang=\"en\">We are Italian. Male or mixed group / all-female group.</span></div>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Match gender and number.</b> The second example extends the source’s singular contrast to a useful plural comparison.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Concorda genere e numero.</b> Il secondo esempio estende al plurale il confronto singolare della dispensa.</span></span>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 3",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Question words in useful sentences",
+          "titleIt": "Parole interrogative in frasi utili",
+          "stage": "examples",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">Chi? → Chi sei?</b><br><span lang=\"en\">Who? → Who are you?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Come? → Come stai?</b><br><span lang=\"en\">How? → How are you?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Dove? → Dove sei?</b><br><span lang=\"en\">Where? → Where are you?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Di dove? → Di dove sei?</b><br><span lang=\"en\">Where from? → Where are you from?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Che cosa? / Cosa? → Che cosa è? / Cos’è?</b><br><span lang=\"en\">What? → What is it?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Quando? → Quando vieni?</b><br><span lang=\"en\">When? → When are you coming?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Perché? → Perché vieni?</b><br><span lang=\"en\">Why? → Why are you coming?</span></div>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 4",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Meaning, spelling or translation?",
+          "titleIt": "Significato, spelling o traduzione?",
+          "stage": "examples",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">Che cosa significa “letto”?</b><br><span lang=\"en\">keh KOH-zah see-NYEE-fee-kah LET-toh</span><br><span lang=\"en\">What does “letto” mean?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">“Letto” significa “bed”.</b><br><span lang=\"en\">LET-toh see-NYEE-fee-kah bed</span><br><span lang=\"en\">“Letto” means “bed”.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Come si scrive “letto” in italiano?</b><br><span lang=\"en\">KOH-meh see SKREE-veh LET-toh een ee-tah-LYAH-noh</span><br><span lang=\"en\">How is “letto” spelt in Italian?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Si scrive ELLE · E · TI · TI · O.</b><br><span lang=\"en\">see SKREE-veh EL-leh eh tee tee oh</span><br><span lang=\"en\">It is spelt L · E · T · T · O. Use the Italian letter names.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Come si dice “bed” in italiano?</b><br><span lang=\"en\">KOH-meh see DEE-cheh bed een ee-tah-LYAH-noh</span><br><span lang=\"en\">How do you say “bed” in Italian?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Si dice “letto”.</b><br><span lang=\"en\">see DEE-cheh LET-toh</span><br><span lang=\"en\">You say “letto”.</span></div>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 4",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Keep the register consistent",
+          "titleIt": "Mantieni lo stesso registro",
+          "stage": "examples",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">Non ho capito!</b><br><span lang=\"en\">non oh kah-PEE-toh</span><br><span lang=\"en\">I did not understand!</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Come, scusa? Puoi ripetere, per favore?</b><br><span lang=\"en\">KOH-meh SKOO-zah pwoy ree-PEH-teh-reh per fah-VOH-reh</span><br><span lang=\"en\">Sorry, what did you say? Can you repeat, please? Informal.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Come, scusi? Può ripetere, per favore?</b><br><span lang=\"en\">KOH-meh SKOO-zee pwoh ree-PEH-teh-reh per fah-VOH-reh</span><br><span lang=\"en\">Sorry, what did you say? Can you repeat, please? Formal.</span></div>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Informal pair:</b> scusa + puoi. <b>Formal pair:</b> scusi + può. Learn the pairs as complete requests.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Coppia informale:</b> scusa + puoi. <b>Coppia formale:</b> scusi + può. Impara le richieste complete.</span></span>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">When you are still speaking formally, <b>Posso darle del tu?</b> asks permission to switch to tu. The source also lists <b>Posso darti del tu?</b>, which already uses the informal form.</span><span class=\"editorial-label-sub\" lang=\"it\">Se stai parlando formalmente, <b>Posso darle del tu?</b> chiede il permesso di passare al tu. La dispensa riporta anche <b>Posso darti del tu?</b>, che usa già la forma informale.</span></span>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 2,5",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Age, greetings and small replies",
+          "titleIt": "Età, saluti e risposte brevi",
+          "stage": "examples",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">Quanti anni hai? / Quanti anni ha?</b><br><span lang=\"en\">How old are you? Informal / formal. Literally: how many years do you have?</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Io ho venticinque anni.</b><br><span lang=\"en\">I am twenty-five. Literally: I have twenty-five years.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Come va? / Come stai? / Come sta?</b><br><span lang=\"en\">How is it going? / How are you? Informal / formal.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Benissimo. / Bene. / Non c’è male. / Sto proprio male.</b><br><span lang=\"en\">Very well. / Well. / Not bad. / I feel really bad.</span></div>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 1,2",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Names and origins: formal and informal",
+          "titleIt": "Nomi e origini: formale e informale",
+          "stage": "examples",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">Come si chiama? / Come ti chiami?</b><br><span lang=\"en\">What is your name? Formal / informal.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Di dove è? / Di dove sei?</b><br><span lang=\"en\">Where are you from? Formal / informal.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Da dove viene? / Da dove vieni?</b><br><span lang=\"en\">Where do you come from? Formal / informal.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Mi chiamo Marco. Sono di Napoli. / Vengo da Napoli.</b><br><span lang=\"en\">My name is Marco. I am from Naples. / I come from Naples.</span></div>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Question and reply use different persons.</b> The person answering talks about themselves, even when the question is formal.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Domanda e risposta usano persone diverse.</b> Chi risponde parla di sé, anche quando la domanda è formale.</span></span>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 2",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Negatives and questions",
+          "titleIt": "Frasi negative e domande",
+          "stage": "examples",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">Sono italiano. → Non sono italiano.</b><br><span lang=\"en\">I am Italian. → I am not Italian.</span></div>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Put non before the verb.</b> The same position works with regular -ARE verbs: Non parlo italiano.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Metti non prima del verbo.</b> La stessa posizione funziona con i verbi regolari in -ARE: Non parlo italiano.</span></span>",
+            "<div data-ui-no-translate><b lang=\"it\">Sei inglese. / Sei inglese?</b><br><span lang=\"en\">You are English. / Are you English? The words can stay in the same order.</span></div>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Listen to the intonation.</b> The source illustrates a statement and a question with different pitch endings. That picture is a guide to these examples, not a rule that every Italian question must rise.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Ascolta l’intonazione.</b> La dispensa confronta un’affermazione e una domanda. Il disegno guida questi esempi; non significa che ogni domanda italiana debba avere un’intonazione ascendente.</span></span>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">A subject can also come last for emphasis: <b>Sei italiano tu?</b> means “Are <b>you</b> Italian?” This added example illustrates the word-order aside in the minutes.</span><span class=\"editorial-label-sub\" lang=\"it\">Il soggetto può anche andare alla fine per dare enfasi: <b>Sei italiano tu?</b> Questo esempio aggiunto illustra la nota sull’ordine delle parole nei verbali.</span></span>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 3,4",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Useful connections with essere",
+          "titleIt": "Collegamenti utili con essere",
+          "stage": "examples",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">Sono Laura. / Sei italiana. / È un’insegnante.</b><br><span lang=\"en\">I am Laura. / You are Italian. / She is a teacher.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Siamo felici. / Siete alti.</b><br><span lang=\"en\">We are happy. / You all are tall.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Ci sono dei libri.</b><br><span lang=\"en\">There are some books. The word dei connects to partitive “some”.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">Sono le tre.</b><br><span lang=\"en\">It is three o’clock. Keep this useful expression together.</span></div>",
+            "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Another use, for later:</b> Io sono andato means “I went / I have gone”, for a male speaker. Here essere helps form a past tense. This set practises present forms; you can recognise the connection without learning a new tense now.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Un altro uso, per più avanti:</b> Io sono andato, detto da un uomo, significa “I went / I have gone”. Qui essere aiuta a formare un tempo passato. In questo esercizio pratichiamo le forme del presente.</span></span>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 3",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        },
+        {
+          "type": "bullets",
+          "title": "Number patterns worth keeping",
+          "titleIt": "Schemi dei numeri da ricordare",
+          "stage": "examples",
+          "items": [
+            "<div data-ui-no-translate><b lang=\"it\">venti + uno → ventuno; venti + otto → ventotto</b><br><span lang=\"en\">The final i of venti disappears before uno and otto.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">ventitré</b><br><span lang=\"en\">The final syllable has the stress and a written accent. Tre on its own has no written accent.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">duecento / trecento; mille / duemila / tremila</b><br><span lang=\"en\">Cento repeats in the hundreds. Mille becomes mila in two thousand, three thousand and so on.</span></div>",
+            "<div data-ui-no-translate><b lang=\"it\">un milione / due milioni; un miliardo / due miliardi</b><br><span lang=\"en\">One million / two million; one billion / two billion.</span></div>"
+          ],
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 1",
+          "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+        }
+      ],
+      "questions": [
+        {
+          "id": "l6-recap-meaning",
+          "type": "text",
+          "kind": "sentence",
+          "prompt": "Ask what the Italian word <b>letto</b> means. Use the <i>significare</i> pattern.",
+          "prompt_it": "Chiedi il significato della parola italiana <b>letto</b>. Usa il modello con <i>significare</i>.",
+          "model": "Che cosa significa letto?",
+          "answers": [
+            "Che cosa significa letto?",
+            "Cosa significa letto?",
+            "Che significa letto?"
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">You want the meaning, not the spelling. Put the question word before the verb and the unknown word.</span><span class=\"editorial-label-sub\" lang=\"it\">Vuoi il significato, non lo spelling. Metti la parola interrogativa prima del verbo e della parola sconosciuta.</span></span>",
+          "explanation": "<b>Significa</b> asks about meaning. <b>Si scrive</b> asks about spelling.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 4",
+          "source_id": "l6-minutes",
+          "source_page": 4,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-significa-letto"
+          ],
+          "support": {
+            "hint": {
+              "en": "You want the meaning, not the spelling. Put the question word before the verb and the unknown word.",
+              "it": "Vuoi il significato, non lo spelling. Metti la parola interrogativa prima del verbo e della parola sconosciuta.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "",
+              "en": "What does “letto” mean?",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Che cosa significa letto?",
+                "en": "What does “letto” mean?",
+                "pron": "keh KOH-zah see-NYEE-fee-kah LET-toh"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-spelling",
+          "type": "text",
+          "kind": "sentence",
+          "prompt": "Ask how <b>letto</b> is spelt in Italian. Use the <i>scrivere</i> pattern.",
+          "prompt_it": "Chiedi come si scrive <b>letto</b> in italiano. Usa il modello con <i>scrivere</i>.",
+          "model": "Come si scrive letto in italiano?",
+          "answers": [
+            "Come si scrive letto in italiano?",
+            "Come si scrive in italiano letto?"
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">This is about the letters of a word. Use the impersonal si construction and keep “in Italian” at the end.</span><span class=\"editorial-label-sub\" lang=\"it\">La domanda riguarda le lettere della parola. Usa la costruzione impersonale con si e termina con “in italiano”.</span></span>",
+          "explanation": "<b>Come si scrive…?</b> asks for a written form or spelling.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 4",
+          "source_id": "l6-minutes",
+          "source_page": 4,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-scrive-letto"
+          ],
+          "support": {
+            "hint": {
+              "en": "This is about the letters of a word. Use the impersonal si construction and keep “in Italian” at the end.",
+              "it": "La domanda riguarda le lettere della parola. Usa la costruzione impersonale con si e termina con “in italiano”.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "",
+              "en": "How is “letto” spelt in Italian?",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Come si scrive letto in italiano?",
+                "en": "How is “letto” spelt in Italian?",
+                "pron": "KOH-meh see SKREE-veh LET-toh een ee-tah-LYAH-noh"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-say",
+          "type": "text",
+          "kind": "sentence",
+          "prompt": "Ask how to say the English word <b>bed</b> in Italian. Use the <i>dire</i> pattern.",
+          "prompt_it": "Chiedi come si dice la parola inglese <b>bed</b> in italiano. Usa il modello con <i>dire</i>.",
+          "model": "Come si dice bed in italiano?",
+          "answers": [
+            "Come si dice bed in italiano?",
+            "Come si dice in italiano bed?"
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">You know the English word and need its Italian equivalent. Use the impersonal si construction for saying.</span><span class=\"editorial-label-sub\" lang=\"it\">Conosci la parola inglese e cerchi l’equivalente italiano. Usa la costruzione impersonale con si per dire.</span></span>",
+          "explanation": "<b>Come si dice…?</b> asks how to express a word or idea.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 4",
+          "source_id": "l6-minutes",
+          "source_page": 4,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-dice-bed"
+          ],
+          "support": {
+            "hint": {
+              "en": "You know the English word and need its Italian equivalent. Use the impersonal si construction for saying.",
+              "it": "Conosci la parola inglese e cerchi l’equivalente italiano. Usa la costruzione impersonale con si per dire.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "",
+              "en": "How do you say “bed” in Italian?",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Come si dice bed in italiano?",
+                "en": "How do you say “bed” in Italian?",
+                "pron": "KOH-meh see DEE-cheh bed een ee-tah-LYAH-noh"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-understand",
+          "type": "text",
+          "kind": "sentence",
+          "prompt": "Recall the complete classroom expression for not understanding.",
+          "prompt_it": "Ricorda l’espressione completa usata quando non hai capito.",
+          "model": "Non ho capito!",
+          "answers": [
+            "Non ho capito!",
+            "Io non ho capito!"
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">This fixed expression starts with the negative word. Keep the two-word verb phrase together; you do not need to conjugate a new tense.</span><span class=\"editorial-label-sub\" lang=\"it\">Questa espressione inizia con la negazione. Mantieni insieme le due parole verbali; non devi studiare un nuovo tempo.</span></span>",
+          "explanation": "<b>Non ho capito!</b> is useful as a complete expression.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 5",
+          "source_id": "l6-minutes",
+          "source_page": 5,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-non-ho-capito"
+          ],
+          "support": {
+            "hint": {
+              "en": "This fixed expression starts with the negative word. Keep the two-word verb phrase together; you do not need to conjugate a new tense.",
+              "it": "Questa espressione inizia con la negazione. Mantieni insieme le due parole verbali; non devi studiare un nuovo tempo.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "",
+              "en": "I did not understand!",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Non ho capito!",
+                "en": "I did not understand!",
+                "pron": "non oh kah-PEE-toh"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-repeat-informal",
+          "type": "text",
+          "kind": "sentence",
+          "prompt": "Recall both parts of the classroom request, speaking <b>informally to one person</b>. Begin with <i>Come</i>.",
+          "prompt_it": "Ricorda entrambe le parti della richiesta, parlando <b>in modo informale a una persona</b>. Inizia con <i>Come</i>.",
+          "model": "Come, scusa? Puoi ripetere, per favore?",
+          "answers": [
+            "Come, scusa? Puoi ripetere, per favore?",
+            "Come, scusa? Tu puoi ripetere, per favore?",
+            "Come, scusa? Puoi ripetere per piacere?"
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">You are using tu. Keep the opening apology and the following ability verb in the same informal register, then add the polite ending.</span><span class=\"editorial-label-sub\" lang=\"it\">Usi il tu. L’espressione iniziale e il verbo che segue devono essere entrambi informali; poi aggiungi la formula di cortesia.</span></span>",
+          "explanation": "The informal pair is <b>scusa + puoi</b>.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 5",
+          "source_id": "l6-minutes",
+          "source_page": 5,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-repeat-informal"
+          ],
+          "support": {
+            "hint": {
+              "en": "You are using tu. Keep the opening apology and the following ability verb in the same informal register, then add the polite ending.",
+              "it": "Usi il tu. L’espressione iniziale e il verbo che segue devono essere entrambi informali; poi aggiungi la formula di cortesia.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "",
+              "en": "Sorry, what did you say? Can you repeat, please?",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Come, scusa? Puoi ripetere, per favore?",
+                "en": "Sorry, what did you say? Can you repeat, please?",
+                "pron": "KOH-meh SKOO-zah pwoy ree-PEH-teh-reh per fah-VOH-reh"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-repeat-formal",
+          "type": "text",
+          "kind": "sentence",
+          "prompt": "Recall both parts of the classroom request, speaking <b>formally to one person</b>. Begin with <i>Come</i>.",
+          "prompt_it": "Ricorda entrambe le parti della richiesta, parlando <b>in modo formale a una persona</b>. Inizia con <i>Come</i>.",
+          "model": "Come, scusi? Può ripetere, per favore?",
+          "answers": [
+            "Come, scusi? Può ripetere, per favore?",
+            "Come, scusi? Lei può ripetere, per favore?",
+            "Come, scusi? Può ripetere per piacere?"
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">You are using formal Lei. Keep the opening apology and the following ability verb in the same formal register. The verb needs a written accent.</span><span class=\"editorial-label-sub\" lang=\"it\">Usi il Lei formale. L’espressione iniziale e il verbo che segue devono essere entrambi formali. Il verbo richiede un accento scritto.</span></span>",
+          "explanation": "The formal pair is <b>scusi + può</b>.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 5",
+          "source_id": "l6-minutes",
+          "source_page": 5,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-repeat-formal"
+          ],
+          "support": {
+            "hint": {
+              "en": "You are using formal Lei. Keep the opening apology and the following ability verb in the same formal register. The verb needs a written accent.",
+              "it": "Usi il Lei formale. L’espressione iniziale e il verbo che segue devono essere entrambi formali. Il verbo richiede un accento scritto.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "",
+              "en": "Sorry, what did you say? Can you repeat, please?",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Come, scusi? Può ripetere, per favore?",
+                "en": "Sorry, what did you say? Can you repeat, please?",
+                "pron": "KOH-meh SKOO-zee pwoh ree-PEH-teh-reh per fah-VOH-reh"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-meaning-reply",
+          "type": "text",
+          "kind": "sentence",
+          "prompt": "Reply to <b>Che cosa significa “letto”?</b> Use <i>significa</i> and the English word <i>bed</i>.",
+          "prompt_it": "Rispondi a <b>Che cosa significa “letto”?</b> Usa <i>significa</i> e la parola inglese <i>bed</i>.",
+          "model": "Letto significa bed.",
+          "answers": [
+            "Letto significa bed."
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">Start with the word being explained, then the meaning verb, then its English equivalent. This is a statement, so do not start with a question word.</span><span class=\"editorial-label-sub\" lang=\"it\">Inizia con la parola da spiegare, poi il verbo e l’equivalente inglese. È un’affermazione: non iniziare con una parola interrogativa.</span></span>",
+          "explanation": "The same verb supports the question and reply: <b>significa</b>.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 4",
+          "source_id": "l6-minutes",
+          "source_page": 4,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-significa-letto"
+          ],
+          "support": {
+            "hint": {
+              "en": "Start with the word being explained, then the meaning verb, then its English equivalent. This is a statement, so do not start with a question word.",
+              "it": "Inizia con la parola da spiegare, poi il verbo e l’equivalente inglese. È un’affermazione: non iniziare con una parola interrogativa.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "",
+              "en": "“Letto” means “bed”.",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Letto significa bed.",
+                "en": "“Letto” means “bed”.",
+                "pron": "LET-toh see-NYEE-fee-kah bed"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-spelling-reply",
+          "type": "text",
+          "kind": "sentence",
+          "prompt": "Spell <b>letto</b> using Italian <b>letter names</b>. Begin with <i>Si scrive</i>.",
+          "prompt_it": "Fai lo spelling di <b>letto</b> usando i <b>nomi italiani delle lettere</b>. Inizia con <i>Si scrive</i>.",
+          "model": "Si scrive elle e ti ti o.",
+          "answers": [
+            "Si scrive elle e ti ti o."
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">There are five letters. Give the name of L, then E, then both Ts separately, then O. Do not use English letter names.</span><span class=\"editorial-label-sub\" lang=\"it\">Ci sono cinque lettere. Scrivi il nome di L, poi E, poi le due T separatamente, poi O. Non usare i nomi inglesi.</span></span>",
+          "explanation": "<b>ELLE · E · TI · TI · O</b> preserves both Ts in <b>letto</b>.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 4",
+          "source_id": "l6-minutes",
+          "source_page": 4,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-scrive-letto"
+          ],
+          "support": {
+            "hint": {
+              "en": "There are five letters. Give the name of L, then E, then both Ts separately, then O. Do not use English letter names.",
+              "it": "Ci sono cinque lettere. Scrivi il nome di L, poi E, poi le due T separatamente, poi O. Non usare i nomi inglesi.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "",
+              "en": "It is spelt L · E · T · T · O.",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Si scrive elle e ti ti o.",
+                "en": "It is spelt L · E · T · T · O.",
+                "pron": "see SKREE-veh EL-leh eh tee tee oh"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-say-reply",
+          "type": "text",
+          "kind": "sentence",
+          "prompt": "Reply to <b>Come si dice “bed” in italiano?</b> Begin with <i>Si dice</i>.",
+          "prompt_it": "Rispondi a <b>Come si dice “bed” in italiano?</b> Inizia con <i>Si dice</i>.",
+          "model": "Si dice letto.",
+          "answers": [
+            "Si dice letto."
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">Use the statement form of the same impersonal construction, then the Italian word for the piece of furniture you sleep in. Keep its double consonant.</span><span class=\"editorial-label-sub\" lang=\"it\">Usa la stessa costruzione impersonale, come affermazione, poi il nome italiano del mobile in cui dormi. Mantieni la consonante doppia.</span></span>",
+          "explanation": "The question asks for the Italian word; the reply gives <b>letto</b>.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 4",
+          "source_id": "l6-minutes",
+          "source_page": 4,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-dice-bed"
+          ],
+          "support": {
+            "hint": {
+              "en": "Use the statement form of the same impersonal construction, then the Italian word for the piece of furniture you sleep in. Keep its double consonant.",
+              "it": "Usa la stessa costruzione impersonale, come affermazione, poi il nome italiano del mobile in cui dormi. Mantieni la consonante doppia.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "",
+              "en": "You say “letto”.",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Si dice letto.",
+                "en": "You say “letto”.",
+                "pron": "see DEE-cheh LET-toh"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-scusi",
+          "type": "text",
+          "kind": "word",
+          "prompt": "Complete only the gap, keeping the request <b>formal</b>: <span lang=\"it\">Come, ____? Può ripetere, per favore?</span>",
+          "prompt_it": "Completa solo lo spazio, mantenendo il registro <b>formale</b>: <span lang=\"it\">Come, ____? Può ripetere, per favore?</span>",
+          "model": "scusi",
+          "answers": [
+            "scusi"
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">Può addresses one person politely. The opening apology must use that same register, rather than the form used with a friend.</span><span class=\"editorial-label-sub\" lang=\"it\">Può si rivolge a una persona in modo formale. Anche l’espressione iniziale deve essere formale, non quella usata con un amico.</span></span>",
+          "explanation": "<b>Scusi</b> belongs with formal <b>può</b>; <b>scusa</b> belongs with informal <b>puoi</b>.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 5",
+          "source_id": "l6-minutes",
+          "source_page": 5,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-repeat-formal",
+            "italian-l6-repeat-informal"
+          ],
+          "support": {
+            "hint": {
+              "en": "Può addresses one person politely. The opening apology must use that same register, rather than the form used with a friend.",
+              "it": "Può si rivolge a una persona in modo formale. Anche l’espressione iniziale deve essere formale, non quella usata con un amico.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "Come, ____? Può ripetere, per favore?",
+              "en": "Sorry, what did you say? Can you repeat, please? Formal.",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Come, scusi? Può ripetere, per favore?",
+                "en": "Sorry, what did you say? Can you repeat, please? Formal.",
+                "pron": "KOH-meh SKOO-zee pwoh ree-PEH-teh-reh per fah-VOH-reh"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-loro",
+          "type": "text",
+          "kind": "word",
+          "prompt": "Write the missing <b>subject pronoun</b>: <span lang=\"it\">____ sono inglesi.</span>",
+          "prompt_it": "Scrivi il <b>pronome soggetto</b> mancante: <span lang=\"it\">____ sono inglesi.</span>",
+          "model": "loro",
+          "answers": [
+            "loro"
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">The adjective ends in -i, so it describes a group. These are the people being spoken about, not the speaker alone.</span><span class=\"editorial-label-sub\" lang=\"it\">L’aggettivo termina in -i: descrive un gruppo. Si parla di queste persone, non della sola persona che sta parlando.</span></span>",
+          "explanation": "<b>Loro sono inglesi.</b> The plural adjective distinguishes this from <b>Sono inglese</b>.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 2",
+          "source_id": "l6-minutes",
+          "source_page": 2,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-sono-inglesi",
+            "italian-l6-sono-inglese"
+          ],
+          "support": {
+            "hint": {
+              "en": "The adjective ends in -i, so it describes a group. These are the people being spoken about, not the speaker alone.",
+              "it": "L’aggettivo termina in -i: descrive un gruppo. Si parla di queste persone, non della sola persona che sta parlando.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "____ sono inglesi.",
+              "en": "They are English.",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Loro sono inglesi.",
+                "en": "They are English.",
+                "pron": "LOH-roh SOH-noh een-GLEH-zee"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        },
+        {
+          "id": "l6-recap-e-formal",
+          "type": "text",
+          "kind": "word",
+          "prompt": "Complete the verb when speaking <b>politely to one woman</b>: <span lang=\"it\">Lei ____ italiana.</span>",
+          "prompt_it": "Completa il verbo, rivolgendoti <b>formalmente a una donna</b>: <span lang=\"it\">Lei ____ italiana.</span>",
+          "model": "è",
+          "answers": [
+            "è"
+          ],
+          "choices": [],
+          "optional_subjects": [],
+          "answer_mode": "accent",
+          "hint": "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\">Formal Lei shares its verb form with the third person singular. You need the verb, not the word meaning “and”, so keep the written accent.</span><span class=\"editorial-label-sub\" lang=\"it\">Il Lei formale usa la terza persona singolare. Serve il verbo, non la congiunzione che significa “and”: mantieni l’accento scritto.</span></span>",
+          "explanation": "<b>Lei è italiana.</b> Formal <b>Lei</b> uses <b>è</b>. The adjective <b>italiana</b> matches the woman addressed.",
+          "adapted": true,
+          "source_class": "ADAPTED PRACTICE",
+          "sourceKind": "Adapted practice",
+          "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 3",
+          "source_id": "l6-minutes",
+          "source_page": 3,
+          "answer_origin": "Derived from the supplied expression or teaching explanation; no separate tutor answer key.",
+          "relatedCardKeys": [
+            "italian-l6-e-accent"
+          ],
+          "support": {
+            "hint": {
+              "en": "Formal Lei shares its verb form with the third person singular. You need the verb, not the word meaning “and”, so keep the written accent.",
+              "it": "Il Lei formale usa la terza persona singolare. Serve il verbo, non la congiunzione che significa “and”: mantieni l’accento scritto.",
+              "html": ""
+            },
+            "prompt": {
+              "it": "Lei ____ italiana.",
+              "en": "You are Italian. Speaking politely to one woman.",
+              "pron": ""
+            },
+            "lines": [
+              {
+                "it": "Lei è italiana.",
+                "en": "You are Italian. Speaking politely to one woman.",
+                "pron": "lay eh ee-tah-LYAH-nah"
+              }
+            ],
+            "pronunciationStatus": "Provisional — verification pending"
+          },
+          "pronunciation_note": "Approximate English-friendly guide. Capitals mark stress. Reused or derived from the existing Lesson 6 guides; not tutor audio or IPA."
+        }
+      ],
+      "relatedCardKeys": [
+        "italian-l6-significa-letto",
+        "italian-l6-scrive-letto",
+        "italian-l6-dice-bed",
+        "italian-l6-non-ho-capito",
+        "italian-l6-repeat-informal",
+        "italian-l6-repeat-formal"
+      ],
+      "reviewer_notes": [
+        "All six source expressions are existing flashcards: no duplicate cards created.",
+        "All four explicit Remember bullets are covered.",
+        "Other connections preserve the minutes and label adaptations.",
+        "The original phrase Io sono andato is retained; its natural English is refined from source I went / I am gone to I went / I have gone.",
+        "The auxiliary explanation is a connection beyond the main present-tense lesson and has no scored task."
+      ]
+    }
+  ],
+  "topics": [],
+  "existingTopicSets": {
+    "questions": [
+      "l6-recap-useful-requests"
+    ]
+  },
+  "recapReferences": [
+    "italian-l6-significa-letto",
+    "italian-l6-scrive-letto",
+    "italian-l6-dice-bed",
+    "italian-l6-non-ho-capito",
+    "italian-l6-repeat-informal",
+    "italian-l6-repeat-formal"
+  ],
+  "reminderSections": [
+    {
+      "type": "bullets",
+      "title": "Remember: essere has its own forms",
+      "titleIt": "Ricorda: le forme di essere",
+      "stage": "learn",
+      "items": [
+        "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Essere is irregular.</b> Learn its forms individually. The regular -ARE ending pattern does not apply.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Essere è irregolare.</b> Impara le sue forme. Non segue le desinenze regolari in -ARE.</span></span>",
+        "<div data-ui-no-translate><b lang=\"it\">io sono · tu sei · lui / lei / Lei è</b><br><span lang=\"en\">I am · you are · he / she is / formal you are</span></div>",
+        "<div data-ui-no-translate><b lang=\"it\">noi siamo · voi siete · loro sono</b><br><span lang=\"en\">we are · you all are · they are</span></div>",
+        "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Sono has two jobs:</b> io sono and loro sono. Use the rest of the sentence to identify who is meant.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Sono ha due usi:</b> io sono e loro sono. Il resto della frase aiuta a capire il soggetto.</span></span>"
+      ],
+      "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 2",
+      "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+    },
+    {
+      "type": "bullets",
+      "title": "Remember: the subject can be left out",
+      "titleIt": "Ricorda: il soggetto può essere sottinteso",
+      "stage": "learn",
+      "items": [
+        "<div data-ui-no-translate><b lang=\"it\">Sono inglese. / Sono inglesi.</b><br><span lang=\"en\">I am English. / They are English.</span></div>",
+        "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>The adjective ending is the clue:</b> inglese is singular; inglesi is plural. Italian often leaves out io, tu, noi and other subject pronouns.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>La desinenza dell’aggettivo è l’indizio:</b> inglese è singolare; inglesi è plurale. In italiano il pronome soggetto è spesso sottinteso.</span></span>",
+        "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Sono a casa.</b> This can mean “I am at home” or “They are at home”. Here the context must identify the subject.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Sono a casa.</b> Può significare “Io sono a casa” oppure “Loro sono a casa”. Qui il contesto deve chiarire il soggetto.</span></span>"
+      ],
+      "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 2,3",
+      "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+    },
+    {
+      "type": "bullets",
+      "title": "Remember: è and e do different jobs",
+      "titleIt": "Ricorda: è ed e hanno funzioni diverse",
+      "stage": "learn",
+      "items": [
+        "<div data-ui-no-translate><b lang=\"it\">è = is / formal you are; e = and</b><br><span lang=\"en\">Keep the written accent when you need the verb.</span></div>",
+        "<div data-ui-no-translate><b lang=\"it\">Lei è italiana.</b><br><span lang=\"en\">You are Italian. Speaking politely to one woman.</span></div>",
+        "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Formal Lei uses the same verb form as lui / lei.</b> The polite meaning comes from the conversation context.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Il Lei formale usa la stessa forma verbale di lui / lei.</b> Il contesto chiarisce il significato formale.</span></span>"
+      ],
+      "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 3",
+      "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+    },
+    {
+      "type": "bullets",
+      "title": "Remember: adjectives agree",
+      "titleIt": "Ricorda: gli aggettivi concordano",
+      "stage": "learn",
+      "items": [
+        "<div data-ui-no-translate><b lang=\"it\">Sono italiano. / Sono italiana.</b><br><span lang=\"en\">I am Italian. Male speaker / female speaker.</span></div>",
+        "<div data-ui-no-translate><b lang=\"it\">Siamo italiani. / Siamo italiane.</b><br><span lang=\"en\">We are Italian. Male or mixed group / all-female group.</span></div>",
+        "<span class=\"editorial-label\"><span class=\"editorial-label-main\" lang=\"en\"><b>Match gender and number.</b> The second example extends the source’s singular contrast to a useful plural comparison.</span><span class=\"editorial-label-sub\" lang=\"it\"><b>Concorda genere e numero.</b> Il secondo esempio estende al plurale il confronto singolare della dispensa.</span></span>"
+      ],
+      "source": "Session 6 - 03.11.2026 - Minutes.pdf · pages 3",
+      "source_class": "COURSE RECAP WITH ADDED EXPLANATION"
+    }
+  ],
+  "sourceCorrections": [
+    {
+      "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 3",
+      "sourceWording": "Adjectives agree with the person and number.",
+      "teachingWording": "Adjectives agree in gender and number.",
+      "reason": "Clarifies the agreement shown in italiano / italiana."
+    },
+    {
+      "source": "Session 6 - 03.11.2026 - Minutes.pdf · page 3",
+      "sourceWording": "Io sono andato (I went / I am gone)",
+      "teachingWording": "Io sono andato (I went / I have gone), male speaker.",
+      "reason": "Separates natural English from a word-for-word gloss."
+    }
+  ],
+  "pronunciation_status": "Approximate English-friendly guides, reused or derived from the existing reviewed Lesson 6 package; no audio or independent dictionary verification claimed."
+}

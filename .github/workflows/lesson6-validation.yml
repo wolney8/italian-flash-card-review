@@ -2,9 +2,9 @@ name: Lesson 6 web validation
 on:
   push:
     branches: [main, feature/lesson6-source-grounded-20261106]
-    paths: ['lesson6/**', 'scripts/*lesson6*', '.github/workflows/lesson6-validation.yml', 'study/**', 'guided-course-v2.js', 'course-data-loader-v1.js', 'index.html']
+    paths: ['lesson7/**', 'lesson6/**', 'scripts/*lesson6*', '.github/workflows/lesson6-validation.yml', 'study/**', 'guided-course-v2.js', 'course-data-loader-v1.js', 'index.html']
   pull_request:
-    paths: ['lesson6/**', 'scripts/*lesson6*', '.github/workflows/lesson6-validation.yml', 'study/**', 'guided-course-v2.js', 'course-data-loader-v1.js', 'index.html']
+    paths: ['lesson7/**', 'lesson6/**', 'scripts/*lesson6*', '.github/workflows/lesson6-validation.yml', 'study/**', 'guided-course-v2.js', 'course-data-loader-v1.js', 'index.html']
 permissions:
   contents: read
 concurrency:

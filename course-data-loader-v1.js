@@ -72,8 +72,11 @@
     const lesson6Cards=window.ITALIAN_L6?.cards;
     if(!Array.isArray(lesson6Cards)||!lesson6Cards.length)throw new Error('Lesson 6 data did not load.');
     if(lesson6Cards.some(c=>c.lesson!=='L6'))throw new Error('Invalid Lesson 6 assignment.');
-    const expanded=finalCards.concat(lesson6Cards);
-    if(new Set(expanded.map(c=>c.key)).size!==expanded.length)throw new Error('Duplicate card keys in Lesson 6.');
+    const lesson7Cards=window.ITALIAN_L7?.cards||[];
+    const lesson6Supplements=window.ITALIAN_L7?.lesson6Supplements?.cards||[];
+    if(lesson7Cards.some(c=>c.lesson!=='L7')||lesson6Supplements.some(c=>c.lesson!=='L6'))throw new Error('Invalid lesson extension assignment.');
+    const expanded=finalCards.concat(lesson6Cards,lesson7Cards,lesson6Supplements);
+    if(new Set(expanded.map(c=>c.key)).size!==expanded.length)throw new Error('Duplicate course card keys.');
     return expanded;
   }
 
@@ -104,6 +107,7 @@
         L4: { number: '4', title: 'Avere, Numbers, Plurals and Family', description: 'Avere, silent H, numbers 0–20, plural forms, articles and family vocabulary.' },
         L5: { number: '5', title: 'Consolidation Review', description: 'A mixed review of greetings, names, origins, avere, plurals, articles, family, C/G sounds and spelling.' }
       };
+      if(lesson==='L7'&&window.ITALIAN_L7)return {number:'7',title:window.ITALIAN_L7.libraryLesson?.title||'Regular -ARE verbs',description:window.ITALIAN_L7.libraryLesson?.description||'Regular verb endings, stress and everyday sentences.'};
       if(lesson==='L6')return {number:'6',title:'Numbers, Essere and Questions',description:'Number-building patterns, negatives, intonation and useful questions.'};
       return meta[lesson] || previous(lesson);
     };
