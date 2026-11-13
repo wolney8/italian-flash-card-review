@@ -296,8 +296,22 @@ def run_case(browser, base, width, height, language, theme, live):
                     expect(panel.locator("h2")).to_contain_text(
                         section.get("titleIt", section["title"]) if language == "it" else section["title"])
                     assert panel.inner_text().strip(), (slug, stage, i)
-                    expect(panel.locator("[lang=it]").first).to_be_visible()
-                    expect(panel.locator("[lang=en]").first).to_be_visible()
+                    expect(page.locator("html")).to_have_attribute("data-ui-language", language)
+                    # UI labels intentionally show one language. Teaching examples
+                    # outside those paired labels retain their Italian and English.
+                    expect(panel.locator(f"[lang={language}]:visible").first).to_be_visible()
+                    for code in ("it", "en"):
+                        expect(panel.locator(f"[lang={code}]").first).to_be_attached()
+                        examples = panel.locator(
+                            f".bullets [lang={code}]:not(.editorial-label-main):not(.editorial-label-sub)")
+                        if examples.count():
+                            expect(examples.first).to_be_visible()
+                        label = panel.locator(f".bullets .editorial-label > [lang={code}]")
+                        if label.count():
+                            if code == language:
+                                expect(label.first).to_be_visible()
+                            else:
+                                expect(label.first).to_be_hidden()
                     usable(page.locator("[data-guided-action=next]"))
                     overflow(f"{slug} {stage} reference {i + 1}")
                     reference_panels += 1
