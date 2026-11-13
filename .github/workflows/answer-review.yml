@@ -1,0 +1,46 @@
+name: Answer review controls
+on:
+  push:
+    branches: [main]
+    paths: ['learning-controls-v2.js', 'learning-controls-v2.css', 'study/guided-sheet-pilot-v1.js', 'study/study-sheets.html', 'scripts/validate_answer_review.py', 'scripts/validate_lesson7_browser.py', '.github/workflows/answer-review.yml']
+  pull_request:
+    paths: ['learning-controls-v2.js', 'learning-controls-v2.css', 'study/guided-sheet-pilot-v1.js', 'study/study-sheets.html', 'scripts/validate_answer_review.py', 'scripts/validate_lesson7_browser.py', '.github/workflows/answer-review.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: answer-review-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check review code and retained session behaviour
+        run: |
+          node --check learning-controls-v2.js
+          node --check study/guided-sheet-pilot-v1.js
+          node scripts/validate_learning_session.cjs
+          python -m py_compile scripts/validate_answer_review.py scripts/validate_lesson7_browser.py
+      - name: Install pinned Playwright and official Chromium
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Test reveal, countdown and manual review
+        run: python scripts/validate_answer_review.py
+      - name: Verify exact production assets and review controls
+        if: github.ref_name == 'main'
+        run: python scripts/validate_answer_review.py --live
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: answer-review-controls
+          path: artifacts/answer-review
+          retention-days: 14

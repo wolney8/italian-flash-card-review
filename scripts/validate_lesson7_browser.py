@@ -131,7 +131,8 @@ def run_case(browser, base, width, height, language, theme, live):
 
     def pause():
         page.keyboard.press("Escape")
-        expect(page.locator(".flow-countdown-help")).to_have_text("")
+        expect(page.locator(".flow-countdown")).to_have_attribute("data-flow-countdown-state", "paused")
+        expect(page.locator("[data-flow-countdown-toggle]")).to_be_visible()
 
     def next_question(expected):
         page.locator("[data-guided-action=next]").click()
@@ -218,10 +219,10 @@ def run_case(browser, base, width, height, language, theme, live):
             next_question(1)
         text_answer("zzzz")
         checked("wrong")
-        # The first click while counting down pauses, and must not discard feedback.
-        page.locator("[data-guided-action=next]").click()
-        assert index() == 1, "First countdown click must pause"
-        expect(page.locator(".flow-countdown-help")).to_have_text("")
+        # Explicit Pause keeps feedback available; Next remains a navigation action.
+        page.locator("[data-flow-countdown-toggle]").click()
+        assert index() == 1, "Pause must retain the checked question"
+        expect(page.locator(".flow-countdown")).to_have_attribute("data-flow-countdown-state", "paused")
         if width == 1280:
             page.wait_for_timeout(5300)
             assert index() == 1, "Paused countdown still advanced"

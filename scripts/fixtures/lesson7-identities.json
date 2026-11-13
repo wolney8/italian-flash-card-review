@@ -1,5 +1,5 @@
 {
-  "description": "Approved Lesson 7 card/question identities and independently checked source answer expectations. Existing control hashes are pinned to release 16bffe; original canonical-source hashes remain unchanged.",
+  "description": "Approved Lesson 7 card/question identities and independently checked source answer expectations. Original canonical-source hashes remain unchanged. Control hashes track reviewed versions, including the authorised 13 November 2026 answer-review controls update.",
   "baseline": "16bffe85603e671c70ea7cf2a697da35af7e6dec",
   "cardKeys": [
     "italian-l7-infinitive",
@@ -182,9 +182,9 @@
       "l6-recap-e-formal"
     ]
   },
-  "unchangedControls": {
-    "learning-controls-v2.js": "2ffc96b36b81ef897efb722222aa9d81035dba9ef0a2e2aa3eaafade646ec099",
-    "learning-controls-v2.css": "b7ae19d352d2b09b2986241e8d7798b0088fe112df0a8f33501b424f143b4e19",
+  "reviewedControls": {
+    "learning-controls-v2.js": "df909ea741e93dc3d456efb8d7544fd51cbf25054258fe1e70a34e925476f4e0",
+    "learning-controls-v2.css": "46cbe736c701a4ed1835bdfbdce3a35b62a5e2dd89af84b38b1a2934c348e1cd",
     "learning-resume-v2.js": "7c17cff88c456471479bc5a4dc8df7b10a5b8edd47cac99e0e424308367c185f",
     "study/guided-sheet-pilot-v1.js": "d4320023e168468f566a90d805a0d688490d759ed0d8b5939c665a0aaffdb980",
     "study/practice-session-v1.js": "70f5531d8c4d95afdf26535d52cb30380d44c579fe6ae1aa7530e43cf258706b",
