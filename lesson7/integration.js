@@ -29,6 +29,14 @@ if(M){
  for(const sheet of sheets())if(sheet.titleIt)M.labels[sheet.slug]=[sheet.title,sheet.titleIt];
 }
 root.ItalianUILibraryMessages=root.ItalianUILibraryMessages||{};
+for(const [i,title] of (D.topics||[]).entries()){
+ const translated=D.topicsIt?.[i];if(!translated)continue;
+ const prefix=title.match(/^\d+\s+/)?.[0]||'';
+ root.ItalianUILibraryMessages[title]=prefix+translated;
+ root.ItalianUILibraryMessages[title.slice(prefix.length)]=translated;
+}
+root.ItalianUILibraryMessages['Study this lesson in class order →']='Studia questa lezione nell’ordine del corso →';
+root.ItalianUILibraryMessages['Italian for Beginners · Last updated 13 November 2026']='Italiano per principianti · Ultimo aggiornamento 13 novembre 2026';
 if(D.libraryLesson?.it)root.ItalianUILibraryMessages[D.libraryLesson.title]=D.libraryLesson.it;
 for(const topic of [...(D.libraryTopics||[]),...(extras.topics||extras.libraryTopics||[])])if(topic.it)root.ItalianUILibraryMessages[topic.title]=topic.it;
 for(const sheet of sheets()){
@@ -40,7 +48,7 @@ for(const sheet of sheets()){
  }
 }
 Object.assign(root.ItalianUILibraryMessages,D.uiTranslations||{});
-root.ItalianLesson7Integration={sheets,version:'2026-11-13-review'};
+root.ItalianLesson7Integration={sheets,version:D.version};
 
 // New reference tables reflow as compact, labelled rows on phones.
 const tableSheetIds=new Set([...(D.sheets||[]),...(extras.sheets||[])].map(s=>s.slug));
