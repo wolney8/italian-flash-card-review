@@ -3,7 +3,8 @@
 
 Requires playwright==1.57.0 and its official Chromium installation.
 Run locally, use --base-url for a deploy preview, or --live to require exact
-production asset bytes before testing. Each case uses an isolated browser context.
+authored production bytes before testing. Only two fixed, observed Netlify HTML
+additions are recognised. Each case uses an isolated browser context.
 """
 
 import argparse
@@ -27,6 +28,18 @@ PRODUCTION = "https://italian-flash-card-review.netlify.app"
 ASSETS = ("learning-controls-v2.js", "learning-controls-v2.css",
           "study/guided-sheet-pilot-v1.js", "study/study-sheets.html")
 ANIMATIONS = ("flow-answer-reveal", "flow-question-enter")
+HTML_ASSET = "study/study-sheets.html"
+HTML_PROMOTION_ANCHOR = b'  <meta charset="utf-8">\n'
+# Captured from this site's public response on 2026-11-13. Keep these literal:
+# different text, attributes, site IDs, positions or whitespace must fail.
+NETLIFY_PROMOTION = (
+    b'<!-- This site is hosted on Netlify. Anyone can build and deploy a site\n'
+    b'     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=495a6aa2-33b0-49e1-9924-2db354b4750a\n'
+    b'     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->\n'
+)
+NETLIFY_PUBLIC_HUD = (
+    b'<script async src="/.netlify/scripts/hud?variant=public" data-nf-variant="public" data-netlify-site-id="495a6aa2-33b0-49e1-9924-2db354b4750a" data-app-host="app.netlify.com" data-account-tier="free"></script>\n'
+)
 
 
 class Quiet(SimpleHTTPRequestHandler):
@@ -34,7 +47,71 @@ class Quiet(SimpleHTTPRequestHandler):
         pass
 
 
-def verify_deployed(request, base):
+def compare_deployed_asset(name, expected, actual):
+    """Compare bytes, removing only the two exact additions at observed positions."""
+    normalised = actual
+    additions = []
+    if name == HTML_ASSET and actual != expected:
+        before, anchor, _after = expected.partition(HTML_PROMOTION_ANCHOR)
+        prefix = before + anchor
+        if (anchor and normalised.count(NETLIFY_PROMOTION) == 1
+                and normalised.startswith(prefix + NETLIFY_PROMOTION)):
+            normalised = prefix + normalised[len(prefix) + len(NETLIFY_PROMOTION):]
+            additions.append("netlify-promotion-comment:495a6aa2-33b0-49e1-9924-2db354b4750a")
+        if (normalised.count(NETLIFY_PUBLIC_HUD) == 1
+                and normalised.endswith(b'</html>\n' + NETLIFY_PUBLIC_HUD)):
+            normalised = normalised[:-len(NETLIFY_PUBLIC_HUD)]
+            additions.append("netlify-public-hud:495a6aa2-33b0-49e1-9924-2db354b4750a")
+    return {
+        "raw_sha256": hashlib.sha256(actual).hexdigest(),
+        "normalised_sha256": hashlib.sha256(normalised).hexdigest(),
+        "expected_sha256": hashlib.sha256(expected).hexdigest(),
+        "raw_bytes_exact": actual == expected,
+        "authored_bytes_exact": normalised == expected,
+        "recognised_host_additions": additions,
+    }
+
+
+def check_asset_verifier():
+    """Small, browser-free regression checks for the precise hosting exception."""
+    original = (ROOT / HTML_ASSET).read_bytes()
+    assert original.count(HTML_PROMOTION_ANCHOR) == 1
+    with_comment = original.replace(HTML_PROMOTION_ANCHOR,
+                                    HTML_PROMOTION_ANCHOR + NETLIFY_PROMOTION, 1)
+    hosted = with_comment + NETLIFY_PUBLIC_HUD
+    cases = [
+        ("unchanged HTML", HTML_ASSET, original, original, True, 0),
+        ("exact promotion only", HTML_ASSET, original, with_comment, True, 1),
+        ("exact HUD only", HTML_ASSET, original, original + NETLIFY_PUBLIC_HUD, True, 1),
+        ("both exact additions", HTML_ASSET, original, hosted, True, 2),
+        ("authored mutation", HTML_ASSET, original,
+         hosted.replace(b'lang="en"', b'lang="it"', 1), False, None),
+        ("unknown addition", HTML_ASSET, original,
+         hosted + b'<!-- unknown hosting content -->\n', False, None),
+        ("changed site ID", HTML_ASSET, original,
+         hosted.replace(b'495a6aa2-33b0-49e1-9924-2db354b4750a', b'other-site'), False, None),
+        ("malformed known comment", HTML_ASSET, original,
+         hosted.replace(b'Netlify hosting facts', b'Netlify  hosting facts'), False, None),
+        ("duplicate known addition", HTML_ASSET, original,
+         hosted + NETLIFY_PUBLIC_HUD, False, None),
+        ("known addition in wrong position", HTML_ASSET, original,
+         NETLIFY_PROMOTION + original + NETLIFY_PUBLIC_HUD, False, None),
+        ("unchanged JavaScript", "learning-controls-v2.js", b'example();\n', b'example();\n', True, 0),
+        ("no JavaScript exception", "learning-controls-v2.js", b'example();\n',
+         b'example();\n' + NETLIFY_PUBLIC_HUD, False, 0),
+    ]
+    for label, name, expected, actual, accepted, addition_count in cases:
+        result = compare_deployed_asset(name, expected, actual)
+        assert result["authored_bytes_exact"] is accepted, label
+        assert result["raw_bytes_exact"] is (actual == expected), label
+        assert result["raw_sha256"] == hashlib.sha256(actual).hexdigest(), label
+        assert (result["normalised_sha256"] == result["expected_sha256"]) is accepted, label
+        if addition_count is not None:
+            assert len(result["recognised_host_additions"]) == addition_count, label
+    print(f"PASS: {len(cases)} precise asset-verifier cases; unknown or authored changes rejected")
+
+
+def verify_deployed(request, base, observations):
     expected = {name: (ROOT / name).read_bytes() for name in ASSETS}
     deadline = time.monotonic() + 120
     mismatch = list(expected)
@@ -43,10 +120,13 @@ def verify_deployed(request, base):
         for name, content in expected.items():
             digest = hashlib.sha256(content).hexdigest()
             response = request.get(base + "/" + name + "?verify=" + digest, timeout=30000)
-            if not response.ok or response.body() != content:
+            comparison = compare_deployed_asset(name, content, response.body())
+            comparison["http_status"] = response.status
+            observations[name] = comparison
+            if not response.ok or not comparison["authored_bytes_exact"]:
                 mismatch.append(name)
         if not mismatch:
-            return {name: hashlib.sha256(content).hexdigest() for name, content in expected.items()}
+            return True
         assert time.monotonic() < deadline, "Deployed assets differ from checkout: " + ", ".join(mismatch)
         time.sleep(2)
 
@@ -345,9 +425,14 @@ def run_case(browser, base, width, height, language, theme, reduced, live):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--live", action="store_true", help="Require exact production review assets before testing")
+    parser.add_argument("--live", action="store_true", help="Require exact authored production review assets before testing")
     parser.add_argument("--base-url", help="Test a specified preview URL")
+    parser.add_argument("--check-asset-verifier", action="store_true",
+                        help="Check strict asset comparison and the two known hosting additions without a browser")
     args = parser.parse_args()
+    if args.check_asset_verifier:
+        check_asset_verifier()
+        return 0
     OUT.mkdir(parents=True, exist_ok=True)
     server = None
     base = (args.base_url or (PRODUCTION if args.live else "")).rstrip("/")
@@ -364,8 +449,10 @@ def main():
         with sync_playwright() as playwright:
             if args.live:
                 request = playwright.request.new_context()
+                report["served_asset_verification"] = {}
                 try:
-                    report["served_assets_exact"] = verify_deployed(request, base)
+                    report["served_assets_verified"] = verify_deployed(
+                        request, base, report["served_asset_verification"])
                 finally:
                     request.dispose()
             browser = playwright.chromium.launch(headless=True, args=["--no-sandbox"])

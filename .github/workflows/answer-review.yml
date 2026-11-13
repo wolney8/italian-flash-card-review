@@ -33,7 +33,10 @@ jobs:
         run: |
           python -m pip install playwright==1.57.0
           python -m playwright install --with-deps chromium
+      - name: Check the strict deployed-asset verifier
+        run: python scripts/validate_answer_review.py --check-asset-verifier
       - name: Test reveal, countdown and manual review
+        if: github.ref_name != 'main'
         run: python scripts/validate_answer_review.py
       - name: Verify exact production assets and review controls
         if: github.ref_name == 'main'
