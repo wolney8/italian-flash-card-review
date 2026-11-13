@@ -2,9 +2,9 @@ name: Repeatable study practice
 on:
   push:
     branches: [main, feature/repeatable-verb-practice-20261111]
-    paths: ['study/**', 'scripts/*repeatable_practice*', '.github/workflows/repeatable-practice.yml']
+    paths: ['lesson7/**', 'study/**', 'scripts/*repeatable_practice*', '.github/workflows/repeatable-practice.yml']
   pull_request:
-    paths: ['study/**', 'scripts/*repeatable_practice*', '.github/workflows/repeatable-practice.yml']
+    paths: ['lesson7/**', 'study/**', 'scripts/*repeatable_practice*', '.github/workflows/repeatable-practice.yml']
 permissions:
   contents: read
 jobs:

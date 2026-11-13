@@ -2,9 +2,9 @@ name: Study flow review
 on:
   push:
     branches: [main, fix/lesson-flow-and-study-navigation-20261106]
-    paths: ['study/**', 'lesson6/**', 'scripts/*study_flow*', 'course-site-header-v1.js', 'guided-course-v2.js', 'index.html', '.github/workflows/study-flow-review.yml']
+    paths: ['lesson7/**', 'study/**', 'lesson6/**', 'scripts/*study_flow*', 'course-site-header-v1.js', 'guided-course-v2.js', 'index.html', '.github/workflows/study-flow-review.yml']
   pull_request:
-    paths: ['study/**', 'lesson6/**', 'scripts/*study_flow*', 'course-site-header-v1.js', 'guided-course-v2.js', 'index.html', '.github/workflows/study-flow-review.yml']
+    paths: ['lesson7/**', 'study/**', 'lesson6/**', 'scripts/*study_flow*', 'course-site-header-v1.js', 'guided-course-v2.js', 'index.html', '.github/workflows/study-flow-review.yml']
 permissions:
   contents: read
 concurrency:

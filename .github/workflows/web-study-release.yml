@@ -2,7 +2,7 @@ name: Web study release
 on:
   push:
     branches: [main, release/web-study-ready-20261110]
-    paths: ['study/**', 'lesson6/**', 'scripts/validate_web_study_release.py', '.github/workflows/web-study-release.yml']
+    paths: ['lesson7/**', 'study/**', 'lesson6/**', 'scripts/validate_web_study_release.py', '.github/workflows/web-study-release.yml']
   workflow_dispatch:
 permissions:
   contents: read

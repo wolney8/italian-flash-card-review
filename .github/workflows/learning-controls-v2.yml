@@ -2,9 +2,9 @@ name: Learning controls v2
 on:
   push:
     branches: [main, feature/learning-controls-20261112]
-    paths: ['learning-*.js', 'learning-*.css', 'guided-course-v2.js', 'study/**', 'index.html', 'scripts/*learning_controls*', '.github/workflows/learning-controls-v2.yml']
+    paths: ['lesson7/**', 'learning-*.js', 'learning-*.css', 'guided-course-v2.js', 'study/**', 'index.html', 'scripts/*learning_controls*', '.github/workflows/learning-controls-v2.yml']
   pull_request:
-    paths: ['learning-*.js', 'learning-*.css', 'guided-course-v2.js', 'study/**', 'index.html', 'scripts/*learning_controls*', '.github/workflows/learning-controls-v2.yml']
+    paths: ['lesson7/**', 'learning-*.js', 'learning-*.css', 'guided-course-v2.js', 'study/**', 'index.html', 'scripts/*learning_controls*', '.github/workflows/learning-controls-v2.yml']
 permissions:
   contents: read
 concurrency:

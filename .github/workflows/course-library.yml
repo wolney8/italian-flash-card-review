@@ -2,9 +2,9 @@ name: Lesson-first study library
 on:
   push:
     branches: [main, feature/lesson-first-library-20261111]
-    paths: ['study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', 'scripts/validate_library_finish.py', '.github/workflows/course-library.yml']
+    paths: ['lesson7/**', 'study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', 'scripts/validate_library_finish.py', '.github/workflows/course-library.yml']
   pull_request:
-    paths: ['study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', 'scripts/validate_library_finish.py', '.github/workflows/course-library.yml']
+    paths: ['lesson7/**', 'study/**', 'course-*.js', 'course-*.css', 'guided-course-v2.js', 'index.html', 'scripts/*course_library*', 'scripts/validate_library_finish.py', '.github/workflows/course-library.yml']
 permissions:
   contents: read
 concurrency:

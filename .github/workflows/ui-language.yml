@@ -2,9 +2,9 @@ name: Interface language
 on:
   push:
     branches: [main, feature/site-ui-language-20261111]
-    paths: ['course-ui-*', 'index.html', 'study/**', 'scripts/*ui_language*', '.github/workflows/ui-language.yml']
+    paths: ['lesson7/**', 'course-ui-*', 'index.html', 'study/**', 'scripts/*ui_language*', '.github/workflows/ui-language.yml']
   pull_request:
-    paths: ['course-ui-*', 'index.html', 'study/**', 'scripts/*ui_language*', '.github/workflows/ui-language.yml']
+    paths: ['lesson7/**', 'course-ui-*', 'index.html', 'study/**', 'scripts/*ui_language*', '.github/workflows/ui-language.yml']
 permissions:
   contents: read
 jobs:

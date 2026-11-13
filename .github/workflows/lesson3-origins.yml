@@ -2,9 +2,9 @@ name: Lesson 3 origins
 on:
   push:
     branches: [main, fix/lesson3-origins-singular-20261109]
-    paths: ['lesson3-origins-v1.js', 'index.html', 'scripts/*lesson3_origins*', '.github/workflows/lesson3-origins.yml']
+    paths: ['lesson7/**', 'lesson3-origins-v1.js', 'index.html', 'scripts/*lesson3_origins*', '.github/workflows/lesson3-origins.yml']
   pull_request:
-    paths: ['lesson3-origins-v1.js', 'index.html', 'scripts/*lesson3_origins*', '.github/workflows/lesson3-origins.yml']
+    paths: ['lesson7/**', 'lesson3-origins-v1.js', 'index.html', 'scripts/*lesson3_origins*', '.github/workflows/lesson3-origins.yml']
 permissions:
   contents: read
 jobs:

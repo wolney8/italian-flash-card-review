@@ -2,9 +2,9 @@ name: Study navigation and support
 on:
   push:
     branches: [main, fix/study-navigation-support-20261111]
-    paths: ['study/**', 'scripts/*study_support*', '.github/workflows/study-support.yml']
+    paths: ['lesson7/**', 'study/**', 'scripts/*study_support*', '.github/workflows/study-support.yml']
   pull_request:
-    paths: ['study/**', 'scripts/*study_support*', '.github/workflows/study-support.yml']
+    paths: ['lesson7/**', 'study/**', 'scripts/*study_support*', '.github/workflows/study-support.yml']
 permissions:
   contents: read
 concurrency:
