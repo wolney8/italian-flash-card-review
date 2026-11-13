@@ -328,7 +328,8 @@ def run_case(browser, base, width, height, language, theme, live):
         q = question()
         expect(q.locator(".question-heading [lang=en]")).to_have_count(1)
         expect(q.locator(".question-heading [lang=it]")).to_have_count(1)
-        text_answer()
+        # Natural quoted wording observed during production review must be accepted.
+        text_answer('Che cosa significa "letto"?')
         checked("correct")
         pause()
         expect(q.locator(".model-answer")).to_contain_text("Che cosa significa letto?")
@@ -343,7 +344,7 @@ def run_case(browser, base, width, height, language, theme, live):
         page.wait_for_selector(".guided-card-host .review-card")
         expect(page.locator(".guided-card-host .review-card")).to_have_attribute(
             "data-deck", "Question words and useful phrases")
-        case["checks"].append("L6 12-question recap and actual related-card destination")
+        case["checks"].append("L6 12-question recap, quoted meaning question and actual related-card destination")
         assert not errors, errors
         case["status"] = "pass"
     except Exception as error:

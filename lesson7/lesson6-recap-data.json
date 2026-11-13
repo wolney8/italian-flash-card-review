@@ -212,7 +212,16 @@
           "answers": [
             "Che cosa significa letto?",
             "Cosa significa letto?",
-            "Che significa letto?"
+            "Che significa letto?",
+            "Che cosa significa \"letto\"?",
+            "Che cosa significa 'letto'?",
+            "Che cosa significa «letto»?",
+            "Cosa significa \"letto\"?",
+            "Cosa significa 'letto'?",
+            "Cosa significa «letto»?",
+            "Che significa \"letto\"?",
+            "Che significa 'letto'?",
+            "Che significa «letto»?"
           ],
           "choices": [],
           "optional_subjects": [],
@@ -260,7 +269,13 @@
           "model": "Come si scrive letto in italiano?",
           "answers": [
             "Come si scrive letto in italiano?",
-            "Come si scrive in italiano letto?"
+            "Come si scrive in italiano letto?",
+            "Come si scrive \"letto\" in italiano?",
+            "Come si scrive 'letto' in italiano?",
+            "Come si scrive «letto» in italiano?",
+            "Come si scrive in italiano \"letto\"?",
+            "Come si scrive in italiano 'letto'?",
+            "Come si scrive in italiano «letto»?"
           ],
           "choices": [],
           "optional_subjects": [],
@@ -308,7 +323,13 @@
           "model": "Come si dice bed in italiano?",
           "answers": [
             "Come si dice bed in italiano?",
-            "Come si dice in italiano bed?"
+            "Come si dice in italiano bed?",
+            "Come si dice \"bed\" in italiano?",
+            "Come si dice 'bed' in italiano?",
+            "Come si dice «bed» in italiano?",
+            "Come si dice in italiano \"bed\"?",
+            "Come si dice in italiano 'bed'?",
+            "Come si dice in italiano «bed»?"
           ],
           "choices": [],
           "optional_subjects": [],
@@ -501,7 +522,22 @@
           "prompt_it": "Rispondi a <b>Che cosa significa “letto”?</b> Usa <i>significa</i> e la parola inglese <i>bed</i>.",
           "model": "Letto significa bed.",
           "answers": [
-            "Letto significa bed."
+            "Letto significa bed.",
+            "Letto significa \"bed\".",
+            "Letto significa 'bed'.",
+            "Letto significa «bed».",
+            "\"Letto\" significa bed.",
+            "\"Letto\" significa \"bed\".",
+            "\"Letto\" significa 'bed'.",
+            "\"Letto\" significa «bed».",
+            "'Letto' significa bed.",
+            "'Letto' significa \"bed\".",
+            "'Letto' significa 'bed'.",
+            "'Letto' significa «bed».",
+            "«Letto» significa bed.",
+            "«Letto» significa \"bed\".",
+            "«Letto» significa 'bed'.",
+            "«Letto» significa «bed»."
           ],
           "choices": [],
           "optional_subjects": [],
@@ -548,7 +584,10 @@
           "prompt_it": "Fai lo spelling di <b>letto</b> usando i <b>nomi italiani delle lettere</b>. Inizia con <i>Si scrive</i>.",
           "model": "Si scrive elle e ti ti o.",
           "answers": [
-            "Si scrive elle e ti ti o."
+            "Si scrive elle e ti ti o.",
+            "Si scrive \"elle e ti ti o\".",
+            "Si scrive 'elle e ti ti o'.",
+            "Si scrive «elle e ti ti o»."
           ],
           "choices": [],
           "optional_subjects": [],
@@ -595,7 +634,10 @@
           "prompt_it": "Rispondi a <b>Come si dice “bed” in italiano?</b> Inizia con <i>Si dice</i>.",
           "model": "Si dice letto.",
           "answers": [
-            "Si dice letto."
+            "Si dice letto.",
+            "Si dice \"letto\".",
+            "Si dice 'letto'.",
+            "Si dice «letto»."
           ],
           "choices": [],
           "optional_subjects": [],

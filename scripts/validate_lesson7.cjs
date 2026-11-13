@@ -223,6 +223,42 @@ async function main() {
     assert.ok(L6.checkAnswer('Studi storia.', translations[4].answers, translations[4].answer_mode));
   });
 
+  check('Recap accepts natural quoted words while rejecting wrong words and letter sequences', () => {
+    const quotes = [['"', '"'], ["'", "'"], ['“', '”'], ['‘', '’'], ['«', '»']];
+    const score = (id, answer) => {
+      const question = newQuestions.find(question => question.id === id);
+      assert.ok(question, id);
+      return L6.checkAnswer(answer, question.answers, question.answer_mode);
+    };
+    for (const [left, right] of quotes) {
+      const quoted = word => left + word + right;
+      const cases = [
+        ['l6-recap-meaning', `Che cosa significa ${quoted('letto')}?`],
+        ['l6-recap-meaning', `Cosa significa ${quoted('letto')}?`],
+        ['l6-recap-meaning', `Che significa ${quoted('letto')}?`],
+        ['l6-recap-spelling', `Come si scrive ${quoted('letto')} in italiano?`],
+        ['l6-recap-spelling', `Come si scrive in italiano ${quoted('letto')}?`],
+        ['l6-recap-say', `Come si dice ${quoted('bed')} in italiano?`],
+        ['l6-recap-say', `Come si dice in italiano ${quoted('bed')}?`],
+        ['l6-recap-meaning-reply', `${quoted('Letto')} significa bed.`],
+        ['l6-recap-meaning-reply', `Letto significa ${quoted('bed')}.`],
+        ['l6-recap-meaning-reply', `${quoted('Letto')} significa ${quoted('bed')}.`],
+        ['l6-recap-spelling-reply', `Si scrive ${quoted('elle e ti ti o')}.`],
+        ['l6-recap-say-reply', `Si dice ${quoted('letto')}.`]
+      ];
+      for (const [id, answer] of cases) assert.ok(score(id, answer), id + ': ' + answer);
+    }
+    assert.ok(score('l6-recap-meaning-reply', '“Letto” significa «bed».'));
+    for (const [id, wrong] of [
+      ['l6-recap-meaning', 'Che cosa significa "casa"?'],
+      ['l6-recap-spelling', 'Come si scrive "letta" in italiano?'],
+      ['l6-recap-say', 'Come si dice "chair" in italiano?'],
+      ['l6-recap-meaning-reply', '"Letto" significa "chair".'],
+      ['l6-recap-spelling-reply', 'Si scrive "elle e ti o".'],
+      ['l6-recap-say-reply', 'Si dice "letta".']
+    ]) assert.equal(score(id, wrong), false, id + ': ' + wrong);
+  });
+
   check('Six-option choices retain one correct option and two marked red herrings', () => {
     for (const question of newQuestions.filter(question => question.type === 'choice')) {
       assert.ok(question.choices.length >= 6, question.id);
