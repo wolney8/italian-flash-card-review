@@ -48,7 +48,7 @@ if recap_topic['id'] not in libraryLesson['topics']:
     libraryLesson['topics'].insert(0,recap_topic['id'])
 
 coverage={
- 'status':'Review candidate; not published', 'lesson_date':'2026-11-10',
+ 'status':'Content approved for website publication', 'lesson_date':'2026-11-10',
  'source_counts':{'classroom_responses':30,'homework_responses':29,'source_responses':59},
  'cards':len(cards),'card_topics':[{'name':t,'count':sum(c['deck']==t for c in cards)} for t in topics],
  'study_sets':[{'slug':s['slug'],'title':s['title'],'kind':s.get('kind'),'screens':len(s['questions']),'responses':sum(len(q.get('pairs',[])) if q['type']=='match' else 1 for q in s['questions'])} for s in sheets+R['sheets']],
@@ -75,9 +75,9 @@ coverage={
   {'lesson':'L6','connection':'Reuse the existing question/expression cards and number/essere/negative/intonation routes. Add 12 contextual recall tasks and a visible reminder guide.'},
  ],
 }
-payload={'version':'2026-11-13-lesson7-review-1','status':'review candidate','sources':C['sources'],'topics':topics,'topicsIt':C['topicsIt'],'cards':cards,'sheets':sheets,'forms':C['forms'],'libraryLesson':libraryLesson,'libraryTopics':lib_topics,'lesson6Supplements':{'cards':[],'sheets':R['sheets'],'topics':[]},'existingTopicSets':existingTopicSets,'recapReferences':R.get('recapReferences',[]),'reminderSections':R.get('reminderSections',[]),'coverage':coverage,'uiTranslations':S.get('uiTranslations',{}) if isinstance(S,dict) else {}}
+payload={'version':'2026-11-13-lesson7-release-1','status':'approved for website publication','sources':C['sources'],'topics':topics,'topicsIt':C['topicsIt'],'cards':cards,'sheets':sheets,'forms':C['forms'],'libraryLesson':libraryLesson,'libraryTopics':lib_topics,'lesson6Supplements':{'cards':[],'sheets':R['sheets'],'topics':[]},'existingTopicSets':existingTopicSets,'recapReferences':R.get('recapReferences',[]),'reminderSections':R.get('reminderSections',[]),'coverage':coverage,'uiTranslations':S.get('uiTranslations',{}) if isinstance(S,dict) else {}}
 serialized=json.dumps(payload,ensure_ascii=False,separators=(',',':'))
-(L7/'content.js').write_text('/* Canonical Lesson 7 review data. One dataset supplies web cards and Anki. */\n(function(root){\nconst data='+serialized+';\nif(typeof module!=="undefined")module.exports=data;\nif(root)root.ITALIAN_L7=data;\n})(typeof window!=="undefined"?window:null);\n')
+(L7/'content.js').write_text('/* Canonical Lesson 7 release data. One dataset supplies web cards and Anki. */\n(function(root){\nconst data='+serialized+';\nif(typeof module!=="undefined")module.exports=data;\nif(root)root.ITALIAN_L7=data;\n})(typeof window!=="undefined"?window:null);\n')
 (OUT/'Lesson_7_Canonical_Content.json').write_text(json.dumps(payload,ensure_ascii=False,indent=2))
 (OUT/'Lesson_7_Coverage_Map.json').write_text(json.dumps(coverage,ensure_ascii=False,indent=2))
 (OUT/'Lesson_7_Pronunciation_Inventory.json').write_text(json.dumps([{k:c[k] for k in ['key','primaryAnswer','guide','ipa','pronunciation_status','pronunciation_note','reference']} for c in cards if c['pron']],ensure_ascii=False,indent=2))

@@ -475,7 +475,7 @@
     if(state.page==='topics'){location.replace('study/study-sheets.html?mode=learn');return;}
     ensure();
     document.body.classList.toggle('guided-focus-active',state.page==='card'&&focusActive());
-    root.innerHTML=header()+ (state.page==='lessons'?lessons():state.page==='card'?cardPage():state.page==='topics'?topics():state.page==='feedback'?feedback():state.page==='course'?course():home()) + `<footer class="guided-footer">Italian for Beginners · Last updated 4 November 2026</footer>`;
+    root.innerHTML=header()+ (state.page==='lessons'?lessons():state.page==='card'?cardPage():state.page==='topics'?topics():state.page==='feedback'?feedback():state.page==='course'?course():home()) + `<footer class="guided-footer">Italian for Beginners · Last updated 13 November 2026</footer>`;
     window.ItalianStudyLinks?.decorate();
     syncCardHeight();
     if(ready)window.ItalianCourseBoot?.ready();

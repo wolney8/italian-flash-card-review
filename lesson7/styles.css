@@ -1,4 +1,6 @@
 /* Scoped Lesson 7 material. General practice and floating controls stay unchanged. */
+/* Match the selected course palette instead of legacy review-card colours. */
+.guided-card-host .review-card[data-lesson="L7"]{--paper:inherit;--paper2:inherit;--line:inherit;--muted:inherit;--green:inherit;--recall:inherit;--answer:inherit;color:var(--ink)}
 .l7-stem{font-weight:700}.l7-ending{font-weight:800;color:var(--correct,#245f47);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.2em}
 .l7-stress{font-weight:400;letter-spacing:.025em;margin-block:10px}
 .l7-stress b{font-weight:800;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:.2em}

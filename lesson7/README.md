@@ -1,6 +1,6 @@
 # Lesson 7 review handoff
 
-**Status: review candidate, not published.** This addition covers the 10 November 2026 lesson. It extends the existing course without replacing its previous cards, exercises or saved-progress identities.
+**Status: approved release.** This addition covers the 10 November 2026 lesson. Production publication follows merge to `main` and successful Netlify deployment. It extends the existing course without replacing its previous cards, exercises or saved-progress identities.
 
 ## Contents
 
