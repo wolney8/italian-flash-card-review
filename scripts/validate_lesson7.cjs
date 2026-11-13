@@ -349,7 +349,7 @@ async function main() {
     }
   });
 
-  check('All 59 original content hashes and six control/progress implementations preserved', () => {
+  check('All 59 original content hashes preserved and reviewed control versions match', () => {
     const saved = JSON.parse(read('docs/library-source-preservation.json'));
     assert.equal(Object.keys(fixture.originalSourceHashes).length, 59);
     same(Object.keys(saved).sort(), [...Object.keys(fixture.originalSourceHashes), 'course-data-loader-v1.js'].sort());
@@ -358,7 +358,7 @@ async function main() {
       assert.equal(hash(file), expected, 'Original content: ' + file);
     }
     assert.equal(hash('course-data-loader-v1.js'), saved['course-data-loader-v1.js'], 'Reviewed loader integration hash');
-    for (const [file, expected] of Object.entries(fixture.unchangedControls)) assert.equal(hash(file), expected, file);
+    for (const [file, expected] of Object.entries(fixture.reviewedControls)) assert.equal(hash(file), expected, file);
   });
 
   check('Extension dependencies load in the correct order', () => {
