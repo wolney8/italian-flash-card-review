@@ -65,6 +65,12 @@
     for(const topic of window.ITALIAN_L7.libraryTopics||[])STUDY_ITALIAN[topic.title]=topic.it;
     for(const sheet of window.ITALIAN_L7.sheets||[])if(sheet.titleIt)STUDY_ITALIAN[sheet.title]=sheet.titleIt;
   }
+  if (window.ItalianLesson8) {
+    const {lesson, topics} = window.ItalianLesson8;
+    LESSONS.push([lesson.id, lesson.title, lesson.description]);
+    LESSON_ITALIAN[lesson.id] = lesson.it;
+    for (const topic of topics) STUDY_ITALIAN[topic.title] = topic.it;
+  }
   const isReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   let state = {page: 'home', lesson: null, deck: '', index: 0, finished: false};
   let ready = false;
@@ -346,7 +352,7 @@
       '<span class="guided-card-count">'+(state.reviewOnly?'Targeted review · ':'')+
       labelPair('Carta '+(state.index+1)+' di '+total,'Card '+(state.index+1)+' of '+total)+
       '</span></div>'+
-      (['L6','L7'].includes(lesson)?'<a class="guided-study-lesson-link" href="study/study-sheets.html?mode=learn&browse=lesson&lesson='+lesson+'">Study this lesson in class order →</a>':'')+
+      (['L6','L7','L8'].includes(lesson)?'<a class="guided-study-lesson-link" href="study/study-sheets.html?mode=learn&browse=lesson&lesson='+lesson+'">Study this lesson in class order →</a>':'')+
       '<div class="guided-card-options">'+
       '<label for="guidedSubdeckSelect">'+labelPair('Argomento','Topic')+'</label>'+
       '<select id="guidedSubdeckSelect" aria-label="Choose a topic">'+decks.map(d=>
@@ -475,7 +481,7 @@
     if(state.page==='topics'){location.replace('study/study-sheets.html?mode=learn');return;}
     ensure();
     document.body.classList.toggle('guided-focus-active',state.page==='card'&&focusActive());
-    root.innerHTML=header()+ (state.page==='lessons'?lessons():state.page==='card'?cardPage():state.page==='topics'?topics():state.page==='feedback'?feedback():state.page==='course'?course():home()) + `<footer class="guided-footer">Italian for Beginners · Last updated 13 November 2026</footer>`;
+    root.innerHTML=header()+ (state.page==='lessons'?lessons():state.page==='card'?cardPage():state.page==='topics'?topics():state.page==='feedback'?feedback():state.page==='course'?course():home()) + `<footer class="guided-footer">Italian for Beginners · Last updated 21 November 2026</footer>`;
     window.ItalianStudyLinks?.decorate();
     syncCardHeight();
     if(ready)window.ItalianCourseBoot?.ready();

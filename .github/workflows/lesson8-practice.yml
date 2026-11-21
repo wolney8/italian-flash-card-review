@@ -1,0 +1,39 @@
+name: Lesson 8 practice
+on:
+  pull_request:
+    paths: &practice_paths
+      - 'lesson8-practice/**'
+      - 'course-data-loader-v1.js'
+      - 'guided-course-v2.js'
+      - 'index.html'
+      - 'study/study-sheets.html'
+      - 'study/study-sheets-v5.js'
+      - 'study/library-v1.js'
+      - 'study/guided-sheet-pilot-v1.js'
+      - 'learning-controls-v2.js'
+      - 'scripts/validate_l8_extra_browser.py'
+      - '.github/workflows/lesson8-practice.yml'
+  push:
+    branches: [main]
+    paths: *practice_paths
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: lesson8-practice-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Playwright and Chromium
+        run: |
+          python -m pip install playwright==1.57.0
+          python -m playwright install --with-deps chromium
+      - name: Test the three Lesson 8 practice routes
+        run: python scripts/validate_l8_extra_browser.py

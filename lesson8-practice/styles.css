@@ -1,0 +1,9 @@
+.guided-card-host .review-card[data-lesson="L8"] {
+  --paper: inherit; --paper2: inherit; --line: inherit; --muted: inherit;
+  --green: inherit; --recall: inherit; --answer: inherit;
+  color: var(--ink);
+}
+.l8-listen { margin: .4rem 0; padding: .5rem .8rem; color: var(--ink); background: var(--paper2); border: 1px solid var(--line); border-radius: .5rem; cursor: pointer; }
+.l8-audio-status { display: block; }
+#l8-articles-in-context .matrix-wrap table { min-width: 0; width: 100%; }
+#l8-articles-in-context .matrix-wrap th, #l8-articles-in-context .matrix-wrap td { padding: .42rem .28rem; overflow-wrap: anywhere; }
