@@ -14,7 +14,24 @@ for(const c of d.cards){
  if(c.guide){assert.ok(c.ipa);assert.equal(c.pronunciation_status,'Provisional — verification pending');}
  assert.ok(d.topics.includes(c.deck));
 }
-for(const s of d.sheets){assert.equal(s.lesson,'L6');assert.ok(s.study_sections.length>=2);assert.ok(s.questions.length);for(const q of s.questions){assert.ok(q.answers.length&&q.source&&q.id);assert.ok(['accent','punctuation'].includes(q.answer_mode));}}
+for(const s of d.sheets){assert.equal(s.lesson,'L6');assert.ok(s.study_sections.length>=2);assert.ok(s.questions.length);for(const q of s.questions){assert.ok(q.answers.length&&q.source&&q.id);assert.ok(['accent','punctuation','match'].includes(q.answer_mode));}}
+assert.ok(!JSON.stringify([d.sheets,d.practiceGroups]).includes('\u2014'),'Em dash in Lesson 6 study material');
+for(const sheet of d.sheets){
+ for(const q of sheet.questions){
+  assert.ok(q.task && !q.task.includes('<'),q.id+' needs a plain English task');
+  assert.ok(q.stimulusHtml || (q.stimulus?.length && q.stimulus.every(line=>['it','en'].includes(line.lang) && line.text && !line.text.includes('<'))),q.id+' needs a separate cue');
+ }
+}
+const matches=d.sheets.find(s=>s.slug==='l6-essere-matching').questions;
+for(const [i,item] of matches.entries()){
+ assert.equal(item.type,'match');
+ assert.equal(item.pairs.length,2);
+ assert.equal(item.legacyMatchValue,['Io sono','Tu sei','Lui / Lei è','Noi siamo','Voi siete','Loro sono'][i]);
+ assert.deepEqual(JSON.parse(item.model),item.pairs.map(p=>p.id));
+ for(const pair of item.pairs)assert.equal(pair.options.filter(o=>o.id===pair.id&&o.right===pair.right).length,1);
+ assert.deepEqual(item.pairs[1].options.map(o=>o.id),['A','B','C','D','E','F']);
+}
+assert.ok(d.sheets.find(s=>s.slug==='l6-essere-translation').questions.every(q=>q.worksheetOrder && q.choices.length===3));
 assert.equal(d.numberRows.length,10);assert.ok(d.numberRows.every(r=>r.length===8));
 assert.ok(d.cards.some(c=>c.answer.includes('l6-n-hundred')));
 assert.ok(d.cards.some(c=>c.answer.includes('l6-n-thousand')));

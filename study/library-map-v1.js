@@ -14,9 +14,9 @@ const topics=[
  ['register','Informal and formal conversations','Conversazioni informali e formali','conversation',['class1-register'],'L1','03 Tu and Lei'],
  ['wellbeing','Greetings and wellbeing','Saluti e benessere','conversation',['l6-greetings'],'L2','00 Greetings & wellbeing'],
  ['alphabet','Alphabet and spelling names','Alfabeto e spelling dei nomi','sounds',['class2-alphabet'],'L2','01 Alphabet & spelling'],
- ['c-sounds','C and CH sounds','Suoni C e CH','sounds',['class2-c-sounds'],'L2','02 C and CH sounds'],
- ['g-sounds','G and GH sounds','Suoni G e GH','sounds',['class2-g-sounds'],'L2','03 G and GH sounds'],
- ['singular-articles','Singular articles and gender','Articoli singolari e genere','grammar',['class2-definite-articles','class2-indefinite-articles'],'L2','06 Article application'],
+ ['c-sounds','C and CH sounds','Suoni C e CH','sounds',['class2-homework-c-columns','class2-c-sounds'],'L2','02 C and CH sounds'],
+ ['g-sounds','G and GH sounds','Suoni G e GH','sounds',['class2-homework-g-columns','class2-g-sounds'],'L2','03 G and GH sounds'],
+ ['singular-articles','Singular articles and gender','Articoli singolari e genere','grammar',['class2-definite-articles','class2-homework-article-columns','class2-indefinite-articles'],'L2','06 Article application'],
  ['pronouns','Pronouns and verb forms','Pronomi e forme verbali','verbs',['subject-pronouns-present-tense','practice-things-pronouns'],'L3','01 Personal pronouns'],
  ['origins','Origins and residence','Origini e residenza','conversation',['class3-complete-replies','di-da-dove-pronouns'],'L3','03 Origins & questions'],
  ['countries','Country names','Nomi dei paesi','conversation',['class3-countries'],'L3','05 Countries'],
@@ -24,11 +24,11 @@ const topics=[
  ['dialogues','Build a conversation','Costruisci una conversazione','conversation',['class3-dialogues'],'L3','07 Conversation practice'],
  ['avere','Avere in context','Avere in contesto','verbs',['class4-avere-homework','class4-avere-class'],'L4','01 Avere - present tense'],
  ['silent-h','With or without H','Con o senza H','verbs',['class4-silent-h'],'L4','02 Silent H spelling'],
- ['numbers-basic','Numbers 0 to 20','Numeri da 0 a 20','numbers',['numbers-0-20'],'L4','04 Numbers 0-20 and age'],
+ ['numbers-basic','Numbers 0 to 20','Numeri da 0 a 20','numbers',['numbers-0-20','class4-homework-number-maze'],'L4','04 Numbers 0-20 and age'],
  ['numbers','Number-building patterns','Come si formano i numeri','numbers',['l6-number-patterns'],'L6','Number-building patterns'],
  ['age','Age and introductions','Età e presentazioni','numbers',['class4-ages-homework','l6-age-dialogue'],'L4','04 Numbers 0-20 and age'],
  ['family','Talking about family','Parlare della famiglia','conversation',['class4-family'],'L4','08 Family sentences and practice'],
- ['plurals','Singular and plural','Singolare e plurale','grammar',['class5-plurals-a','class5-plurals-b','class5-plurals-c','class5-plurals-d','plural-articles'],'L5','02 Singular and plural transformations'],
+ ['plurals','Singular and plural','Singolare e plurale','grammar',['class5-class-plural-table','class5-plurals-a','class5-plurals-b','class5-plurals-c','class5-plurals-d','plural-articles'],'L5','02 Singular and plural transformations'],
  ['partitives','Some: articles and quantities','Articoli partitivi e quantità','grammar',['l6-plural-workshop','connected-partitives'],'L5','03 The and some plural articles'],
  ['sound-review','C and G revision','Ripasso C e G','sounds',['sounds-review'],'L5','05 C G sounds and spelling'],
  ['town-spelling','Spelling with Italian towns','Spelling con le città italiane','sounds',['town-code'],'L5','05 C G sounds and spelling'],
@@ -60,6 +60,42 @@ const labels={
  'l6-essere-translation':['Homework: translation choices','Compiti: scelta della traduzione'],
  'l6-plural-workshop':['Group activity: plural partitives','Attività di gruppo: partitivi plurali']
 };
-const api={lessons,topics,subsets,lessonSets,labels,version:'2026-11-11-library-v1'};
+// Handbook assignments from the session minutes, and optional quizzes shared by the tutor.
+const homework = {
+ L1: {book: [
+   ['pp. 164–165, ex. 1–4', 'Match greetings to situations and dialogues to pictures. Choose the verb forms and fill the gaps.', 'Abbina i saluti alle situazioni e i dialoghi alle immagini. Scegli le forme verbali e completa gli spazi.']
+ ]},
+ L2: {book: [
+   ['p. 172, ex. 9', 'Match each word to its article.', 'Abbina ogni parola al suo articolo.']
+ ], quizzes: [
+   ['Indefinite articles', 'Articoli indeterminativi', '664eb0143e5b2ac8771d2b0b'],
+   ['Definite articles', 'Articoli determinativi', '615396b15821cf0036b983f8']
+ ]},
+ L3: {book: [
+   ['p. 164, ex. 6', 'Complete the sentences.', 'Completa le frasi.'],
+   ['p. 165, ex. 7–10', 'Match questions and answers, build country names from syllables, reorder a dialogue and fill the gaps.', 'Abbina domande e risposte, forma i nomi dei paesi con le sillabe, riordina il dialogo e completa gli spazi.']
+ ], quizzes: [['Nationalities', 'Nazionalità', '642e0ea7053bff04dbfa8b2f']]},
+ L4: {book: [
+   ['p. 166, ex. 12', 'Follow the number maze from 20 down to 0 and read the hidden sentence.', 'Segui il labirinto dei numeri da 20 a 0 e leggi la frase nascosta.']
+ ], quizzes: [['Plurals', 'Plurali', '63c7f839e4a7b3539aaab5d0']]},
+ L5: {book: [
+   ['p. 22, ex. 6 A–C', 'Listen and repeat, match the pictures, ask how someone is and order the replies.', 'Ascolta e ripeti, abbina le immagini, chiedi come sta una persona e metti in ordine le risposte.'],
+   ['p. 12, ex. 10', 'Listen for tu or formal Lei in each dialogue.', 'Ascolta ogni dialogo e riconosci il tu o il Lei.']
+ ]},
+ L6: {book: [
+   ['p. 20, ex. 1–2', 'Choose the ages. Complete the numbers and check with the audio.', 'Scegli le età. Completa i numeri e controlla con l’audio.'],
+   ['p. 21, ex. 3–4A', 'Tick the numbers you hear, then answer the questions about the picture.', 'Segna i numeri che senti, poi rispondi alle domande sull’immagine.'],
+   ['p. 175, ex. 19', 'Listen, add a question mark or full stop, then repeat.', 'Ascolta, aggiungi il punto interrogativo o il punto, poi ripeti.']
+ ]},
+ L7: {book: [
+   ['p. 173, ex. 14', 'Fill the gaps with the correct verb.', 'Completa gli spazi con il verbo corretto.']
+ ], quizzes: [['Present tense of -are verbs', 'Presente dei verbi in -are', '65777d19f7bf26f894ba2d46']]},
+ L8: {book: [
+   ['p. 26, ex. 14', 'Look at the pictures and complete the job titles.', 'Guarda le immagini e completa i nomi delle professioni.'],
+   ['p. 173, ex. 12', 'Give the workplace for each job.', 'Scrivi il luogo di lavoro per ogni professione.'],
+   ['p. 174, ex. 15', 'Complete the sentences with the missing words.', 'Completa le frasi con le parole mancanti.']
+ ]}
+};
+const api={lessons,topics,subsets,lessonSets,labels,homework,version:'2026-11-11-library-v1'};
 if(typeof module!=='undefined')module.exports=api;if(root)root.ItalianLibraryMap=api;
 })(typeof window!=='undefined'?window:null);

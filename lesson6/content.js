@@ -150,7 +150,7 @@ const table=(title,headers,rows)=>({type:'table',title,headers,rows});
 const bullets=(title,items)=>({type:'bullets',title,items});
 function q(id,prompt,answer,hint,opts={}){return {id,type:opts.choices?'choice':'text',prompt,answers:Array.isArray(answer)?answer:[answer],choices:opts.choices,optional_subjects:opts.subjects||[],hint,model:opts.model||(Array.isArray(answer)?answer[0]:answer),answer_mode:opts.mode||'accent',explanation:opts.explanation||'',source:opts.source||'',answer_origin:opts.origin||'Derived from the supplied teaching table'};}
 function sheet(slug,title,subtitle,intro,sections,qs,source,page,kind){sheets.push({slug,title,subtitle,intro,scope:'Lesson 6',lesson:'L6',study_sections:sections,questions:qs,source_id:source,source_page:page,kind});}
-const essence=[table('Essere — the six forms',['Pronoun','Form','Meaning'],conjugation),bullets('Use the subject as your clue',['<b>sono</b> serves both <b>io</b> and <b>loro</b>; use the sentence context.','<b>è</b> means is; <b>e</b> means and. Keep the accent.','The task asks for the missing verb form, not a translation of the whole sentence.'])];
+const essence=[table('Essere · the six forms',['Pronoun','Form','Meaning'],conjugation),bullets('Use the subject as your clue',['<b>sono</b> serves both <b>io</b> and <b>loro</b>; use the sentence context.','<b>è</b> means is; <b>e</b> means and. Keep the accent.','The task asks for the missing verb form, not a translation of the whole sentence.'])];
 const hwGaps=[
  ['Io ___ un professore.','sono','I am a teacher.'],['Tu ___ molto alto.','sei','You are very tall.'],['Roma ___ in Italia.','è','Rome is in Italy.'],['Marco ___ stanco oggi.','è','Marco is tired today.'],['Noi ___ in classe.','siamo','We are in class.'],['Voi ___ inglesi o americani?','siete','Are you English or American?'],['I bambini ___ in giardino.','sono','The children are in the garden.'],['Il caffè ___ caldo.','è','The coffee is hot.'],['Io e Sarah ___ amiche.','siamo','Sarah and I are friends.'],['Tu e Tom ___ pronti per la lezione?','siete','Are you and Tom ready for the lesson?']
 ];
@@ -175,7 +175,7 @@ const numberPracticeValues=[...Array.from({length:31},(_,n)=>n),40,50,60,70,80,9
 sheet('l6-number-patterns','Number-building patterns','Numbers 20+ · patterns and age','Use the highlighted repeated parts rather than memorising each long word separately.',[
  bullets('The joins and repeating parts',numberPatterns),
  table('The four source columns',['UNITÀ','DECINE','CENTINAIA','MIGLIAIA'],numberRows.map(r=>[0,2,4,6].map(i=>'<span class="l6-number-value">'+r[i].toLocaleString('en-GB')+'</span> '+num(r[i+1])))),
- table('Age and larger numbers',['Meaning','Italian'],[['How old are you? — informal','Quanti anni hai?'],['How old are you? — formal','Quanti anni ha?'],['I am 34 years old.','Io ho trentaquattro anni.'],['1 million / 2 million','Un milione / Due milioni'],['1 billion / 2 billion','Un miliardo / Due miliardi']])
+ table('Age and larger numbers',['Meaning','Italian'],[['How old are you? · informal','Quanti anni hai?'],['How old are you? · formal','Quanti anni ha?'],['I am 34 years old.','Io ho trentaquattro anni.'],['1 million / 2 million','Un milione / Due milioni'],['1 billion / 2 billion','Un miliardo / Due miliardi']])
 ],numberPracticeValues.map(n=>q('l6-number-write-'+n,'Write <b>'+n.toLocaleString('en-GB')+'</b> in Italian.',numMap.get(n),n===23?'Remember the accent on the final vowel.':n===21||n===28?'Think about the final vowel of venti before uno or otto.':n>=1000?'Compare mille with the repeating mila ending.':n>=100?'Use the repeated cento part.':n>=40?'Use the tens column of the handout.':'Write the number as one Italian word.',{explanation:num(numMap.get(n)),source:n<=20?'Earlier course reference · Avere, numbers and family · Numbers 0–20':sourceText('numbers',1),origin:n<=20?'User-requested revision using the existing 0–20 course reference':'User-requested writing practice using the supplied number handout'})),'numbers',1,'pattern');
 const intPairs=[['Sei inglese.','Sei inglese?','Are you English?'],['Sei studente.','Sei studente?','Are you a student?'],['È italiano.','È italiano?','Is he Italian?'],['Siamo pronti.','Siamo pronti?','Are we ready?'],['Siete inglesi.','Siete inglesi?','Are you English? (plural)']];
 sheet('l6-intonation','Statement or question?','Intonation · see the curve, then say it','Keep the words and notice how the pitch ends in the source diagram.',[
@@ -189,7 +189,7 @@ sheet('l6-plural-workshop','Plural partitive workshop','Group activity · 15 phr
 ],pluralRows.map((x,i)=>q('l6-plural-'+(i+1),'Make the whole phrase plural: <b>'+esc(x[0])+'</b>.',x[1],'Change the article and the noun ending.',{explanation:esc(x[2]),source:sourceText('plurals',2),origin:"Teacher's answer key"})),'plurals',1,'revision');
 sheet('l6-useful-questions','Useful questions','Question words and requests','Choose a question that fits the meaning or situation.',[
  table('Question words',['Word','Meaning','Example'],[['Chi?','Who?','Chi sei?'],['Come?','How?','Come stai?'],['Dove?','Where?','Dove sei?'],['Di dove?','Where from?','Di dove sei?'],['Che cosa? / Cosa?','What?','Che cosa è / Cos’è?'],['Quando?','When?','Quando vieni?'],['Perché?','Why?','Perché vieni?']]),
- table('Useful requests',['Situation','Expression'],[['Ask what a word means','Che cosa significa “letto”?'],['Ask for spelling','Come si scrive “letto” in italiano?'],['Ask how to say an English word','Come si dice “bed” in italiano?'],['Say you did not understand','Non ho capito!'],['Request repetition — informal','Come, scusa? Puoi ripetere, per favore?'],['Request repetition — formal','Come, scusi? Può ripetere, per favore?']])
+ table('Useful requests',['Situation','Expression'],[['Ask what a word means','Che cosa significa “letto”?'],['Ask for spelling','Come si scrive “letto” in italiano?'],['Ask how to say an English word','Come si dice “bed” in italiano?'],['Say you did not understand','Non ho capito!'],['Request repetition · informal','Come, scusa? Puoi ripetere, per favore?'],['Request repetition · formal','Come, scusi? Può ripetere, per favore?']])
 ],[["Ask when",'Quando vieni?',['Quando vieni?','Perché vieni?','Chi sei?']],['Ask why','Perché vieni?',['Dove sei?','Perché vieni?','Quando vieni?']],['Ask who','Chi sei?',['Chi sei?','Dove sei?','Cos’è?']],['Ask where','Dove sei?',['Dove sei?','Chi sei?','Come stai?']],['Ask what letto means','Che cosa significa “letto”?',['Come si scrive “letto” in italiano?','Che cosa significa “letto”?','Come si dice “bed” in italiano?']],['Ask how letto is spelt','Come si scrive “letto” in italiano?',['Come si scrive “letto” in italiano?','Non ho capito!','Di dove sei?']],['Say you did not understand','Non ho capito!',['Non ho capito!','Benissimo!','Come va?']],['Request repetition formally','Come, scusi? Può ripetere, per favore?',['Come, scusa? Puoi ripetere, per favore?','Come, scusi? Può ripetere, per favore?','Come va?']]].map((x,i)=>q('l6-useful-'+(i+1),esc(x[0])+'.',x[1],'Choose the question word or register that matches the situation.',{choices:x[2],explanation:esc(x[1]),source:sourceText('tables',3),origin:'Adapted selection task from supplied expressions'})),'tables',3,'pattern');
 // Class order from Session 6 minutes pp.1–5. A topic is not a worksheet filename.
 // Existing exercise routes/IDs remain available so saved answers and bookmarks survive.
@@ -198,7 +198,7 @@ const learn=section=>withStage('learn',section);
 const example=section=>withStage('examples',section);
 const bySlug=slug=>sheets.find(s=>s.slug===slug);
 const formsSections=[
- learn(table('Essere — present tense',['Pronoun','Essere','Meaning'],conjugation)),
+ learn(table('Essere · present tense',['Pronoun','Essere','Meaning'],conjugation)),
  learn(bullets('What to notice',[
   'Essere is irregular: learn each form. <b>Io sono</b> and <b>loro sono</b> use the same verb form.',
   'The subject pronoun is often omitted. Compare <b>Sono inglese</b> (I am English) and <b>Sono inglesi</b> (They are English).',
@@ -212,7 +212,7 @@ const formsSections=[
  ])),
  example(bullets('Context matters',[
   '<b>Sono a casa.</b> The source gives “They are at home”; without a subject or context, <b>sono</b> also serves “I am”. This example is not used as a single-answer subject test.',
-  '<details><summary>Another use mentioned in class</summary><p>The source also introduces essere as an auxiliary: <b>Io sono andato</b> (“I went / I am gone”). Past-tense practice is not added here.</p></details>'
+  '<details><summary>Another use mentioned in class</summary><p>The source also introduces essere as an auxiliary: <b>Io sono andato</b> (“I went / I have gone”). Past-tense practice is not added here.</p></details>'
  ]))
 ];
 for(const slug of ['l6-essere-class','l6-essere-matching','l6-essere-gaps','l6-essere-translation']){
@@ -222,10 +222,10 @@ for(const slug of ['l6-essere-class','l6-essere-matching','l6-essere-gaps','l6-e
 }
 const practiceGroups={
  'l6-essere-class':[
-  {slug:'l6-essere-class',label:'Class practice — 12 sentences'},
-  {slug:'l6-essere-matching',label:'Homework — match the forms (6)'},
-  {slug:'l6-essere-gaps',label:'Homework — sentence gaps (10)'},
-  {slug:'l6-essere-translation',label:'Homework — choose the sentence (8)'}
+  {slug:'l6-essere-class',label:'Class practice · 12 sentences'},
+  {slug:'l6-essere-matching',label:'Homework · match the forms (6)'},
+  {slug:'l6-essere-gaps',label:'Homework · sentence gaps (10)'},
+  {slug:'l6-essere-translation',label:'Homework · choose the sentence (8)'}
  ]
 };
 const numberSheet=bySlug('l6-number-patterns');
@@ -251,8 +251,8 @@ usefulSheet.study_sections=[learn(usefulSheet.study_sections[0]),
  ])),
  example(table('When you need help',['Situation','Supplied expression'],[
   ['I did not understand','Non ho capito!'],
-  ['Request repetition — informal','Come, scusa? Puoi ripetere, per favore?'],
-  ['Request repetition — formal','Come, scusi? Può ripetere, per favore?']
+  ['Request repetition · informal','Come, scusa? Puoi ripetere, per favore?'],
+  ['Request repetition · formal','Come, scusi? Può ripetere, per favore?']
  ]))
 ];
 sheet('l6-greetings','Greetings and responses','Come va? Come sta? Come stai?',
@@ -260,10 +260,10 @@ sheet('l6-greetings','Greetings and responses','Come va? Come sta? Come stai?',
  learn(table('Ask how someone is',['Supplied greeting','Use'],[['Come va?','How is it going?'],['Come sta?','Formal'],['Come stai?','Informal']])),
  example(table('Respond',['Supplied response','Meaning'],[['Benissimo!','Very well!'],['Bene.','Well.'],['Non c’è male.','Not bad.'],['Sto proprio male.','I feel really bad.']]))
  ],[
- q('l6-greeting-response-1','Choose the response meaning “Very well”.','Benissimo!','Use a response from the warm-up.',{choices:['Benissimo!','Non c’è male.','Sto proprio male.'],source:sourceText('minutes',1),origin:'Adapted recall of the supplied warm-up expressions',explanation:'Benissimo! — Very well!'}),
- q('l6-greeting-response-2','Choose the response meaning “Not bad”.','Non c’è male.','Use the complete expression.',{choices:['Bene.','Non c’è male.','Sto proprio male.'],source:sourceText('minutes',1),origin:'Adapted recall of the supplied warm-up expressions',explanation:'Non c’è male. — Not bad.'}),
- q('l6-greeting-register-1','Which question addresses someone formally?','Come sta?','Compare sta with stai.',{choices:['Come sta?','Come stai?'],source:sourceText('minutes',1),origin:'Adapted register check from supplied greetings',explanation:'Come sta? — formal.'}),
- q('l6-greeting-register-2','Which question addresses someone informally?','Come stai?','Compare stai with sta.',{choices:['Come sta?','Come stai?'],source:sourceText('minutes',1),origin:'Adapted register check from supplied greetings',explanation:'Come stai? — informal.'})
+ q('l6-greeting-response-1','Choose the response meaning “Very well”.','Benissimo!','Use a response from the warm-up.',{choices:['Benissimo!','Non c’è male.','Sto proprio male.'],source:sourceText('minutes',1),origin:'Adapted recall of the supplied warm-up expressions',explanation:'Benissimo! · Very well!'}),
+ q('l6-greeting-response-2','Choose the response meaning “Not bad”.','Non c’è male.','Use the complete expression.',{choices:['Bene.','Non c’è male.','Sto proprio male.'],source:sourceText('minutes',1),origin:'Adapted recall of the supplied warm-up expressions',explanation:'Non c’è male. · Not bad.'}),
+ q('l6-greeting-register-1','Which question addresses someone formally?','Come sta?','Compare sta with stai.',{choices:['Come sta?','Come stai?'],source:sourceText('minutes',1),origin:'Adapted register check from supplied greetings',explanation:'Come sta? · formal.'}),
+ q('l6-greeting-register-2','Which question addresses someone informally?','Come stai?','Compare stai with sta.',{choices:['Come sta?','Come stai?'],source:sourceText('minutes',1),origin:'Adapted register check from supplied greetings',explanation:'Come stai? · informal.'})
  ],'minutes',1,'warm-up');
 sheet('l6-age-dialogue','Age and introductions','Use the numbers in a formal and informal conversation.',
  'Ask about age, name and origin using the formal and informal dialogue.',[
@@ -275,11 +275,215 @@ sheet('l6-age-dialogue','Age and introductions','Use the numbers in a formal and
   'The classroom identity cards were not supplied. Use the Marco / 25 / Napoli dialogue above rather than an invented identity.'
  ]))
  ],[
- q('l6-dialogue-age-informal','Choose the informal age question.','Quanti anni hai?','Look at the final verb.',{choices:['Quanti anni ha?','Quanti anni hai?'],source:sourceText('minutes',2),origin:'Adapted recall from the supplied dialogue',explanation:'Quanti anni hai? — informal.'}),
- q('l6-dialogue-age-formal','Choose the formal age question.','Quanti anni ha?','Look at the final verb.',{choices:['Quanti anni ha?','Quanti anni hai?'],source:sourceText('minutes',2),origin:'Adapted recall from the supplied dialogue',explanation:'Quanti anni ha? — formal.'}),
- q('l6-dialogue-name','Choose the informal name question from the dialogue.','Come ti chiami?','Compare ti with si.',{choices:['Come ti chiami?','Come si chiama?'],source:sourceText('minutes',2),origin:'Adapted recall from the supplied dialogue',explanation:'Come ti chiami? — informal.'}),
- q('l6-dialogue-origin','Choose the informal origin question using essere.','Di dove sei?','Choose the essere form, not venire.',{choices:['Di dove è?','Di dove sei?','Da dove viene?'],source:sourceText('minutes',2),origin:'Adapted recall from the supplied dialogue',explanation:'Di dove sei? — informal origin with essere.'})
+ q('l6-dialogue-age-informal','Choose the informal age question.','Quanti anni hai?','Look at the final verb.',{choices:['Quanti anni ha?','Quanti anni hai?'],source:sourceText('minutes',2),origin:'Adapted recall from the supplied dialogue',explanation:'Quanti anni hai? · informal.'}),
+ q('l6-dialogue-age-formal','Choose the formal age question.','Quanti anni ha?','Look at the final verb.',{choices:['Quanti anni ha?','Quanti anni hai?'],source:sourceText('minutes',2),origin:'Adapted recall from the supplied dialogue',explanation:'Quanti anni ha? · formal.'}),
+ q('l6-dialogue-name','Choose the informal name question from the dialogue.','Come ti chiami?','Compare ti with si.',{choices:['Come ti chiami?','Come si chiama?'],source:sourceText('minutes',2),origin:'Adapted recall from the supplied dialogue',explanation:'Come ti chiami? · informal.'}),
+ q('l6-dialogue-origin','Choose the informal origin question using essere.','Di dove sei?','Choose the essere form, not venire.',{choices:['Di dove è?','Di dove sei?','Da dove viene?'],source:sourceText('minutes',2),origin:'Adapted recall from the supplied dialogue',explanation:'Di dove sei? · informal origin with essere.'})
  ],'minutes',2,'dialogue');
+// The two decisions in each paper matching row use the two original option banks.
+const bilingual=(en,it)=>'<span class="editorial-label"><span class="editorial-label-main" lang="en">'+en+'</span><span class="editorial-label-sub" lang="it">'+it+'</span></span>';
+const persons=[
+ ['One speaker. Use the first-person singular.','Una sola persona parla di sé. Usa la prima singolare.'],
+ ['One person you address informally. Use the tu form.','Parli a una persona a cui dai del tu. Usa la seconda singolare.'],
+ ['One person or thing. Use the third-person singular.','Una sola persona o cosa. Usa la terza singolare.'],
+ ['The group includes the speaker. Use the noi form.','Nel gruppo c’è chi parla. Usa la prima plurale.'],
+ ['You address a group. Use the voi form.','Ti rivolgi a più persone. Usa la seconda plurale.'],
+ ['Several people or things are being described. Use the loro form.','Si parla di più persone o cose. Usa la terza plurale.']
+];
+const sourcePronouns=['I','You (singular)','He / She','We','You all','They'];
+const matchingGuides=['EE-oh SOH-noh','too say','loo-ee / lay eh','noy SYAH-moh','voy SYEH-teh','LOH-roh SOH-noh'];
+const pronIds=['p-io','p-tu','p-lui-lei','p-noi','p-voi','p-loro'];
+const verbIds=['C','E','A','B','D','F'];
+const pronOptions=[1,5,0,4,2,3].map(i=>({id:pronIds[i],right:conjugation[i][0]}));
+const verbOptions=[
+ {id:'A',right:'A. è'}, {id:'B',right:'B. siamo'}, {id:'C',right:'C. sono (1ª persona singolare)'},
+ {id:'D',right:'D. siete'}, {id:'E',right:'E. sei'}, {id:'F',right:'F. sono (3ª persona plurale)'}
+];
+const matchSheet=bySlug('l6-essere-matching');
+matchSheet.questions=matchSheet.questions.map((old,i)=>{
+ const model=JSON.stringify([pronIds[i],verbIds[i]]);
+ const pairs=[
+  {id:pronIds[i],left:'Pronome italiano',right:conjugation[i][0],options:pronOptions},
+  {id:verbIds[i],left:'Forma di essere',right:verbOptions.find(option=>option.id===verbIds[i]).right,options:verbOptions}
+ ];
+ return {...old,type:'match',answer_mode:'match',worksheetOrder:true,legacyMatchValue:old.model,
+  pairs,extras:[],choices:[],model,answers:[model],matchLeftLang:'it',matchRightLang:'it',
+  hint:bilingual(...persons[i]),prompt:bilingual('Match <b>'+sourcePronouns[i]+'</b> to its Italian pronoun and verb.','Abbina <b>'+sourcePronouns[i]+'</b> al pronome italiano e alla forma di essere.'),
+  support:{hint:{en:persons[i][0],it:persons[i][1],html:''},prompt:null,lines:[{it:old.model,en:conjugation[i][2],pron:matchingGuides[i]}]},
+  explanation:bilingual(conjugation[i][2]+' = '+old.model+'.',old.model+' = '+conjugation[i][2]+'.')};
+});
+const personHint=(n,en='',it='')=>[persons[n][0]+(en?' '+en:''),persons[n][1]+(it?' '+it:'')];
+const gapHints=[
+ personHint(0),personHint(1),['Roma is one city. Use the same verb form as lei.','Roma è una città. Usa la stessa forma di lei.'],
+ ['Marco is one person. Use the form for lui.','Marco è una persona. Usa la forma di lui.'],personHint(3),
+ personHint(4,'A question keeps the same verb form.','La domanda mantiene la stessa forma verbale.'),
+ ['I bambini means the children. The subject is plural.','I bambini è plurale. Pensa a loro.'],
+ ['Il caffè is one drink. Use the third-person singular.','Il caffè è una sola bevanda. Usa la terza singolare.'],
+ ['Io e Sarah includes the speaker. Replace the two names with “we”.','Io e Sarah comprende chi parla. Pensa a noi.'],
+ ['Tu e Tom are two people you address together.','Tu e Tom indica due persone a cui parli. Pensa a voi.']
+];
+const classHints=[personHint(0),personHint(0,'Contento describes the speaker.','Contento descrive chi parla.'),personHint(1),personHint(1,'In biblioteca is the place.','In biblioteca indica il luogo.'),
+ ['Luca is one boy. Which form goes with lui?','Luca è un ragazzo. Quale forma si usa con lui?'],
+ ['Il gatto is singular. Nero describes the cat.','Il gatto è singolare. Nero descrive il gatto.'],
+ ['La mela is one apple even though two adjectives follow.','La mela è una sola, anche con due aggettivi.'],
+ personHint(3),personHint(3,'Fratelli describes the group.','Fratelli descrive il gruppo.'),personHint(4),
+ ['I libri are several books. The table is the place.','I libri è plurale. Il tavolo indica il luogo.'],
+ ['Le stelle are several stars. Use the verb for loro.','Le stelle è plurale. Usa la forma di loro.']
+];
+const translationHints=[personHint(0),personHint(1),['She is one woman. Use the third-person singular of essere.','She indica una donna. Usa essere alla terza singolare.'],personHint(3),personHint(4),personHint(5),['The subject is one pizza. The adjective buona describes it.','Il soggetto è una pizza. Buona la descrive.'],['Paul and I includes the speaker. Look for the form for “we”.','Paul and I comprende chi parla. Cerca la forma di noi.']];
+const negativeHints=[personHint(0),personHint(1),['Anna is one person. Think of lei.','Anna è una persona. Pensa a lei.'],personHint(3),personHint(4),['Marco and Luca are two people. Think of loro.','Marco e Luca sono due persone. Pensa a loro.']];
+function applyHints(slug,hints){bySlug(slug).questions.forEach((item,i)=>{item.hint=bilingual(...hints[i]);});}
+applyHints('l6-essere-class',classHints);
+applyHints('l6-essere-gaps',gapHints);
+applyHints('l6-negative-homework',negativeHints.map(([en,it])=>['Put non before essere. '+en,'Metti non prima di essere. '+it]));
+const translations=bySlug('l6-essere-translation');
+translations.questions.forEach((item,i)=>{
+ item.worksheetOrder=true;item.hint=bilingual(...translationHints[i]);item.prompt=bilingual('Choose the Italian translation.','Scegli la traduzione italiana.')+' <b lang="en">'+esc(hwMC[i][0])+'</b>';
+});
+const descriptions={
+ 'l6-essere-matching':['Homework · Match each English pronoun to its Italian pronoun and verb.','Compiti · Abbina ogni pronome inglese al pronome italiano e al verbo.'],
+ 'l6-essere-gaps':['Homework · Fill each gap with essere.','Compiti · Completa le frasi con essere.'],
+ 'l6-essere-translation':['Homework · Choose one of the three Italian sentences.','Compiti · Scegli una delle tre frasi italiane.'],
+ 'l6-essere-class':['Class worksheet · Fill each gap with essere.','Scheda di classe · Completa le frasi con essere.'],
+ 'l6-negative-homework':['Homework · Complete each sentence with non and essere.','Compiti · Completa le frasi con non ed essere.'],
+ 'l6-number-patterns':['Extra practice · Write each number as a word.','Esercizio aggiuntivo · Scrivi ogni numero in lettere.'],
+ 'l6-intonation':['Extra practice · Read the sentence with the pitch shown.','Esercizio aggiuntivo · Leggi la frase con l’intonazione indicata.'],
+ 'l6-useful-questions':['Extra practice · Choose the phrase for each situation.','Esercizio aggiuntivo · Scegli la frase adatta alla situazione.'],
+ 'l6-plural-workshop':['Class group worksheet · Change each phrase from “a” to “some”.','Scheda di gruppo · Trasforma le espressioni dal singolare al plurale con il partitivo.'],
+ 'l6-greetings':['Warm-up · Choose a greeting or a reply.','Riscaldamento · Scegli un saluto o una risposta.'],
+ 'l6-age-dialogue':['Dialogue practice · Use tu or Lei for the person you are speaking to.','Dialogo · Usa tu o Lei secondo la persona a cui parli.']
+};
+for(const [slug,wording] of Object.entries(descriptions))bySlug(slug).intro=bilingual(...wording);
+const pluralGlosses=['tie','sofa','aeroplane','night','bridge','mirror','chair','bar of soap','classroom','bed','tower','tree','table','wave','stadium'];
+pluralsSheet.questions.forEach((item,i)=>{
+ const [start]=pluralRows[i];const noun=start.split(/[ ’]/).at(-1);
+ let en,it;
+ if(start.startsWith('una ')||start.includes('’')){
+   en='Feminine noun. Choose the feminine plural for “some”.';it='Nome femminile. Scegli il partitivo femminile plurale.';
+ }else if(start.startsWith('uno ')){
+   en='Masculine noun starting with s + consonant. Think of the plural article gli.';it='Nome maschile con s + consonante. Pensa all’articolo plurale gli.';
+ }else if(/^[aeiou]/.test(noun)){
+   en='Masculine noun starting with a vowel. Think of the plural article gli.';it='Nome maschile che inizia per vocale. Pensa all’articolo plurale gli.';
+ }else{
+   en='Masculine noun starting with an ordinary consonant. Think of the plural article i.';it='Nome maschile che inizia per consonante semplice. Pensa all’articolo plurale i.';
+ }
+ const ending=noun.slice(-1);
+ item.hint=bilingual(en+' Change the final -'+ending+' too.',it+' Cambia anche la -'+ending+' finale.');
+ item.prompt=bilingual('Make it plural with “some”.','Metti al plurale con il partitivo.')+' <b lang="it">'+esc(start)+'</b> <small lang="en">('+pluralGlosses[i]+')</small>';
+});
+const unitClues=[
+ ['It starts with z.','Inizia con z.'],['It starts with u.','Inizia con u.'],['The two vowels after d sound separately.','Le due vocali dopo d si pronunciano separatamente.'],['On its own, “three” has no written accent.','Il numero tre da solo si scrive senza accento.'],
+ ['It contains qu and a double consonant.','Contiene qu e una consonante doppia.'],['Its opening ci has the sound of “ch” in chair.','La c iniziale ha un suono dolce.'],['Two vowels follow s.','Dopo la s ci sono due vocali.'],
+ ['Double the middle consonant.','Raddoppia la consonante centrale.'],['It starts and ends with o. Double the middle consonant.','Inizia e finisce con o. Raddoppia la consonante centrale.'],
+ ['It starts with n and ends in e.','Inizia con n e finisce con e.'],['Its last consonant has a soft c sound.','L’ultima consonante è una c dolce.']
+];
+numberSheet.questions.forEach((item,i)=>{
+ const n=numberPracticeValues[i];let clue;
+ if(n<=10)clue=unitClues[n];
+ else if(n<=16)clue=['This teen number ends in -dici. Think of '+(n-10)+' first.','Questo numero termina in -dici. Pensa prima a '+(n-10)+'.'];
+ else if(n<=19)clue=['Here the part for ten comes first. Join it to the part for '+(n-10)+'.','Qui la parte del dieci viene prima. Uniscila alla parte del '+(n-10)+'.'];
+ else if(n===21||n===28)clue=['Before uno or otto, drop the final vowel of venti.','Davanti a uno o otto cade la vocale finale di venti.'];
+ else if(n===23)clue=['Join twenty and three. Accent the final é.','Unisci venti e tre. Metti l’accento sulla é finale.'];
+ else if(n>=22&&n<=29)clue=['Keep the final i of venti before the word for '+(n-20)+'.','Mantieni la i di venti prima della parola per '+(n-20)+'.'];
+ else if(n===100)clue=['Use the single word for one hundred. It begins with ce-.','Usa la parola per un centinaio: inizia con ce-.'];
+ else if(n===200)clue=['Join two and hundred as one word.','Unisci due e cento in un’unica parola.'];
+ else if(n===1000)clue=['Use the singular thousand form with a double l.','Usa la forma del singolare con la doppia l.'];
+ else if(n===10000)clue=['Join ten and the plural thousand ending -mila.','Unisci dieci alla desinenza plurale -mila.'];
+ else if(n>=40)clue=['This is a multiple of ten. Its ending is -anta.','È una decina intera. La desinenza è -anta.'];
+ else clue=n===20?['It starts with v and ends in -nti.','Inizia con v e termina in -nti.']:['It starts with tr and ends in -enta.','Inizia con tr e termina in -enta.'];
+ item.hint=bilingual(...clue);
+});
+const intonationHints=[
+ ['Follow the last part of the curve. It rises.','Segui la parte finale della curva. Sale.'],
+ ['Follow the last part of the curve. It falls.','Segui la parte finale della curva. Scende.'],
+ ...intPairs.slice(0,4).map(()=>['Keep the words in order. Which final mark asks a question?','Mantieni l’ordine delle parole. Quale segno indica una domanda?'])
+];
+applyHints('l6-intonation',intonationHints);
+intonationSheet.questions.forEach((item,i)=>{
+ item.prompt=i<2?curve(i===0?'rise':'fall')+'<span lang="it">Claudia è di Vienna</span> '+bilingual('Statement or question?','Affermazione o domanda?'):
+ bilingual('Write it as a question.','Trasforma in domanda.')+' <b lang="it">'+intPairs[i-2][0]+'</b>';
+});
+const situations=[
+ ['Ask when someone is coming.','Chiedi quando arriva qualcuno.','Choose the word for a time.','Scegli la parola che chiede il momento.'],
+ ['Ask why someone is coming.','Chiedi perché viene qualcuno.','Ask for a reason.','Chiedi il motivo.'],
+ ['Ask who someone is.','Chiedi l’identità di qualcuno.','You want a person’s identity.','Ti interessa l’identità della persona.'],
+ ['Ask where someone is.','Chiedi dove si trova qualcuno.','You want their current location.','Ti interessa il luogo in cui si trova.'],
+ ['Ask what letto means.','Chiedi il significato di letto.','Look for the verb about meaning.','Cerca il verbo che indica il significato.'],
+ ['Ask how letto is spelt.','Chiedi come si scrive letto.','Ask for the letters of the word.','Chiedi le lettere della parola.'],
+ ['Say you did not understand.','Di’ che non hai capito.','You need a negative statement.','Serve una frase negativa.'],
+ ['Politely ask a stranger to repeat.','Chiedi a un estraneo di ripetere.','Use the Lei form in both parts.','Dai del Lei in entrambe le parti.']
+];
+usefulSheet.questions.forEach((q,i)=>{q.prompt=bilingual(...situations[i].slice(0,2));q.hint=bilingual(...situations[i].slice(2));});
+applyHints('l6-greetings',[
+ ['Look for the ending that means “very”.','Cerca il suffisso che rafforza bene.'],
+ ['Look for a negative reply that mentions male.','Cerca una risposta negativa con male.'],
+ ['One stranger. Use the Lei form of stare.','Un estraneo: usa la forma di stare per il Lei.'],
+ ['One friend. Use the tu form of stare.','Un amico: usa la forma di stare per il tu.']
+]);
+applyHints('l6-age-dialogue',[
+ ['Age uses avere. Choose the tu form for one friend.','Per l’età si usa avere. Scegli la forma di tu.'],
+ ['Age uses avere. A stranger addressed as Lei takes the third-person singular.','Per l’età si usa avere. Con un estraneo usa la terza singolare, Lei.'],
+ ['With a friend, choose a tu form of chiamarsi.','Con un amico scegli la forma di tu del verbo chiamarsi.'],
+ ['A friend’s origin uses di dove and the tu form of essere.','Per la provenienza di un amico usa di dove ed essere alla seconda singolare.']
+]);
+numberSheet.study_sections.push(example(bullets('Homework in your coursebook',[
+ bilingual('Page 20, exercise 1. Choose each family member’s age.','Pagina 20, esercizio 1. Scegli l’età di ogni familiare.'),
+ bilingual('Page 20, exercise 2A–B. Complete the number list, then check with the book audio.','Pagina 20, esercizio 2A–B. Completa la lista dei numeri, poi controlla con l’audio del libro.'),
+ bilingual('Page 21, exercise 3. Tick the numbers you hear.','Pagina 21, esercizio 3. Segna i numeri che senti.'),
+ bilingual('Page 21, exercise 4A. Look at the picture and answer the questions.','Pagina 21, esercizio 4A. Guarda l’immagine e rispondi alle domande.')
+])));
+intonationSheet.study_sections.push(example(bullets('Homework in your coursebook',[
+ bilingual('Page 175, exercise 19. Listen and add ? or . to each sentence. Listen again and repeat.','Pagina 175, esercizio 19. Ascolta e aggiungi ? o . a ogni frase. Riascolta e ripeti.')
+])));
+
+// Keep the action and the material the learner acts on in separate blocks.
+function practiceTask(slug, build) {
+ bySlug(slug).questions.forEach((question, index) => Object.assign(question, build(index)));
+}
+for (const [slug, rows] of [['l6-essere-class',classGaps],['l6-essere-gaps',hwGaps],['l6-negative-homework',negHW]]) {
+ const task = rows === negHW ? 'Make the sentence negative. Write non and the missing form of essere (to be).' : 'Write the missing form of essere (to be).';
+ practiceTask(slug, i => ({task, stimulus:[{label:'Italian',lang:'it',text:rows[i][0]},{label:'Meaning',lang:'en',text:rows[i][2]}]}));
+}
+practiceTask('l6-essere-matching', i => ({
+ task:'Choose the Italian pronoun. Then choose its form of essere (to be).', stimulus:[{label:'English pronoun',lang:'en',text:sourcePronouns[i]}]
+}));
+practiceTask('l6-essere-translation', i => ({
+ task:'Choose the Italian translation with the correct form of essere (to be).', stimulus:[{label:'English',lang:'en',text:hwMC[i][0]}]
+}));
+practiceTask('l6-number-patterns', i => ({
+ task:'Write the number in Italian as one word.', stimulus:[{label:'Number',lang:'en',text:numberPracticeValues[i].toLocaleString('en-GB')}]
+}));
+practiceTask('l6-intonation', i => i < 2 ? {
+ task:'Follow the line to the end. Choose whether the speaker is asking a question or making a statement.',
+ stimulusHtml:curve(i===0?'rise':'fall')+'<p lang="it">Claudia è di Vienna</p>'
+} : {
+ task:'Turn the statement into a question. Write the whole sentence with its new punctuation.', stimulus:[{label:'Statement',lang:'it',text:intPairs[i-2][0]}]
+});
+practiceTask('l6-plural-workshop', i => ({
+ task:'Change “a” to “some”. Write the plural article and noun in Italian.', stimulus:[{label:'Singular',lang:'it',text:pluralRows[i][0]},{label:'Noun meaning',lang:'en',text:pluralGlosses[i]}]
+}));
+const questionSituations=[
+ 'You want to know when your friend is coming.', 'You want to know why your friend is coming.',
+ 'You want to ask someone who they are.', 'You want to know where your friend is now.',
+ 'You hear the word letto and want to know what it means.', 'You hear the word letto and want to know how to spell it.',
+ 'You did not understand what the teacher said.', 'You would like a stranger to repeat what they said.'
+];
+practiceTask('l6-useful-questions', i => ({
+ task:i===6?'Choose what you would say in Italian.':'Choose the Italian question you would ask.', stimulus:[{label:'Situation',lang:'en',text:questionSituations[i]}]
+}));
+practiceTask('l6-greetings', i => i<2 ? {
+ task:'Choose the Italian reply with this meaning.', stimulus:[{label:'English',lang:'en',text:['Very well!','Not bad.'][i]}]
+} : {
+ task:'Choose how to ask this person how they are.', stimulus:[{label:'Situation',lang:'en',text:i===2?'You are speaking politely to a stranger.':'You are speaking to a friend.'}]
+});
+const introductionCues=[
+ ['Choose the Italian question about age.','You are speaking to a friend.'],
+ ['Choose the Italian question about age.','You are speaking politely to a stranger.'],
+ ['Choose how to ask someone their name in Italian.','You are meeting a new classmate. Use tu.'],
+ ['Choose how to ask where someone comes from. Use essere (to be).','You are speaking to a friend.']
+];
+practiceTask('l6-age-dialogue', i => ({task:introductionCues[i][0],stimulus:[{label:'Situation',lang:'en',text:introductionCues[i][1]}]}));
+
 const flow=['l6-greetings','l6-plural-workshop','l6-number-patterns','l6-age-dialogue','l6-essere-class','l6-negative-homework','l6-intonation','l6-useful-questions'];
 for(const item of sheets){
  item.topicSlug=item.topicSlug||item.slug;

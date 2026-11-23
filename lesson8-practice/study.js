@@ -4,9 +4,14 @@
   const {topics, bilingual, escape, soundButton} = root.ItalianLesson8;
   const section = (stage, title, titleIt, items) => ({stage, type: 'bullets', title, titleIt, items});
   const example = (italian, english) => '<strong lang="it">' + escape(italian) + '</strong><br><span lang="en" data-ui-no-translate>' + escape(english) + '</span>';
-  function question(id, en, it, model, hintEn, hintIt, italian, english, alternatives = [], pronunciation = '') {
+  const line = (label, text, lang = 'it') => ({label, text, lang});
+  function question(id, task, stimulus, model, hintEn, hintIt, italian, english, alternatives = [], pronunciation = '') {
+    // The full text fallback also preserves the instruction and each distinct line.
+    const prompt = '<span lang="en" data-ui-no-translate>' + escape(task) + '</span>' +
+      stimulus.map(row => '<br>' + (row.label ? '<span lang="en">' + escape(row.label) + '</span> · ' : '') +
+        '<span lang="' + row.lang + '">' + escape(row.text) + '</span>').join('');
     return {
-      id: 'l8-' + id, type: 'text', kind: 'word', prompt: bilingual(en, it), model,
+      id: 'l8-' + id, type: 'text', kind: 'word', task, stimulus, prompt, model,
       answers: [model, ...alternatives], choices: [], optional_subjects: [], answer_mode: 'accent',
       hint: bilingual(hintEn, hintIt), explanation: '',
       support: {hint: {en: hintEn, it: hintIt, html: ''}, prompt: null,
@@ -16,7 +21,7 @@
   function sheet(topic, subtitle, subtitleIt, sections, questions) {
     const meta = topics.find(item => item.key === topic);
     return {
-      slug: meta.slug, title: meta.title, titleIt: meta.it, subtitle, subtitleIt,
+      slug: meta.slug, title: 'Extra practice · ' + meta.title, titleIt: 'Esercizi aggiuntivi · ' + meta.it, subtitle, subtitleIt, sourceKind: 'Extra practice',
       intro: bilingual(subtitle, subtitleIt), scope: 'Lesson 8 · Additional practice', lesson: 'L8', courseLesson: 'L8',
       study_sections: sections, questions
     };
@@ -27,6 +32,8 @@
       bilingual('Start with the verb. The subject is who or what it agrees with. A direct object is the person or thing the verb acts on directly.',
         'Parti dal verbo. Il soggetto è la persona o la cosa con cui il verbo concorda. Il complemento oggetto indica chi o che cosa è coinvolto direttamente nell’azione.'),
       example('Anna mangia la pizza.', 'Anna eats the pizza. Anna is the subject. Mangia is the verb. What does Anna eat? La pizza is the direct object.'),
+      example('Che cosa mangia Anna? / Dove mangia Anna?', 'What does Anna eat? / Where does Anna eat? First decide whether you are asking for food or for a place.'),
+      example('Saluto Anna. / Telefono ad Anna.', 'I greet Anna. / I phone Anna. Saluto chi? Anna directly answers who I greet. A chi telefono? The verb telefonare needs a before the person I ring.'),
       example('Anna mangia in cucina.', 'Anna eats in the kitchen. In cucina says where she eats. Mangiare can take an object, but this sentence leaves it unstated.'),
       example('Lavo i piatti. / Lavoro in un ufficio. / Lavoro il legno.', 'I wash the dishes (lavare). / I work in an office (lavorare). / I work the wood (lavorare). In un ufficio gives the workplace. Il legno is what I shape or work on.'),
       example('Il cuoco brucia il pane. / Il pane brucia.', 'The cook burns the bread. / The bread burns. The first use is transitive: the bread is the direct object. The second use is intransitive: the bread is the subject and there is no direct object.'),
@@ -41,23 +48,71 @@
       example('Faccio l’insegnante e lavoro in una scuola.', 'I’m a teacher and I work in a school. You can also say Lavoro come insegnante in una scuola.')
     ])
   ];
-  const grammarItems = [
-    ['g-object', 'Anna mangia la pizza. Copy the whole direct object.', 'Anna mangia la pizza. Copia tutto il complemento oggetto.', 'la pizza', 'What does Anna eat?', 'Che cosa mangia Anna?', 'Anna mangia la pizza.', 'The pizza is what Anna eats.'],
-    ['g-place', 'Anna mangia in cucina. Copy the phrase that says where.', 'Anna mangia in cucina. Copia le parole che indicano il luogo.', 'in cucina', 'Look for the preposition and its noun.', 'Cerca la preposizione e il nome.', 'Anna mangia in cucina.', 'In the kitchen tells us where Anna eats.'],
-    ['g-no-object', 'Anna mangia in cucina. Does this sentence name what she eats? Type yes or no.', 'Anna mangia in cucina. La frase dice che cosa mangia? Scrivi sì o no.', 'no', 'A location and the thing eaten do different jobs.', 'Il luogo e ciò che si mangia hanno funzioni diverse.', 'Anna mangia in cucina.', 'She eats in the kitchen. No food is named.'],
-    ['g-subject', 'Il pane brucia. Copy the whole subject.', 'Il pane brucia. Copia tutto il soggetto.', 'il pane', 'What is burning?', 'Che cosa brucia?', 'Il pane brucia.', 'The bread itself is burning.'],
-    ['g-burn', 'Il cuoco brucia il pane. Copy the whole direct object.', 'Il cuoco brucia il pane. Copia tutto il complemento oggetto.', 'il pane', 'What does the cook burn?', 'Che cosa brucia il cuoco?', 'Il cuoco brucia il pane.', 'The cook burns the bread. Here il pane is the object.'],
-    ['g-complement', 'Luca è un dottore. Copy the phrase that identifies Luca.', 'Luca è un dottore. Copia le parole che identificano Luca.', 'un dottore', 'After essere, look for the description of the subject.', 'Dopo essere, cerca la descrizione del soggetto.', 'Luca è un dottore.', 'Luca and the doctor are the same person. Un dottore is a subject complement.'],
-    ['g-job-verb', 'Che lavoro fai? Copy the verb.', 'Che lavoro fai? Copia il verbo.', 'fai', 'Which word has the tu form?', 'Quale parola è la forma del tu?', 'Che lavoro fai?', 'Fai means you do. Che lavoro is the object.'],
-    ['g-noun', 'Che lavoro fai? Copy just the noun meaning job.', 'Che lavoro fai? Copia solo il nome che indica la professione.', 'lavoro', 'Find the thing being asked about.', 'Individua ciò che si chiede.', 'Che lavoro fai?', 'Lavoro names a job here.'],
-    ['g-work', 'I work in a restaurant. Complete: ___ in un ristorante.', 'I work in a restaurant. Completa: ___ in un ristorante.', 'lavoro', 'Use the first-person singular of lavorare.', 'Usa la prima persona singolare di lavorare.', 'Lavoro in un ristorante.', 'Lavoro is a verb here.'],
-    ['g-fare', 'I work as a doctor. Complete with the article: Faccio ___ dottore.', 'Completa con l’articolo: Faccio ___ dottore.', 'il', 'Use fare + the definite article + the job.', 'Usa fare + articolo determinativo + professione.', 'Faccio il dottore.', 'Use the definite article in this job expression.'],
-    ['g-wash', 'I wash the dishes. Choose lavo or lavoro: ___ i piatti.', 'Scegli il verbo per “I wash the dishes”. Lavo o lavoro? ___ i piatti.', 'lavo', 'Which infinitive means “to wash”?', 'Quale infinito significa “to wash”?', 'Lavo i piatti.', 'Lavo comes from lavare, to wash. Lavoro comes from lavorare, to work.'],
-    ['g-wood', 'Lavoro il legno. Copy what the speaker works on.', 'Lavoro il legno. Copia il materiale su cui si lavora.', 'il legno', 'Name the material acted on.', 'Individua il materiale lavorato.', 'Lavoro il legno.', 'I work the wood. Here lavorare has a direct object; in Lavoro in un ufficio the phrase gives a place.'],
-    ['g-specific-doctor', 'I am Marta’s doctor. Fill the definite article: Sono ___ dottore di Marta.', 'Completa con l’articolo determinativo: Sono ___ dottore di Marta.', 'il', 'This is the particular doctor identified by di Marta.', 'Di Marta identifica un medico preciso.', 'Sono il dottore di Marta.', 'Il identifies a specific doctor. Sono un dottore simply gives a profession.'],
-    ['g-how', 'In Come stai? write the English meaning of come.', 'In Come stai? scrivi in inglese il significato di come.', 'how', 'This is a question about someone’s wellbeing.', 'È una domanda sullo stato di una persona.', 'Come stai?', 'How are you?'],
-    ['g-as', 'In Lavoro come insegnante, write the English meaning of come.', 'In Lavoro come insegnante, scrivi in inglese il significato di come.', 'as', 'This is the speaker’s actual role.', 'Si tratta del vero ruolo di chi parla.', 'Lavoro come insegnante.', 'I work as a teacher.'],
-    ['g-like', 'In Sei come un fratello per me, write the English meaning of come.', 'In Sei come un fratello per me, scrivi in inglese il significato di come.', 'like', 'The speaker compares two people.', 'Chi parla fa un paragone.', 'Sei come un fratello per me.', 'You are like a brother to me.']
+  const grammarQuestions = [
+    question("g-object", "Complete the reply with the food Anna eats. Write “the pizza” in Italian.",
+      [line("Speaker A", "Che cosa mangia Anna?"), line("Speaker B", "Mangia ___.")], "la pizza",
+      "Pizza is feminine and singular. Include the word for “the”.", "Pizza è femminile e singolare. Aggiungi l’articolo determinativo.",
+      "Anna mangia la pizza.", "Anna eats the pizza. What does she eat? The pizza is the direct object."),
+    question("g-place", "Say where Anna eats. Fill the gap with “in the kitchen” in Italian.",
+      [line("Speaker A", "Dove mangia Anna?"), line("Speaker B", "Mangia ___.")], "in cucina",
+      "Dove means “where”. For this room, Italian uses in followed by the room name.", "Dove introduce una domanda sul luogo. Per questa stanza usa in davanti al nome.",
+      "Anna mangia in cucina.", "Anna eats in the kitchen. In cucina tells us where."),
+    question("g-no-object", "Complete the reply with the food Anna eats. Write the article and the noun in Italian.",
+      [line("Situation", "Anna is eating a sandwich.", "en"), line("Speaker A", "Che cosa mangia Anna?"), line("Speaker B", "Mangia ___.")], "un panino",
+      "Panino means “sandwich”. For one sandwich, use the masculine singular article meaning “a”.", "Panino è maschile singolare. Qui serve l’articolo indeterminativo.",
+      "Mangia un panino.", "She eats a sandwich. What does she eat? A sandwich is the direct object.", ["un tramezzino"]),
+    question("g-subject", "Say what is burning. Write “the bread” in Italian.",
+      [line("Speaker A", "Che cosa brucia nel forno?"), line("Speaker B", "___!")], "il pane",
+      "Pane is masculine and singular. Here the bread itself is burning.", "Pane è maschile e singolare. È il pane stesso che brucia.",
+      "Il pane brucia nel forno.", "The bread is burning in the oven. The bread is the subject."),
+    question("g-burn", "Say what the cook burns. Fill the gap with “the bread” in Italian.",
+      [line("", "Il cuoco brucia ___.")], "il pane",
+      "What does the cook burn? Include the article before pane.", "Che cosa brucia il cuoco? Metti l’articolo prima di pane.",
+      "Il cuoco brucia il pane.", "The cook burns the bread. This time the bread is the direct object."),
+    question("g-complement", "Say you are a doctor. Write “a doctor” in Italian using dottore.",
+      [line("Speaker A", "C’è un medico sul treno?"), line("Speaker B", "Sì, sono ___.")], "un dottore",
+      "Dottore is masculine and begins with a single consonant.", "Dottore è maschile e inizia con una consonante semplice.",
+      "Sì, sono un dottore.", "Yes, I’m a doctor. Un dottore tells us who the speaker is."),
+    question("g-job-verb", "Ask a friend about their job. Write the missing form of fare.",
+      [line("Speaker A", "Che lavoro ___?"), line("Speaker B", "Faccio il cuoco.")], "fai",
+      "One friend takes tu. Choose the present form that goes with tu.", "Per parlare con un amico usa la forma del presente per tu.",
+      "Che lavoro fai?", "What do you do for a living? Fai means “you do”."),
+    question("g-noun", "Ask what someone does for work. Write the Italian noun for “job”.",
+      [line("Speaker A", "Che ___ fai?"), line("Speaker B", "Faccio la farmacista.")], "lavoro",
+      "Fai supplies the verb. The missing noun names the work someone does.", "Fai è il verbo. Manca il nome che indica la professione.",
+      "Che lavoro fai?", "What job do you do? Lavoro means “job” here."),
+    question("g-work", "Say where you work. Write the missing form of lavorare.",
+      [line("Speaker A", "Dove lavori?"), line("Speaker B", "___ in un ristorante.")], "lavoro",
+      "The speaker means “I work”. Use the io ending of a regular -are verb.", "Chi risponde parla di sé. Usa la desinenza di io per un verbo regolare in -are.",
+      "Lavoro in un ristorante.", "I work in a restaurant. Lavoro means “I work” here."),
+    question("g-fare", "Give the doctor’s job title with fare. Write the Italian word for “the”.",
+      [line("Speaker A", "Che lavoro fai?"), line("Speaker B", "Faccio ___ dottore.")], "il",
+      "Dottore is masculine, singular and starts with d.", "Dottore è maschile singolare e inizia con d.",
+      "Faccio il dottore.", "I work as a doctor. Italian uses a definite article with fare and a job."),
+    {...question("g-wash", "Choose the verb that means “I wash”.",
+      [line("", "Dopo cena ___ i piatti.")], "lavo",
+      "Lavare means “to wash”. Lavorare means “to work”.", "Lavare significa “to wash”. Lavorare significa “to work”.",
+      "Dopo cena lavo i piatti.", "After dinner I wash the dishes."), type: 'choice', choices: ['lavoro', 'lavo']},
+    question("g-wood", "Say which material the carpenter works with. Write “the wood” in Italian.",
+      [line("", "Sono un falegname. Lavoro ___.")], "il legno",
+      "Legno is masculine singular. Include the definite article.", "Legno è maschile singolare. Aggiungi l’articolo determinativo.",
+      "Lavoro il legno.", "I work the wood. The wood is the material I shape."),
+    question("g-specific-doctor", "Identify Marta’s particular doctor. Write the Italian word for “the”.",
+      [line("", "Sono ___ dottore di Marta.")], "il",
+      "Here dottore refers to one specific man. It starts with d.", "Qui dottore indica una persona precisa. È maschile singolare e inizia con d.",
+      "Sono il dottore di Marta.", "I’m Marta’s doctor."),
+    question("g-how", "Complete the question with the Italian word for “how”.",
+      [line("", "___ stai oggi?")], "come",
+      "Someone might answer this question with sto bene.", "Una possibile risposta a questa domanda è sto bene.",
+      "Come stai oggi?", "How are you today? Come asks how somebody feels."),
+    question("g-as", "Say that you work as a teacher. Write the word meaning “as”.",
+      [line("", "Lavoro ___ insegnante.")], "come",
+      "Use the expression lavorare + a linking word + the job title.", "Usa la costruzione lavorare + una parola di collegamento + il nome della professione.",
+      "Lavoro come insegnante.", "I work as a teacher. Come introduces a role."),
+    question("g-like", "Compare a friend to a brother. Write the Italian word for “like”.",
+      [line("", "Sei ___ un fratello per me.")], "come",
+      "The speaker is comparing two people.", "Chi parla fa un confronto fra due persone.",
+      "Sei come un fratello per me.", "You’re like a brother to me. Come introduces a comparison."),
   ];
 
   const sounds = [
@@ -83,24 +138,27 @@
       example(word, en) + '<br><span class="l8-reading">' + escape(guide) + '</span><br>' + soundButton(word)))
   ];
   const soundQuestions = sounds.map(([id,word,en,guide,englishSound,letters]) => {
-    const gap = '___' + word.slice(letters.length);
-    const bank = word.startsWith('c') ? 'ci / chi / ce / che' : 'gi / ghi / ge / ghe';
-    const enPrompt = 'Meaning: ' + en + '. Complete ' + gap + ' with ' + bank + '. It starts like ' + englishSound +
-      ', then the Italian vowel ' + letters.slice(-1) + '. Say it aloud and enter just the missing letters.';
-    const itPrompt = 'Significato inglese: ' + en + '. Completa ' + gap + ' con ' + bank + '. Il suono iniziale è come in ' +
-      englishSound.split(' ').pop() + ' e la vocale è ' + letters.slice(-1) + '. Pronuncia la parola e scrivi solo le lettere mancanti.';
-    return question('s-' + id, enPrompt, itPrompt, letters, 'Before e or i, h keeps c or g hard.',
-      'Davanti a e o i, h mantiene il suono duro di c o g.', word, en + '. First consonant like ' + englishSound + '.', [], guide);
+    const gaps = {ci:'Il ___bo è buono.', chi:'Un ___lo di pane, per favore.', ce:'La ___na è pronta.',
+      che:'___ lavoro fai?', gi:'Facciamo un ___ro?', ghi:'Il ___ro dorme.', ge:'Vorrei un ___lato.', ghe:'Il ___pardo corre.'};
+    const bank = {ci:'ci / chi',chi:'ci / chi',ce:'ce / che',che:'ce / che',gi:'gi / ghi',ghi:'gi / ghi',ge:'ge / ghe',ghe:'ge / ghe'};
+    const hintEn = 'Say the first sound, like ' + englishSound + '. A hard sound needs h before e or i.';
+    const hintIt = 'Pronuncia il suono iniziale, come in ' + (letters.includes('h') ? (word.startsWith('c') ? 'casa' : 'gatto') : (word.startsWith('c') ? 'cena' : 'gelato')) + '. Davanti a e o i il suono duro vuole h.';
+    const task = 'Write the missing letters. Choose ' + bank[id].replace(' / ', ' or ') + ' to spell the word for “' + en + '”.';
+    return question('s-' + id, task, [line('', gaps[id])], letters, hintEn, hintIt,
+      word, en + '. First consonant like ' + englishSound + '.', [], guide);
   });
   const newWords = [
-    ['amici','ami___','friends','ci','ah-MEE-chee'],['barche','bar___','boats','che','BAHR-keh'],
-    ['funghi','fun___','mushrooms','ghi','FOON-ghee'],['pagine','pa___ne','pages','gi','PAH-jee-neh']
+    ['amici','Ho due ami___.','friends','ci','ah-MEE-chee','ci / chi','ch in chip','cena'],
+    ['barche','Vedo due bar___.','boats','che','BAHR-keh','ce / che','k in key','casa'],
+    ['funghi','Vorrei una pizza con i fun___.','mushrooms','ghi','FOON-ghee','gi / ghi','g in go','gatto'],
+    ['pagine','Leggo due pa___ne.','pages','gi','PAH-jee-neh','gi / ghi','j in jam','gelato']
   ];
-  newWords.forEach(([word,gap,en,answer,guide]) => soundQuestions.push(question('s-'+word,
-    'Say the Italian word for “' + en + '” aloud. Supply the missing letters: ' + gap + '.',
-    'Pronuncia la parola italiana per “' + en + '”. Scrivi le lettere mancanti: ' + gap + '.',
-    answer, 'Think about the consonant sound and the following vowel.', 'Pensa al suono della consonante e alla vocale che segue.',
-    word, en, [], guide)));
+  newWords.forEach(([word,gap,en,answer,guide,bank,sound,model]) => {
+    const task = 'Write the missing letters. Choose ' + bank.replace(' / ', ' or ') + ' to spell the word for “' + en + '”.';
+    soundQuestions.push(question('s-'+word, task, [line('', gap)], answer,
+      'The missing letters start like ' + sound + '. Say the whole word, then write the missing letters.',
+      'Il suono è quello di ' + model + '. Pronuncia la parola e scrivi le lettere mancanti.', word,en,[],guide));
+  });
 
   const articles = [
     ['il','del','nel','dal'],['lo','dello','nello','dallo'],['l’','dell’','nell’','dall’'],
@@ -130,22 +188,43 @@
     {en:'in the', it:'in + articolo', words:['negozio','studio','ufficio','scuola','negozi','uffici','scuole'], english:['shop','studio','office','school','shops','offices','schools']},
     {en:'from the', it:'da + articolo', words:['negozio','studio','aula','banca','negozi','studi','banche'], english:['shop','studio','classroom','bank','shops','studios','banks']}
   ];
+  // Each gap asks for the whole phrase. Its sentence supplies the intended
+  // meaning of di, in or da; the supplied noun keeps the answer unambiguous.
+  const articleFrames = [
+    ['___ è sul tavolo.', '___ arriva alle otto.', '___ di Marta si chiama Sara.', '___ è grande.',
+      '___ sono sul tavolo.', '___ di Paolo arrivano domani.', '___ di Sara sono qui.'],
+    ['Vorrei ___, per favore.', 'Nel caffè metto ___.', 'Nell’insalata metto ___.', 'A pranzo mangio ___.',
+      'In biblioteca prendo ___.', 'Oggi incontro ___.', 'Al mercato compro ___.'],
+    ['Il regalo è ___ vicino a casa.', 'Il quadro è ___ di Luca.', 'La cartella è ___ di Anna.', 'La riunione è ___ del paese.',
+      'I saldi iniziano ___ del centro.', 'Ci sono computer ___ del comune.', 'Oggi si vota ___ del paese.'],
+    ['Esco ___ vicino a casa.', 'Luca esce ___ del dentista.', 'Gli studenti escono ___.', 'Anna esce ___.',
+      'I clienti escono ___ del centro.', 'Gli artisti escono ___ al piano terra.', 'I clienti escono ___ del centro.']
+  ];
+  const familyHints = [
+    ['Which article means “the” here?','Quale articolo determinativo serve?'],
+    ['For “some”, join di to the article.','Per il partitivo, unisci di e l’articolo.'],
+    ['For “in the”, join in to the article.','Per dire dove, unisci in e l’articolo.'],
+    ['For “from the”, join da to the article.','Per dire da dove, unisci da e l’articolo.']
+  ];
   const articleQuestions = [];
-  // Cycle through meanings so consecutive cards practise different decisions.
   for (let n = 0; n < articles.length; n++) {
-    articleFamilies.forEach(({en,it,words,english},family) => {
+    articleFamilies.forEach(({en,words,english},family) => {
       const form = articles[n][family], noun = words[n], phrase = form + (form.endsWith('’') ? '' : ' ') + noun;
+      const gloss = en + ' ' + english[n], frame = articleFrames[family][n];
+      const feminine = n === 3 || n === 6 || noun === 'amica' || noun === 'aula';
+      const initial = noun.startsWith('st') || noun.startsWith('sc') ? noun.slice(0,2) : noun[0];
+      const hintEn = 'The noun is ' + (feminine ? 'feminine' : 'masculine') + (n < 4 ? ' singular' : ' plural') + ' and starts with ' + initial + '. ';
+      const hintIt = 'Il nome è ' + (feminine ? 'femminile' : 'maschile') + (n < 4 ? ' singolare' : ' plurale') + ' e inizia per ' + initial + '. ';
       articleQuestions.push(question('a-'+family+'-'+n,
-        'Write the complete Italian phrase for “' + en + ' ' + english[n] + '”. Use ' + noun + '.',
-        'Scrivi l’espressione italiana per “' + en + ' ' + english[n] + '”. Usa ' + noun + ' e ' + it + '.',
-        phrase, 'Identify the noun’s gender, number and initial sound before choosing the form.',
-        'Individua genere, numero e suono iniziale del nome prima di scegliere la forma.',
-        phrase, en + ' ' + english[n] + '.'));
+        'Write “' + gloss + '” in Italian. Include the noun ' + noun + ' in your answer.', [line('', frame)],
+        phrase, hintEn + familyHints[family][0], hintIt + familyHints[family][1],
+        frame.replace('___',phrase), gloss + '.'));
     });
   }
   root.ItalianLesson8.sheets = [
-    sheet('grammar', 'Find the subject, object, place or description; use come in context.',
-      'Distingui soggetto, oggetto, luogo e descrizione. Usa come nel contesto.', grammarSections, grammarItems.map(item=>question(...item))),
+    ...root.ItalianLesson8.buildCoreSheets({question, example, section, line}),
+    sheet('grammar', 'Complete short kitchen and workplace conversations.',
+      'Completa brevi conversazioni in cucina e sul lavoro.', grammarSections, grammarQuestions),
     sheet('sounds', 'Say and spell words with ci, chi, ce, che, gi, ghi, ge and ghe.',
       'Pronuncia e scrivi parole con ci, chi, ce, che, gi, ghi, ge e ghe.', soundSections, soundQuestions),
     sheet('articles', 'Build singular and plural phrases for the, some, in the and from the.',

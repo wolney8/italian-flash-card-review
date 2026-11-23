@@ -68,16 +68,19 @@ try:
     elif i==7:
      assert page.locator('.library-lesson-detail [data-library-topic]').count()==8
     else:
-     assert page.locator('.library-lesson-detail [data-library-topic]').count()==3
+     assert page.locator('.library-lesson-detail [data-library-topic]').count()==9
     check_layout()
    page.screenshot(path=str(OUT/f'lessons-{width}-{theme}.png'),full_page=True,animations='disabled')
    visit('/study/study-sheets.html?browse=topic')
    assert page.locator('.library-topic-section').count()==6
    check_layout()
-   dataset=page.evaluate('ItalianStudyData');assert len(dataset)==71
+   dataset=page.evaluate('ItalianStudyData');assert len(dataset)==len({s['slug'] for s in dataset})
    assert sum(not s['slug'].startswith(('l7-','l8-')) and s['slug']!='l6-recap-useful-requests' for s in dataset)==53
    assert sum(s['slug'].startswith('l7-') for s in dataset)==14
-   assert sum(s['slug'].startswith('l8-') for s in dataset)==3
+   l8=[s for s in dataset if s['slug'].startswith('l8-')]
+   assert len(l8)==9
+   assert sum(len(s['questions']) for s in l8 if s.get('sourceKind')=='Extra practice')==56
+   assert sum(len(s['questions']) for s in l8 if s.get('sourceKind')!='Extra practice')==59
    assert sum(s['slug']=='l6-recap-useful-requests' for s in dataset)==1
    if FOCUS=='all':route_data=dataset
    elif FOCUS=='legacy':route_data=dataset[:9]

@@ -33,7 +33,7 @@ function catalogueLinks(){
  if(window.ItalianStudyLibrary)return;
  if(!document.body.classList.contains('study-sheet-library')||root.querySelector('.study-ready-shortcuts'))return;
  const bar=document.createElement('nav');bar.className='study-ready-shortcuts';bar.setAttribute('aria-label','Course shortcuts');
- bar.innerHTML='<a href="study-sheets.html?mode=learn&path=L6">Session 6 — class order</a><a href="study-sheets.html?mode=learn&sheet=l6-number-patterns&stage=practise&practice=flip">Numbers — flip & reveal</a><a href="study-sheets.html?mode=learn&sheet=known-verbs-and-forms&stage=learn">Verb reference</a>';
+ bar.innerHTML='<a href="study-sheets.html?mode=learn&path=L6">Session 6 · class order</a><a href="study-sheets.html?mode=learn&sheet=l6-number-patterns&stage=practise&practice=flip">Numbers · flip & reveal</a><a href="study-sheets.html?mode=learn&sheet=known-verbs-and-forms&stage=learn">Verb reference</a>';
  root.prepend(bar);
 }
 function addNumberMode(){
@@ -46,7 +46,7 @@ function addNumberMode(){
  const items=source.questions.map((q,i)=>[lesson.numberPracticeValues[i],q.model]);
  const board=document.createElement('section');board.className='number-reveal-board';board.hidden=true;
  board.setAttribute('aria-label','Number flip cards');
- board.innerHTML='<div class="number-view-switch" role="group" aria-label="Number card layout"><button type="button" data-number-view="sequence" aria-pressed="true">Practice sequence</button><button type="button" data-number-view="patterns" aria-pressed="false">Pattern columns</button></div><div class="number-reveal-actions"><button type="button" data-number-action="reveal">Reveal all</button><button type="button" data-number-action="hide">Hide all</button><span class="number-reveal-status" role="status"></span></div><p class="number-reveal-note">Tap a number to reveal its Italian. Flips do not count as checked answers.</p><div data-number-panel="sequence">'+group('0–10',items.slice(0,11))+group('11–20',items.slice(11,21))+group('21–30',items.slice(21,31))+group('Tens, hundreds and thousands',items.slice(31))+'</div><div data-number-panel="patterns" hidden class="number-pattern-columns">'+['UNITÀ','DECINE','CENTINAIA','MIGLIAIA'].map((t,c)=>group(t,lesson.numberRows.map(row=>[row[c*2],row[c*2+1]]))).join('')+'</div>';
+ board.innerHTML='<div class="number-view-switch" role="group" aria-label="Number card layout"><button type="button" data-number-view="sequence" aria-pressed="true">Practice sequence</button><button type="button" data-number-view="patterns" aria-pressed="false">Pattern columns</button></div><div class="number-reveal-actions"><button type="button" data-number-action="reveal">Reveal all</button><button type="button" data-number-action="hide">Hide all</button><span class="number-reveal-status" role="status"></span></div><p class="number-reveal-note" lang="en" data-ui-no-translate>Say each number in Italian. Open the card to check the word.</p><div data-number-panel="sequence">'+group('0–10',items.slice(0,11))+group('11–20',items.slice(11,21))+group('21–30',items.slice(21,31))+group('Tens, hundreds and thousands',items.slice(31))+'</div><div data-number-panel="patterns" hidden class="number-pattern-columns">'+['UNITÀ','DECINE','CENTINAIA','MIGLIAIA'].map((t,c)=>group(t,lesson.numberRows.map(row=>[row[c*2],row[c*2+1]]))).join('')+'</div>';
  const mode=document.createElement('div');mode.className='number-practice-modes';mode.setAttribute('role','group');mode.setAttribute('aria-label','Number practice method');
  mode.innerHTML='<button type="button" data-number-reveal-mode="write" aria-pressed="true">Write answers</button><button type="button" data-number-reveal-mode="flip" aria-pressed="false">Flip & reveal</button>';
  quiz.prepend(mode);mode.after(board);
@@ -71,7 +71,10 @@ function addNumberMode(){
 function linkReference(){
  const article=root.querySelector('#di-da-dove-pronouns');
  if(!article||article.querySelector('.study-reference-link'))return;
- const a=document.createElement('a');a.className='study-reference-link';a.href='study-sheets.html?mode=learn&sheet=known-verbs-and-forms&stage=learn';a.textContent='Open the verb reference — forms, usage, pronunciation and di / da / dove';
+ const a=document.createElement('a');a.className='study-reference-link';
+ const context=window.ItalianStudyContext;
+ a.href=window.ItalianStudyLibrary?.href('known-verbs-and-forms',context?.lesson,'references',context?.browse,'learn')||'study-sheets.html?sheet=known-verbs-and-forms&stage=learn';
+ a.textContent='Open the verb reference · forms, usage, pronunciation and di / da / dove';
  article.querySelector('header.hero')?.append(a);
 }
 function addVerbReference(){

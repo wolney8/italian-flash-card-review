@@ -149,7 +149,8 @@
     renderCard = function (card, position, total) {
       const anchor = `card-${slugify(card.key)}`;
       const title = panelTitle(card.panel, card.deck);
-      const promptSummary = truncate(stripHtml(card.prompt), 86);
+      const front = window.ItalianCardFront.render(card);
+      const promptSummary = truncate(stripHtml(front), 86);
       const pattern = card.pattern || card.rule || '';
       const reference = card.reference || card.source || '';
       const usage = card.usage || '';
@@ -159,7 +160,7 @@
         <div class="card-sticky-tools"><div class="sticky-card-copy"><span class="sticky-card-index">Card ${position} of ${total}</span><strong>${escapeHtml(title)}</strong><span class="sticky-side-state">Recall side</span></div><div class="sticky-card-actions"><button class="reveal-button sticky-reveal" type="button" aria-expanded="false">Show answer</button><button class="card-comment-button sticky-comment" type="button" data-comment-scope="card">Comment</button></div></div>
         <div class="card-position">Card ${position} of ${total} · ${escapeHtml(promptSummary)}</div>
         <div class="flip-shell"><div class="flip-card-inner">
-          <section class="card-side card-face recall-side" aria-hidden="false"><div class="side-label recall-label">Recall side</div><div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div><div class="topic-panel">${card.panel || ''}</div><div class="front-body">${card.prompt || ''}</div></section>
+          <section class="card-side card-face recall-side" aria-hidden="false"><div class="side-label recall-label">Recall side</div><div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div><div class="topic-panel">${card.panel || ''}</div><div class="front-body">${front}</div></section>
           <section class="card-side card-face answer-side" aria-hidden="true"><div class="side-label answer-label-main">Answer side</div><div class="answer-body"><div class="answer-label">Answer</div><div class="italian">${card.answer || ''}</div>${card.pron ? `<div class="phon">${card.pron}</div>` : ''}${card.meaning ? `<div class="section"><div class="label">Natural English</div><div class="natural">${card.meaning}</div></div>` : ''}${card.literal ? `<div class="section"><div class="label">Literal construction</div><div class="literal">${card.literal}</div></div>` : ''}${usage ? `<div class="section"><div class="label">Use / word jobs</div><div class="usage">${usage}</div></div>` : ''}${pattern ? `<div class="section"><div class="label">Rule / forms</div><div class="pattern">${pattern}</div></div>` : ''}${clarification ? `<details class="extra clarification-block"><summary>Clarification</summary><div class="inside">${clarification}</div></details>` : ''}<details class="extra"><summary>Course source</summary><div class="inside">${reference}<p>${escapeHtml(card.key)}</p></div></details></div></section>
         </div></div>
         <div class="card-actions"><button class="reveal-button" type="button" aria-expanded="false">Flip to answer side</button><button class="card-comment-button" type="button" data-comment-scope="card">Comment on this card</button></div>

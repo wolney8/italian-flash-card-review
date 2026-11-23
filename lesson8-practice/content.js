@@ -3,8 +3,8 @@
   'use strict';
   const lesson = {
     id: 'L8', date: '2026-11-17',
-    title: 'Grammar, pronunciation and articles', it: 'Grammatica, pronuncia e articoli',
-    description: 'Lesson 8 grammar in context, with extra pronunciation and article practice.',
+    title: 'Fare, stare and talking about work', it: 'Fare, stare e parlare del lavoro',
+    description: 'Class and homework practice for fare, stare, jobs and workplaces. Extra practice with grammar, sounds and articles.',
     topics: ['l8-grammar', 'l8-sounds', 'l8-articles'], extra: []
   };
   const topics = [
@@ -12,6 +12,20 @@
     {key:'sounds', id:'l8-sounds', title:'Pronunciation practice', it:'Esercizi di pronuncia', deck:'02 Pronunciation practice', category:'sounds', slug:'l8-pronunciation-practice'},
     {key:'articles', id:'l8-articles', title:'Articles in context', it:'Gli articoli nel contesto', deck:'03 Articles in context', category:'grammar', slug:'l8-articles-in-context'}
   ];
+  // Core study topics link to the closest available cards for revision.
+  // Register extra decks first in the catalogue so their existing return links stay precise.
+  const coreTopics = [
+    ['l8-verb-tables','Regular to irregular','Dai verbi regolari agli irregolari','verbs'],
+    ['l8-verb-choices','Choose the verb form','Scegli la forma del verbo','verbs'],
+    ['l8-jobs-workplaces','Jobs and workplaces','Professioni e luoghi di lavoro','conversation'],
+    ['l8-work-dialogue','Talking about work','Parlare di lavoro','conversation'],
+    ['l8-wellbeing','How are you?','Come stai?','conversation'],
+    ['l8-mixed-verbs','Mixed verb practice','Esercizi misti sui verbi','verbs']
+  ].map(([slug,title,it,category]) => ({id:slug, slug, title, it, category,
+    flashcards: slug === 'l8-wellbeing'
+      ? {lesson:'L2',deck:'00 Greetings & wellbeing'}
+      : {lesson:'L8',deck:topics[0].deck}}));
+  lesson.topics = [...coreTopics, ...topics].map(topic => topic.id);
   const escape = value => String(value || '').replace(/[&<>"']/g, c =>
     ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'})[c]);
   const bilingual = (en, it) => '<span class="editorial-label"><span class="editorial-label-main" lang="en">' +
@@ -84,5 +98,5 @@
     deviceVoice(word, status);
   });
   root.addEventListener('pagehide', stopSound);
-  root.ItalianLesson8 = {lesson, topics, escape, bilingual, soundButton, loadCards, renderCard};
+  root.ItalianLesson8 = {lesson, topics, coreTopics, escape, bilingual, soundButton, loadCards, renderCard};
 })(window);

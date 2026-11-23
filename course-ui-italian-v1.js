@@ -65,13 +65,12 @@ Check your understanding|||Verifica la comprensione
 Read the explanation. Use Next when you are ready.|||Leggi la spiegazione. Seleziona Avanti quando sei pronto.
 Look for patterns in the examples, then try a question.|||Cerca gli schemi negli esempi, poi prova un esercizio.
 Choose or type an answer, then select Check answer.|||Scegli o scrivi una risposta, poi seleziona Controlla.
-Answer tips|||Suggerimenti per rispondere
 Show hint|||Mostra suggerimento
 Hide hint|||Nascondi suggerimento
 Hint|||Suggerimento
 Check answer|||Controlla
 Type your answer|||Scrivi la risposta
-Answer, use a hint if needed, then check|||Rispondi, usa un suggerimento se serve, poi controlla
+Practice questions|||Esercizi
 Practice summary|||Riepilogo degli esercizi
 Practice complete|||Esercizi completati
 Your practice results|||I tuoi risultati
@@ -101,8 +100,8 @@ Other practice for this topic|||Altri esercizi su questo argomento
 Topic|||Argomento
 Class order|||Ordine della lezione
 Show|||Mostra
-Session 6 — class order|||Lezione 6 — ordine degli argomenti
-Numbers — flip & reveal|||Numeri — gira e scopri
+Session 6 · class order|||Lezione 6 · ordine degli argomenti
+Numbers · flip & reveal|||Numeri · gira e scopri
 Verb reference|||Guida ai verbi
 Write answers|||Scrivi le risposte
 Flip & reveal|||Gira e scopri
@@ -223,10 +222,10 @@ Pronoun map used in the tables|||Pronomi usati nelle tabelle
 Pronoun|||Pronome
 Meaning / use|||Significato / uso
 Verb person|||Persona del verbo
-Core course verbs - complete present tense|||Verbi principali del corso — presente completo
+Core course verbs - complete present tense|||Verbi principali del corso · presente completo
 Chiamarsi - to be called|||Il verbo chiamarsi
 Form|||Forma
-Stare and andare - complete support tables|||Stare e andare — tabelle complete di supporto
+Stare and andare - complete support tables|||Stare e andare · tabelle complete di supporto
 Source boundary and practical use|||Ambito delle fonti e uso pratico
 Word jobs and sentence building|||Funzioni delle parole e costruzione delle frasi
 Nouns, verbs, adjectives, pronouns, articles and prepositions|||Nomi, verbi, aggettivi, pronomi, articoli e preposizioni
@@ -240,11 +239,11 @@ Breakdown|||Analisi
 Sentence frame|||Struttura della frase
 Avere, numbers and family|||Avere, numeri e famiglia
 Present-tense forms, silent H, age, common expressions and quantities|||Forme del presente, H muta, età, espressioni comuni e quantità
-Avere - present tense|||Avere — presente
+Avere - present tense|||Avere · presente
 English|||Inglese
 The silent H changes the meaning|||L’H muta cambia il significato
-With H - avere|||Con H — avere
-Without H - different word|||Senza H — un’altra parola
+With H - avere|||Con H · avere
+Without H - different word|||Senza H · un’altra parola
 Common expressions with avere|||Espressioni comuni con avere
 Numbers 0-20|||Numeri 0–20
 Plurals and articles|||Plurali e articoli
@@ -253,7 +252,7 @@ Common plural endings|||Desinenze plurali comuni
 Singular pattern|||Schema singolare
 Plural pattern|||Schema plurale
 Example|||Esempio
-The and some - the full visual pattern|||Articoli determinativi e partitivi — schema completo
+The and some - the full visual pattern|||Articoli determinativi e partitivi · schema completo
 Noun pattern|||Schema del nome
 THE|||DETERMINATIVO
 SOME|||PARTITIVO
@@ -277,7 +276,7 @@ Clue|||Indizio
 Think|||Rifletti
 Essere in the present|||Essere al presente
 The six forms, their meaning and how they are used.|||Le sei forme, il significato e l’uso.
-Essere — present tense|||Essere — presente
+Essere · present tense|||Essere · presente
 Using essere|||L’uso di essere
 Use|||Uso
 Context matters|||Il contesto conta
@@ -339,19 +338,19 @@ Regular comparison|||Confronto: verbo regolare
 Reflexive comparison|||Confronto: verbo riflessivo
 Who?|||Chi?
 Say it approximately|||Pronuncia approssimativa
-Plural forms — later reference|||Forme plurali — riferimento per dopo
+Plural forms · later reference|||Forme plurali · riferimento per dopo
 Original pronoun map and lesson notes|||Pronomi e note originali della lezione
 Why di dove, da dove, or just dove?|||Perché di dove, da dove o solo dove?
 What changes with articles, partitives and masculine/feminine?|||Che cosa cambia con articoli, partitivi, maschile e femminile?
-Essere di — be from|||Essere di — origine
-Venire da — come from|||Venire da — provenienza
-Vivere / abitare — live|||Vivere / abitare — residenza
-Essere + a place — be located|||Essere + un luogo — posizione
+Essere di · be from|||Essere di · origine
+Venire da · come from|||Venire da · provenienza
+Vivere / abitare · live|||Vivere / abitare · residenza
+Essere + a place · be located|||Essere + un luogo · posizione
 Same verb, different adjective|||Stesso verbo, aggettivo diverso
 Same verb, different article|||Stesso verbo, articolo diverso
 Some: dei / degli / delle|||Il partitivo: dei / degli / delle
 A preposition can join an article|||Una preposizione può unirsi a un articolo
-Open the verb reference — forms, usage, pronunciation and di / da / dove|||Apri la guida ai verbi — forme, uso, pronuncia e di / da / dove
+Open the verb reference · forms, usage, pronunciation and di / da / dove|||Apri la guida ai verbi · forme, uso, pronuncia e di / da / dove
 Singular conversations first|||Prima le conversazioni al singolare
 Origins and questions|||Origini e domande
 First: be from · come from · live in|||Prima: essere di · venire da · abitare
@@ -368,8 +367,8 @@ Nationality adjectives|||Aggettivi di nazionalità
 Nationalities|||Nazionalità
 Conversation practice|||Esercizi di conversazione
 Conversation and farewells|||Conversazione e saluti finali
-Later - plural questions|||Più avanti — domande al plurale
-Traditional pronouns - recognition|||Pronomi tradizionali — riconoscimento
+Later - plural questions|||Più avanti · domande al plurale
+Traditional pronouns - recognition|||Pronomi tradizionali · riconoscimento
 Correct|||Corretto
 Incorrect|||Sbagliato
 Answer:|||Risposta:
@@ -379,7 +378,7 @@ Intermediate|||Intermedio
 Advanced|||Avanzato
 Beginners · Semester 1 of 3|||Principianti · Semestre 1 di 3
 Currently studying|||In corso
-Planned stages — no content available yet|||Fasi previste — contenuti non ancora disponibili
+Planned stages · no content available yet|||Fasi previste · contenuti non ancora disponibili
 Details to be confirmed|||Dettagli da confermare
 Learn it in stages.|||Impara un passo alla volta.
 Open this semester’s lessons|||Apri le lezioni di questo semestre
@@ -467,10 +466,10 @@ Article application|||Uso degli articoli
 Plural articles|||Articoli plurali
 Family vocabulary|||Lessico della famiglia
 Family sentences and practice|||Frasi ed esercizi sulla famiglia
-Classroom sentences — 12 questions|||Frasi in classe — 12 domande
-Homework: match pronouns — 6 questions|||Compiti: abbina i pronomi — 6 domande
-Homework: sentence gaps — 10 questions|||Compiti: completa le frasi — 10 domande
-Homework: choose the translation — 8 questions|||Compiti: scegli la traduzione — 8 domande
+Classroom sentences · 12 questions|||Frasi in classe · 12 domande
+Homework: match pronouns · 6 questions|||Compiti: abbina i pronomi · 6 domande
+Homework: sentence gaps · 10 questions|||Compiti: completa le frasi · 10 domande
+Homework: choose the translation · 8 questions|||Compiti: scegli la traduzione · 8 domande
 Study tools|||Strumenti di studio
 Current topic|||Argomento attuale
 `.trim().split('\n').map(line=>line.split('|||')));

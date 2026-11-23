@@ -26,7 +26,7 @@ if not lib_topics:
     lib_topics=[
       {'id':'l7-families','title':'Verb families and infinitives','it':'Famiglie verbali e infinito','category':'verbs','sets':['l7-families','l7-homework-matching'],'flashcards':{'lesson':'L7','deck':topics[0]}},
       {'id':'l7-build-are','title':'Build the regular -ARE pattern','it':'Costruisci il modello regolare in -ARE','category':'verbs','sets':['l7-endings'],'flashcards':{'lesson':'L7','deck':topics[1]}},
-      {'id':'l7-core-verbs','title':'Five everyday verbs','it':'Cinque verbi quotidiani','category':'verbs','sets':['l7-class-'+v for v in ['lavorare','abitare','parlare','studiare','mangiare']],'flashcards':{'lesson':'L7','deck':topics[2]}},
+      {'id':'l7-core-verbs','title':'Five everyday verbs','it':'Cinque verbi quotidiani','category':'verbs','sets':['l7-class-'+v for v in ['lavorare','parlare','abitare','studiare','mangiare']],'flashcards':{'lesson':'L7','deck':topics[2]}},
       {'id':'l7-forms','title':'Choose the verb form','it':'Scegli la forma verbale','category':'verbs','sets':['l7-homework-gaps','l7-homework-choices','l7-homework-more'],'flashcards':{'lesson':'L7','deck':topics[3]}},
       {'id':'l7-stress-spelling','title':'Stress and spelling','it':'Accento e ortografia','category':'sounds','sets':['l7-stress-spelling'],'flashcards':{'lesson':'L7','deck':topics[4]}},
       {'id':'l7-sentences','title':'Build everyday sentences','it':'Costruisci frasi quotidiane','category':'conversation','sets':['l7-homework-translation'],'flashcards':{'lesson':'L7','deck':topics[5]}},

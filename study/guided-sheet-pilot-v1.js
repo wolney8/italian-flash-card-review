@@ -69,8 +69,6 @@
     const actions=hero.querySelector('.actions');
     const backLink=actions?.querySelector('a[href*="study-sheets.html"]');
     if(backLink)backLink.hidden=true;
-    const originalHelp=quiz.querySelector('.quiz-intro');
-    if(originalHelp){const disclosure=document.createElement('details');disclosure.className='guided-sheet-tips';disclosure.innerHTML='<summary>Answer tips</summary>';originalHelp.parentNode.insertBefore(disclosure,originalHelp);disclosure.appendChild(originalHelp);}
     const steps=document.createElement('div');steps.className='guided-sheet-steps';
     steps.innerHTML=window.ItalianLearningSession.progressMarkup({label:'Overall progress',completed:0,total:learn.length+examples.length+questions.length,prefix:'guided-sheet-progress'})+
       '<nav class="guided-sheet-step-navigation" aria-label="Study stages">'+STEP_IDS.map((id,i)=>'<button type="button" data-guided-step="'+id+'"><span class="guided-sheet-step-number">'+(i+1)+'</span><span class="guided-sheet-step-copy"><span>'+STEP_LABELS[i]+'</span><small>'+STEP_HELP[i]+'</small></span></button>').join('')+'</nav><div class="guided-sheet-current" aria-live="polite"><p class="guided-sheet-position"></p><h2 class="guided-sheet-current-title" tabindex="-1"></h2><p class="guided-sheet-instruction"></p></div>';
@@ -119,6 +117,7 @@
       const unit=reviewing?(state.reviewKind==='unanswered'?'Unanswered question':'Retry question'):practice?'Question':'Part';
       const position=practice&&state.finished?'Summary':unit+' '+(current+1)+' of '+count;
       status.textContent='Step '+(pos+1)+' of 3 · '+position;title.textContent=practice&&state.finished?'Your practice results':STEP_LABELS[pos];instruction.textContent=practice&&state.finished?'Review your progress or return to a question.':INSTRUCTIONS[pos];
+      instruction.hidden=practice&&!state.finished&&!!questions[state.question]?.querySelector('.worksheet-task');
       controlsStatus.textContent=practice?stat.attempted+' of '+questions.length+' attempted · '+stat.correct+' correct':position;
       const first=step==='learn'&&state.learn===0;previousButton.disabled=first;
       previousButton.textContent=practice&&state.finished?'Back to questions':reviewing&&current===0?'Back to results':practice?(state.question?'Previous question':'Back to examples'):step==='examples'?(state.examples?'Previous example':'Back to learn'):'Previous section';

@@ -16,7 +16,12 @@
     var total=document.getElementById('studyOverallProgress');if(total)total.textContent=done+' / '+n.length+' attempted · '+ok+' correct this session';
     for(var s of ROOT.querySelectorAll('.study-pack-sheet')){var qs=Array.from(s.querySelectorAll('.quiz-question')),d=qs.filter(q=>p.study.answers[sid(q)]?.result),c=d.filter(q=>p.study.answers[sid(q)].result==='correct').length;var el=s.querySelector('.sheet-progress');if(!el){el=document.createElement('div');el.className='sheet-progress';s.querySelector('.hero .actions')?.insertAdjacentElement('beforebegin',el);}if(el)el.innerHTML='<div class="sheet-progress-track"><div class="sheet-progress-fill" style="width:'+(qs.length?100*d.length/qs.length:0)+'%"></div></div><span>'+d.length+' / '+qs.length+' attempted · '+c+' correct this session</span>';}
   }
-  function restore(){var p=read();for(var q of all()){var r=p.study.answers[sid(q)];if(!r)continue;var txt=q.querySelector('input[type=text]');if(txt)txt.value=r.value||'';else for(var radio of q.querySelectorAll('input[type=radio]'))radio.checked=radio.value===r.value;
+  function restore(){var p=read();for(var q of all()){var r=p.study.answers[sid(q)];if(!r)continue;var txt=q.querySelector('input[type=text]');
+    if(q.dataset.legacyMatch && r.value && !r.value.startsWith('[')){
+      const oldRow=all().find(row=>row.dataset.legacyMatch===r.value);
+      if(oldRow)r.value=oldRow.dataset.matchModel;
+    }
+    if(txt)txt.value=r.value||'';else for(var radio of q.querySelectorAll('input[type=radio]'))radio.checked=radio.value===r.value;
     var hint=q.querySelector('.hint'),toggle=q.querySelector('.hint-button');if(r.hint&&hint){hint.hidden=false;if(toggle){toggle.textContent='Nascondi suggerimento';toggle.setAttribute('aria-expanded','true');}}
     q.dataset.result=r.result||'';var feedback=q.querySelector('.feedback');if(r.result&&feedback){feedback.textContent=r.result==='correct'?'Corretto':'Sbagliato';feedback.className='feedback '+r.result;q.querySelector('.model-answer').hidden=false;}
     var check=q.querySelector('.check-button');if(check)check.disabled=!value(q).trim();}

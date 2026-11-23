@@ -54,3 +54,9 @@ html[data-italian-theme=dark] .library-actions .library-primary{color:#213327}
 .study-pack-sheet .guided-sheet-finish .guided-sheet-primary{background:var(--mint);border-color:var(--mint);color:var(--paper)}
 html[data-italian-theme=dark] .study-pack-sheet .guided-sheet-finish .guided-sheet-primary{color:#213327}
 .study-pack-sheet .guided-sheet-finish .guided-sheet-followup.guided-sheet-secondary{background:var(--paper2);color:var(--ink)!important;border-color:var(--line)}
+
+.library-homework h3 { margin: 1rem 0 .2rem; }
+.library-homework ul { margin: .4rem 0; padding-inline-start: 1.3rem; }
+.library-homework li { margin-block: .5rem; line-height: 1.5; }
+.library-homework li .editorial-label { display: inline; }
+.library-homework a { color: var(--ink); text-decoration: underline; }
