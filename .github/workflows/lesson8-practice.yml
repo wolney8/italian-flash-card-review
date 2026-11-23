@@ -13,13 +13,18 @@ on:
       - 'study/visual-exercises.*'
       - 'study/visual-return.js'
       - 'study/daily-verbs.js'
-      - 'study/daily-practice.css'
+      - 'study/daily-practice.*'
+      - 'course-practice-routes-v1.js'
+      - 'course-site-header-v1.*'
+      - 'course-ui-language-v1.js'
       - 'study/study-sheets.html'
       - 'study/study-sheets-v5.js'
       - 'study/library-v1.js'
       - 'study/guided-sheet-pilot-v1.js'
       - 'learning-controls-v2.js'
       - 'scripts/validate_l8_extra_browser.py'
+      - 'scripts/validate_navigation_consistency.cjs'
+      - 'scripts/validate_practice_navigation.py'
       - 'scripts/validate_worksheet_tasks.cjs'
       - 'scripts/validate_recall_layout.cjs'
       - '.github/workflows/lesson8-practice.yml'
@@ -40,6 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check worksheet directions, flashcard fronts and answer keys
         run: |
+          node scripts/validate_navigation_consistency.cjs
           node scripts/validate_worksheet_tasks.cjs
           node scripts/validate_recall_layout.cjs
       - uses: actions/setup-python@v5

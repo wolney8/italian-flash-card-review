@@ -11,6 +11,8 @@ from urllib.parse import parse_qs, urlparse
 
 from playwright.sync_api import expect, sync_playwright
 
+from validate_practice_navigation import VIEWS, check_navigation
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CARDS = json.loads((ROOT / 'lesson8-practice/cards.json').read_text())
@@ -136,6 +138,12 @@ Object.defineProperty(window, 'SpeechSynthesisUtterance', {configurable:true,
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
+    def translate_path(self, path):
+        # Netlify serves the three .html bookmark aliases at their extensionless paths too.
+        local = super().translate_path(path)
+        aliases = {f'/study/{view}' for view in VIEWS}
+        return local + '.html' if urlparse(path).path in aliases else local
+
     def log_message(self, *_):
         pass
 
@@ -339,6 +347,7 @@ def main():
             check_visual_practice(page, base)
             check_core(page, base)
             assert not errors, errors
+            check_navigation(browser, base)
         finally:
             browser.close()
             server.shutdown()

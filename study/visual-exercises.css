@@ -1,31 +1,79 @@
-.visual-page{max-width:850px}
-.activity-picker{display:grid;gap:4px;width:fit-content;max-width:100%;margin:20px 0 18px;font-weight:650}
-.tile-panel{min-width:0}
-#visual-count,.tile-guide{color:var(--muted);font-size:.9rem}
-#visual-title{margin:.3em 0;font:500 clamp(1.55rem,4vw,2.1rem)/1.15 "Baskervville",Georgia,serif;color:var(--ink)}
-#visual-instruction{font-size:1.08rem}
-.tile-guide{margin-top:.35rem}
-#visual-tiles{display:flex;flex-wrap:wrap;gap:.5rem;padding:1.1rem 0}
-.visual-tile,.visual-target{min-height:44px;color:var(--ink);font:inherit}
-.visual-tile{display:grid;align-content:center;max-width:100%;gap:1px;padding:.4rem .75rem;border:1px solid #91a48e;border-radius:9px;background:var(--card);font-weight:650;overflow-wrap:anywhere}
-.visual-tile[draggable=true]{cursor:grab}
-.visual-tile:active{cursor:grabbing}
-.visual-tile[data-placed=true]{background:var(--tint)}
-.visual-tile[aria-pressed=true]{border-color:var(--green);outline:2px solid var(--green);outline-offset:1px}
-.visual-tile[data-result=wrong]{border-color:#9a5526}
-.visual-tile[data-result=right]{border-color:#39784b}
-.visual-tile small{font-size:.73rem;font-weight:500;color:var(--muted)}
-#visual-boxes{display:grid;gap:.5rem}
-.visual-target{width:100%;text-align:left;display:grid;grid-template-columns:minmax(100px,35%) minmax(0,1fr);align-items:center;gap:.5rem;padding:.55rem .8rem;border:1px dashed #8b9b86;border-radius:8px;background:#f7f8ef;overflow-wrap:anywhere}
-.visual-target.hover,.visual-target:focus-visible{border-style:solid;background:var(--tint)}
-.visual-target > *{pointer-events:none}
-.visual-target strong{font-size:.97rem}
-.visual-target span{color:var(--text)}
-.visual-target[data-empty=true] span{color:var(--muted);font-size:.88rem}
-.visual-target:disabled,.visual-tile:disabled{opacity:1;cursor:default}
-.tile-panel details{margin:.9rem 0}
-.tile-panel details p{color:var(--muted)}
-#visual-score{font-weight:650;color:var(--ink);margin-top:.5rem}
-#visual-feedback:not(:empty){padding:.55rem .75rem;margin:.6rem 0;border-left:3px solid var(--gold);background:#f5efdf}
-#visual-feedback[data-state=success]{border-color:var(--green);background:var(--tint)}
-@media(max-width:420px){.visual-target{grid-template-columns:minmax(82px,38%) minmax(0,1fr);padding:.55rem}.visual-page{padding-inline:12px}.visual-tile{padding-inline:.6rem}.tile-panel{padding:14px}}
+.course-practice .activity-picker {
+  display: grid;
+  gap: 4px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 20px 0 18px;
+  font-weight: 600;
+}
+.course-practice .tile-panel { max-width: 850px; }
+.course-practice #visual-count, .course-practice .tile-guide { color: var(--muted); font-size: .94rem; }
+.course-practice #visual-title {
+  margin: .3em 0;
+  color: var(--ink);
+  font: 600 clamp(1.55rem, 4vw, 2.1rem)/1.15 var(--practice-heading);
+}
+.course-practice #visual-instruction { font-size: 1.08rem; }
+.course-practice .tile-guide { margin-top: .35rem; }
+.course-practice #visual-tiles { display: flex; flex-wrap: wrap; gap: .5rem; padding: 1.1rem 0; }
+.course-practice :is(.visual-tile, .visual-target) { min-height: 44px; color: var(--ink); overflow-wrap: anywhere; }
+.course-practice .visual-tile {
+  display: grid;
+  align-content: center;
+  gap: 1px;
+  max-width: 100%;
+  padding: .4rem .75rem;
+  border: 1px solid var(--practice-control-border);
+  border-radius: 9px;
+  background: var(--paper);
+  font-weight: 600;
+}
+.course-practice .visual-tile[draggable="true"] { cursor: grab; }
+.course-practice .visual-tile:active { cursor: grabbing; }
+.course-practice .visual-tile[data-placed="true"] { background: var(--practice-selected); }
+.course-practice .visual-tile[aria-pressed="true"] {
+  border-color: var(--green);
+  outline: 2px solid var(--green);
+  outline-offset: 1px;
+}
+.course-practice .visual-tile[aria-pressed="true"]:focus-visible {
+  outline: 3px solid var(--editorial-focus);
+  outline-offset: 3px;
+}
+.course-practice .visual-tile[data-result="wrong"] { border-color: var(--wrong); }
+.course-practice .visual-tile[data-result="right"] { border-color: var(--correct); }
+.course-practice .visual-tile small { color: var(--muted); font-size: .78rem; font-weight: 500; }
+.course-practice #visual-boxes { display: grid; gap: .5rem; }
+.course-practice .visual-target {
+  display: grid;
+  grid-template-columns: minmax(100px, 35%) minmax(0, 1fr);
+  align-items: center;
+  gap: .5rem;
+  width: 100%;
+  padding: .55rem .8rem;
+  border: 1px dashed var(--practice-control-border);
+  border-radius: 8px;
+  background: var(--paper2);
+  text-align: left;
+}
+.course-practice .visual-target:is(.hover, :focus-visible) { border-style: solid; border-color: var(--green); background: var(--practice-selected); }
+.course-practice .visual-target > * { pointer-events: none; }
+.course-practice .visual-target strong { font-size: .97rem; }
+.course-practice .visual-target span { color: var(--ink); }
+.course-practice .visual-target[data-empty="true"] span { color: var(--muted); font-size: .9rem; }
+.course-practice :is(.visual-target, .visual-tile):disabled { opacity: 1; cursor: default; }
+.course-practice .tile-panel details { margin: .9rem 0; }
+.course-practice .tile-panel details p { color: var(--muted); }
+.course-practice #visual-score { margin-top: .5rem; color: var(--ink); font-weight: 600; }
+.course-practice #visual-feedback:not(:empty) {
+  margin: .6rem 0;
+  padding: .55rem .75rem;
+  border-left: 3px solid var(--hint);
+  background: var(--practice-review);
+}
+.course-practice #visual-feedback[data-state="success"] { border-color: var(--correct); background: var(--practice-selected); }
+@media (max-width: 420px) {
+  .course-practice .visual-target { grid-template-columns: minmax(82px, 38%) minmax(0, 1fr); padding: .55rem; }
+  .course-practice .visual-tile { padding-inline: .6rem; }
+  .course-practice .tile-panel { padding: 14px; }
+}

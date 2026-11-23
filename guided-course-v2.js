@@ -3,6 +3,9 @@
   const params = new URLSearchParams(location.search);
   if (params.get('audit') === '1') return; // Keep the established detailed audit unchanged.
 
+  const practiceRoutes=window.ItalianPracticeRoutes;
+  const defaultTitle=document.title;
+  let previousPracticeHeader='';
   const THEME_KEY = 'italianCourseThemeV1';
   const PROGRESS_KEY = 'italianCourseSessionProgressV2';
   const RESUME_KEY = 'italianGuidedResumeV1';
@@ -171,6 +174,7 @@
     const url = new URL(location.href);
     const reviewOnly=url.searchParams.get('review')==='again';
     const page = url.searchParams.get('page');
+    if (practiceRoutes?.has(page)) return {page,lesson:null,deck:'',index:0,finished:false};
     const legacy = url.hash.match(/^#lesson-(L\d+)$/i)?.[1]?.toUpperCase();
     const lesson = url.searchParams.get('lesson') || legacy;
     if (lesson && LESSONS.some(l => l[0] === lesson)) return {page:'card',lesson,deck:url.searchParams.get('topic') || '',index:Math.max(0,Number(url.searchParams.get('card') || 0)),finished:url.searchParams.get('done')==='1',reviewOnly};
@@ -181,7 +185,7 @@
   }
   function urlFor(next) {
     const u = new URL(location.href);
-    for (const key of ['view','page','lesson','topic','card','done','review']) u.searchParams.delete(key);
+    for (const key of ['view','page','lesson','topic','card','done','review','activity','round','sheetReturn']) u.searchParams.delete(key);
     u.hash = '';
     if (next.page !== 'home') u.searchParams.set('page',next.page);
     if (next.page === 'card' && next.lesson) {
@@ -219,6 +223,7 @@
     document.body.classList.toggle('night_mode',dark);
     document.documentElement.style.colorScheme = dark?'dark':'light';
     document.documentElement.dataset.italianTheme=dark?'dark':'light';
+    document.documentElement.style.backgroundColor=getComputedStyle(document.body).getPropertyValue('--bg').trim();
   }
   function themeToggle() { safeSet(THEME_KEY,dark?'light':'dark'); themeApply(); renderKeepingCardFace(); }
   function ensure() {
@@ -421,7 +426,8 @@
       parts.push('Lesson '+lesson.slice(1),deck);
       if(c&&!state.finished){scope='card';cardKey=c.key;itemId='card:'+c.key;parts.push('Card '+(state.index+1)+' of '+cardList(lesson,deck).length);}
       else{scope='deck';itemId='deck:'+lesson+':'+(typeof slugify==='function'?slugify(deck):deck);parts.push('Topic completion');}
-    } else if(state.page==='lessons'){parts.push('Lesson library');}
+    } else if(practiceRoutes?.has(state.page)){parts.push(practiceRoutes.title(state.page));}
+    else if(state.page==='lessons'){parts.push('Lesson library');}
     else if(state.page==='topics'){parts.push('Study sheet library');}
     else if(state.page==='course'){parts.push('Course pathway');}
     else if(state.page==='feedback'){parts.push('Feedback page');}
@@ -477,10 +483,41 @@
       if(confidence)confidence.hidden=false;
     }
   }
+  function renderPractice() {
+    const page=state.page;
+    const chrome=header();
+    const existing=root.querySelector('[data-practice-host]');
+    if (existing?.dataset.practiceHost===page) {
+      if (chrome!==previousPracticeHeader) {
+        const currentHeader=root.querySelector('.course-site-header');
+        const active=document.activeElement;
+        const focusClass=currentHeader.contains(active) && active.classList[0];
+        currentHeader.outerHTML=chrome;
+        if (focusClass) root.querySelector('.course-site-header .'+CSS.escape(focusClass))?.focus({preventScroll:true});
+        previousPracticeHeader=chrome;
+      }
+      return;
+    }
+    const title=practiceRoutes.title(page);
+    const segments=page==='daily-practice'?[]:[{label:'Daily practice',to:'daily-practice'}];
+    segments.push({label:title});
+    previousPracticeHeader=chrome;
+    document.title=title+' | Italian for Beginners';
+    root.innerHTML=chrome+'<div data-practice-host="'+page+'" aria-live="off"><p role="status">Loading exercise…</p></div>';
+    practiceRoutes.mount(root.querySelector('[data-practice-host]'),page,crumbs(segments));
+  }
   function render() {
     if(state.page==='topics'){location.replace('study/study-sheets.html?mode=learn');return;}
     ensure();
     document.body.classList.toggle('guided-focus-active',state.page==='card'&&focusActive());
+    if (practiceRoutes?.has(state.page)) {
+      renderPractice();
+      window.ItalianCourseBoot?.ready();
+      return;
+    }
+    practiceRoutes?.unmount();
+    previousPracticeHeader='';
+    document.title=defaultTitle;
     root.innerHTML=header()+ (state.page==='lessons'?lessons():state.page==='card'?cardPage():state.page==='topics'?topics():state.page==='feedback'?feedback():state.page==='course'?course():home()) + `<footer class="guided-footer">Italian for Beginners · Last updated 21 November 2026</footer>`;
     window.ItalianStudyLinks?.decorate();
     syncCardHeight();
@@ -495,6 +532,7 @@
   }
   document.addEventListener('click',event=>{
     const nav=event.target.closest('[data-guide-to]');
+    if(nav && (event.ctrlKey||event.metaKey||event.shiftKey||event.altKey||event.button!==0))return;
     if(nav){event.preventDefault();navigate({page:nav.dataset.guideTo});return;}
     const l=event.target.closest('[data-guide-lesson]');
     if(l){event.preventDefault();navigate({page:'card',lesson:l.dataset.guideLesson});return;}
@@ -530,7 +568,7 @@
   document.addEventListener('change',event=>{
     if(event.target.id==='guidedSubdeckSelect')navigate({...state,deck:event.target.value,index:0,finished:false,reviewOnly:false});
   });
-  window.addEventListener('popstate',()=>{state=stateFromUrl();render();});
+  window.addEventListener('popstate',()=>{menuOpen=false;state=stateFromUrl();render();});
   window.addEventListener('hashchange',()=>{if(location.hash.match(/^#lesson-L\d+$/i)){state=stateFromUrl();render();}});
   window.addEventListener('italian-course-data-ready',()=>{ready=true;render();});
   window.addEventListener('pageshow',()=>{ready=Boolean(window.__COURSE_DATA_READY__);render();});

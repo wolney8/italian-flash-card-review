@@ -3,36 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#203d34">
+  <script src="/course-practice-routes-v1.js?v=1"></script>
   <title>Jobs in photographs | Italian for Beginners</title>
-  <link rel="stylesheet" href="daily-practice.css?v=visual1">
+  <link rel="stylesheet" href="daily-practice.css">
   <link rel="stylesheet" href="jobs-in-photos.css">
-  <script src="visual-return.js" defer></script>
 </head>
 <body>
-  <header class="coursebar">
-    <a class="brand" href="../?page=home"><span class="brandmark" aria-hidden="true">it.</span> Italian for Beginners</a>
-    <nav aria-label="Course"><a data-back-to-sheet href="study-sheets.html?sheet=l8-jobs-workplaces&amp;stage=practise&amp;mode=learn">Lesson 8 study sheet</a><a href="daily-practice.html">Daily practice</a></nav>
-  </header>
-  <main>
+  <main class="course-practice photo-page">
+    <a class="practice-return" href="/study/study-sheets.html?sheet=l8-jobs-workplaces&amp;stage=practise&amp;mode=learn" data-back-to-sheet>Lesson 8 study sheet</a>
     <div class="intro"><h1>Jobs in photographs</h1><p>Look at the work taking place. Choose the Italian name for the job.</p></div>
     <section class="panel photo-panel" aria-label="Photo exercise">
-      <p id="photo-state" role="status">Loading photographs…</p>
+      <p id="photo-state" lang="en-GB" data-ui-no-translate role="status">Loading photographs…</p>
       <button type="button" class="secondary" id="retry-photos" hidden>Try loading again</button>
       <div id="photo-question" hidden>
-        <p class="meter" id="photo-count"></p>
+        <p class="meter" id="photo-count" lang="en-GB" data-ui-no-translate></p>
         <div class="photo-and-answers">
-          <figure><img id="job-photo" alt=""></figure>
+          <figure><img id="job-photo" lang="en-GB" data-ui-no-translate alt=""></figure>
           <div>
             <form id="job-form">
               <fieldset id="job-choices">
-                <legend id="photo-prompt" tabindex="-1">Which job is shown?</legend>
-                <div id="job-options"></div>
+                <legend id="photo-prompt" lang="en-GB" data-ui-no-translate tabindex="-1">Which job is shown?</legend>
+                <div id="job-options" lang="it" data-ui-no-translate></div>
               </fieldset>
-              <details id="hint"><summary>Hint</summary><p></p></details>
+              <details id="hint"><summary>Hint</summary><p lang="en-GB" data-ui-no-translate></p></details>
               <button type="submit" class="primary" id="check-job">Check answer</button>
             </form>
-            <div id="job-feedback" role="status" aria-live="polite" aria-atomic="true"></div>
+            <div id="job-feedback" lang="en-GB" data-ui-no-translate role="status" aria-live="polite" aria-atomic="true"></div>
             <button type="button" class="primary" id="next-photo" hidden>Next photograph</button>
           </div>
         </div>
@@ -40,12 +36,11 @@
       </div>
       <div id="photo-complete" hidden>
         <h2 tabindex="-1">Round complete</h2>
-        <p id="photo-score"></p>
+        <p id="photo-score" lang="en-GB" data-ui-no-translate></p>
         <button type="button" class="primary" id="restart-photos">Practise again</button>
       </div>
     </section>
     <noscript>Enable JavaScript to answer the photo questions.</noscript>
   </main>
-  <script src="jobs-in-photos.js"></script>
 </body>
 </html>
