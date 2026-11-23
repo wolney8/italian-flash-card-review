@@ -28,8 +28,10 @@ for(const italianFirst of [true,false])for(const dark of [true,false])for(const 
  assert.match(guided,/aria-controls="courseSiteNavigation"/);
  assert.match(guided,/data-guide-label-order/);
  assert.match(study,/data-study-editorial-language/);
- assert.equal((guided.match(/class="editorial-label-sub"/g)||[]).length,4);
- assert.equal((study.match(/class="editorial-label-sub"/g)||[]).length,4);
+ assert.equal((guided.match(/class="editorial-label-sub"/g)||[]).length,5);
+ assert.equal((study.match(/class="editorial-label-sub"/g)||[]).length,5);
+ assert.ok(guided.includes('href="study/daily-practice.html"'));
+ assert.ok(study.includes('href="daily-practice.html"'));
  assert.match(guided,/aria-current="page"/);
  variants++;
 }
