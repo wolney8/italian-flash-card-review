@@ -75,7 +75,8 @@ try:
    assert page.locator('.library-topic-section').count()==6
    check_layout()
    dataset=page.evaluate('ItalianStudyData');assert len(dataset)==len({s['slug'] for s in dataset})
-   assert sum(not s['slug'].startswith(('l7-','l8-')) and s['slug']!='l6-recap-useful-requests' for s in dataset)==53
+   assert sum(not s['slug'].startswith(('l7-','l8-')) and s['slug']!='l6-recap-useful-requests' for s in dataset)==58
+   assert len(dataset)==82 and sum(len(s['questions']) for s in dataset)==831
    assert sum(s['slug'].startswith('l7-') for s in dataset)==14
    l8=[s for s in dataset if s['slug'].startswith('l8-')]
    assert len(l8)==9
@@ -166,7 +167,9 @@ try:
    new_round('quick')
    assert page.evaluate('JSON.parse(sessionStorage.getItem("italianCourseSessionProgressV2")).study.answers["class4-family-q1"]')==saved
    opts=page.locator('.quiz-question:not([hidden]) input[type=radio]').evaluate_all('(els)=>els.map(e=>e.value)')
-   assert len(opts)>=6
+   question_index=int(page.locator('.quiz-question:not([hidden])').get_attribute('data-progress-key').rsplit('-q',1)[1])-1
+   source_options=next(s for s in dataset if s['slug']=='class4-silent-h')['questions'][question_index]['choices']
+   assert len(opts)==2 and opts==source_options,(opts,source_options)
    language('en');language('it');assert page.locator('.quiz-question:not([hidden]) input[type=radio]').evaluate_all('(els)=>els.map(e=>e.value)')==opts
    assert not errors,errors
    ctx.close()

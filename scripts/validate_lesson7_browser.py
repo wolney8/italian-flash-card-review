@@ -327,8 +327,9 @@ def run_case(browser, base, width, height, language, theme, live):
         visit("l6-recap-useful-requests", topic="questions")
         expect(page.locator(".quiz-question")).to_have_count(12)
         q = question()
-        expect(q.locator(".question-heading [lang=en]")).to_have_count(1)
-        expect(q.locator(".question-heading [lang=it]")).to_have_count(1)
+        expect(q.locator(".worksheet-task[lang=en]")).to_have_text(
+            "Write the whole question in Italian. Ask for the meaning of a word.")
+        expect(q.locator(".worksheet-cue > [lang=en]:last-child")).to_have_text("What does “letto” mean?")
         # Natural quoted wording observed during production review must be accepted.
         text_answer('Che cosa significa "letto"?')
         checked("correct")

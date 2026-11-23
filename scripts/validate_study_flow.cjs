@@ -20,7 +20,14 @@ for(const [key,old] of Object.entries(baseline.cards)){
  const card=data.cards.find(c=>c.key===key);assert.ok(card,key+' lost');
  assert.equal(hash(Object.fromEntries(baseline.unchanged_card_fields.map(k=>[k,card[k]]))),old,key+' recall content changed');
 }
-for(const [slug,old] of Object.entries(baseline.questions))assert.equal(hash(data.sheets.find(s=>s.slug===slug).questions),old,slug+' existing questions/answers/order changed');
+// Keep the pre-review snapshot for history. Validate the reviewed IDs, order,
+// marking modes and accepted answers independently of instructions and hints.
+const reviewed = JSON.parse(read('scripts/fixtures/lesson6-reviewed-answers.json'));
+assert.deepEqual(Object.keys(reviewed).sort(), data.sheets.map(s=>s.slug).sort());
+for(const sheet of data.sheets){
+ const keys=sheet.questions.map(q=>[q.id,q.type,q.answer_mode,q.model,q.answers]);
+ assert.equal(hash(keys),reviewed[sheet.slug],sheet.slug+' IDs, order or marking keys changed');
+}
 const sets=data.practiceGroups['l6-essere-class'];assert.equal(sets.length,4);
 for(const set of sets){const sheet=data.sheets.find(s=>s.slug===set.slug);assert.equal(sheet.topicSlug,'l6-essere-class');}
 assert.equal(data.numberRows.length,10);
@@ -33,4 +40,4 @@ assert.ok(read('study/guided-sheet-pilot-v1.js').includes("select.id='studyPract
 assert.ok(read('study/guided-sheet-pilot-v1.js').includes("url.searchParams.set('stage','practise')"));
 const workflow=read('.github/workflows/lesson6-validation.yml');
 assert.doesNotMatch(workflow,/run:\s*python lesson6\/build\.py/,'Anki must remain paused');
-console.log('PASS class order, topic names, one Essere topic/four practice sets, all 66 card contents, unchanged non-number questions and approved 41-question number set.');
+console.log('PASS class order, topic names, one Essere topic/four practice sets, all 66 card contents, reviewed marking keys and 41-question number set.');

@@ -105,9 +105,11 @@ try:
    # Actual content: supplied meaning stays English; no hidden answer is exposed before checking.
    page.evaluate('sessionStorage.removeItem("italianStudyRoundV2:l6-essere-class");sessionStorage.removeItem("italianGuidedSheetPilotV1:l6-essere-class")')
    visit('l6-essere-class');q=current()
-   assert q.locator('.l6-gloss').inner_text()=='I am at home.'
-   assert '[…]' in q.locator('.question-prompt-support').inner_text()
-   assert 'SOH-noh' not in q.locator('.question-prompt-support').inner_text()
+   assert q.locator('.worksheet-cue > [lang=en]:last-child').inner_text()=='I am at home.'
+   assert q.locator('.worksheet-cue > [lang=it]:last-child').inner_text()=='Io ___ a casa.'
+   assert q.locator('.question-prompt-support').count()==0
+   assert q.locator('.model-answer').is_hidden()
+   assert 'SOH-noh' not in q.locator('.question-heading').inner_text()
    q.locator('.hint-button').click();assert q.locator('.hint').is_visible()
    fill(q,False);activate(q.locator('.check-button'));page.wait_for_timeout(80)
    assert q.get_attribute('data-result')=='wrong'

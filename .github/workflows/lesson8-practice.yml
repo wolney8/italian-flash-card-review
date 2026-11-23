@@ -4,6 +4,8 @@ on:
     paths: &practice_paths
       - 'lesson8-practice/**'
       - 'course-data-loader-v1.js'
+      - 'course-card-front-v1.js'
+      - 'early-card-tasks.js'
       - 'guided-course-v2.js'
       - 'index.html'
       - 'study/study-sheets.html'
@@ -12,6 +14,8 @@ on:
       - 'study/guided-sheet-pilot-v1.js'
       - 'learning-controls-v2.js'
       - 'scripts/validate_l8_extra_browser.py'
+      - 'scripts/validate_worksheet_tasks.cjs'
+      - 'scripts/validate_recall_layout.cjs'
       - '.github/workflows/lesson8-practice.yml'
   push:
     branches: [main]
@@ -28,6 +32,10 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+      - name: Check worksheet directions, flashcard fronts and answer keys
+        run: |
+          node scripts/validate_worksheet_tasks.cjs
+          node scripts/validate_recall_layout.cjs
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
