@@ -63,12 +63,17 @@ try:
     visit('/study/study-sheets.html?mode=learn&lesson=L'+str(i))
     assert page.locator('.library-lesson-detail [data-library-topic]').count()>2
     if i<=6:
-     assert page.locator('.library-extras').count()==1
-     assert page.locator('.library-extras').get_attribute('open') is None
+     assert page.locator('details.library-extras:not(.library-homework)').count()==1
+     assert page.locator('details.library-extras:not(.library-homework)').get_attribute('open') is None
     elif i==7:
      assert page.locator('.library-lesson-detail [data-library-topic]').count()==8
     else:
      assert page.locator('.library-lesson-detail [data-library-topic]').count()==9
+    has_homework=page.evaluate('(id)=>Boolean(ItalianLibraryMap.homework[id])','L'+str(i))
+    homework=page.locator('details.library-homework')
+    assert homework.count()==int(has_homework)
+    if has_homework:
+     assert homework.get_attribute('open') is None and homework.locator('li').count()>0
     check_layout()
    page.screenshot(path=str(OUT/f'lessons-{width}-{theme}.png'),full_page=True,animations='disabled')
    visit('/study/study-sheets.html?browse=topic')
