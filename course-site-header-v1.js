@@ -11,7 +11,7 @@ function header(o={}){
  const href=key=>key==='topics'?(study?'':'study/')+'study-sheets.html?mode='+(o.mode==='review'?'review':'learn'):base+'?page='+key;
  const active=o.current==='card'?'lessons':o.current||'home';
  const items=[['home','Inizio','Home'],['lessons','Lezioni','Lessons'],['topics','Schede di studio','Study sheets']];
- const nav=items.map(([key,it,en])=>'<a href="'+href(key)+'" data-guide-to="'+key+'"'+(active===key?' aria-current="page"':'')+'>'+pair(it,en,!!o.italianFirst)+'</a>').join('');
+ const nav=items.map(([key,it,en])=>'<a href="'+href(key)+'" data-guide-to="'+key+'"'+(active===key?' aria-current="page"':'')+'>'+pair(it,en,!!o.italianFirst)+'</a>').join('')+'<a href="'+(study?'':'study/')+'daily-practice.html">'+pair('Esercizi quotidiani','Daily practice',!!o.italianFirst)+'</a>';
  const comment='<button type="button" class="course-site-comment" data-guide-comment data-study-editorial-comment>'+pair('Commenti','Comments',!!o.italianFirst)+'</button>';
  const order='<button type="button" class="course-site-language" data-guide-label-order data-study-editorial-language aria-label="Change interface language"><span class="ui-language-choice" lang="it">ITA</span><span aria-hidden="true"> / </span><span class="ui-language-choice" lang="en">ENG</span></button>';
  const theme='<button type="button" class="course-site-theme" data-guide-theme data-study-editorial-theme title="Change colour theme" aria-label="Switch to '+(o.dark?'light':'dark')+' mode"><span aria-hidden="true">'+(o.dark?'☀':'☾')+'</span><span>'+(o.dark?'Light':'Dark')+'</span></button>';

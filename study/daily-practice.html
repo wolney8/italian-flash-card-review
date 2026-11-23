@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#203d34">
+  <title>Daily practice | Italian for Beginners</title>
+  <link rel="stylesheet" href="daily-practice.css">
+</head>
+<body>
+  <header class="coursebar">
+    <a class="brand" data-course-link="home" href="../?page=home"><span class="brandmark" aria-hidden="true">it.</span> Italian for Beginners</a>
+    <nav aria-label="Course"><a data-course-link="sheets" href="study-sheets.html?mode=learn&amp;browse=lesson">Study sheets</a><a href="#topics" aria-current="page">Daily practice</a></nav>
+  </header>
+  <main>
+    <div class="intro"><h1>Daily practice</h1><p>Choose a topic. Practise eight questions at your own pace.</p></div>
+    <div class="workspace">
+      <aside id="topics"><h2>Practice topics</h2><nav id="topic-buttons" aria-label="Practice topics"></nav></aside>
+      <section id="work" aria-labelledby="topic-title">
+        <div class="topic-head"><h2 id="topic-title"></h2><p id="topic-intro"></p></div>
+        <div id="filters" class="filters" hidden>
+          <label>Verb group<select id="group"><option value="all">All verbs</option><option value="regular">Regular verbs</option><option value="irregular">Irregular verbs</option></select></label>
+          <label>Practise a verb<select id="verb"></select></label>
+          <label id="focus-label">Practise<select id="focus"></select></label>
+        </div>
+        <details id="reference"><summary id="ref-title">Quick reference</summary><div id="ref-body"></div></details>
+        <div id="exercise"></div>
+      </section>
+    </div>
+    <noscript>Enable JavaScript to practise the exercises.</noscript>
+  </main>
+  <script src="daily-verbs.js"></script>
+  <script src="daily-patterns.js"></script>
+  <script src="daily-phrases.js"></script>
+  <script src="daily-practice.js"></script>
+</body>
+</html>
