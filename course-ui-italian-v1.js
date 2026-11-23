@@ -5,6 +5,53 @@ const messages=Object.fromEntries(`
 Home|||Inizio
 Lessons|||Lezioni
 Study sheets|||Schede di studio
+Daily practice|||Esercizi quotidiani
+Visual exercises|||Esercizi visivi
+Practice topics|||Argomenti da ripassare
+Match verb endings|||Abbina le desinenze verbali
+Match whole verb forms|||Abbina le forme verbali complete
+Match articles|||Abbina gli articoli
+Match Italian numbers|||Abbina i numeri in italiano
+Sort C and G sounds|||Raggruppa i suoni di C e G
+Build a sentence|||Costruisci una frase
+Jobs in photographs|||Professioni in fotografia
+Lesson 8 study sheet|||Scheda della lezione 8
+Back to your study sheet|||Torna alla tua scheda
+Exercise|||Esercizio
+Articles|||Articoli
+Pronouncing C and G|||La pronuncia di C e G
+In, on and from|||Le preposizioni in, su e da
+Questions and classroom phrases|||Domande e frasi per la classe
+Direct objects|||Complementi oggetto
+Verb group|||Gruppo di verbi
+Practise a verb|||Scegli un verbo
+All verbs|||Tutti i verbi
+Regular verbs|||Verbi regolari
+Irregular verbs|||Verbi irregolari
+All articles|||Tutti gli articoli
+Definite (the)|||Determinativi (the)
+Indefinite (a or an)|||Indeterminativi (a o an)
+Partitive (some)|||Partitivi (some)
+All tasks|||Tutti gli esercizi
+Match forms and subjects|||Abbina forme e soggetti
+Write whole forms|||Scrivi le forme complete
+Write endings|||Scrivi le desinenze
+Choose one answer|||Scegli una risposta
+Your answer|||La tua risposta
+Hear the Italian|||Ascolta in italiano
+Another round|||Un altro giro
+Finish round|||Termina il giro
+Round complete|||Giro completato
+Show solution|||Mostra la soluzione
+Next round|||Giro successivo
+Reset tiles|||Rimetti a posto le tessere
+Play again|||Ricomincia
+Try loading again|||Riprova a caricare
+Next photograph|||Foto successiva
+Photograph and source|||Fotografia e fonte
+Photo exercise|||Esercizio con le foto
+Tiles|||Tessere
+Answer boxes|||Caselle per le risposte
 Study Sheets|||Schede di studio
 Comments|||Commenti
 Comment|||Commenta

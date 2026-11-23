@@ -1,6 +1,5 @@
-(() => {
-  'use strict';
-  const byId = id => document.getElementById(id);
+export function mountPractice(main, signal) {
+  const byId = id => main.querySelector('#'+id);
   const roles = {
     insegnante: {italian:'l’insegnante', english:'teacher'},
     cuoco: {italian:'il cuoco / la cuoca', english:'cook'},
@@ -56,12 +55,13 @@
     const image = byId('job-photo');
     image.alt = photo.alt;
     image.onload = () => {
+      if (signal.aborted) return;
       byId('photo-state').hidden = true;
       byId('photo-question').hidden = false;
       if (moveFocus) byId('photo-prompt').focus();
     };
     image.onerror = () => showError('This photograph could not be loaded.');
-    image.src = 'job-photos/'+photo.file;
+    image.src = new URL('job-photos/'+photo.file, import.meta.url).href;
   }
   function start() {
     position = 0; score = 0; round = shuffle(photos);
@@ -76,12 +76,13 @@
   async function load() {
     byId('retry-photos').hidden = true;
     try {
-      const response = await fetch('job-photos/sources.json');
+      const response = await fetch(new URL('job-photos/sources.json',import.meta.url),{signal});
       if (!response.ok) throw Error();
       photos = await response.json();
+      if (signal.aborted) return;
       if (!photos.length) throw Error();
       start();
-    } catch { showError('The photograph collection could not be loaded.'); }
+    } catch { if (!signal.aborted) showError('The photograph collection could not be loaded.'); }
   }
   byId('retry-photos').addEventListener('click',() => photos.length && round.length ? renderPhoto(true) : load());
   byId('job-form').addEventListener('submit', event => {
@@ -111,4 +112,4 @@
   });
   byId('restart-photos').addEventListener('click',start);
   load();
-})();
+}

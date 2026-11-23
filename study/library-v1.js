@@ -171,18 +171,48 @@ function context(active,params){
  return current;
 }
 const visualActivities = [
- {sets:['l7-endings','l7-class-lavorare','l7-class-parlare','l7-class-abitare','l7-class-studiare','l7-class-mangiare'],
-  page:'visual-exercises.html?activity=verbs', en:'Match verb endings', it:'Abbina le desinenze'},
- {sets:['class2-c-sounds','class2-g-sounds','class2-homework-c-columns','class2-homework-g-columns','sounds-review','l8-pronunciation-practice'],
-  page:'visual-exercises.html?activity=sounds', en:'Sort C and G sounds', it:'Raggruppa i suoni di C e G'},
- {sets:['l6-useful-questions','l6-recap-useful-requests','l7-homework-gaps','l7-homework-choices','l7-homework-more','l7-homework-translation','l8-work-dialogue'],
-  page:'visual-exercises.html?activity=sentence', en:'Build a sentence', it:'Costruisci una frase'},
- {sets:['l8-jobs-workplaces'],page:'jobs-in-photos.html',en:'Jobs in photographs',it:'I mestieri nelle fotografie'}
+ {activity:'verbs', en:'Match verb endings', it:'Abbina le desinenze', rounds:{
+  'l7-endings':'parlare','l7-class-lavorare':'lavorare','l7-class-parlare':'parlare','l7-class-abitare':'abitare',
+  'l7-class-studiare':'studiare','l7-class-mangiare':'mangiare','l7-families':'leggere','l7-homework-matching':'dormire',
+  'practice-regular-verbs':'parlare','practice-vivere':'vivere','practice-abitare':'abitare'}},
+ {activity:'forms', en:'Match whole verb forms', it:'Abbina le forme verbali', rounds:{
+  'l6-essere-matching':'essere','l6-essere-gaps':'essere-plural','l6-essere-translation':'essere','l6-essere-class':'essere',
+  'class4-avere-homework':'avere','class4-avere-class':'avere-plural','practice-essere':'essere','practice-avere':'avere',
+  'practice-venire':'venire','practice-stare':'stare','practice-andare':'andare','practice-chiamarsi':'chiamarsi',
+  'practice-irregular-verbs':'essere','subject-pronouns-present-tense':'essere','known-verbs-and-forms':'avere',
+  'l8-verb-tables':'fare','l8-verb-choices':'stare','l8-wellbeing':'stare','l8-mixed-verbs':'fare-plural'}},
+ {activity:'articles', en:'Match articles', it:'Abbina gli articoli', rounds:{
+  'class2-definite-articles':'definite','class2-indefinite-articles':'indefinite','class2-homework-article-columns':'indefinite',
+  'plural-articles':'plural-the','class5-class-plural-table':'singular-to-plural','class5-plurals-a':'singular-to-plural',
+  'class5-plurals-b':'plural-the','class5-plurals-c':'singular-to-plural','class5-plurals-d':'plural-the',
+  'l6-plural-workshop':'some-plural','connected-partitives':'some-plural','l8-articles-in-context':'in'}},
+ {activity:'numbers', en:'Match Italian numbers', it:'Abbina i numeri italiani', rounds:{
+  'numbers-0-20':'zero-ten','class4-homework-number-maze':'teens','class4-ages-homework':'ages',
+  'l6-number-patterns':'hundreds','avere-numbers-family':'ages'}},
+ {activity:'sounds', en:'Sort C and G sounds', it:'Raggruppa i suoni di C e G', rounds:{
+  'class2-c-sounds':'first-c','class2-g-sounds':'first-g','class2-homework-c-columns':'ci-chi',
+  'class2-homework-g-columns':'gi-ghi','sounds-review':'four-sounds','l8-pronunciation-practice':'hard-soft'}},
+ {activity:'sentence', en:'Build a sentence', it:'Costruisci una frase', rounds:{
+  'class1-introductions':'name','class1-register':'formal-name','class3-complete-replies':'residence','class3-dialogues':'origin',
+  'di-da-dove-pronouns':'come-from','l6-negative-homework':'negative','l6-age-dialogue':'age-question','l6-useful-questions':'spell',
+  'l6-recap-useful-requests':'repeat','l7-homework-gaps':'languages','l7-homework-choices':'chocolate','l7-homework-more':'chef',
+  'l7-homework-translation':'history','l8-work-dialogue':'teacher','word-jobs-sentence-building':'school'}},
+ {activity:'photos', en:'Jobs in photographs', it:'I mestieri nelle fotografie', rounds:{'l8-jobs-workplaces':''}}
 ];
+function visualPracticeLink(id){
+ const entry=visualActivities.find(group=>Object.hasOwn(group.rounds,id));
+ if(!entry)return '';
+ const query=new URLSearchParams({page:entry.activity==='photos'?'jobs-in-photos':'visual-exercises'});
+ if(entry.activity!=='photos'){
+  query.set('activity',entry.activity);
+  query.set('round',entry.rounds[id]);
+ }
+ query.set('sheetReturn',location.pathname+location.search+location.hash);
+ return '<a data-visual-practice href="../?'+esc(query.toString())+'">'+pair(entry.en,entry.it)+'</a>';
+}
 function detailNav(nav,ctx){
  const label=ctx.lesson?'Lesson '+ctx.lesson.slice(1):'By topic';
- const activity=visualActivities.find(item=>item.sets.includes(ctx.set?.id));
- const practiceLink=activity?'<a data-visual-practice href="'+activity.page+'">'+pair(activity.en,activity.it)+'</a>':'';
+ const practiceLink=visualPracticeLink(ctx.set?.id);
  nav.innerHTML='<div class="library-detail-bar"><a href="'+ctx.library+'">← '+pair(label,label.startsWith('Lesson')?'Lezione '+ctx.lesson.slice(1):'Per argomento')+'</a><a data-related-flashcards href="'+ctx.flashcards+'">'+pair('Related flashcards','Carte collegate')+'</a>'+practiceLink+'</div>';
 }
 function mountDetail(article){if(!current||article.dataset.libraryDetail)return;article.dataset.libraryDetail='ready';

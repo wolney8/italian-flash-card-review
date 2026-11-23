@@ -11,6 +11,8 @@ from urllib.parse import parse_qs, urlparse
 
 from playwright.sync_api import expect, sync_playwright
 
+from validate_practice_navigation import VIEWS, check_navigation
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CARDS = json.loads((ROOT / 'lesson8-practice/cards.json').read_text())
@@ -136,6 +138,12 @@ Object.defineProperty(window, 'SpeechSynthesisUtterance', {configurable:true,
 
 
 class QuietHandler(SimpleHTTPRequestHandler):
+    def translate_path(self, path):
+        # Netlify serves the three .html bookmark aliases at their extensionless paths too.
+        local = super().translate_path(path)
+        aliases = {f'/study/{view}' for view in VIEWS}
+        return local + '.html' if urlparse(path).path in aliases else local
+
     def log_message(self, *_):
         pass
 
@@ -304,9 +312,10 @@ def check_visual_practice(page, base):
     open_topic(page, base, 'work-dialogue', 'l8-work-dialogue')
     page.locator('[data-visual-practice]').click()
     expect(page.locator('#visual-activity')).to_have_value('sentence')
-    page.locator('#visual-tiles button').first.click()
-    page.locator('#visual-boxes button').first.click()
-    expect(page.locator('#visual-feedback')).to_contain_text('placed in')
+    expect(page.locator('#visual-instruction')).to_contain_text('I am a teacher and I work in a school')
+    page.locator('.visual-tile[aria-label="Faccio, unplaced"]').click()
+    page.locator('.visual-target').filter(has_text='First verb').click()
+    expect(page.locator('#visual-feedback')).to_contain_text('Faccio placed in 1. First verb')
     print(f'Visual practice: loaded and scored {len(photos)} credited photographs and placed a sentence tile.', flush=True)
 
 
@@ -339,6 +348,7 @@ def main():
             check_visual_practice(page, base)
             check_core(page, base)
             assert not errors, errors
+            check_navigation(browser, base)
         finally:
             browser.close()
             server.shutdown()

@@ -1,6 +1,9 @@
-(function () {
-  'use strict';
-  const byId = id => document.getElementById(id);
+import './daily-verbs.js';
+import './daily-patterns.js';
+import './daily-phrases.js';
+
+export function mountPractice(main, signal) {
+  const byId = id => main.querySelector('#'+id);
   const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
   const normal = value => String(value).toLocaleLowerCase('it').normalize('NFC').replace(/[‘’]/g, "'").replace(/[.!?]+$/g, '').trim().replace(/\s+/g, ' ');
   const day = new Date();
@@ -133,11 +136,11 @@
     const audioWord = state.topic === 'sounds' && (result || q.id.startsWith('sounds-read-')) ? q.word : '';
     const answerLang = q.answerLang === 'en' ? 'en' : 'it';
     const choices = q.choices && q.choices.length;
-    const inputs = choices ? '<fieldset class="choice-list"><legend class="sr">Choose one answer</legend>'+q.choices.map(c => '<label lang="'+answerLang+'"><input type="radio" required name="answer" value="'+esc(c)+'"'+(result?.value===c?' checked':'')+'>'+esc(c)+'</label>').join('')+'</fieldset>'
+    const inputs = choices ? '<fieldset class="choice-list"><legend class="sr">Choose one answer</legend>'+q.choices.map(c => '<label data-ui-no-translate lang="'+answerLang+'"><input type="radio" required name="answer" value="'+esc(c)+'"'+(result?.value===c?' checked':'')+'>'+esc(c)+'</label>').join('')+'</fieldset>'
       : '<label class="entry">Your answer<input type="text" name="answer" lang="'+answerLang+'" required autocomplete="off" autocapitalize="none" spellcheck="false" value="'+esc(result?.value||'')+'"></label>';
-    box.innerHTML = '<article class="panel"><div class="meter"><progress value="'+session.index+'" max="'+session.ids.length+'"></progress>Question '+(session.index+1)+' of '+session.ids.length+'</div><h3 class="question-title" tabindex="-1">'+esc(q.task)+'</h3><div class="stimulus">'+stim+'</div>'+(audioWord ? '<button type="button" class="listen" data-action="listen" data-word="'+esc(audioWord)+'"'+(italianVoice()?'':' hidden')+'>Hear the Italian</button>' : '')+
-      '<form>'+inputs+(result ? '' : '<details><summary>Hint</summary><p>'+esc(q.hint)+'</p></details><div class="controls"><button class="primary" type="submit">Check answer</button><button type="button" class="secondary" data-action="reveal">Show answer</button></div>')+'</form>'+
-      (result ? '<div role="status" class="feedback '+(result.correct?'':'review')+'"><p><b>'+(result.correct?'Correct.':result.revealed?'Answer':'The answer is')+'</b> <span lang="'+answerLang+'">'+esc(q.answer)+'</span></p><p>'+esc(q.explanation)+'</p></div><div class="controls"><button class="primary" data-action="next">'+(session.index+1===session.ids.length?'Finish round':'Next question')+'</button></div>' : '')+'</article>';
+    box.innerHTML = '<article class="panel"><div class="meter"><progress value="'+session.index+'" max="'+session.ids.length+'"></progress>Question '+(session.index+1)+' of '+session.ids.length+'</div><h3 class="question-title" tabindex="-1" lang="en-GB" data-ui-no-translate>'+esc(q.task)+'</h3><div class="stimulus" lang="en-GB" data-ui-no-translate>'+stim+'</div>'+(audioWord ? '<button type="button" class="listen" data-action="listen" data-word="'+esc(audioWord)+'"'+(italianVoice()?'':' hidden')+'>Hear the Italian</button>' : '')+
+      '<form>'+inputs+(result ? '' : '<details><summary>Hint</summary><p lang="en-GB" data-ui-no-translate>'+esc(q.hint)+'</p></details><div class="controls"><button class="primary" type="submit">Check answer</button><button type="button" class="secondary" data-action="reveal">Show answer</button></div>')+'</form>'+
+      (result ? '<div role="status" lang="en-GB" data-ui-no-translate class="feedback '+(result.correct?'':'review')+'"><p><b>'+(result.correct?'Correct.':result.revealed?'Answer':'The answer is')+'</b> <span lang="'+answerLang+'">'+esc(q.answer)+'</span></p><p>'+esc(q.explanation)+'</p></div><div class="controls"><button class="primary" data-action="next">'+(session.index+1===session.ids.length?'Finish round':'Next question')+'</button></div>' : '')+'</article>';
     if (result) box.querySelectorAll('input').forEach(el => {el.disabled=true;});
     if (focus) (result ? box.querySelector('[data-action="next"]') : box.querySelector('h3')).focus();
   }
@@ -168,9 +171,9 @@
   byId('verb').addEventListener('change', e => {state.verb=e.target.value; loadTopic();});
   byId('focus').addEventListener('change', e => {state.focus[state.topic]=e.target.value; loadTopic();});
   if ('speechSynthesis' in window) speechSynthesis.addEventListener('voiceschanged', () => {
-    const button = document.querySelector('[data-action="listen"]');
+    const button = main.querySelector('[data-action="listen"]');
     if (button) button.hidden=!italianVoice();
-  });
+  },{signal});
   byId('exercise').addEventListener('submit', e => {
     e.preventDefault();
     const value = String(new FormData(e.target).get('answer') || '').trim();
@@ -195,9 +198,5 @@
       case 'retry': start(session.round, session.ids.filter((_,i) => !session.results[i]?.correct)); byId('reference').open=false; render(true); break;
     }
   });
-  if (location.protocol === 'file:' || document.documentElement.hasAttribute('data-standalone')) {
-    document.querySelector('[data-course-link="home"]').href='https://italian-flash-card-review.netlify.app/?page=home';
-    document.querySelector('[data-course-link="sheets"]').href='https://italian-flash-card-review.netlify.app/study/study-sheets.html?mode=learn&browse=lesson';
-  }
   loadTopic();
-})();
+}

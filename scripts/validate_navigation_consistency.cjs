@@ -30,8 +30,13 @@ for(const italianFirst of [true,false])for(const dark of [true,false])for(const 
  assert.match(study,/data-study-editorial-language/);
  assert.equal((guided.match(/class="editorial-label-sub"/g)||[]).length,5);
  assert.equal((study.match(/class="editorial-label-sub"/g)||[]).length,5);
- assert.ok(guided.includes('href="study/daily-practice.html"'));
- assert.ok(study.includes('href="daily-practice.html"'));
+ for(const [html,base] of [[guided,'https://course.test/'],[study,'https://course.test/study/study-sheets.html']]){
+  const daily=Array.from(html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)).find(item=>item[2].includes('Daily practice'));
+  assert.ok(daily,'The shared course header must link to Daily practice');
+  const url=new URL(daily[1],base);
+  assert.equal(url.pathname,'/');
+  assert.equal(url.searchParams.get('page'),'daily-practice');
+ }
  assert.match(guided,/aria-current="page"/);
  variants++;
 }

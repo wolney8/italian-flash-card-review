@@ -61,6 +61,9 @@
     if(/\s[←→]$/.test(s))return translate(s.slice(0,-2),lang)+' '+s.slice(-1);
     if(/^\d{2} /.test(s))return s.slice(0,3)+translate(s.slice(3),lang);
     let m;
+    if((m=s.match(/^Mix all (\d+) verbs$/)))return 'Mischia tutti i '+m[1]+' verbi';
+    if((m=s.match(/^See the forms of (.+)$/)))return 'Vedi le forme di '+m[1];
+    if((m=s.match(/^Practise these (\d+) again$/)))return m[1]==='1'?'Ripeti questo esercizio':'Ripeti questi '+m[1]+' esercizi';
     if((m=s.match(/^Next practice set: (.+)$/)))return 'Prossimi esercizi: '+translate(m[1],lang);
     if((m=s.match(/^Retry mistakes \((\d+)\)$/)))return 'Riprova gli errori ('+m[1]+')';
     if((m=s.match(/^(Quick practice|Full exercise set) · (\d+) questions$/)))return (m[1]==='Quick practice'?'Esercizi rapidi':'Tutti gli esercizi')+' · '+m[2]+' domande';

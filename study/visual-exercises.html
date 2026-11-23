@@ -3,35 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#203d34">
+  <script src="/course-practice-routes-v1.js?v=1"></script>
   <title>Visual exercises | Italian for Beginners</title>
   <link rel="stylesheet" href="daily-practice.css">
   <link rel="stylesheet" href="visual-exercises.css">
 </head>
 <body>
-  <header class="coursebar">
-    <a class="brand" href="../?page=home"><span class="brandmark" aria-hidden="true">it.</span> Italian for Beginners</a>
-    <nav aria-label="Course"><a href="study-sheets.html?mode=learn&amp;browse=lesson" data-back-to-sheet>Study sheets</a><a href="daily-practice.html">Daily practice</a></nav>
-  </header>
-  <main class="visual-page">
+  <main class="course-practice visual-page">
+    <a class="practice-return" href="/study/study-sheets.html?mode=learn&amp;browse=lesson" data-back-to-sheet hidden>Back to your study sheet</a>
     <div class="intro"><h1>Visual exercises</h1></div>
     <label class="activity-picker">Exercise
       <select id="visual-activity">
         <option value="verbs">Match verb endings</option>
+        <option value="forms">Match whole verb forms</option>
+        <option value="articles">Match articles</option>
+        <option value="numbers">Match Italian numbers</option>
         <option value="sounds">Sort C and G sounds</option>
         <option value="sentence">Build a sentence</option>
       </select>
     </label>
     <section class="panel tile-panel" aria-labelledby="visual-title">
-      <p id="visual-count"></p>
-      <h2 id="visual-title" tabindex="-1"></h2>
-      <p id="visual-instruction"></p>
-      <p class="tile-guide">Choose a tile, then a box. You can also drag the tile. Choose it again to move it.</p>
-      <div id="visual-tiles" role="group" aria-label="Tiles"></div>
-      <div id="visual-boxes" role="group" aria-label="Answer boxes"></div>
-      <details id="visual-hint"><summary>Hint</summary><p></p></details>
-      <p id="visual-score" hidden></p>
-      <p id="visual-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+      <p id="visual-count" lang="en-GB" data-ui-no-translate></p>
+      <h2 id="visual-title" lang="en-GB" data-ui-no-translate tabindex="-1"></h2>
+      <p id="visual-instruction" lang="en-GB" data-ui-no-translate></p>
+      <p class="tile-guide" lang="en-GB">Choose a tile, then a box. You can also drag the tile. Choose it again to move it.</p>
+      <div id="visual-tiles" lang="en-GB" data-ui-no-translate role="group" aria-label="Tiles"></div>
+      <div id="visual-boxes" lang="en-GB" data-ui-no-translate role="group" aria-label="Answer boxes"></div>
+      <details id="visual-hint"><summary>Hint</summary><p lang="en-GB" data-ui-no-translate></p></details>
+      <p id="visual-score" lang="en-GB" data-ui-no-translate hidden></p>
+      <p id="visual-feedback" lang="en-GB" data-ui-no-translate role="status" aria-live="polite" aria-atomic="true"></p>
       <div class="controls">
         <button type="button" class="primary" id="visual-check">Check answer</button>
         <button type="button" class="secondary" id="visual-reveal" hidden>Show solution</button>
@@ -41,8 +41,5 @@
     </section>
     <noscript>Enable JavaScript to use the exercises.</noscript>
   </main>
-  <script src="visual-return.js" defer></script>
-  <script src="daily-verbs.js"></script>
-  <script src="visual-exercises.js"></script>
 </body>
 </html>
