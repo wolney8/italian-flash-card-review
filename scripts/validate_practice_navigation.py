@@ -17,6 +17,9 @@ def route(page, view):
                       parse_qs(urlsplit(url).query).get('page') == [view])
     expect(page.locator('#guidedExperience .course-site-header')).to_have_count(1)
     expect(page.locator(VIEWS[view])).to_be_visible()
+    expect(page.locator('.course-site-navigation [aria-current]')).to_have_attribute(
+        'data-guide-to', 'daily-practice')
+
 
 
 def theme(page, expected):
@@ -49,13 +52,15 @@ def check_aliases(page, base):
         for suffix in ('.html', ''):
             params = {'sheetReturn': sheet}
             if view == 'visual-exercises':
-                params['activity'] = 'sounds'
+                params.update(activity='sounds', round='gi-ghi')
             page.goto(f'{base}/study/{view}{suffix}?{urlencode(params)}')
             route(page, view)
             query = parse_qs(urlsplit(page.url).query)
             assert query.get('sheetReturn') == [sheet], (view, query)
             if view == 'visual-exercises':
                 expect(page.locator('#visual-activity')).to_have_value('sounds')
+                assert query.get('round') == ['gi-ghi']
+                expect(page.locator('#visual-tiles')).to_contain_text('ghi')
             if view != 'daily-practice':
                 destination = page.get_by_role('link', name='Back to your study sheet').evaluate('el => el.href')
                 assert destination == base + sheet
@@ -63,6 +68,29 @@ def check_aliases(page, base):
     page.wait_for_url(lambda url: urlsplit(url).path == '/' and
                       parse_qs(urlsplit(url).query).get('page') == ['lessons'])
     expect(page.locator('[data-guide-lesson=L8]')).to_be_visible()
+
+
+def check_worksheet_entries(page, base):
+    examples = (
+        ('L2', 'class2-definite-articles', 'articles', 'definite', 'singular article'),
+        ('L6', 'l6-number-patterns', 'numbers', 'hundreds', 'in hundreds'),
+        ('L6', 'l6-essere-class', 'forms', 'essere', 'of essere'),
+    )
+    for lesson, sheet, activity, round_id, title in examples:
+        query = urlencode({'lesson': lesson, 'sheet': sheet, 'set': sheet, 'stage': 'examples'})
+        page.goto(f'{base}/study/study-sheets.html?{query}')
+        link = page.locator('[data-visual-practice]')
+        expect(link).to_be_visible()
+        return_url = page.url
+        link.click()
+        route(page, 'visual-exercises')
+        params = parse_qs(urlsplit(page.url).query)
+        assert params.get('round') == [round_id], (sheet, params)
+        expect(page.locator('#visual-activity')).to_have_value(activity)
+        expect(page.locator('#visual-title')).to_contain_text(title)
+        page.locator('[data-back-to-sheet]').click()
+        expect(page).to_have_url(return_url)
+        expect(page.locator('section[data-study-stage=examples]:visible')).to_be_visible()
 
 
 def check_navigation(browser, base):
@@ -83,6 +111,7 @@ def check_navigation(browser, base):
         try:
             if not mobile:
                 check_aliases(page, base)
+                check_worksheet_entries(page, base)
             page.goto(base + '/?page=home')
             header_link(page, 'Daily practice').click()
             route(page, 'daily-practice')
@@ -127,6 +156,16 @@ def check_navigation(browser, base):
             theme(page, 'light')
             expect(tile).to_have_attribute('data-placed', 'true')
             assert colour(tile) != tile_dark
+
+            instruction = page.locator('#visual-instruction')
+            english = instruction.inner_text()
+            language = page.locator('.course-site-language')
+            language.click()
+            assert page.evaluate("localStorage.getItem('italianCourseLanguageV1')") == 'it'
+            expect(instruction).to_have_text(english)
+            expect(tile).to_have_attribute('data-placed', 'true')
+            language.click()
+            assert page.evaluate("localStorage.getItem('italianCourseLanguageV1')") == 'en'
 
             for activity in ('forms', 'articles', 'numbers', 'sentence'):
                 picker.select_option(activity)

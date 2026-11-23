@@ -312,9 +312,10 @@ def check_visual_practice(page, base):
     open_topic(page, base, 'work-dialogue', 'l8-work-dialogue')
     page.locator('[data-visual-practice]').click()
     expect(page.locator('#visual-activity')).to_have_value('sentence')
-    page.locator('#visual-tiles button').first.click()
-    page.locator('#visual-boxes button').first.click()
-    expect(page.locator('#visual-feedback')).to_contain_text('placed in')
+    expect(page.locator('#visual-instruction')).to_contain_text('I am a teacher and I work in a school')
+    page.locator('.visual-tile[aria-label="Faccio, unplaced"]').click()
+    page.locator('.visual-target').filter(has_text='First verb').click()
+    expect(page.locator('#visual-feedback')).to_contain_text('Faccio placed in 1. First verb')
     print(f'Visual practice: loaded and scored {len(photos)} credited photographs and placed a sentence tile.', flush=True)
 
 

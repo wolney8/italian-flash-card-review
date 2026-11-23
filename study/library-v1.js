@@ -182,7 +182,7 @@ const visualActivities = [
   'practice-irregular-verbs':'essere','subject-pronouns-present-tense':'essere','known-verbs-and-forms':'avere',
   'l8-verb-tables':'fare','l8-verb-choices':'stare','l8-wellbeing':'stare','l8-mixed-verbs':'fare-plural'}},
  {activity:'articles', en:'Match articles', it:'Abbina gli articoli', rounds:{
-  'class2-definite-articles':'definite','class2-indefinite-articles':'indefinite','class2-homework-article-columns':'definite',
+  'class2-definite-articles':'definite','class2-indefinite-articles':'indefinite','class2-homework-article-columns':'indefinite',
   'plural-articles':'plural-the','class5-class-plural-table':'singular-to-plural','class5-plurals-a':'singular-to-plural',
   'class5-plurals-b':'plural-the','class5-plurals-c':'singular-to-plural','class5-plurals-d':'plural-the',
   'l6-plural-workshop':'some-plural','connected-partitives':'some-plural','l8-articles-in-context':'in'}},

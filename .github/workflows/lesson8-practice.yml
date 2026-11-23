@@ -16,6 +16,8 @@ on:
       - 'study/daily-practice.*'
       - 'course-practice-routes-v1.js'
       - 'course-site-header-v1.*'
+      - 'editorial-theme-v1.css'
+      - 'course-shell-boot-v1.js'
       - 'course-ui-language-v1.js'
       - 'study/study-sheets.html'
       - 'study/study-sheets-v5.js'
