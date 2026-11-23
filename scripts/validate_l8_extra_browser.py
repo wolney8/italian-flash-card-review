@@ -293,7 +293,7 @@ def check_visual_practice(page, base):
         feedback = page.locator('#job-feedback')
         expect(feedback).to_contain_text('Correct.' if index else 'The job is')
         expect(feedback).to_contain_text(photo['evidence'])
-        expect(page.locator('#job-choices')).to_be_disabled()
+        expect(page.locator('#job-options input:checked')).to_be_disabled()
         page.locator('#next-photo').click()
     assert seen == set(by_file)
     expect(page.locator('#photo-score')).to_have_text(f'{len(photos) - 1} of {len(photos)} correct.')
