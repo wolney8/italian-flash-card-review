@@ -63,3 +63,8 @@ input[type=radio]{accent-color:var(--green)}
 .sr{position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap}
 @media(max-width:720px){main{padding:22px 14px 42px}.workspace{grid-template-columns:1fr;gap:18px;margin-top:18px}#topic-buttons{flex-direction:row;flex-wrap:wrap;gap:4px}#topic-buttons button{padding:6px 8px;font-size:.86rem}.coursebar{padding:10px 14px}.coursebar nav{gap:10px}.brand{font-size:.90rem}.coursebar nav a{font-size:.79rem}.topic-head h2{font-size:1.6rem}}
 @media(max-width:420px){.coursebar{flex-wrap:wrap}.coursebar nav{flex-wrap:wrap}.filters{gap:8px}.filters label{max-width:100%}.controls{gap:7px}}
+
+.visual-topic-heading{margin-top:18px}
+.visual-topic-links{display:grid;gap:3px}
+.visual-topic-links a{width:fit-content;border-radius:6px;padding:5px 10px;font-weight:600}
+@media(max-width:720px){.visual-topic-links{display:flex;flex-wrap:wrap;gap:2px 6px}.visual-topic-links a{padding:5px 8px;font-size:.86rem}.visual-topic-heading{margin:10px 0 2px}}

@@ -1,0 +1,71 @@
+[
+  {
+    "file": "cuoco.jpg",
+    "role": "cuoco",
+    "title": "A cook prepares vegetables in Cleveland",
+    "credit": "Bryan M. Ilyankoff / U.S. Navy",
+    "source": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_A_Sailor_prepares_a_meal..jpg",
+    "licence": "Public domain in the United States (official U.S. Navy photograph)",
+    "licenceUrl": "https://commons.wikimedia.org/wiki/File:Flickr_-_Official_U.S._Navy_Imagery_-_A_Sailor_prepares_a_meal..jpg#Licensing",
+    "alt": "A person in a tall white hat chops vegetables at a kitchen worktop.",
+    "date": "2012-08-30",
+    "archiveId": "120830-N-WX378-004",
+    "provenance": "Official U.S. Navy image. The caption identifies Culinary Specialist Antonio Lindsey preparing a meal at Cuyahoga Community College in Cleveland. The event date in the caption and camera metadata is 30 August 2012.",
+    "originalFile": "https://upload.wikimedia.org/wikipedia/commons/c/c3/Flickr_-_Official_U.S._Navy_Imagery_-_A_Sailor_prepares_a_meal..jpg",
+    "width": 900,
+    "height": 643,
+    "originalSha256": "2e180c270dd7177ec4f227c11253d914d5949a736a467d6692a2f870702b9f84",
+    "hint": "Look at what the person is doing with the food.",
+    "evidence": "The person is chopping vegetables at a kitchen worktop. The archive identifies the cook as Antonio Lindsey.",
+    "distractors": [
+      "insegnante",
+      "infermiere"
+    ]
+  },
+  {
+    "file": "insegnante.jpg",
+    "role": "insegnante",
+    "title": "A geography lesson in Concho, Arizona",
+    "credit": "Russell Lee / Library of Congress, Prints & Photographs Division, FSA/OWI Collection",
+    "source": "https://www.loc.gov/item/2017788007/",
+    "licence": "Public domain (FSA/OWI photographic collection)",
+    "licenceUrl": "https://www.loc.gov/rr/print/res/071_fsab.html",
+    "alt": "A person standing beside a blackboard points to a large wall map.",
+    "date": "1940-10",
+    "archiveId": "LC-USF34-037826-D",
+    "provenance": "Library of Congress catalogue record 2017788007 identifies a school teacher teaching geography. Russell Lee photographed the lesson in October 1940. The archive holds the safety-film negative.",
+    "originalFile": "https://tile.loc.gov/storage-services/service/pnp/fsa/8b26000/8b26400/8b26410v.jpg",
+    "width": 900,
+    "height": 687,
+    "originalSha256": "a4849992a92d5e0faf570d15d1a27e80ff6adf59fc78329cb8c783aadd7aa212",
+    "hint": "Look at how the person is using the wall map.",
+    "evidence": "The person is pointing to a map during a geography lesson.",
+    "distractors": [
+      "cameriere",
+      "cuoco"
+    ]
+  },
+  {
+    "file": "infermiere.jpg",
+    "role": "infermiere",
+    "title": "A registered nurse takes a blood pressure reading",
+    "credit": "Joan E. Kretschmer / U.S. Navy",
+    "source": "https://commons.wikimedia.org/wiki/File:US_Navy_070919-N-6278K-106_Laura_Seris,_a_registered_nurse_and_Project_Hope_volunteer_attached_to_Military_Sealift_Command_hospital_ship_USNS_Comfort_(T-AH_20),_takes_a_blood_pressure_reading_from_a_patient.jpg",
+    "licence": "Public domain in the United States (official U.S. Navy photograph)",
+    "licenceUrl": "https://commons.wikimedia.org/wiki/File:US_Navy_070919-N-6278K-106_Laura_Seris,_a_registered_nurse_and_Project_Hope_volunteer_attached_to_Military_Sealift_Command_hospital_ship_USNS_Comfort_(T-AH_20),_takes_a_blood_pressure_reading_from_a_patient.jpg#Licensing",
+    "alt": "A person in a white shirt checks a cuff around a seated person’s upper arm.",
+    "date": "2007-09-19",
+    "archiveId": "070919-N-6278K-106",
+    "provenance": "Official U.S. Navy image. The caption identifies Project HOPE registered nurse Laura Seris checking a patient in Port of Spain, Trinidad and Tobago. The photograph was taken during an outreach visit to a school.",
+    "originalFile": "https://upload.wikimedia.org/wikipedia/commons/f/f6/US_Navy_070919-N-6278K-106_Laura_Seris%2C_a_registered_nurse_and_Project_Hope_volunteer_attached_to_Military_Sealift_Command_hospital_ship_USNS_Comfort_%28T-AH_20%29%2C_takes_a_blood_pressure_reading_from_a_patient.jpg",
+    "width": 900,
+    "height": 643,
+    "originalSha256": "25086f02e8b9f62ccafd43f154b85d46bb5e8a2eeb89557a5de4ea56bf76b60e",
+    "hint": "Look at the cuff on the seated person’s arm.",
+    "evidence": "The cuff measures blood pressure. The archive identifies the person taking the reading as a registered nurse.",
+    "distractors": [
+      "insegnante",
+      "cuoco"
+    ]
+  }
+]
