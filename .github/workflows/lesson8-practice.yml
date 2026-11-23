@@ -8,6 +8,12 @@ on:
       - 'early-card-tasks.js'
       - 'guided-course-v2.js'
       - 'index.html'
+      - 'study/job-photos/**'
+      - 'study/jobs-in-photos.*'
+      - 'study/visual-exercises.*'
+      - 'study/visual-return.js'
+      - 'study/daily-verbs.js'
+      - 'study/daily-practice.css'
       - 'study/study-sheets.html'
       - 'study/study-sheets-v5.js'
       - 'study/library-v1.js'
@@ -43,5 +49,5 @@ jobs:
         run: |
           python -m pip install playwright==1.57.0
           python -m playwright install --with-deps chromium
-      - name: Test the three Lesson 8 practice routes
+      - name: Test Lesson 8 worksheets, flashcards and visual activities
         run: python scripts/validate_l8_extra_browser.py

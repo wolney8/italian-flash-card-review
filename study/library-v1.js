@@ -170,9 +170,20 @@ function context(active,params){
   breadcrumbs:[{label:'Study sheets',href:libraryURL(null,browse)},...(lesson?[{label:'Lesson '+lesson.id.slice(1),href:libraryURL(lesson.id)}]:[]),{label:topic?.title||clean(active.title)}]};
  return current;
 }
+const visualActivities = [
+ {sets:['l7-endings','l7-class-lavorare','l7-class-parlare','l7-class-abitare','l7-class-studiare','l7-class-mangiare'],
+  page:'visual-exercises.html?activity=verbs', en:'Match verb endings', it:'Abbina le desinenze'},
+ {sets:['class2-c-sounds','class2-g-sounds','class2-homework-c-columns','class2-homework-g-columns','sounds-review','l8-pronunciation-practice'],
+  page:'visual-exercises.html?activity=sounds', en:'Sort C and G sounds', it:'Raggruppa i suoni di C e G'},
+ {sets:['l6-useful-questions','l6-recap-useful-requests','l7-homework-gaps','l7-homework-choices','l7-homework-more','l7-homework-translation','l8-work-dialogue'],
+  page:'visual-exercises.html?activity=sentence', en:'Build a sentence', it:'Costruisci una frase'},
+ {sets:['l8-jobs-workplaces'],page:'jobs-in-photos.html',en:'Jobs in photographs',it:'I mestieri nelle fotografie'}
+];
 function detailNav(nav,ctx){
  const label=ctx.lesson?'Lesson '+ctx.lesson.slice(1):'By topic';
- nav.innerHTML='<div class="library-detail-bar"><a href="'+ctx.library+'">← '+pair(label,label.startsWith('Lesson')?'Lezione '+ctx.lesson.slice(1):'Per argomento')+'</a><a data-related-flashcards href="'+ctx.flashcards+'">'+pair('Related flashcards','Carte collegate')+'</a></div>';
+ const activity=visualActivities.find(item=>item.sets.includes(ctx.set?.id));
+ const practiceLink=activity?'<a data-visual-practice href="'+activity.page+'">'+pair(activity.en,activity.it)+'</a>':'';
+ nav.innerHTML='<div class="library-detail-bar"><a href="'+ctx.library+'">← '+pair(label,label.startsWith('Lesson')?'Lezione '+ctx.lesson.slice(1):'Per argomento')+'</a><a data-related-flashcards href="'+ctx.flashcards+'">'+pair('Related flashcards','Carte collegate')+'</a>'+practiceLink+'</div>';
 }
 function mountDetail(article){if(!current||article.dataset.libraryDetail)return;article.dataset.libraryDetail='ready';
  const quiz=article.querySelector('[data-study-quiz]');if(!quiz)return;
@@ -197,6 +208,15 @@ function mountDetail(article){if(!current||article.dataset.libraryDetail)return;
  }
  root.ItalianUI?.refresh();
 }
+document.addEventListener('click',event=>{
+ const link=event.target.closest('a[data-visual-practice]');
+ if(!link)return;
+ root.ItalianStudyPersistence?.captureAll();
+ root.ItalianGuidedStudy?.remember();
+ const target=new URL(link.href);
+ target.searchParams.set('sheetReturn',location.pathname+location.search+location.hash);
+ link.href=target.href;
+});
 document.addEventListener('click',e=>{const link=e.target.closest('[data-related-flashcards]');if(!link)return;
  root.ItalianStudyPersistence?.captureAll();root.ItalianGuidedStudy?.remember();
  const path=location.pathname+location.search;put('italianStudyReturnV1',{path,scrollY:root.scrollY,at:Date.now()});

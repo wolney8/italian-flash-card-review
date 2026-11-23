@@ -246,6 +246,70 @@ def check_study(page, topic):
         assert all(a != b for a, b in zip(families, families[1:])), families
 
 
+def check_visual_practice(page, base):
+    folder = ROOT / 'study' / 'job-photos'
+    photos = json.loads((folder / 'sources.json').read_text())
+    by_file = {photo['file']: photo for photo in photos}
+    assert len(by_file) == len(photos) >= 2
+    assert set(by_file) == {file.name for file in folder.glob('*.jpg')}
+    for filename, photo in by_file.items():
+        assert (folder / filename).read_bytes().startswith(b'\xff\xd8\xff'), filename
+        assert all(photo[key].strip() for key in ('title', 'credit', 'licence', 'alt', 'archiveId', 'provenance')), filename
+        assert re.fullmatch(r'\d{4}-\d{2}(?:-\d{2})?', photo['date']), filename
+        assert re.fullmatch(r'[0-9a-f]{64}', photo['originalSha256']), filename
+        for key in ('source', 'licenceUrl', 'originalFile'):
+            url = urlparse(photo[key])
+            assert url.scheme == 'https' and url.hostname, (filename, key)
+
+    open_topic(page, base, 'jobs-workplaces', 'l8-jobs-workplaces')
+    page.locator('[data-guided-step=examples]').click()
+    sheet_url = page.url
+    page.locator('[data-visual-practice]').click()
+    expect(page.get_by_role('heading', name='Jobs in photographs')).to_be_visible()
+    seen = set()
+    for index in range(len(photos)):
+        expect(page.locator('#photo-count')).to_have_text(f'Photograph {index + 1} of {len(photos)}')
+        expect(page.locator('#photo-question')).to_be_visible()
+        image = page.locator('#job-photo')
+        filename = image.get_attribute('src').split('/')[-1]
+        assert filename not in seen, filename
+        seen.add(filename)
+        photo = by_file[filename]
+        width, height = image.evaluate('(img) => [img.naturalWidth, img.naturalHeight]')
+        assert width == photo['width'] > 0 and height == photo['height'] > 0, filename
+        expect(image).to_have_attribute('alt', photo['alt'])
+        page.get_by_text('Photograph and source', exact=True).click()
+        credit = page.locator('#photo-attribution')
+        expect(credit).to_be_visible()
+        expect(credit).to_contain_text(photo['credit'])
+        expect(credit).to_contain_text(photo['date'][:4])
+        for label, url in [(photo['title'], photo['source']), (photo['licence'], photo['licenceUrl'])]:
+            expect(credit.get_by_role('link', name=label, exact=True)).to_have_attribute('href', url)
+
+        # Deliberately miss the first photo. Check that feedback and the final score agree.
+        answer = photo['role'] if index else photo['distractors'][0]
+        page.locator(f'#job-options input[value="{answer}"]').check()
+        page.get_by_role('button', name='Check answer', exact=True).click()
+        feedback = page.locator('#job-feedback')
+        expect(feedback).to_contain_text('Correct.' if index else 'The job is')
+        expect(feedback).to_contain_text(photo['evidence'])
+        expect(page.locator('#job-choices')).to_be_disabled()
+        page.locator('#next-photo').click()
+    assert seen == set(by_file)
+    expect(page.locator('#photo-score')).to_have_text(f'{len(photos) - 1} of {len(photos)} correct.')
+    page.get_by_role('link', name='Back to your study sheet').click()
+    expect(page).to_have_url(sheet_url)
+    expect(page.locator('section[data-study-stage=examples]:visible')).to_be_visible()
+
+    open_topic(page, base, 'work-dialogue', 'l8-work-dialogue')
+    page.locator('[data-visual-practice]').click()
+    expect(page.locator('#visual-activity')).to_have_value('sentence')
+    page.locator('#visual-tiles button').first.click()
+    page.locator('#visual-boxes button').first.click()
+    expect(page.locator('#visual-feedback')).to_contain_text('placed in')
+    print(f'Visual practice: loaded and scored {len(photos)} credited photographs and placed a sentence tile.', flush=True)
+
+
 def main():
     handler = partial(QuietHandler, directory=str(ROOT))
     with ThreadingHTTPServer(('127.0.0.1', 0), handler) as server, sync_playwright() as pw:
@@ -272,6 +336,7 @@ def main():
                 open_topic(page, base, topic, slug)
                 check_study(page, topic)
                 print(f'{deck}: {count} cards and {len(ANSWERS[topic])} correct worksheet submissions', flush=True)
+            check_visual_practice(page, base)
             check_core(page, base)
             assert not errors, errors
         finally:
