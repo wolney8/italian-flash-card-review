@@ -71,8 +71,26 @@ function enhance(data){
  root.ItalianStudyData=DATA;return DATA;
 }
 function topicSets(topic,lesson){return (M.lessonSets[lesson+':'+topic.id]||topic.sets).filter(id=>sets[id]);}
-function href(setId,lesson,topic,browse='lesson',stage){const s=sets[setId];const u=new URL('study-sheets.html',location.href);u.search='';u.searchParams.set('mode','learn');u.searchParams.set('browse',browse);if(lesson)u.searchParams.set('lesson',lesson);if(topic)u.searchParams.set('topic',topic);if(s){u.searchParams.set('sheet',s.sheet);u.searchParams.set('set',s.id);}if(stage)u.searchParams.set('stage',stage);return u.pathname+u.search;}
-function libraryURL(lesson,browse='lesson'){const u=new URL('study-sheets.html',location.href);u.search='?mode=learn&browse='+browse;if(lesson&&browse==='lesson')u.searchParams.set('lesson',lesson);return u.pathname+u.search;}
+function catalogueURL(browse){
+ const page=new URL(location.href);
+ const target=new URL('study-sheets.html',page);
+ target.searchParams.set('mode',page.searchParams.get('mode')==='review'?'review':'learn');
+ target.searchParams.set('browse',browse);
+ return target;
+}
+function href(setId,lesson,topic,browse='lesson',stage){
+ const set=sets[setId],target=catalogueURL(browse),p=target.searchParams;
+ if(lesson)p.set('lesson',lesson);
+ if(topic)p.set('topic',topic);
+ if(set){p.set('sheet',set.sheet);p.set('set',set.id);}
+ if(stage)p.set('stage',stage);
+ return target.pathname+target.search;
+}
+function libraryURL(lesson,browse='lesson'){
+ const target=catalogueURL(browse);
+ if(lesson&&browse==='lesson')target.searchParams.set('lesson',lesson);
+ return target.pathname+target.search;
+}
 function questionKeys(id){const s=sets[id];return s?s.indices.map(i=>s.sheet+'-q'+(i+1)):[];}
 function stats(id){const keys=questionKeys(id),a=get('italianCourseSessionProgressV2').study?.answers||{};return {total:keys.length,done:keys.filter(k=>a[k]?.result).length,correct:keys.filter(k=>a[k]?.result==='correct').length};}
 function chooseSet(topic,lesson){const ids=topicSets(topic,lesson);const resumable=ids.find(id=>{const r=get('italianStudyRoundV2:'+id);return r.keys?.length&&!r.finished;});return resumable||ids.find(id=>stats(id).done<stats(id).total)||ids[0];}
@@ -89,7 +107,7 @@ function render(nav,host,params){
   if(lesson){
    const topics=lesson.topics.map(id=>M.topics.find(t=>t.id===id));
    const firstTopic=topics.find(t=>topicSets(t,lesson.id).some(id=>stats(id).done<stats(id).total))||topics[0];
-   content='<div class="library-layout has-lesson"><aside><h2>'+pair('Lessons','Lezioni')+'</h2>'+list+'</aside><section class="library-lesson-detail"><a class="library-mobile-back" href="'+libraryURL(null)+'">← '+pair('All lessons','Tutte le lezioni')+'</a><p class="eyebrow">'+pair('Lesson '+lesson.id.slice(1),'Lezione '+lesson.id.slice(1))+'</p><h2>'+pair(lesson.title,lesson.it)+'</h2><div class="library-actions"><a class="library-primary" href="'+href(chooseSet(firstTopic,lesson.id),lesson.id,firstTopic.id)+'">'+pair('Continue practice','Continua gli esercizi')+'</a><a href="../?page=card&lesson='+lesson.id+'">'+pair('Lesson flashcards','Carte della lezione')+'</a></div>'+topics.map(t=>topicRow(t,lesson.id,browse)).join('')+extraMarkup(lesson.extra,lesson.id,browse)+'</section></div>';
+   content='<div class="library-layout has-lesson"><aside><h2>'+pair('Lessons','Lezioni')+'</h2>'+list+'</aside><section class="library-lesson-detail"><a class="library-mobile-back" href="'+libraryURL(null)+'">← '+pair('All lessons','Tutte le lezioni')+'</a><p class="eyebrow">'+pair('Lesson '+lesson.id.slice(1),'Lezione '+lesson.id.slice(1))+'</p><h2>'+pair(lesson.title,lesson.it)+'</h2><div class="library-actions"><a class="library-primary" href="'+href(chooseSet(firstTopic,lesson.id),lesson.id,firstTopic.id)+'">'+pair('Continue practice','Continua gli esercizi')+'</a><a href="../?page=card&lesson='+lesson.id+'">'+pair('Lesson flashcards','Carte della lezione')+'</a></div>'+topics.map(t=>topicRow(t,lesson.id,browse)).join('')+extraMarkup(lesson.extra,lesson.id,browse)+homeworkMarkup(lesson.id)+'</section></div>';
   }else content='<div class="library-view"><h2>'+pair('Choose a lesson','Scegli una lezione')+'</h2>'+list+'</div>';
  }else{
   const categories=[['conversation','Conversation','Conversazione'],['verbs','Verbs and pronouns','Verbi e pronomi'],['grammar','Articles and agreement','Articoli e concordanza'],['numbers','Numbers and age','Numeri ed età'],['sounds','Sounds and spelling','Suoni e ortografia'],['reference','Reference and mixed revision','Riferimenti e ripasso misto']];
@@ -100,6 +118,17 @@ function render(nav,host,params){
  root.ItalianStudyContext={library,lesson:lesson?.id||null,browse,libraryPage:true,breadcrumbs:[{label:'Study sheets',href:lesson?libraryURL(null):null},...(lesson?[{label:'Lesson '+lesson.id.slice(1)}]:[])]};
  document.title=(lesson?'Lesson '+lesson.id.slice(1)+' · ':'')+'Study sheets · Italian for Beginners';
  root.dispatchEvent(new Event('italian-library-ready'));root.ItalianUI?.refresh();root.ItalianCourseBoot?.ready();
+}
+function homeworkMarkup(lessonId) {
+ const assignment = M.homework[lessonId];
+ if (!assignment) return '';
+ const pages = assignment.book.map(([page,en,it]) =>
+   '<li><strong>'+esc(page)+'</strong> '+pair(en,it)+'</li>').join('');
+ const quizzes = (assignment.quizzes || []).map(([en,it,id]) =>
+   '<li><a href="https://dashboard.blooket.com/set/'+esc(id)+'">'+pair(en,it)+'</a></li>').join('');
+ return '<details class="library-extras library-homework"><summary>'+pair('Homework and revision','Compiti e ripasso')+'</summary>'+
+   '<h3>'+pair('Course handbook','Libro di corso')+'</h3><p lang="it">Nuovo Espresso Plus 1</p><ul>'+pages+'</ul>'+
+   (quizzes ? '<h3>'+pair('Optional online revision','Ripasso online facoltativo')+'</h3><ul>'+quizzes+'</ul>' : '')+'</details>';
 }
 function extraMarkup(ids,lesson,browse){if(!ids.length)return '';return '<details class="library-extras"><summary>'+pair('Extra practice','Esercizi aggiuntivi')+'</summary>'+ids.filter(id=>sets[id]).map(id=>'<a class="library-topic-row" href="'+href(id,lesson,null,browse)+'"><span><strong>'+pair(sets[id].title,sets[id].it)+'</strong><small>'+progress([id])+'</small></span><span aria-hidden="true">›</span></a>').join('')+'</details>';}
 function context(active,params){
@@ -172,6 +201,29 @@ document.addEventListener('click',e=>{const link=e.target.closest('[data-related
  root.ItalianStudyPersistence?.captureAll();root.ItalianGuidedStudy?.remember();
  const path=location.pathname+location.search;put('italianStudyReturnV1',{path,scrollY:root.scrollY,at:Date.now()});
  const url=new URL(link.href);url.searchParams.set('studyReturn',path);link.href=url.pathname+url.search;
+});
+// The mode button updates the URL without leaving the activity. Refresh links already
+// drawn for the previous mode, including the saved destination used by Quit and save.
+root.addEventListener('italian-study-mode-updated',()=>{
+ const page=new URL(location.href);
+ const mode=page.searchParams.get('mode')==='review'?'review':'learn';
+ const inMode=href=>{
+  if(!href||href.startsWith('#'))return href;
+  const target=new URL(href,page);
+  if(target.origin!==page.origin||target.pathname!==page.pathname)return href;
+  target.searchParams.set('mode',mode);
+  return target.pathname+target.search+target.hash;
+ };
+ const ctx=root.ItalianStudyContext;
+ if(ctx){
+  ctx.library=inMode(ctx.library);
+  if(ctx.next)ctx.next.href=inMode(ctx.next.href);
+  for(const crumb of ctx.breadcrumbs||[])if(crumb.href)crumb.href=inMode(crumb.href);
+ }
+ for(const anchor of document.querySelectorAll('a[href]')){
+  const href=anchor.getAttribute('href'),updated=inMode(href);
+  if(updated!==href)anchor.setAttribute('href',updated);
+ }
 });
 function register(){const host=document.getElementById('studySheets');if(!host)return;new MutationObserver(()=>{const a=host.querySelector('.study-pack-sheet[data-guided-pilot=ready]');if(a)mountDetail(a);}).observe(host,{childList:true,subtree:true,attributes:true,attributeFilter:['data-guided-pilot']});}
 root.ItalianStudyLibrary={enhance,render,context,detailNav,mountDetail,href,questionKeys,stats,sets:()=>sets,map:M,pair,clean,get,put};

@@ -3,9 +3,36 @@
 'use strict';
 const B=root.ItalianPracticeBank;if(!B)return;
 const {esc,pair}=B;
-function renderMatching(slug,q,i){const id=slug+'-q'+i,options=q.pairs.map(p=>({id:p.id,right:p.right})).concat(q.extras);
-const rows=q.pairs.map((p,row)=>'<div class="practice-match-row" data-match-id="'+p.id+'"><label for="'+id+'-match-'+p.id+'" lang="en" data-ui-no-translate>'+esc(p.left)+'</label><select id="'+id+'-match-'+p.id+'" data-match-select="'+p.id+'" aria-describedby="'+id+'-match-feedback-'+p.id+'"><option value="">'+(root.ItalianUI?.language==='it'?'Scegli…':'Choose…')+'</option>'+B.shuffle(options,B.seed(slug)+':match:'+i+':'+row).map(o=>'<option value="'+o.id+'" lang="it" data-ui-no-translate>'+esc(o.right)+'</option>').join('')+'</select><span class="practice-match-feedback" id="'+id+'-match-feedback-'+p.id+'" aria-live="polite"></span></div>').join('');
-return '<article class="quiz-question" data-type="match" data-question-key="'+id+'" data-answers="'+esc(JSON.stringify(q.answers))+'" data-match-model="'+esc(q.model)+'" data-optional-subjects="[]" data-answer-mode="match"><div class="question-heading"><span class="question-number">'+i+'</span><span>'+q.prompt+'</span></div><button class="hint-button" type="button" aria-expanded="false">Mostra suggerimento</button><div class="hint" hidden>'+q.hint+'</div><div class="answer-row"><input id="'+id+'" type="text" hidden tabindex="-1" aria-hidden="true" autocomplete="off"><div class="practice-match-pairs">'+rows+'</div><button class="check-button" type="button" disabled>Controlla</button></div><div class="feedback" role="status"></div><div class="model-answer" hidden><strong>Risposta:</strong><div class="practice-match-key">'+q.pairs.map(p=>'<p><span lang="en">'+esc(p.left)+'</span> → <span lang="it">'+esc(p.right)+'</span></p>').join('')+'</div>'+q.explanation+'</div></article>';}
+// Instructions stay in English. Each cue and each change of speaker has its own row.
+function renderQuestionHeading(id, q, number) {
+ const cue = q.stimulusHtml || (q.stimulus || []).map(row => {
+   const label = row.label ? '<span class="worksheet-cue-label" lang="en">'+esc(row.label)+'</span>' : '';
+   return '<div class="worksheet-cue">'+label+'<span lang="'+esc(row.lang || 'it')+'">'+esc(row.text)+'</span></div>';
+ }).join('');
+ const content = q.task
+   ? '<p class="worksheet-task" lang="en">'+esc(q.task)+'</p>'+
+     (cue ? '<div class="worksheet-stimulus">'+cue+'</div>' : '')
+   : q.prompt;
+ return '<div class="question-heading" id="'+esc(id)+'-heading" data-ui-no-translate>'+
+   '<span class="question-number" aria-hidden="true">'+number+'</span>'+
+   '<div class="worksheet-content">'+content+'</div></div>';
+}
+function renderMatching(slug, q, i) {
+ const id = slug + '-q' + i;
+ const options = q.matchOptions || q.pairs.map(p => ({id:p.id, right:p.right})).concat(q.extras || []);
+ const rows = q.pairs.map((p, row) => {
+   const rowId = id + '-match-' + esc(p.id);
+   const bank = p.options || (q.worksheetOrder || q.matchOptions ? options : B.shuffle(options, B.seed(slug)+':match:'+i+':'+row));
+   const leftLang = esc(p.leftLang || q.matchLeftLang || 'en');
+   const rightLang = esc(p.rightLang || q.matchRightLang || 'it');
+   return '<div class="practice-match-row" data-match-id="'+esc(p.id)+'"><label for="'+rowId+'" lang="'+leftLang+'" data-ui-no-translate>'+esc(p.left)+'</label>'+
+     '<select id="'+rowId+'" data-match-select="'+esc(p.id)+'" aria-describedby="'+rowId+'-feedback"><option value="">'+(root.ItalianUI?.language==='it'?'Scegli…':'Choose…')+'</option>'+
+     bank.map(o=>'<option value="'+esc(o.id)+'" lang="'+rightLang+'" data-ui-no-translate>'+esc(o.right)+'</option>').join('')+
+     '</select><span class="practice-match-feedback" id="'+rowId+'-feedback" aria-live="polite"></span></div>';
+ }).join('');
+ const key = q.pairs.map(p=>'<p><span lang="'+esc(p.leftLang || q.matchLeftLang || 'en')+'">'+esc(p.left)+'</span> → <span lang="'+esc(p.rightLang || q.matchRightLang || 'it')+'">'+esc(p.right)+'</span></p>').join('');
+ return '<article class="quiz-question" data-type="match" data-question-key="'+id+'" data-answers="'+esc(JSON.stringify(q.answers))+'" data-match-model="'+esc(q.model)+'" data-legacy-match="'+esc(q.legacyMatchValue || '')+'" data-optional-subjects="[]" data-answer-mode="match">'+renderQuestionHeading(id,q,i)+'<button class="hint-button" type="button" aria-expanded="false">Mostra suggerimento</button><div class="hint" hidden>'+q.hint+'</div><div class="answer-row"><input id="'+id+'" type="text" hidden tabindex="-1" aria-hidden="true" autocomplete="off"><div class="practice-match-pairs">'+rows+'</div><button class="check-button" type="button" disabled>Controlla</button></div><div class="feedback" role="status"></div><div class="model-answer" hidden><strong>Risposta:</strong><div class="practice-match-key">'+key+'</div>'+(q.explanation || '')+'</div></article>';
+}
 function checkMatch(q){let chosen=[];try{chosen=JSON.parse(q.querySelector('input[type=text]').value||'[]');}catch(_){}const expected=JSON.parse(q.dataset.matchModel);if(chosen.length!==expected.length||!chosen.every(Boolean))return;
 const correct=chosen.every((v,i)=>v===expected[i]);q.dataset.result=correct?'correct':'wrong';
 const feedback=q.querySelector('.feedback');feedback.className='feedback '+q.dataset.result;feedback.textContent=correct?'Corretto':'Sbagliato';q.querySelector('.model-answer').hidden=false;
@@ -34,7 +61,7 @@ function newRound(article){if(root.ItalianGuidedStudy){root.ItalianGuidedStudy.n
 function mount(){const article=document.querySelector('.study-pack-sheet');
  if(document.body.classList.contains('study-sheet-library')){
   const host=document.querySelector('.study-ready-shortcuts');if(host&&!host.querySelector('[data-verb-practice-link]')){
-   const a=document.createElement('a');a.href='study-sheets.html?mode=learn&path=verbs';a.dataset.verbPracticeLink='true';a.innerHTML=pair('Verbs — practise','Verbi — esercizi');host.prepend(a);
+   const a=document.createElement('a');a.href='study-sheets.html?mode=learn&path=verbs';a.dataset.verbPracticeLink='true';a.innerHTML=pair('Verbs · practise','Verbi · esercizi');host.prepend(a);
   }
  }
  if(!article||article.dataset.guidedPilot!=='ready'||article.dataset.repeatPractice)return;
@@ -55,7 +82,7 @@ document.addEventListener('change',e=>{const select=e.target.closest('[data-matc
  input.dispatchEvent(new Event('input',{bubbles:true}));
 });
 document.addEventListener('click',e=>{if(e.target.closest('[data-new-practice-round]'))newRound(e.target.closest('.study-pack-sheet'));});
-root.ItalianPracticeUI={renderMatching,checkMatch,readyMatch,mount};
+root.ItalianPracticeUI={renderQuestionHeading,renderMatching,checkMatch,readyMatch,mount};
 const host=document.getElementById('studySheets');if(host)new MutationObserver(mount).observe(host,{childList:true,subtree:true,attributes:true,attributeFilter:['data-guided-pilot']});
 mount();
 })(window);

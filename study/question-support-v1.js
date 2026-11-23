@@ -238,6 +238,62 @@ studenti|students|stoo-DEHN-tee
 studente|student|stoo-DEHN-teh
 regno|kingdom|REH-nyoh
 unito|united|oo-NEE-toh`);
+// Vocabulary from the homework sorting columns and plural table.
+words(`cestino|basket|cheh-STEE-noh
+bicicletta|bicycle|bee-chee-KLEHT-tah
+orchestra|orchestra|or-KEH-strah
+chioma|head of hair|KYOH-mah
+chiodo|nail|KYOH-doh
+chiosco|kiosk|KYOHS-koh
+cervo|deer|CHEHR-voh
+panche|benches|PAHN-keh
+chele|claws|KEH-leh
+cipolla|onion|chee-POHL-lah
+chilometro|kilometre|kee-LOH-meh-troh
+forchetta|fork|for-KEHT-tah
+cemento|cement|cheh-MEHN-toh
+circo|circus|CHEER-koh
+cima|summit|CHEE-mah
+ghiro|dormouse|GHEE-roh
+gemelli|twins|jeh-MEHL-lee
+gita|outing|JEE-tah
+geranio|geranium|jeh-RAH-nyoh
+giraffa|giraffe|jee-RAHF-fah
+spaghetti|spaghetti|spah-GHEHT-tee
+ghirlanda|garland|gheer-LAHN-dah
+girasole|sunflower|jee-rah-SOH-leh
+alghe|seaweed|AHL-gheh
+ufficio|office|oof-FEE-choh
+agenzia|agency|ah-jehn-TSEE-ah
+architetta|architect|ar-kee-TEHT-tah
+libreria|bookshop|lee-breh-REE-ah
+signore|gentleman|see-NYOH-reh
+operaio|factory worker|oh-peh-RAH-yoh
+signora|lady|see-NYOH-rah
+corso|course|KOHR-soh
+infermiere|nurse|een-fehr-MYEH-reh
+studio|studio|STOO-dyoh
+ospedale|hospital|oh-speh-DAH-leh
+numero|number|NOO-meh-roh
+negozio|shop|neh-GOHT-tsyoh
+operaia|factory worker|oh-peh-RAH-yah
+segretaria|secretary|seh-greh-TAH-ryah
+montagne|mountains|mohn-TAH-nyeh
+scuole|schools|SKWOH-leh
+intelligenti|intelligent|een-tehl-lee-JEHN-tee
+donne|women|DOHN-neh
+tazze|cups|TAHT-tseh
+ristoranti|restaurants|ree-stoh-RAHN-tee
+piazze|squares|PYAHT-tseh
+uccelli|birds|oot-CHEHL-lee
+motociclette|motorbikes|moh-toh-chee-KLEHT-teh
+prossima|next|PROHS-see-mah
+volta|time|VOHL-tah
+alla|to the|AHL-lah
+brillano|shine|BREEL-lah-noh
+rossi|Rossi|ROHS-see
+venire|to come|veh-NEE-reh
+zebra|zebra|DZEH-brah`);
 // Noun family entries keep gender, spelling and pronunciation together.
 const nounRows=`libro|libri|book|books|LEE-broh|LEE-bree|m
 casa|case|house|houses|KAH-zah|KAH-zeh|f
@@ -373,6 +429,9 @@ pronti per la lezione|ready for the lesson
 inglesi o americani|English or American`);
 
 const sentenceMeanings={
+ 'esse brillano':'They shine.', 'marco e anna abitano a roma':'Marco and Anna live in Rome.',
+ 'come sta lei':'How are you? (formal)', 'la casa è grande':'The house is big.',
+ 'tè o caffè':'Tea or coffee?', 'ciao, alla prossima volta':'Bye, see you next time!',
  'le città':'the cities',
  'lui / lei è':'He / she / it is.', 'io sono laura':'I am Laura.', 'lei è laura':'She is Laura.',
  'lei si chiama laura':'Her name is Laura.', 'marco ha trent\'anni':'Marco is thirty years old.',
@@ -439,53 +498,26 @@ function english(value,formal=false){const s=norm(value).replace(/[“”"]/g,''
  }
  return nounPhrase(s);
 }
-function promptItalian(q){const p=text(q.prompt);if(!/_{2,}/.test(p))return '';
+function promptItalian(q){
+ if(q.stimulus){
+  const gap=q.stimulus.find(row=>(row.lang||'it')==='it' && /_{2,}/.test(row.text));
+  return gap && gap.text.replace(/[_\s.!?]/g,'') ? gap.text : '';
+ }
+ const p=text(q.prompt);if(!/_{2,}/.test(p))return '';
  const quoted=p.match(/[“"]([^”"]*_{2,}[^”"]*)[”"]/);let s=(quoted?quoted[1]:p.split(':').at(-1)).trim().replace(/\s*\(formal you\)\.?$/,'').replace(/([.!?])\s*(?:Use|Write)\b[\s\S]*$/i,'$1');
  if(s.includes('___')&&(!/:/.test(p)||s.length<p.length))return s;return '';
 }
 function modelItalian(q){if(q.type==='match')return q.pairs.map(x=>x.right);if(q.type==='order')return (q.items||[]).map(x=>x.text||x.label||'');const p=q.kind==='sentence'?null:promptItalian(q);return [p?p.replace(/_{2,}/,text(q.model)).replace(/(['’])\s+(?=[a-zàèéìòù])/gi,'$1'):text(q.model)];}
-function identifyVerb(q,sheet){const p=text(q.prompt);const own=sheet.slug.replace(/^practice-/, '');if(verbRows[own])return own;for(const v of Object.keys(verbRows)){if(new RegExp('\\b'+v+'\\b').test(p))return v;}if(/essere|negative-homework/.test(sheet.slug))return 'essere';if(/avere|ages-homework/.test(sheet.slug))return 'avere';return '';}
-function subject(q){const s=promptItalian(q)||text(q.model),p=text(q.prompt);for(const who of Object.keys(subjectNames).sort((a,b)=>b.length-a.length)){if(norm(s).startsWith(who+' ')||norm(s)===who)return who;}
- const m=p.match(/\band\s+(Io|Tu|Lei|Noi|Voi|Loro)\b/i);return m?m[1].toLowerCase():'';}
-function hint(q,sheet,i){const p=text(q.prompt),model=text(q.model),v=identifyVerb(q,sheet),who=subject(q),negative=/negative|negativ|\bnon\b/.test(p)||/^non /.test(model);let en='',it='';
- if(who&&v){let person=(['io','noi','tu e io','io e sarah','io e paolo'].includes(who)?'first':who==='tu'||who==='voi'||who==='tu e tom'?'second':'third');let plural=['noi','voi','loro','essi','esse','tu e io','io e sarah','io e paolo','tu e tom','marco e luca','i bambini','i ragazzi','i libri','le stelle','i miei figli'].includes(who);if(who==='lei')person='third';
-  en='“'+who+'” is the subject'+(who==='lei'?' (she, or polite you when the prompt specifies formal address)':'')+'. Use the '+person+'-person '+(plural?'plural':'singular')+' form of '+v+'. '+(negative?'Put non immediately before the verb phrase. ':'')+(q.kind==='sentence'?'Keep the named subject and the full place or description.':q.kind==='phrase'?'Enter the complete missing phrase, not the whole sentence.':'Enter only what replaces the gap.');
-  it='Il soggetto è “'+who+'”. Usa la '+({first:'prima',second:'seconda',third:'terza'}[person]||person)+' persona '+(plural?'plurale':'singolare')+' di '+v+'. '+(negative?'Metti non subito prima del gruppo verbale. ':'')+'Scrivi soltanto ciò che richiede la domanda.';
- }
- if(sheet.slug==='l6-number-patterns'){
-  const n=(root?.ITALIAN_L6?.numberPracticeValues||[...Array(31).keys(),40,50,60,70,80,90,100,200,1000,10000])[i];
-  const clues={0:['It starts with z and has four letters.','Inizia con z e ha quattro lettere.'],1:['It starts with u. This is the number, not a gendered article.','Inizia con u. Qui è un numero, non un articolo.'],2:['Use three letters and pronounce both vowels.','Usa tre lettere e pronuncia entrambe le vocali.'],3:['The number on its own has no written accent.','Il numero da solo non ha accento scritto.'],4:['It starts with qu and has a double t.','Inizia con qu e contiene doppia t.'],5:['It starts with ci and contains qu.','Inizia con ci e contiene qu.'],6:['The spelling is also a present-tense form of essere.','La grafia coincide con una forma del presente di essere.'],7:['Start with se and hold the double t.','Inizia con se e mantieni la doppia t.'],8:['It starts with o and has a double t.','Inizia con o e ha doppia t.'],9:['It starts with no and ends with ve.','Inizia con no e finisce con ve.'],10:['It starts with die and ends with ci.','Inizia con die e finisce con ci.'],11:['Look for the unit-like beginning un- and the ending -dici.','Cerca l’inizio un- e la parte finale -dici.'],12:['It begins do- and ends -dici.','Inizia con do- e finisce con -dici.'],13:['It begins tre- and ends -dici.','Inizia con tre- e finisce con -dici.'],14:['It begins quattor- and ends -dici.','Inizia con quattor- e finisce con -dici.'],15:['It begins quin- and ends -dici.','Inizia con quin- e finisce con -dici.'],16:['It begins se- and ends -dici.','Inizia con se- e finisce con -dici.'],17:['The order changes: dici- comes first. Keep the double s and double t.','L’ordine cambia: dici- va all’inizio. Mantieni doppia s e doppia t.'],18:['Join the ten-like start to otto without an extra a. Keep double t.','Unisci l’inizio a otto senza una a aggiuntiva. Mantieni doppia t.'],19:['It begins dicia- and has a double n before the unit.','Inizia con dicia- e ha doppia n prima dell’unità.'],20:['The tens stem you will use for the next nine numbers ends in i.','La base delle decine per i nove numeri successivi finisce in i.'],30:['It begins tre- and ends -nta.','Inizia con tre- e finisce con -nta.'],40:['Think quar- plus the recurring -anta ending.','Pensa a quar- e alla parte finale -anta.'],50:['Think cinqu- plus -anta.','Pensa a cinqu- e -anta.'],60:['Do not confuse it with seventy. This one has double s.','Non confonderlo con settanta. Qui c’è doppia s.'],70:['Do not confuse it with sixty. This one has double t.','Non confonderlo con sessanta. Qui c’è doppia t.'],80:['Start from ott- and add the tens ending.','Parti da ott- e aggiungi la parte finale delle decine.'],90:['Start from nov- and add the tens ending.','Parti da nov- e aggiungi la parte finale delle decine.'],100:['Use the base repeated in duecento and trecento.','Usa la base ripetuta in duecento e trecento.'],200:['Combine the word for two with the hundred base, as one word.','Unisci la parola per due con la base cento, in una sola parola.'],1000:['Use the singular thousand word. It has double l.','Usa la parola singolare per 1.000, con doppia l.'],10000:['Combine ten with the plural thousand ending -mila.','Unisci dieci alla parte finale plurale -mila.']};
-  if(n>20&&n<30){en='Build '+n+' from venti and '+(n-20)+'. '+([21,28].includes(n)?'Drop the final i of venti before uno or otto.':n===23?'Keep the final acute accent: é.':'Keep the final i of venti. Write one word.');it='Forma '+n+' con venti e '+(n-20)+'. '+([21,28].includes(n)?'Togli la i finale di venti prima di uno o otto.':n===23?'Mantieni l’accento acuto finale: é.':'Mantieni la i finale di venti. Scrivi una sola parola.');}else [en,it]=clues[n];
- }
- const nounTokens=norm(p+' '+model).match(/[a-zàèéìòù]+/g)||[],noun=nounTokens.find(w=>nouns[w]);
- if(noun&&(/plural|singular|article|partitive|partitivi|partitives|Correct/.test(p)||/plural|articles|partitives/.test(sheet.slug))){const n=nouns[noun],gender=n.gender==='m'?'masculine':'feminine',reverse=/singular/.test(p)&&!/plural.*singular.*plural/.test(p),some=/some|partitive/.test(p)||/l6-plural-workshop|connected-partitives/.test(sheet.slug);const ending=n.singular.slice(-1),next=n.plural.slice(-1),opening=/^[aeiou]/.test(noun)?'a vowel':/^s[^aeiou]|^z/.test(noun)?'s + consonant or z':'an ordinary consonant';
-  en='“'+noun+'” is '+gender+'. '+(some?'You need “some”, not “the”. ':'')+'The noun begins with '+opening+'. '+(/only.*article/.test(p)?'Choose the article; do not rewrite the noun.':reverse?'For one item, restore '+n.singular+' and its singular article.':'Check both the article and the ending'+(ending!==next?': '+ending+' becomes '+next:'. The noun’s spelling stays unchanged')+'.');
-  it='“'+noun+'” è '+(n.gender==='m'?'maschile':'femminile')+'. '+(some?'Serve un articolo partitivo. ':'')+'Controlla l’inizio del nome e '+(/only.*article/.test(p)?'scrivi soltanto l’articolo.':'la concordanza tra articolo e nome.');
- }
- if(sheet.slug==='class4-silent-h'){const clues=[['The speaker has hunger. This gap is a verb, not a choice between two drinks.','Chi parla ha fame. Serve un verbo.'],['Tea and coffee are alternatives. The gap joins the choices; it does not express possession.','Tè e caffè sono alternative. Serve la congiunzione.'],['Lei is the subject and un figlio is what she has. You need a verb.','Lei è il soggetto e un figlio è ciò che ha. Serve un verbo.'],['Vado already supplies the verb. The gap introduces Roma as the destination.','Vado è già il verbo. Lo spazio introduce Roma come destinazione.'],['Loro is plural and Italian uses avere for age. The silent h belongs to the verb.','Loro è plurale e per l’età si usa avere. Il verbo ha l’h muta.'],['Un introduces a noun, and twelve months make a year. You do not need another verb.','Un introduce un nome e dodici mesi formano un anno. Non serve un altro verbo.']];[en,it]=clues[i];}
- if(sheet.slug==='l6-intonation'){en=i<2?'Follow the end of this curve, not its highest point: rising at the end signals a question in this exercise; falling signals a statement.':'Keep the supplied Italian words in their order. To turn this statement into a written question, change the final punctuation and read the ending with rising intonation.';it=i<2?'Osserva la fine della curva: se sale indica una domanda in questo esercizio; se scende indica un’affermazione.':'Mantieni le parole italiane nello stesso ordine. Cambia la punteggiatura finale e leggi con intonazione interrogativa.';}
- if(sheet.slug==='class3-complete-replies'){const verb=text(q.prompt).match(/using\s+(essere|venire|vivere|abitare)/i)?.[1]||'';en=verb==='essere'?'Use io with essere. Origin uses di + the supplied city, unlike current location.':verb==='venire'?'Use io with venire. The source uses da; with l’Italia, da joins the article as dall’.':/vivere|abitare/.test(verb)?'Use io with '+verb+'. Residence uses a before Napoli and in before Italia. The question needs dove without di or da.':['Sono expresses origin here: choose the preposition that belongs to essere di, not venire da.','Vengo expresses coming from a source: choose the preposition that belongs to venire da.','Vivo describes residence, and Italia is a country. Compare in Italia with a Napoli.','Abito describes residence, and Napoli is a city. Compare a Napoli with in Italia.'][i-6];it='Usa il soggetto richiesto e una risposta completa: essere di, venire da, vivere o abitare a/in. Mantieni il luogo indicato.';}
- if(sheet.slug==='class1-introductions'&&i>=6&&q.type!=='order'){const formal=i===8;en=i===6?'The speaker introduces their own name. Use the io reflexive pronoun with chiamarsi, then Marco.':'Ask for a name, not an origin. Begin with Come and choose the '+(formal?'formal Lei':'informal tu')+' reflexive pronoun and chiamarsi form.';it=i===6?'Chi parla presenta il proprio nome. Usa il pronome riflessivo di io con chiamarsi, poi Marco.':'Chiedi il nome, non la provenienza. Inizia con Come e scegli pronome riflessivo e forma di chiamarsi per '+(formal?'Lei':'tu')+'.';}
- if(sheet.slug==='class1-greetings'){const clues=['This is a friend, so use the short informal greeting, not the morning/evening formula.','The clue is morning. Choose the greeting built around giorno, not sera.','The clue is evening. Choose the greeting built around sera, not giorno.','You are meeting someone for the first time. Use the phrase meaning it is a pleasure.','This responds to help or a kindness, rather than starting or ending a conversation.'];en=clues[i];it=['È un amico: usa il saluto breve e informale.','È mattina: pensa a giorno, non a sera.','È sera: pensa al saluto per la sera.','È il primo incontro: esprimi il piacere di conoscere qualcuno.','Rispondi a un aiuto o a una gentilezza, non saluti.'][i];}
- if(q.type==='match'){const left=q.pairs.map(p=>p.left).join('; ');en='Start with '+q.pairs[0].left+'. '+(v?'Identify the person and use only phrases with '+v+'.':'Compare the meaning and whether each item is singular or plural.')+' Then match the other rows; the two unused choices belong to a different meaning or form.';it='Inizia da '+q.pairs[0].left+'. Confronta significato, persona e numero in ogni riga. Due opzioni non si usano.';}
- if(q.type==='order'){en=/dialogue/.test(p)?'Begin with a greeting or introduction, then place each question before its reply. Keep the formal or informal register consistent.':'Find the subject first, then its verb, then the remaining phrase. Keep the negative word before the verb.';it=/dialogue/.test(p)?'Inizia con un saluto o una presentazione. Metti ogni domanda prima della risposta e mantieni lo stesso registro.':'Trova prima il soggetto, poi il verbo e il resto della frase. La negazione va prima del verbo.';}
-
- if(sheet.slug==='class2-alphabet'){const l=p.match(/for ([A-Z])\b/)?.[1];en=l?'Give the Italian letter name for '+l+', not an English letter sound. '+(['H','L','M','N','R','S'].includes(l)?'This letter name contains a doubled consonant.':'Use the letter name from the alphabet chart.'):'Write the four Italian letter names for L, U, C and A in that order, separated by spaces.';it=l?'Scrivi il nome italiano della lettera '+l+', non il suono inglese.':'Scrivi in ordine i nomi italiani di L, U, C e A, separati da spazi.';}
- if(/^class2-[cg]-sounds$/.test(sheet.slug)&&q.type!=='match'){const letter=sheet.slug.includes('-c-')?'C':'G',w=modelItalian(q)[0],hard=/[cg]h[ei]/i.test(w),soft=/^[cg][ei]/i.test(w);en='In “'+p.match(/meaning\s+([^:]+)/)?.[1]+'”, check the vowel after '+letter+'. '+(hard?'An H before E or I keeps the consonant hard.':soft?'Before E or I, this consonant is soft; do not add H.':'Before A, O or U the consonant is hard without H.')+' Type only the missing letters.';it='Controlla la vocale dopo '+letter+'. '+(hard?'H prima di E o I mantiene il suono duro.':soft?'Davanti a E o I il suono è dolce: non aggiungere H.':'Davanti ad A, O o U il suono è duro senza H.')+' Scrivi solo le lettere mancanti.';}
- if(sheet.slug==='class3-countries'){const parts=p.split(':').at(-1);en='Join '+parts+' in the given order as one country name. Keep any double consonants in the supplied syllables.';it='Unisci '+parts+' nell’ordine indicato, formando un solo nome di paese. Mantieni le consonanti doppie.';}
- if(sheet.slug==='class3-nationality'&&q.type!=='match'){en=i<2?'The speaker is '+(i===0?'Marco, one male person':'Anna, one female person')+'. Keep sono and change the nationality ending to agree with that speaker.':i<4?'Inglese has the same singular ending for a male or female speaker. Do not change it to -o or -a.':'Siamo means we are. Use a plural nationality ending: '+(i===4?'masculine for the specified mixed or male group.':'feminine for the specified all-female group.');it=i<2?'Il soggetto è '+(i===0?'Marco':'Anna')+': concorda l’aggettivo con la persona.':i<4?'Inglese ha la stessa forma singolare al maschile e al femminile.':'Siamo indica noi: usa la desinenza plurale adatta al gruppo.';}
- if(sheet.slug==='class1-register'){const informal=[1,3,4].includes(i);en='You are speaking to '+(informal?'a friend with tu':'one person politely with Lei')+'. '+(i<4?'For a name question, compare ti chiami with si chiama.':'For a wellbeing question, compare the tu and Lei forms of stare.');it='Ti rivolgi '+(informal?'a un amico con tu':'a una persona con il Lei formale')+'. '+(i<4?'Confronta ti chiami e si chiama.':'Confronta le forme di stare per tu e Lei.');}
- if(sheet.slug==='class4-family'&&q.type!=='match'){en='The subject is io, so keep the first-person form of avere. '+(i===1?'Use the singular article and noun for one brother.':i===2?'After due, use the plural noun for brothers.':'Place non before the verb, then use the plural noun for children.');it='Il soggetto è io: usa la prima persona di avere. '+(i===1?'Per un fratello usa articolo e nome singolari.':i===2?'Dopo due usa il nome plurale.':'Metti non prima del verbo e usa il nome plurale per figli.');}
- if(sheet.slug==='practice-things-pronouns'){const row=Math.floor(i/4),number=row<2?'singular':'plural',gender=row%2?'feminine':'masculine';en='The noun in this question is '+gender+' '+number+'. '+(i%4===1?'Use the same essere form as third-person '+number+'. Gender does not change the verb.':'Choose the traditional subject pronoun that agrees with both gender and number, then keep the remaining sentence.');it='Il nome è '+(row%2?'femminile':'maschile')+' '+(row<2?'singolare':'plurale')+'. '+(i%4===1?'Usa la terza persona di essere. Il genere non cambia il verbo.':'Il pronome concorda in genere e numero.');}
- if(sheet.slug==='l6-essere-matching'){const labels=['the speaker alone: io','one person addressed informally: tu','one person or thing: third-person singular','the speaker together with others: noi','several people being addressed: voi','several people being spoken about: loro'];en='“'+p.replace(/^.*for /,'').replace(/\.$/,'')+'” refers to '+labels[i]+'. Match the pronoun first, then use its essere form.';it='Prima scegli il pronome per il significato richiesto, poi la forma corrispondente di essere. '+['Io: chi parla.','Tu: una persona a cui parli.','Terza persona singolare: una persona o cosa.','Noi: chi parla insieme ad altri.','Voi: più persone a cui parli.','Loro: più persone di cui parli.'][i];}
- if(!en){const original=String(q.hint||'');if(!/Use the form or phrase shown|Match the subject before|Identify who or what|Check subject|Use the present form/.test(text(original))){return {en:'',it:'',html:original};}en='For this question, focus on '+(p.match(/“([^”]+)”|"([^"]+)"|\bUse\s+(\w+)/)?.slice(1).find(Boolean)||'the exact word or phrase requested')+'. '+(/\bformal\b/.test(p)?'A formal question to one person uses the Lei form, while the person replying uses io.':'Use the meaning in the prompt to choose the subject and the appropriate form.');it='Concentrati sulla parola o frase richiesta in questa domanda. Controlla il soggetto e il significato prima di scegliere la forma.';}
- return {en,it,html:''};
-}
-function describe(q,sheet,i){if(q.support)return q.support;const formal=/formal/.test(text(q.prompt))&&!/informal/.test(text(q.prompt))||sheet.slug.startsWith('practice-')&&/^lei\b/.test(norm(promptItalian(q)||q.model));const italian=modelItalian(q);const supplied=String(q.prompt).match(/<small class="l6-gloss">([\s\S]*?)<\/small>/)?.[1];const lines=italian.map((it,n)=>({it,en:q.type==='match'?q.pairs[n].left:supplied?text(supplied):sheet.slug==='l6-number-patterns'?numberEnglish[i]:english(it,formal),pron:pronounce(it)}));
+function describe(q,sheet,i){if(q.support)return q.support;const formal=/formal/.test(text(q.prompt))&&!/informal/.test(text(q.prompt))||sheet.slug.startsWith('practice-')&&/^lei\b/.test(norm(promptItalian(q)||q.model));let italian=modelItalian(q);
+ const word=q.stimulus?.[0]?.text;
+ if(/^class2-homework-[cg]-columns$/.test(sheet.slug))italian=[word];
+ if(sheet.slug==='class2-homework-article-columns')italian=[q.model+(/[’']$/.test(q.model)?'':' ')+word];
+ const supplied=String(q.prompt).match(/<small class="l6-gloss">([\s\S]*?)<\/small>/)?.[1];const lines=italian.map((it,n)=>({it,en:q.type==='match'?q.pairs[n].left:supplied?text(supplied):sheet.slug==='l6-number-patterns'?numberEnglish[i]:english(it,formal),pron:pronounce(it)}));
  if(sheet.slug==='class2-alphabet'){const letter=text(q.prompt).match(/for ([A-Z])\b/)?.[1];if(letter)lines[0].en='The Italian name for the letter '+letter+'.';}
  if(sheet.slug==='c-g-sounds-and-spelling'&&i===8)lines[0].pron='EHM-meh dee mee-LAH-noh, ee dee EE-moh-lah, ah dee ahn-KOH-nah';let prompt=q.kind==='sentence'?null:promptItalian(q);
- if(!prompt&&/Give the complete/.test(text(q.prompt)))prompt=text(String(q.prompt).match(/<span lang="it">([\s\S]*?)<\/span>/)?.[1]||'');
- return {hint:hint(q,sheet,i),prompt:prompt?{it:prompt,en:supplied?text(supplied):english(prompt.replace(/_{2,}/,text(q.model)),formal),pron:pronounce(prompt)}:null,lines,source:supplied?'worksheet':'added study support',pronunciationStatus:'Approximate English-friendly guide; added study support, not IPA or tutor audio'};}
+ if(!prompt && q.stimulus)prompt=q.stimulus.find(row=>row.label==='Speaker A' && row.lang==='it')?.text||'';
+ if(!prompt&&!q.stimulus&&/Give the complete/.test(text(q.prompt)))prompt=text(String(q.prompt).match(/<span lang="it">([\s\S]*?)<\/span>/)?.[1]||'');
+ return {hint:{en:'',it:'',html:q.hint || ''},prompt:prompt?{it:prompt,en:supplied?text(supplied):english(prompt.replace(/_{2,}/,text(q.model)),formal),pron:pronounce(prompt)}:null,lines,source:supplied?'worksheet':'added study support',pronunciationStatus:'Approximate English-friendly guide; added study support, not IPA or tutor audio'};}
 const api={describe,english,pronounce,modelItalian,version:'study-support-20261111',lexicon:lex};if(typeof module!=='undefined'&&module.exports)module.exports=api;if(!root)return;
 root.ItalianStudySupport=api;
 const pair=(en,it)=>root.ItalianPracticeBank.pair(en,it),host=document.getElementById('studySheets');
@@ -494,12 +526,19 @@ function mount(){const article=host?.querySelector('.study-pack-sheet');if(!arti
  const sheet=root.ItalianStudyData.find(s=>s.slug===article.id);if(!sheet)return;
  article.querySelectorAll('.quiz-question').forEach((el,i)=>{if(el.dataset.languageSupport)return;const q=sheet.questions[i];if(!q)return;const d=describe(q,sheet,i);el.dataset.languageSupport='ready';
   const tip=el.querySelector('.hint');if(tip&&(d.hint.en||d.hint.html))tip.innerHTML=d.hint.html||pair(d.hint.en,d.hint.it);
-  if(d.prompt&&(d.prompt.en||d.prompt.pron)){
+  if(!q.task&&d.prompt&&(d.prompt.en||d.prompt.pron)){
    // Existing worksheet gloss is already visible in the prompt. Do not duplicate it.
    const view={...d.prompt,en:el.querySelector('.l6-gloss')?'':d.prompt.en};
    if(view.en||view.pron){const support=document.createElement('div');support.className='question-prompt-support';support.innerHTML=lineMarkup(view,false);el.querySelector('.question-heading')?.after(support);}
   }
-  const usable=d.lines.filter(x=>x.en||x.pron);if(usable.length){const answer=el.querySelector('.model-answer');const block=document.createElement('div');block.className='question-answer-support';block.innerHTML=usable.map(x=>lineMarkup(x,q.type==='match'||q.type==='order'||norm(x.it)!==norm(q.model))).join('')+'<small class="question-pron-note">'+pair('Pronunciation is approximate. Capitals mark stress.','La pronuncia è approssimativa. Le maiuscole indicano l’accento.')+'</small>';answer?.append(block);}
+  const usable=d.lines.filter(x=>x.en||x.pron);
+  if(usable.length){
+   const block=document.createElement('div');
+   block.className='question-answer-support';
+   block.innerHTML=usable.map(x=>lineMarkup(x,q.type==='match'||q.type==='order'||norm(x.it)!==norm(q.model))).join('');
+   if(usable.some(x=>x.pron))block.insertAdjacentHTML('beforeend','<small class="question-pron-note">'+pair('Pronunciation is approximate. Capitals mark stress.','La pronuncia è approssimativa. Le maiuscole indicano l’accento.')+'</small>');
+   el.querySelector('.model-answer')?.append(block);
+  }
  });}
 api.refreshQuestion=()=>{};
 if(host)new MutationObserver(mount).observe(host,{childList:true,subtree:true});mount();

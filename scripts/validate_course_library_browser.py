@@ -55,26 +55,38 @@ try:
     assert page.locator('.course-site-language').inner_text().replace(' ','').replace('\n','')=='ITA/ENG'
     assert not errors,errors
    visit('/study/study-sheets.html?mode=learn')
-   assert page.locator('[data-library-lesson]').count()==7
-   assert page.locator('[data-library-lesson]').evaluate_all("els=>els.map(el=>el.dataset.libraryLesson)")==['L1','L2','L3','L4','L5','L6','L7']
+   assert page.locator('[data-library-lesson]').count()==8
+   assert page.locator('[data-library-lesson]').evaluate_all("els=>els.map(el=>el.dataset.libraryLesson)")==['L1','L2','L3','L4','L5','L6','L7','L8']
    assert page.locator('#studyPathPicker').count()==0
    assert len(page.evaluate('window.__oldFrame'))==0,'Legacy study chrome painted during load'
-   for i in range(1,8):
+   for i in range(1,9):
     visit('/study/study-sheets.html?mode=learn&lesson=L'+str(i))
     assert page.locator('.library-lesson-detail [data-library-topic]').count()>2
     if i<=6:
-     assert page.locator('.library-extras').count()==1
-     assert page.locator('.library-extras').get_attribute('open') is None
-    else:
+     assert page.locator('details.library-extras:not(.library-homework)').count()==1
+     assert page.locator('details.library-extras:not(.library-homework)').get_attribute('open') is None
+    elif i==7:
      assert page.locator('.library-lesson-detail [data-library-topic]').count()==8
+    else:
+     assert page.locator('.library-lesson-detail [data-library-topic]').count()==9
+    has_homework=page.evaluate('(id)=>Boolean(ItalianLibraryMap.homework[id])','L'+str(i))
+    homework=page.locator('details.library-homework')
+    assert homework.count()==int(has_homework)
+    if has_homework:
+     assert homework.get_attribute('open') is None and homework.locator('li').count()>0
     check_layout()
    page.screenshot(path=str(OUT/f'lessons-{width}-{theme}.png'),full_page=True,animations='disabled')
    visit('/study/study-sheets.html?browse=topic')
    assert page.locator('.library-topic-section').count()==6
    check_layout()
-   dataset=page.evaluate('ItalianStudyData');assert len(dataset)==68
-   assert sum(not s['slug'].startswith('l7-') and s['slug']!='l6-recap-useful-requests' for s in dataset)==53
+   dataset=page.evaluate('ItalianStudyData');assert len(dataset)==len({s['slug'] for s in dataset})
+   assert sum(not s['slug'].startswith(('l7-','l8-')) and s['slug']!='l6-recap-useful-requests' for s in dataset)==58
+   assert len(dataset)==82 and sum(len(s['questions']) for s in dataset)==831
    assert sum(s['slug'].startswith('l7-') for s in dataset)==14
+   l8=[s for s in dataset if s['slug'].startswith('l8-')]
+   assert len(l8)==9
+   assert sum(len(s['questions']) for s in l8 if s.get('sourceKind')=='Extra practice')==56
+   assert sum(len(s['questions']) for s in l8 if s.get('sourceKind')!='Extra practice')==59
    assert sum(s['slug']=='l6-recap-useful-requests' for s in dataset)==1
    if FOCUS=='all':route_data=dataset
    elif FOCUS=='legacy':route_data=dataset[:9]
@@ -131,9 +143,10 @@ try:
    assert q.locator('input').input_value()=='Io sono di Na'
    page.click('[data-related-flashcards]');page.wait_for_selector('.review-card[data-lesson=L3]');page.wait_for_function('!document.documentElement.classList.contains("course-booting")')
    assert page.locator('.guided-card-host .review-card').get_attribute('data-deck')=='03 Origins & questions'
-   assert page.evaluate('cards.length')==565
-   assert page.evaluate("cards.filter(c=>c.lesson!=='L7').length")==511
+   assert page.evaluate('cards.length')==623
+   assert page.evaluate("cards.filter(c=>!['L7','L8'].includes(c.lesson)).length")==511
    assert page.evaluate("cards.filter(c=>c.lesson==='L7').length")==54
+   assert page.evaluate("cards.filter(c=>c.lesson==='L8').length")==58
    page.click('[data-back-to-practice]');page.wait_for_function('window.ItalianGuidedStudy && !document.documentElement.classList.contains("course-booting")')
    q=page.locator('.quiz-question:not([hidden])');assert q.get_attribute('data-progress-key')==qid
    assert q.locator('input').input_value()=='Io sono di Na'
@@ -159,12 +172,14 @@ try:
    new_round('quick')
    assert page.evaluate('JSON.parse(sessionStorage.getItem("italianCourseSessionProgressV2")).study.answers["class4-family-q1"]')==saved
    opts=page.locator('.quiz-question:not([hidden]) input[type=radio]').evaluate_all('(els)=>els.map(e=>e.value)')
-   assert len(opts)>=6
+   question_index=int(page.locator('.quiz-question:not([hidden])').get_attribute('data-progress-key').rsplit('-q',1)[1])-1
+   source_options=next(s for s in dataset if s['slug']=='class4-silent-h')['questions'][question_index]['choices']
+   assert len(opts)==2 and opts==source_options,(opts,source_options)
    language('en');language('it');assert page.locator('.quiz-question:not([hidden]) input[type=radio]').evaluate_all('(els)=>els.map(e=>e.value)')==opts
    assert not errors,errors
    ctx.close()
   browser.close()
- report={'status':'pass','environment':'production' if LIVE else 'repository','focus':FOCUS,'route_cases':len(results),'model_answers_checked':sum(r['answers_checked'] for r in results),'cases':results,'navigation':'seven lessons and shared topic view; original six retained','quick_full':'passed','flashcard_round_trip':'draft, hint and position retained','partial_matching':'retained','unrelated_progress':'retained','legacy_page_flash':'not observed','language_button':'ITA / ENG; fixed width','anki':'unchanged'}
+ report={'status':'pass','environment':'production' if LIVE else 'repository','focus':FOCUS,'route_cases':len(results),'model_answers_checked':sum(r['answers_checked'] for r in results),'cases':results,'navigation':'eight lessons and shared topic view; original six retained','quick_full':'passed','flashcard_round_trip':'draft, hint and position retained','partial_matching':'retained','unrelated_progress':'retained','legacy_page_flash':'not observed','language_button':'ITA / ENG; fixed width','anki':'unchanged'}
  (OUT/(('live-' if LIVE else '')+FOCUS+'-results.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='cases'},indent=2))
 except Exception:
  if page:

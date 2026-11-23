@@ -35,8 +35,9 @@ try:
    page.goto(base+'/study/study-sheets.html?lesson=L3&topic=origins&set=class3-complete-replies&sheet=class3-complete-replies',wait_until='domcontentloaded')
    page.wait_for_function('window.ItalianGuidedStudy && !document.documentElement.classList.contains("course-booting")')
    q=page.locator('.quiz-question:not([hidden])')
-   assert 'Scrivi la risposta completa' in q.locator('.question-heading').inner_text()
-   assert 'Give the complete' not in q.locator('.question-heading').inner_text()
+   instruction=q.locator('.worksheet-task[lang=en]')
+   assert instruction.inner_text()=='Answer in a full Italian sentence. Use io and essere.'
+   assert q.locator('.worksheet-cue [lang=it]').all_inner_texts()==['Di dove sei?', '____']
    assert 'Esercizi adattati' in page.locator('.study-pack-sheet > header .lead').inner_text()
    assert page.locator('.quiz-question b button').count()==0
    q.locator('input[type=text]').fill('Io sono di Na')
@@ -46,6 +47,7 @@ try:
     page.wait_for_function('(lang)=>ItalianUI.language===lang && !document.documentElement.classList.contains("ui-language-changing")',arg=language)
     widths.append(page.locator('.course-site-language').bounding_box()['width'])
     assert q.locator('input[type=text]').input_value()=='Io sono di Na'
+    assert instruction.inner_text()=='Answer in a full Italian sentence. Use io and essere.'
     assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2')
    assert max(widths)-min(widths)<1
    q.locator('input[type=text]').fill('wrong');q.locator('.check-button').click()
@@ -80,10 +82,10 @@ try:
     params=parse_qs(urlparse(page.locator('[data-related-flashcards]').get_attribute('href')).query)
     assert params['lesson']==[lesson] and params['topic']==[deck],(slug,params)
    assert not errors,errors
-   results.append({'width':width,'theme':theme,'normal_motion':'pass','translated_instruction':'pass','result_restart':'pass','verb_links':len(verb_targets),'button_contrast':ratios,'status':'pass'})
+   results.append({'width':width,'theme':theme,'normal_motion':'pass','english_task_across_languages':'pass','result_restart':'pass','verb_links':len(verb_targets),'button_contrast':ratios,'status':'pass'})
    context.close()
   browser.close()
  (OUT/('live-finish-results.json' if live else 'finish-results.json')).write_text(json.dumps(results,indent=2))
- print('PASS translated instructions, fixed-width normal-motion language switch, result restart, contrast and verb links.')
+ print('PASS English instructions in both interface languages, fixed-width normal-motion language switch, result restart, contrast and verb links.')
 finally:
  if server:server.shutdown()

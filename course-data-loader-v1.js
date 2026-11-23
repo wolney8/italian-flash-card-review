@@ -53,7 +53,7 @@
     return decoded;
   }
 
-  function validateCards(coreCards, lesson5Cards) {
+  function validateCards(coreCards, lesson5Cards, lesson8Cards) {
     if (coreCards.length !== EXPECTED_CORE_CARDS) {
       throw new Error(`Expected ${EXPECTED_CORE_CARDS} cards in Lessons 1–4, received ${coreCards.length}.`);
     }
@@ -75,7 +75,7 @@
     const lesson7Cards=window.ITALIAN_L7?.cards||[];
     const lesson6Supplements=window.ITALIAN_L7?.lesson6Supplements?.cards||[];
     if(lesson7Cards.some(c=>c.lesson!=='L7')||lesson6Supplements.some(c=>c.lesson!=='L6'))throw new Error('Invalid lesson extension assignment.');
-    const expanded=finalCards.concat(lesson6Cards,lesson7Cards,lesson6Supplements);
+    const expanded=finalCards.concat(lesson6Cards,lesson7Cards,lesson6Supplements,lesson8Cards);
     if(new Set(expanded.map(c=>c.key)).size!==expanded.length)throw new Error('Duplicate course card keys.');
     return expanded;
   }
@@ -107,6 +107,10 @@
         L4: { number: '4', title: 'Avere, Numbers, Plurals and Family', description: 'Avere, silent H, numbers 0–20, plural forms, articles and family vocabulary.' },
         L5: { number: '5', title: 'Consolidation Review', description: 'A mixed review of greetings, names, origins, avere, plurals, articles, family, C/G sounds and spelling.' }
       };
+      if (lesson === 'L8' && window.ItalianLesson8) {
+        const {title, description} = window.ItalianLesson8.lesson;
+        return {number: '8', title, description};
+      }
       if(lesson==='L7'&&window.ITALIAN_L7)return {number:'7',title:window.ITALIAN_L7.libraryLesson?.title||'Regular -ARE verbs',description:window.ITALIAN_L7.libraryLesson?.description||'Regular verb endings, stress and everyday sentences.'};
       if(lesson==='L6')return {number:'6',title:'Numbers, Essere and Questions',description:'Number-building patterns, negatives, intonation and useful questions.'};
       return meta[lesson] || previous(lesson);
@@ -145,7 +149,8 @@
     renderCard = function (card, position, total) {
       const anchor = `card-${slugify(card.key)}`;
       const title = panelTitle(card.panel, card.deck);
-      const promptSummary = truncate(stripHtml(card.prompt), 86);
+      const front = window.ItalianCardFront.render(card);
+      const promptSummary = truncate(stripHtml(front), 86);
       const pattern = card.pattern || card.rule || '';
       const reference = card.reference || card.source || '';
       const usage = card.usage || '';
@@ -155,7 +160,7 @@
         <div class="card-sticky-tools"><div class="sticky-card-copy"><span class="sticky-card-index">Card ${position} of ${total}</span><strong>${escapeHtml(title)}</strong><span class="sticky-side-state">Recall side</span></div><div class="sticky-card-actions"><button class="reveal-button sticky-reveal" type="button" aria-expanded="false">Show answer</button><button class="card-comment-button sticky-comment" type="button" data-comment-scope="card">Comment</button></div></div>
         <div class="card-position">Card ${position} of ${total} · ${escapeHtml(promptSummary)}</div>
         <div class="flip-shell"><div class="flip-card-inner">
-          <section class="card-side card-face recall-side" aria-hidden="false"><div class="side-label recall-label">Recall side</div><div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div><div class="topic-panel">${card.panel || ''}</div><div class="front-body">${card.prompt || ''}</div></section>
+          <section class="card-side card-face recall-side" aria-hidden="false"><div class="side-label recall-label">Recall side</div><div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div><div class="topic-panel">${card.panel || ''}</div><div class="front-body">${front}</div></section>
           <section class="card-side card-face answer-side" aria-hidden="true"><div class="side-label answer-label-main">Answer side</div><div class="answer-body"><div class="answer-label">Answer</div><div class="italian">${card.answer || ''}</div>${card.pron ? `<div class="phon">${card.pron}</div>` : ''}${card.meaning ? `<div class="section"><div class="label">Natural English</div><div class="natural">${card.meaning}</div></div>` : ''}${card.literal ? `<div class="section"><div class="label">Literal construction</div><div class="literal">${card.literal}</div></div>` : ''}${usage ? `<div class="section"><div class="label">Use / word jobs</div><div class="usage">${usage}</div></div>` : ''}${pattern ? `<div class="section"><div class="label">Rule / forms</div><div class="pattern">${pattern}</div></div>` : ''}${clarification ? `<details class="extra clarification-block"><summary>Clarification</summary><div class="inside">${clarification}</div></details>` : ''}<details class="extra"><summary>Course source</summary><div class="inside">${reference}<p>${escapeHtml(card.key)}</p></div></details></div></section>
         </div></div>
         <div class="card-actions"><button class="reveal-button" type="button" aria-expanded="false">Flip to answer side</button><button class="card-comment-button" type="button" data-comment-scope="card">Comment on this card</button></div>
@@ -213,15 +218,16 @@
       throw new Error('This browser cannot decompress the course card data.');
     }
 
-    const [coreEncoded, lesson5Encoded] = await Promise.all([
+    const [coreEncoded, lesson5Encoded, lesson8Cards] = await Promise.all([
       loadEncodedGroup(CORE_FILES),
-      loadEncodedGroup(LESSON5_FILES)
+      loadEncodedGroup(LESSON5_FILES),
+      window.ItalianLesson8 ? window.ItalianLesson8.loadCards() : []
     ]);
     const [coreCards, lesson5Cards] = await Promise.all([
       decodeCards(coreEncoded, 'Lessons 1–4'),
       decodeCards(lesson5Encoded, 'Lesson 5')
     ]);
-    const finalCards = validateCards(coreCards, lesson5Cards);
+    const finalCards = validateCards(coreCards, lesson5Cards, lesson8Cards);
 
     const waitForApp = () => {
       const appReady = typeof cards !== 'undefined' && Array.isArray(cards) && typeof renderView === 'function';

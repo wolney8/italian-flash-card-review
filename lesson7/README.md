@@ -14,7 +14,7 @@
 | Additional Lesson 6 recap sets | 1 |
 | Questions in the Lesson 6 recap | 12 |
 
-The five-pair homework matching activity occupies one screen but contains five individual responses. The source worksheets account for **30 classroom responses and 29 homework responses**. Added pattern, spelling and connected practice account for the remaining Lesson 7 responses and are labelled separately.
+The five-pair homework matching activity follows the paper’s Italian-to-English direction and A–E answer bank. It occupies one screen but contains five individual responses. The source worksheets account for **30 classroom responses and 29 homework responses**. Added pattern, spelling and connected practice account for the remaining Lesson 7 responses and are labelled separately.
 
 The Lesson 6 recap is available through both Lesson 6 and Lesson 7. Both routes use the same exercise identity. No new Lesson 6 cards are created; the existing 66 cards are retained.
 
@@ -87,7 +87,7 @@ Useful routes:
 
 The supplied Lesson 7 sources are the minutes, presentation, tables, classroom worksheet and homework worksheet. The dataset records page/slide references and separates course material, recap and added support.
 
-The minutes reference textbook page 173 exercise 14 and grammar page 233. Those pages were not supplied, so their exercises are not reproduced. No separate email body was present in the request.
+The minutes assign textbook page 173 exercise 14 and recommend grammar page 233. Those pages were not supplied, so their exercises are not reproduced. No separate email body was present in the request.
 
 Recorded clarifications include:
 
@@ -106,10 +106,10 @@ English-friendly pronunciation is approximate. The source/stress checks do not e
 The current content/integration validation records:
 
 - 218 accepted-answer/model checks using the existing answer scorer.
-- 36 multiple-choice option checks, including six unique options, two red herrings and one keyed answer per question.
+- 12 worksheet option checks, covering the two printed forms in each of six questions and one keyed answer per question.
 - Resolution of all 15 new study routes and their exact related-card targets.
 - Preservation of all 53 previous study sets and answer keys.
-- Preservation of original canonical card data and Lesson 6 content hashes.
+- Preservation of original canonical card data, including all 66 Lesson 6 flashcards.
 - Registration of Lesson 7, its topic mappings, bilingual titles and explicit learning support.
 - Correct dependency order for the extension scripts.
 - Unchanged existing learning-control and progress implementations.

@@ -291,7 +291,8 @@ function renderSubdeck(deck, deckCards, open) {
 function renderCard(card, position, total) {
   const anchor = `card-${slugify(card.key)}`;
   const title = panelTitle(card.panel, card.deck);
-  const promptSummary = truncate(stripHtml(card.prompt), 86);
+  const front = window.ItalianCardFront.render(card);
+  const promptSummary = truncate(stripHtml(front), 86);
 
   return `<article class="review-card" id="${anchor}" data-key="${escapeHtml(card.key)}" data-lesson="${escapeHtml(card.lesson)}" data-deck="${escapeHtml(card.deck)}">
     <div class="card-sticky-tools">
@@ -314,7 +315,7 @@ function renderCard(card, position, total) {
           <div class="side-label recall-label">Recall side</div>
           <div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div>
           <div class="topic-panel">${card.panel}</div>
-          <div class="front-body">${card.prompt}</div>
+          <div class="front-body">${front}</div>
         </section>
 
         <section class="card-side card-face answer-side" aria-hidden="true">

@@ -580,6 +580,26 @@ a {
   overflow-wrap: anywhere;
 }
 
+.front-body .recall-exercise {
+  max-width: 40rem;
+  margin: 0 auto;
+  text-align: start;
+}
+.front-body .recall-exercise .instruction {
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  line-height: 1.45;
+  margin: 0;
+}
+.recall-cues {
+  margin-top: .85rem;
+  border-inline-start: 2px solid var(--line);
+  padding-inline-start: .9rem;
+}
+.recall-cue { overflow-wrap: anywhere; line-height: 1.5; }
+.recall-cue + .recall-cue { margin-top: .55rem; }
+.recall-cue-label { display: block; font-size: .9rem; color: var(--muted); }
+.recall-cue > [lang="it"] { font-size: 1.18em; font-weight: 600; }
+
 .clue {
   margin: 22px 0 0;
   color: var(--muted);

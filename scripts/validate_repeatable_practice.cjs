@@ -15,21 +15,30 @@ for(const sheet of enhanced){
  for(const [i,q] of sheet.questions.entries()){
   tasks++;
   if(q.type==='choice'){
-   mc++;assert.ok(q.choices.length>=6,sheet.slug+' '+i);assert.equal(new Set(q.choices).size,q.choices.length);
-   assert.equal(q.redHerrings.length,2);assert.ok(q.redHerrings.every(x=>q.choices.includes(x)));
-   const correct=q.choices.filter(v=>q.answers.some(a=>B.normal(a)===B.normal(v)));
+   mc++;assert.ok(q.choices.length>=2,sheet.slug+' '+i);
+   assert.equal(new Set(q.choices).size,q.choices.length);
+   const correct=q.choices.filter(v=>L6.checkAnswer(v,q.answers,q.answer_mode));
    assert.equal(correct.length,1,sheet.slug+' '+i+' must have exactly one keyed answer');
-   assert.ok(!q.redHerrings.includes(correct[0]));
-   const a=B.shuffle(q.choices,'first');assert.deepEqual(a,B.shuffle(q.choices,'first'));
-   assert.deepEqual([...a].sort(),[...q.choices].sort());
-   const positions=new Set(Array.from({length:60},(_,n)=>B.shuffle(q.choices,String(n)).indexOf(correct[0])));
-   assert.ok(positions.size>=5,'Correct answers need genuinely varied positions');
+   assert.ok((q.redHerrings||[]).every(x=>q.choices.includes(x)&&x!==correct[0]));
+   if(q.worksheetOrder){
+    assert.deepEqual(B.choices(q,sheet.slug,i),q.choices,'Preserve printed choice order');
+   }else{
+    const a=B.shuffle(q.choices,'first');assert.deepEqual(a,B.shuffle(q.choices,'first'));
+    assert.deepEqual([...a].sort(),[...q.choices].sort());
+    const positions=new Set(Array.from({length:60},(_,n)=>B.shuffle(q.choices,String(n)).indexOf(correct[0])));
+    assert.ok(positions.size>=Math.min(q.choices.length,5),'Correct answers need genuinely varied positions');
+   }
   }
   if(q.type==='match'){
-   matches++;assert.equal(q.pairs.length,6);assert.equal(q.extras.length,2);
-   assert.equal(new Set(q.pairs.map(p=>p.right)).size,6,'Identical sono needs explicit subjects');
-   assert.equal(new Set([...q.pairs,...q.extras].map(p=>p.id)).size,8);
-   assert.deepEqual(JSON.parse(q.model),q.pairs.map(p=>p.id));
+   matches++;assert.deepEqual(JSON.parse(q.model),q.pairs.map(p=>p.id));
+   if(q.legacyMatchValue){
+    assert.ok(q.worksheetOrder&&q.pairs.length===2,'Source matching uses a pronoun and a verb');
+    assert.ok(q.pairs.every(p=>p.options?.some(x=>x.id===p.id&&x.right===p.right)),'Missing marked source option');
+   }else{
+    assert.equal(q.pairs.length,6);
+    assert.equal(new Set(q.pairs.map(p=>p.right)).size,6,'Identical sono needs explicit subjects');
+    const bank=[...q.pairs,...(q.extras||[])];assert.equal(new Set(bank.map(p=>p.id)).size,bank.length);
+   }
   }
  }
 }
@@ -38,7 +47,8 @@ for(const original of baseline){const updated=enhanced.find(s=>s.slug===original
  for(let i=0;i<original.questions.length;i++){
   const a=original.questions[i],b=updated.questions[i];
   assert.deepEqual(b.answers,a.answers);assert.equal(b.model,a.model);assert.equal(b.hint,a.hint);
-  if(a.type==='choice')assert.deepEqual(b.sourceChoices,a.choices);
+  if(a.type==='choice')assert.deepEqual(b.choices,a.choices,original.slug+' must retain its original options');
+  if(a.type==='match'){assert.deepEqual(b.pairs,a.pairs);assert.equal(b.legacyMatchValue,a.legacyMatchValue);}
  }
 }
 for(const key of Object.keys(B.V)){
@@ -50,8 +60,8 @@ for(const key of Object.keys(B.V)){
  assert.ok(s.study_sections[0].rows.every(r=>r[2]),'Pronunciation guide missing');
  assert.ok(s.questions.slice(0,12).every(q=>!/(?:Noi|Voi|Loro)\s+(?:<b>|<)/.test(q.prompt)),'Start with singular');
 }
-assert.equal(tasks,391);assert.equal(mc,118);assert.equal(matches,15);
-const report={status:'pass',source_sheets:20,practice_topics:11,source_tasks:212,new_tasks:179,total_tasks:tasks,multiple_choice:mc,minimum_options:6,red_herrings_per_choice:2,matching_tasks:matches,canonical_answers:'unchanged',anki:'unchanged',source_note:'New tasks/distractors are adaptations. Esse completes the feminine-plural comparison as supplementary support.'};
+assert.equal(tasks,391);assert.equal(mc,112);assert.equal(matches,21);
+const report={status:'pass',source_sheets:20,practice_topics:11,source_tasks:212,new_tasks:179,total_tasks:tasks,multiple_choice:mc,choice_order:'Printed options stay in source order, adapted practice can shuffle',matching_tasks:matches,canonical_answers:'unchanged',anki:'unchanged',source_note:'New tasks/distractors are adaptations. Esse completes the feminine-plural comparison as supplementary support.'};
 const out=path.join(root,'artifacts/repeatable-practice');fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'content-validation.json'),JSON.stringify(report,null,2));
 fs.writeFileSync(path.join(out,'enhanced-sheets.json'),JSON.stringify(enhanced));
 console.log(JSON.stringify(report,null,2));

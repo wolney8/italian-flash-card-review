@@ -1,0 +1,582 @@
+[
+  {
+    "key": "italian-l8-grammar-come-how",
+    "front": "Ask one friend in Italian how they are. Use stare.",
+    "answer": "Come stai?",
+    "english": "How are you?",
+    "pron": "KOH-meh STYE",
+    "ipa": "/ˈkome stai/",
+    "notes": "Here come asks how someone feels. English also reuses words. In “as a teacher”, as gives a role. In “as tall as me”, it compares.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-come-as",
+    "front": "Say “I work as a teacher” in Italian. Use lavorare and give your actual role.",
+    "answer": "Lavoro come insegnante.",
+    "english": "I work as a teacher.",
+    "pron": "lah-VOH-roh KOH-meh een-seh-NYAHN-teh",
+    "ipa": "/laˈvoro ˈkome inseɲˈɲante/",
+    "notes": "Come introduces the role you actually do. In this pattern the job title comes straight after come.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-come-like",
+    "front": "Say to a friend “You’re like a brother to me”.",
+    "answer": "Sei come un fratello per me.",
+    "english": "You’re like a brother to me.",
+    "pron": "SEH-ee KOH-meh oon frah-TEHL-loh pehr MEH",
+    "ipa": "/sɛi ˈkome un fraˈtɛllo per me/",
+    "notes": "Come makes a comparison here. The phrase works even if you are unrelated.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-verb-of-question",
+    "front": "Che lavoro fai? Which Italian word changes when you ask about Marta instead of tu? Give the word from the original question.",
+    "answer": "fai",
+    "english": "you do",
+    "pron": "FAI (rhymes with eye)",
+    "ipa": "/fai/",
+    "notes": "Che lavoro fa Marta? Fai changes to fa. Lavoro stays the noun meaning job. The ending of fai already tells you the subject is tu.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-object-of-question",
+    "front": "In Che lavoro fai?, give the whole Italian phrase for the thing you do.",
+    "answer": "che lavoro",
+    "english": "what job",
+    "pron": "keh lah-VOH-roh",
+    "ipa": "/ke laˈvoro/",
+    "notes": "You do what? What job. Che lavoro is the direct object, even at the start of the question.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-lavoro-as-verb",
+    "front": "Complete “I work in an office” with the first-person form of lavorare. ___ in un ufficio.",
+    "answer": "lavoro",
+    "english": "I work",
+    "pron": "lah-VOH-roh",
+    "ipa": "/laˈvoro/",
+    "notes": "Here lavoro is a verb. English does this too. In “I work here”, work is the verb. In “What work do you do?”, work is a noun.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-two-verbs",
+    "front": "Which two Italian verbs mean “I do” and “I work” in Faccio l’insegnante e lavoro in una scuola? Give them in sentence order.",
+    "answer": "faccio · lavoro",
+    "english": "I do · I work",
+    "pron": "FAHT-choh · lah-VOH-roh",
+    "ipa": "/ˈfattʃo/ · /laˈvoro/",
+    "notes": "Each verb belongs to its own part of the sentence, joined by e (and). Both have the same understood subject, io.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-lavare",
+    "front": "You’re at the kitchen sink. Complete “I wash the dishes” with the verb lavare. ___ i piatti.",
+    "answer": "lavo",
+    "english": "I wash",
+    "pron": "LAH-voh",
+    "ipa": "/ˈlavo/",
+    "notes": "Lavare → lavo (to wash → I wash). Lavorare → lavoro (to work → I work). The extra syllable changes the word.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-dishes",
+    "front": "In Lavo i piatti, say the Italian words that answer “I wash what?” Include the article.",
+    "answer": "i piatti",
+    "english": "the dishes",
+    "pron": "ee PYAHT-tee",
+    "ipa": "/i ˈpjatti/",
+    "notes": "Think “I wash them”. The dishes are the direct object. The verb takes them directly, so this use is transitive.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-workplace",
+    "front": "In Lavoro in un ufficio, which whole Italian phrase answers “where?”",
+    "answer": "in un ufficio",
+    "english": "in an office",
+    "pron": "een oon oof-FEE-choh",
+    "ipa": "/in un ufˈfitʃo/",
+    "notes": "In introduces a place. The sentence already works as Lavoro, “I work”. Here lavorare is intransitive.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-wood",
+    "front": "In Lavoro il legno, say the Italian phrase for the material being shaped. Include the article.",
+    "answer": "il legno",
+    "english": "the wood",
+    "pron": "eel LEH-nyoh",
+    "ipa": "/il ˈleɲɲo/",
+    "notes": "I work or shape the wood. Il legno is the direct object. Compare Lavoro in un ufficio, where the office is the place. The same verb has two uses.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-fare-job",
+    "front": "Say “I work as a doctor” using fare and the masculine job title beginning with d.",
+    "answer": "Faccio il dottore.",
+    "english": "I work as a doctor.",
+    "pron": "FAHT-choh eel doht-TOH-reh",
+    "ipa": "/ˈfattʃo il dotˈtore/",
+    "notes": "Use the definite article for fare + occupation. Other uses of fare allow different forms, as in faccio una torta or faccio sport.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-essere-indefinite",
+    "front": "Someone asks whether there is a doctor on the train. Say “I’m a doctor” with essere, the indefinite article and the masculine title beginning with d.",
+    "answer": "Sono un dottore.",
+    "english": "I’m a doctor.",
+    "pron": "SOH-noh oon doht-TOH-reh",
+    "ipa": "/ˈsono un dotˈtore/",
+    "notes": "Un introduces one member of a profession. The complete phrase un dottore identifies the speaker.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-doctor-on-duty",
+    "front": "A patient asks which person is the doctor on duty. Say “I’m the doctor on duty” using essere and the masculine title beginning with d.",
+    "answer": "Sono il dottore di turno.",
+    "english": "I’m the doctor on duty.",
+    "pron": "SOH-noh eel doht-TOH-reh dee TOOR-noh",
+    "ipa": "/ˈsono il dotˈtore di ˈturno/",
+    "notes": "Il picks out a particular doctor. Il dottore is singular. I dottori is plural.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-bare-job",
+    "front": "Say “I’m a teacher” with essere and a bare job title.",
+    "answer": "Sono insegnante.",
+    "english": "I’m a teacher.",
+    "pron": "SOH-noh een-seh-NYAHN-teh",
+    "ipa": "/ˈsono inseɲˈɲante/",
+    "notes": "Essere can link you directly to a job title. English needs “a” in this translation.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-describing-subject",
+    "front": "In Sono un dottore, which whole Italian phrase describes who the speaker is?",
+    "answer": "un dottore",
+    "english": "a doctor",
+    "pron": "oon doht-TOH-reh",
+    "ipa": "/un dotˈtore/",
+    "notes": "The speaker and the doctor are one person. Sono links them. Grammarians call this description a subject complement. Compare a direct object in Lavo i piatti.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-remember-two-clauses",
+    "front": "Say “I’m a teacher and I work in a school”. Use fare for the job and lavorare for the place.",
+    "answer": "Faccio l’insegnante e lavoro in una scuola.",
+    "english": "I’m a teacher and I work in a school.",
+    "pron": "FAHT-choh leen-seh-NYAHN-teh eh lah-VOH-roh een OO-nah SKWOH-lah",
+    "ipa": "/ˈfattʃo linseɲˈɲante e laˈvoro in ˈuna ˈskwɔla/",
+    "notes": "Laura’s Remember! Join the job and workplace with e. Keep the definite article in l’insegnante.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-l8-grammar-remember-one-clause",
+    "front": "Say “I work as a teacher in a school” using one verb. Give the role and then the place.",
+    "answer": "Lavoro come insegnante in una scuola.",
+    "english": "I work as a teacher in a school.",
+    "pron": "lah-VOH-roh KOH-meh een-seh-NYAHN-teh een OO-nah SKWOH-lah",
+    "ipa": "/laˈvoro ˈkome inseɲˈɲante in ˈuna ˈskwɔla/",
+    "notes": "Laura’s other model uses come for the role and in for the workplace. This repairs the common error lavoro l’insegnante.",
+    "topic": "grammar"
+  },
+  {
+    "key": "italian-extra-sounds-ci-cibo",
+    "topic": "sounds",
+    "front": "Food. Complete ___bo with ci or chi and say the word aloud.",
+    "answer": "cibo",
+    "english": "food",
+    "pron": "CHEE-boh",
+    "ipa": "/ˈtʃibo/",
+    "notes": "Ci gives /tʃi/ here. Start with the ch sound in cheese and pronounce the i."
+  },
+  {
+    "key": "italian-extra-sounds-chi-chilo",
+    "topic": "sounds",
+    "front": "A kilo. Complete ___lo with ci or chi and say the word aloud.",
+    "answer": "chilo",
+    "english": "kilo",
+    "pron": "KEE-loh",
+    "ipa": "/ˈkilo/",
+    "notes": "Chi gives /ki/. The silent h keeps the c hard before i."
+  },
+  {
+    "key": "italian-extra-sounds-ce-voce",
+    "topic": "sounds",
+    "front": "Voice. Complete vo___ with ce or che and say the word aloud.",
+    "answer": "voce",
+    "english": "voice",
+    "pron": "VOH-cheh",
+    "ipa": "/ˈvotʃe/",
+    "notes": "The c before e sounds like ch in chat. Stress the first syllable."
+  },
+  {
+    "key": "italian-extra-sounds-che-amiche",
+    "topic": "sounds",
+    "front": "Female friends. Complete ami___ with ce or che and say the plural of amica aloud.",
+    "answer": "amiche",
+    "english": "female friends",
+    "pron": "ah-MEE-keh",
+    "ipa": "/aˈmike/",
+    "notes": "Amica has /k/ before a. Its plural keeps /k/ before e by adding a silent h."
+  },
+  {
+    "key": "italian-extra-sounds-gi-giro",
+    "topic": "sounds",
+    "front": "A tour. Complete ___ro with gi or ghi and say the word aloud.",
+    "answer": "giro",
+    "english": "tour",
+    "pron": "JEE-roh",
+    "ipa": "/ˈdʒiro/",
+    "notes": "Gi gives /dʒi/, starting with j as in jam. Un giro can mean a tour or a lap."
+  },
+  {
+    "key": "italian-extra-sounds-ghi-ghiro",
+    "topic": "sounds",
+    "front": "A dormouse. Complete ___ro with gi or ghi and say the word aloud.",
+    "answer": "ghiro",
+    "english": "dormouse",
+    "pron": "GHEE-roh",
+    "ipa": "/ˈɡiro/",
+    "notes": "Ghiro starts like English ghee, with /ɡ/ as in go. Giro starts with /dʒ/ as in jam. The h is silent."
+  },
+  {
+    "key": "italian-extra-sounds-ge-agenda",
+    "topic": "sounds",
+    "front": "An appointment diary. Complete a___nda with ge or ghe and say the word aloud.",
+    "answer": "agenda",
+    "english": "appointment diary",
+    "pron": "ah-JEN-dah",
+    "ipa": "/aˈdʒɛnda/",
+    "notes": "Ge starts with /dʒ/, like j in jam. Stress the middle syllable."
+  },
+  {
+    "key": "italian-extra-sounds-ghe-righe",
+    "topic": "sounds",
+    "front": "A line on a page is una riga. Complete its plural ri___ with ge or ghe and say it aloud.",
+    "answer": "righe",
+    "english": "lines on a page",
+    "pron": "REE-gheh",
+    "ipa": "/ˈriɡe/",
+    "notes": "Ghe keeps the /ɡ/ of riga before e. Say the g as in go. The h is silent."
+  },
+  {
+    "key": "italian-extra-sounds-hard-c-cubo",
+    "topic": "sounds",
+    "front": "A cube. Complete ___ubo with c or ch and say the word aloud.",
+    "answer": "cubo",
+    "english": "cube",
+    "pron": "KOO-boh",
+    "ipa": "/ˈkubo/",
+    "notes": "Before a, o and u, plain c gives /k/. Try the same start in cane (dog), coda (tail) and cubo (cube)."
+  },
+  {
+    "key": "italian-extra-sounds-hard-g-gatto",
+    "topic": "sounds",
+    "front": "A cat. Complete ___atto with g or gh and say the word aloud.",
+    "answer": "gatto",
+    "english": "cat",
+    "pron": "GAHT-toh",
+    "ipa": "/ˈɡatto/",
+    "notes": "Before a, o and u, plain g gives /ɡ/ as in go. Try gatto (cat), gola (throat) and gufo (owl). Hold the double t in gatto briefly."
+  },
+  {
+    "key": "italian-extra-sounds-cia-camicia",
+    "topic": "sounds",
+    "front": "A shirt. Complete cami___ with ca or cia and say all three syllables.",
+    "answer": "camicia",
+    "english": "shirt",
+    "pron": "kah-MEE-chah",
+    "ipa": "/kaˈmitʃa/",
+    "notes": "In camicia, the first i carries the stress. The second i gives the c its /tʃ/ sound before a. Compare farmacia (pharmacy), where the stressed i in far-ma-CI-a forms its own syllable."
+  },
+  {
+    "key": "italian-extra-sounds-gia-giallo",
+    "topic": "sounds",
+    "front": "Yellow. Complete ___llo with ga or gia and say the two syllables.",
+    "answer": "giallo",
+    "english": "yellow",
+    "pron": "JAHL-loh",
+    "ipa": "/ˈdʒallo/",
+    "notes": "Gia gives /dʒa/ in giallo. Go straight from the j sound into a, then hold the double l briefly."
+  },
+  {
+    "key": "italian-extra-articles-il-the",
+    "topic": "articles",
+    "front": "Use libro. Say “the book”.",
+    "answer": "il libro",
+    "english": "the book",
+    "pron": "eel LEE-broh",
+    "ipa": "/il ˈlibro/",
+    "notes": "Libro is masculine singular and begins with a single l. Its definite article is il."
+  },
+  {
+    "key": "italian-extra-articles-il-some",
+    "topic": "articles",
+    "front": "You want an unspecified amount of bread. Use pane and the partitive. Say “some bread”.",
+    "answer": "del pane",
+    "english": "some bread",
+    "pron": "dehl PAH-neh",
+    "ipa": "/del ˈpane/",
+    "notes": "Bread is an amount here. In Compro del pane, del means “some”. In il prezzo del pane, the same form means “of the” or “the price of bread”."
+  },
+  {
+    "key": "italian-extra-articles-il-in-the",
+    "topic": "articles",
+    "front": "The children are inside the particular park you mentioned. Use parco. Say “in the park”.",
+    "answer": "nel parco",
+    "english": "in the park",
+    "pron": "nehl PAHR-koh",
+    "ipa": "/nel ˈparko/",
+    "notes": "In + il gives nel. Compare in un parco (in a park) with nel parco (in the park)."
+  },
+  {
+    "key": "italian-extra-articles-il-from-the",
+    "topic": "articles",
+    "front": "A friend has just come from the park. Use parco. Say “from the park”.",
+    "answer": "dal parco",
+    "english": "from the park",
+    "pron": "dahl PAHR-koh",
+    "ipa": "/dal ˈparko/",
+    "notes": "Da + il gives dal for movement from a place. Arrivo dal parco means “I’m coming from the park”. Il cancello del parco is “the gate of the park”."
+  },
+  {
+    "key": "italian-extra-articles-lo-the",
+    "topic": "articles",
+    "front": "Use zaino. Say “the rucksack”.",
+    "answer": "lo zaino",
+    "english": "the rucksack",
+    "pron": "loh DZAI-noh",
+    "ipa": "/lo dˈdzaino/",
+    "notes": "Masculine singular zaino begins with z, so use lo. Say dz together. The stressed DZAI rhymes with “eye”."
+  },
+  {
+    "key": "italian-extra-articles-lo-some",
+    "topic": "articles",
+    "front": "You need an unspecified length of string. Use spago and the partitive. Say “some string”.",
+    "answer": "dello spago",
+    "english": "some string",
+    "pron": "dehl-loh SPAH-goh",
+    "ipa": "/dello ˈspaɡo/",
+    "notes": "Spago is masculine and begins with s + p, so the base article is lo. Di + lo gives dello. Here string is an amount."
+  },
+  {
+    "key": "italian-extra-articles-lo-in-the",
+    "topic": "articles",
+    "front": "The keys are inside a particular rucksack. Use zaino. Say “in the rucksack”.",
+    "answer": "nello zaino",
+    "english": "in the rucksack",
+    "pron": "nehl-loh DZAI-noh",
+    "ipa": "/nello dˈdzaino/",
+    "notes": "Start with lo zaino. In + lo joins as nello. The double l is held a little longer."
+  },
+  {
+    "key": "italian-extra-articles-lo-from-the",
+    "topic": "articles",
+    "front": "You have just walked out of the studio. Use studio. Say “from the studio”.",
+    "answer": "dallo studio",
+    "english": "from the studio",
+    "pron": "dahl-loh STOO-dyoh",
+    "ipa": "/dallo ˈstudjo/",
+    "notes": "Studio begins with s + t, so it takes lo. Da + lo gives dallo. Other masculine lo starters include gn in gnomo and ps in psicologo."
+  },
+  {
+    "key": "italian-extra-articles-la-the",
+    "topic": "articles",
+    "front": "Use scuola. Say “the school”.",
+    "answer": "la scuola",
+    "english": "the school",
+    "pron": "lah SKWAW-lah",
+    "ipa": "/la ˈskwɔla/",
+    "notes": "Scuola is feminine singular. The masculine rule for s + consonant does not apply to it."
+  },
+  {
+    "key": "italian-extra-articles-la-some",
+    "topic": "articles",
+    "front": "You would like an unspecified amount of pasta. Use pasta and the partitive. Say “some pasta”.",
+    "answer": "della pasta",
+    "english": "some pasta",
+    "pron": "dehl-lah PAH-stah",
+    "ipa": "/della ˈpasta/",
+    "notes": "An unspecified quantity of pasta takes the singular partitive. Di + la gives della."
+  },
+  {
+    "key": "italian-extra-articles-la-in-the",
+    "topic": "articles",
+    "front": "The exhibition is inside the particular school you visited. Use scuola. Say “in the school”.",
+    "answer": "nella scuola",
+    "english": "in the school",
+    "pron": "nehl-lah SKWAW-lah",
+    "ipa": "/nella ˈskwɔla/",
+    "notes": "In + la gives nella for this specific building. A scuola is the usual expression for “at school”."
+  },
+  {
+    "key": "italian-extra-articles-la-from-the",
+    "topic": "articles",
+    "front": "You saw smoke coming from the school building. Use scuola. Say “from the school”.",
+    "answer": "dalla scuola",
+    "english": "from the school",
+    "pron": "dahl-lah SKWAW-lah",
+    "ipa": "/dalla ˈskwɔla/",
+    "notes": "Da + la gives dalla. Here the building is where the smoke is coming from."
+  },
+  {
+    "key": "italian-extra-articles-elided-the",
+    "topic": "articles",
+    "front": "Use ufficio. Say “the office”.",
+    "answer": "l’ufficio",
+    "english": "the office",
+    "pron": "loof-FEE-choh",
+    "ipa": "/lufˈfitʃo/",
+    "notes": "Ufficio is masculine singular and starts with a vowel. L’ also goes before a feminine singular vowel, as in l’aula (the classroom)."
+  },
+  {
+    "key": "italian-extra-articles-elided-some",
+    "topic": "articles",
+    "front": "You order an unspecified amount of water. Use acqua and the partitive. Say “some water”.",
+    "answer": "dell’acqua",
+    "english": "some water",
+    "pron": "dehl-LAHK-kwah",
+    "ipa": "/delˈlakkwa/",
+    "notes": "Acqua is feminine singular. Di + l’ gives dell’. Write the next vowel immediately after the apostrophe."
+  },
+  {
+    "key": "italian-extra-articles-elided-in-the",
+    "topic": "articles",
+    "front": "The folder is inside the particular office you just described. Use ufficio. Say “in the office”.",
+    "answer": "nell’ufficio",
+    "english": "in the office",
+    "pron": "nehl-loof-FEE-choh",
+    "ipa": "/nellufˈfitʃo/",
+    "notes": "In ufficio is a common way to say “at work” or “in the office” generally. Nell’ufficio points to the particular office in this scene."
+  },
+  {
+    "key": "italian-extra-articles-elided-from-the",
+    "topic": "articles",
+    "front": "You can hear voices coming from the classroom. Use aula. Say “from the classroom”.",
+    "answer": "dall’aula",
+    "english": "from the classroom",
+    "pron": "dahl-LAO-lah",
+    "ipa": "/dalˈlawla/",
+    "notes": "Aula is feminine singular and starts with a vowel. Da + l’ gives dall’. LAO sounds like English “loud” without its final d."
+  },
+  {
+    "key": "italian-extra-articles-i-the",
+    "topic": "articles",
+    "front": "Use libri. Say “the books”.",
+    "answer": "i libri",
+    "english": "the books",
+    "pron": "ee LEE-bree",
+    "ipa": "/i ˈlibri/",
+    "notes": "Il libro becomes i libri in the plural. Change the article and noun together."
+  },
+  {
+    "key": "italian-extra-articles-i-some",
+    "topic": "articles",
+    "front": "There are some books on the table. Use libri and the partitive. Say just “some books”.",
+    "answer": "dei libri",
+    "english": "some books",
+    "pron": "day LEE-bree",
+    "ipa": "/dei ˈlibri/",
+    "notes": "Di + i gives dei. Laura’s Lesson 6 example is Ci sono dei libri, “There are some books”. The number of books is unspecified."
+  },
+  {
+    "key": "italian-extra-articles-i-in-the",
+    "topic": "articles",
+    "front": "The illustrations are in the books you borrowed. Use libri. Say “in the books”.",
+    "answer": "nei libri",
+    "english": "in the books",
+    "pron": "nay LEE-bree",
+    "ipa": "/nei ˈlibri/",
+    "notes": "In + i gives nei. Compare nel libro (in the book) with nei libri (in the books)."
+  },
+  {
+    "key": "italian-extra-articles-i-from-the",
+    "topic": "articles",
+    "front": "You copied the quotations from the books. Use libri. Say “from the books”.",
+    "answer": "dai libri",
+    "english": "from the books",
+    "pron": "dye LEE-bree",
+    "ipa": "/dai ˈlibri/",
+    "notes": "Da + i gives dai when the books are the source. Dei libri can mean “some books”, as in Compro dei libri."
+  },
+  {
+    "key": "italian-extra-articles-gli-the",
+    "topic": "articles",
+    "front": "Use studenti for a mixed group. Say “the students”.",
+    "answer": "gli studenti",
+    "english": "the students",
+    "pron": "lyee stoo-DEN-tee",
+    "ipa": "/ʎi stuˈdɛnti/",
+    "notes": "Lo studente becomes gli studenti. Gli is one palatal sound followed by i. The “lyee” guide is approximate."
+  },
+  {
+    "key": "italian-extra-articles-gli-some",
+    "topic": "articles",
+    "front": "You met a few friends of mixed genders. Use amici and the partitive. Say “some friends”.",
+    "answer": "degli amici",
+    "english": "some friends",
+    "pron": "dehl-lyee ah-MEE-chee",
+    "ipa": "/deʎʎi aˈmitʃi/",
+    "notes": "L’amico becomes gli amici. Di + gli gives degli. The palatal sound in degli is held a little longer."
+  },
+  {
+    "key": "italian-extra-articles-gli-in-the",
+    "topic": "articles",
+    "front": "The lunches are inside the rucksacks. Use zaini. Say “in the rucksacks”.",
+    "answer": "negli zaini",
+    "english": "in the rucksacks",
+    "pron": "nehl-lyee DZAI-nee",
+    "ipa": "/neʎʎi dˈdzaini/",
+    "notes": "Lo zaino becomes gli zaini. In + gli gives negli. The Italian plural keeps the z and ends in i."
+  },
+  {
+    "key": "italian-extra-articles-gli-from-the",
+    "topic": "articles",
+    "front": "The messages came from the students. Use studenti for a mixed group. Say “from the students”.",
+    "answer": "dagli studenti",
+    "english": "from the students",
+    "pron": "dahl-lyee stoo-DEN-tee",
+    "ipa": "/daʎʎi stuˈdɛnti/",
+    "notes": "Da + gli gives dagli. The students are the senders in Ricevo messaggi dagli studenti (I receive messages from the students)."
+  },
+  {
+    "key": "italian-extra-articles-le-the",
+    "topic": "articles",
+    "front": "Use amiche for a group of female friends. Say “the friends”.",
+    "answer": "le amiche",
+    "english": "the female friends",
+    "pron": "leh ah-MEE-keh",
+    "ipa": "/le aˈmike/",
+    "notes": "L’amica becomes le amiche. In the plural the full article le stays before the vowel. The h keeps the c hard."
+  },
+  {
+    "key": "italian-extra-articles-le-some",
+    "topic": "articles",
+    "front": "You buy an unspecified number of bananas. Use banane and the partitive. Say “some bananas”.",
+    "answer": "delle banane",
+    "english": "some bananas",
+    "pron": "dehl-leh bah-NAH-neh",
+    "ipa": "/delle baˈnane/",
+    "notes": "Una banana is one banana. Di + le gives delle for an unspecified number of bananas."
+  },
+  {
+    "key": "italian-extra-articles-le-in-the",
+    "topic": "articles",
+    "front": "The workshops take place inside several named schools. Use scuole. Say “in the schools”.",
+    "answer": "nelle scuole",
+    "english": "in the schools",
+    "pron": "nehl-leh SKWAW-leh",
+    "ipa": "/nelle ˈskwɔle/",
+    "notes": "In + le gives nelle. Nella scuola is singular. Nelle scuole is plural."
+  },
+  {
+    "key": "italian-extra-articles-le-from-the",
+    "topic": "articles",
+    "front": "You have received replies from the schools. Use scuole. Say “from the schools”.",
+    "answer": "dalle scuole",
+    "english": "from the schools",
+    "pron": "dahl-leh SKWAW-leh",
+    "ipa": "/dalle ˈskwɔle/",
+    "notes": "Da + le gives dalle. Compare dalle scuole (from the schools) with nelle scuole (in the schools)."
+  }
+]

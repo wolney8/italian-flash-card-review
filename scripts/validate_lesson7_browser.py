@@ -259,7 +259,7 @@ def run_case(browser, base, width, height, language, theme, live):
         checked("correct")
         pause()
         expect(q.locator(".practice-match-key p")).to_have_count(5)
-        for word in ("lavorare", "dormire", "parlare", "leggere", "mangiare"):
+        for word in ("Lavorare", "Dormire", "Parlare", "Leggere", "Mangiare"):
             expect(q.locator(".practice-match-key")).to_contain_text(word)
         assert '["0"' not in q.locator(".model-answer").inner_text(), "Raw matching JSON shown"
         overflow("five-pair matching")
@@ -269,8 +269,8 @@ def run_case(browser, base, width, height, language, theme, live):
         visit("l7-homework-choices")
         q = question()
         radios = q.locator("input[type=radio]")
-        expect(radios).to_have_count(6)
-        assert len(set(radios.evaluate_all("els => els.map(e=>e.value)"))) == 6
+        expect(radios).to_have_count(2)
+        assert radios.evaluate_all("els => els.map(e=>e.value)") == ["parlo","parla"]
         for choice in q.locator("label.choice").all():
             usable(choice)
         expected = json.loads(q.get_attribute("data-answers"))[0]
@@ -279,9 +279,9 @@ def run_case(browser, base, width, height, language, theme, live):
         q.locator(".check-button").click()
         checked("correct")
         pause()
-        overflow("six-choice MCQ")
-        screenshot("six-choices")
-        case["checks"].append("six distinct visible MCQ choices and check-before-Next")
+        overflow("worksheet choice pair")
+        screenshot("worksheet-choices")
+        case["checks"].append("the two original worksheet choices in order and check-before-Next")
 
         # Reference layouts are semantic bullet groups/grids (and tables if present).
         # Inspect every Learn/Examples panel in representative new reference sets.
@@ -327,8 +327,9 @@ def run_case(browser, base, width, height, language, theme, live):
         visit("l6-recap-useful-requests", topic="questions")
         expect(page.locator(".quiz-question")).to_have_count(12)
         q = question()
-        expect(q.locator(".question-heading [lang=en]")).to_have_count(1)
-        expect(q.locator(".question-heading [lang=it]")).to_have_count(1)
+        expect(q.locator(".worksheet-task[lang=en]")).to_have_text(
+            "Write the whole question in Italian. Ask for the meaning of a word.")
+        expect(q.locator(".worksheet-cue > [lang=en]:last-child")).to_have_text("What does “letto” mean?")
         # Natural quoted wording observed during production review must be accepted.
         text_answer('Che cosa significa "letto"?')
         checked("correct")

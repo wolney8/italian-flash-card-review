@@ -19,12 +19,22 @@ for(const ids of Object.values(map.lessonSets))ids.forEach(id=>assert.ok(sets.ha
 let count=0,choices=0,matching=0,ordering=0;
 for(const sheet of data){for(const q of sheet.questions){count++;
  assert.ok(q.model&&q.answers?.length,sheet.slug+' lacks keyed answers');
- if(q.type==='choice'){choices++;assert.ok(q.choices.length>=6);assert.equal(new Set(q.choices).size,q.choices.length);assert.equal(q.redHerrings.length,2);assert.ok(q.redHerrings.every(x=>q.choices.includes(x)&&!q.answers.includes(x)));assert.equal(q.choices.filter(x=>L6.checkAnswer(x,q.answers,q.answer_mode)).length,1,sheet.slug+' has multiple keyed correct choices');}
- if(q.type==='match'){matching++;assert.equal(q.pairs.length,6);assert.equal(q.extras.length,2);assert.deepEqual(JSON.parse(q.model),q.pairs.map(p=>p.id));}
+ if(q.type==='choice'){choices++;assert.ok(q.choices.length>=2);assert.equal(new Set(q.choices).size,q.choices.length);
+  assert.ok((q.redHerrings||[]).every(x=>q.choices.includes(x)&&!L6.checkAnswer(x,q.answers,q.answer_mode)));
+  if(q.worksheetOrder)assert.deepEqual(B.choices(q,sheet.slug,count),q.choices,'Printed options changed order');assert.equal(q.choices.filter(x=>L6.checkAnswer(x,q.answers,q.answer_mode)).length,1,sheet.slug+' has multiple keyed correct choices');}
+ if(q.type==='match'){matching++;assert.deepEqual(JSON.parse(q.model),q.pairs.map(p=>p.id));
+  for(const pair of q.pairs){
+   const options=pair.options||q.matchOptions||[...q.pairs,...(q.extras||[])];
+   assert.ok(options.length>=2&&options.some(x=>x.id===pair.id&&x.right===pair.right),sheet.slug+' correct match missing');
+   assert.equal(new Set(options.map(x=>x.id)).size,options.length,sheet.slug+' duplicate option');
+  }}
  if(q.type==='order'){ordering++;assert.deepEqual(JSON.parse(q.model),q.items.map(x=>x.id));assert.equal(new Set(q.items.map(x=>x.id)).size,q.items.length);}
 }}
-assert.equal(extra.sheets.filter(s=>s.slug.startsWith('class4-')&&s.slug!=='class4-family').reduce((n,s)=>n+s.questions.length,0),27);
+assert.equal(extra.sheets.filter(s=>['class4-avere-homework','class4-silent-h','class4-ages-homework','class4-avere-class'].includes(s.slug)).reduce((n,s)=>n+s.questions.length,0),27);
 assert.equal(extra.sheets.filter(s=>s.slug.startsWith('class5-plurals-')).reduce((n,s)=>n+s.questions.length,0),32);
+for(const [slug,size] of Object.entries({'class2-homework-c-columns':16,'class2-homework-g-columns':12,'class2-homework-article-columns':19,'class4-homework-number-maze':1,'class5-class-plural-table':15})){
+ assert.equal(byId.get(slug)?.questions.length,size,slug+' source activities missing');
+}
 assert.equal(byId.get('l6-number-patterns').questions.length,41);
 assert.equal(L6.cards.length,66);
 assert.ok(map.lessonSets['L4:partitives'].includes('connected-partitives'));

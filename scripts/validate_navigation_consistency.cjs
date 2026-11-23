@@ -56,5 +56,7 @@ for(const phrase of ['Resource type:', 'Study basis:', 'Nine independent guides.
  assert.ok(!detail.includes(phrase), 'Redundant study metadata remains: '+phrase);
 }
 assert.doesNotMatch(shell, /Study resources<\/p>|Browse nine focused study sheets/, 'Redundant study sheet introduction remains');
-assert.match(detail, /Typed answers accept punctuation and accent differences/, 'Useful quiz instructions must remain');
+assert.doesNotMatch(detail, /class="quiz-intro"|Typed answers accept punctuation/, 'Remove the generic answer guidance');
+assert.doesNotMatch(read('study/guided-sheet-pilot-v1.js'), /<summary>Answer tips/, 'Remove the generic answer tips control');
+assert.match(detail, /class="hint-button"/, 'Keep the question-specific hint');
 console.log('PASS redundant study preambles removed; learning instructions preserved.');

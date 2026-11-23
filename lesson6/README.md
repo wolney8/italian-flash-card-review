@@ -8,7 +8,7 @@ One canonical `content.js` dataset supplies the web cards and can supply a later
 - 66 recall cards in eight ordered topics.
 - Eight visible study topics; eleven retained exercise routes. Four Essere routes appear as practice sets inside one topic.
 - 120 practice questions: 79 unchanged non-number questions and 41 number-writing tasks (0–30 inclusive plus ten larger values).
-- All 30 supplied homework tasks: 6 pronoun/form matches, 10 sentence gaps, 8 translations, 6 negative gaps.
+- All 30 supplied homework tasks: 6 two-stage pronoun/form matches, 10 sentence gaps, 8 three-option translation questions, 6 negative gaps.
 - 27 classroom/group tasks: 12 class gaps and the complete 15-item plural workshop.
 - 55 adapted number-writing, intonation and useful-expression questions, plus eight warm-up/dialogue checks.
 - Original 445 cards and original nine embedded Study Sheets are preserved.

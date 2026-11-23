@@ -1,5 +1,5 @@
 {
-  "description": "Approved Lesson 7 card/question identities and independently checked source answer expectations. Original canonical-source hashes remain unchanged. Control hashes track reviewed versions, including the authorised 13 November 2026 answer-review controls update.",
+  "description": "Approved Lesson 7 card/question identities and independently checked source answer expectations. Original canonical-source hashes remain unchanged. Control hashes track reviewed versions, including the local worksheet review on 23 November 2026.",
   "baseline": "16bffe85603e671c70ea7cf2a697da35af7e6dec",
   "cardKeys": [
     "italian-l7-infinitive",
@@ -186,9 +186,9 @@
     "learning-controls-v2.js": "df909ea741e93dc3d456efb8d7544fd51cbf25054258fe1e70a34e925476f4e0",
     "learning-controls-v2.css": "46cbe736c701a4ed1835bdfbdce3a35b62a5e2dd89af84b38b1a2934c348e1cd",
     "learning-resume-v2.js": "7c17cff88c456471479bc5a4dc8df7b10a5b8edd47cac99e0e424308367c185f",
-    "study/guided-sheet-pilot-v1.js": "d4320023e168468f566a90d805a0d688490d759ed0d8b5939c665a0aaffdb980",
-    "study/practice-session-v1.js": "70f5531d8c4d95afdf26535d52cb30380d44c579fe6ae1aa7530e43cf258706b",
-    "study/study-recovery-v1.js": "8cc073694a62848f1fddf08d55435f611d1f22884eee3e1e8ca0747fe43c898d"
+    "study/guided-sheet-pilot-v1.js": "c6b3f13d956d8c24d919662990589d398aed6be35ba428f47817b6cf1617f8c1",
+    "study/practice-session-v1.js": "0ade7ccabc966c86c5f2456ebc529f606b4274ba992714f0d80d46962c7c9d10",
+    "study/study-recovery-v1.js": "5435eaba75c829abdf06535a14484d013216134965f4753c9d3f4b1a48f23a14"
   },
   "originalSourceHashes": {
     "lesson6/content.js": "11f925fff41a82f9b6aa986a3fcaabd44aebf39401fe4e33236c8291b696dc12",

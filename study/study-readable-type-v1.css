@@ -117,3 +117,32 @@
   .study-pack-sheet .question-heading label {font-size:18px}
   .study-pack-sheet .panel h2 {font-size:clamp(22px,5vw,27px)}
 }
+
+.study-pack-sheet .quiz-list { grid-template-columns:minmax(0, 1fr); }
+.study-pack-sheet .question-heading:has(.worksheet-task) { align-items:flex-start; }
+.worksheet-content { min-width:0; flex:1; }
+.worksheet-content .worksheet-task {
+  margin:0;
+  color:var(--ink);
+  font-size:clamp(1.05rem,2.1vw,1.2rem);
+  line-height:1.45;
+  font-weight:600;
+}
+.worksheet-stimulus {
+  margin-top:.8rem;
+  padding:.6rem 0 .6rem .9rem;
+  border-inline-start:2px solid var(--line);
+  font-weight:400;
+  line-height:1.55;
+  overflow-wrap:anywhere;
+}
+.worksheet-cue { display:flex; flex-wrap:wrap; gap:0 .65rem; align-items:baseline; }
+.worksheet-cue + .worksheet-cue { margin-top:.4rem; }
+.worksheet-cue-label { font-size:.93rem; font-weight:600; }
+.worksheet-cue > [lang]:last-child { min-width:0; }
+.worksheet-stimulus img { max-width:100%; height:auto; }
+@media(max-width:520px) {
+  .worksheet-content .worksheet-task { font-size:1.05rem; }
+  .worksheet-cue { display:block; }
+  .worksheet-cue-label { display:block; }
+}
