@@ -5,7 +5,8 @@
   const pages = new Map([
     ['daily-practice','Daily practice'],
     ['visual-exercises','Visual exercises'],
-    ['jobs-in-photos','Jobs in photographs']
+    ['jobs-in-photos','Jobs in photographs'],
+    ['articles-guide','Articles']
   ]);
   const current = new URL(location.href);
   const alias = [...pages.keys()].find(page => {
