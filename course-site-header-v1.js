@@ -9,7 +9,7 @@ function pair(it,en,italianFirst){
 function header(o={}){
  const study=o.context==='study',base=study?'../':'';
  const href=key=>key==='topics'?(study?'':'study/')+'study-sheets.html?mode='+(o.mode==='review'?'review':'learn'):base+'?page='+key;
- const practice=['daily-practice','visual-exercises','jobs-in-photos'].includes(o.current);
+ const practice=['daily-practice','visual-exercises','jobs-in-photos','articles-guide'].includes(o.current);
  const active=practice?'daily-practice':o.current==='card'?'lessons':o.current||'home';
  const items=[['home','Inizio','Home'],['lessons','Lezioni','Lessons'],['topics','Schede di studio','Study sheets'],['daily-practice','Esercizi quotidiani','Daily practice']];
  const nav=items.map(([key,it,en])=>'<a href="'+href(key)+'" data-guide-to="'+key+'"'+(active===key?(practice&&o.current!==key?' aria-current="location"':' aria-current="page"'):'')+'>'+pair(it,en,!!o.italianFirst)+'</a>').join('');
