@@ -40,23 +40,30 @@ async function loadCourse() {
   });
   const scripts = Array.from(read('index.html').matchAll(/<script src="([^"?]+)/g), match => match[1]);
   for (const file of scripts) {
-    if (!/(?:card-tasks|card-front)|^(?:lesson6|lesson7|lesson8-practice)\/content\.js$|^course-data-loader-v1\.js$/.test(file)) continue;
+    if (!/(?:card-tasks|card-front)|^(?:lesson6|lesson7|lesson8-practice|daily-verb-cards)\/content\.js$|^course-data-loader-v1\.js$/.test(file)) continue;
     document.currentScript = {src:new URL(file, location).href};
     vm.runInContext(read(file), context, {filename:file});
   }
   await ready;
   assert.equal([...requested].filter(file => file.endsWith('.txt')).length, 18, 'Missing early course card chunks');
   assert.ok(requested.has('lesson8-practice/cards.json'));
+  assert.ok(requested.has('daily-verb-cards/cards.json'));
+  assert.ok(requested.has('daily-verb-cards/coverage.json'));
   return {cards:context.cards, renderCard:context.renderCard, window};
 }
 
 async function main() {
+  require('node:child_process').execFileSync(process.execPath,[path.join(root,'scripts/build_daily_verb_cards.cjs'),'--check'],{cwd:root,stdio:'pipe'});
   const {cards, renderCard, window} = await loadCourse();
   const source = JSON.stringify(cards);
   const l8Source = new Map(JSON.parse(read('lesson8-practice/cards.json')).map(row => [row.key, row]));
-  assert.equal(cards.length, 623);
+  const additions=JSON.parse(read('daily-verb-cards/cards.json'));
+  const coverage=JSON.parse(read('daily-verb-cards/coverage.json'));
+  assert.equal(cards.length, 623+coverage.newCards);
+  assert.equal(cards.filter(card=>/^L[1-8]$/.test(card.lesson)).length,623,'Existing lesson banks must retain their 623 records');
   assert.equal(new Set(cards.map(card => card.key)).size, cards.length);
-  assert.equal(new Set(cards.map(card => card.lesson)).size, 8);
+  assert.equal(new Set(cards.filter(card=>/^L[1-8]$/.test(card.lesson)).map(card => card.lesson)).size, 8);
+  assert.equal(cards.filter(card=>card.lesson==='PRACTICE').length,additions.length);
   assert.equal(l8Source.size, 58);
   assert.equal(window.ItalianLesson8CardTasks.get('missing-card'), null);
 
@@ -70,7 +77,7 @@ async function main() {
     assert.doesNotMatch(front, /\u2014|&mdash;|&#8212;|&#x2014;/i, card.key);
     const html = renderCard(card, i + 1, cards.length);
     assert.ok(html.includes('<div class="front-body">' + front + '</div>'), card.key + ' course bypasses the recall renderer');
-    assert.ok(html.includes('<div class="italian">' + card.answer + '</div>'), card.key + ' answer changed');
+    assert.ok(html.includes('<div class="italian"'+(card.answerLang?' lang="'+card.answerLang+'"':'')+'>' + card.answer + '</div>'), card.key + ' answer changed');
     assert.ok(html.includes('data-key="' + escapeHtml(card.key) + '"'), card.key + ' identity changed');
     const l8 = l8Source.get(card.key);
     const exercise = l8 ? window.ItalianLesson8CardTasks.get(card.key) : window.ItalianEarlyCardTasks?.get(card);
@@ -79,7 +86,7 @@ async function main() {
       assert.equal(card.answer, escapeHtml(l8.answer), card.key);
     }
     if (!exercise) {
-      assert.ok(front.includes('class="focus"'), card.key + ' missing original cue');
+      assert.match(front,/class="[^"]*\bfocus\b[^"]*"/,card.key + ' missing original cue');
       continue;
     }
     adapted++;
@@ -120,6 +127,24 @@ async function main() {
     }
   }
   assert.equal(JSON.stringify(cards), source, 'Rendering must preserve every shared card record');
+  const practice=window.ItalianDailyVerbCards.collectionCards(cards);
+  const practiceKeys=new Set(practice.map(card=>card.key));
+  assert.equal(practiceKeys.size,practice.length,'Virtual collection must not duplicate keys');
+  assert.equal(coverage.formCoverage.length,210);
+  for(const point of coverage.formCoverage)assert.ok(practiceKeys.has(point.key),'Daily collection misses '+point.verb+' person '+point.person);
+  for(const point of coverage.usageCoverage)for(const key of point.keys)assert.ok(practiceKeys.has(key),'Daily collection misses use '+key);
+  for(const point of coverage.patternCoverage)assert.ok(practiceKeys.has(point.key),'Daily collection misses pattern '+point.key);
+  for(const row of additions){
+    const card=cards.find(item=>item.key===row.key);
+    assert.equal(card.answer,escapeHtml(row.answer),row.key+' answer parity');
+    assert.equal(card.guide,row.guide,row.key+' guide parity');
+    assert.equal(card.ipa,row.ipa,row.key+' IPA parity');
+    assert.ok(row.task&&row.cues.length&&row.source,row.key+' source/task missing');
+    assert.doesNotMatch(JSON.stringify(row),/\u2014/);
+    assert.ok(!row.guide||row.ipa,row.key+' guide missing IPA');
+  }
+  assert.equal(JSON.stringify(cards),source,'Virtual views must preserve original lesson records');
+  console.log('Daily collection: '+practice.length+' unique cards, '+additions.length+' new; all210 form points and all94 usage records reachable.');
   console.log('Verified ' + cards.length + ' recall fronts, answer sides and stable identities, including ' + adapted + ' adapted prompts.');
 }
 

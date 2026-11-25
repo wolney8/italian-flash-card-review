@@ -163,8 +163,9 @@ try:
    assert q.locator('input').input_value()=='Io sono di Na'
    page.click('[data-related-flashcards]');page.wait_for_selector('.review-card[data-lesson=L3]');page.wait_for_function('!document.documentElement.classList.contains("course-booting")')
    assert page.locator('.guided-card-host .review-card').get_attribute('data-deck')=='03 Origins & questions'
-   assert page.evaluate('cards.length')==623
-   assert page.evaluate("cards.filter(c=>!['L7','L8'].includes(c.lesson)).length")==511
+   assert page.evaluate("cards.filter(c=>/^L[1-8]$/.test(c.lesson)).length")==623
+   assert page.evaluate("cards.filter(c=>/^L[1-6]$/.test(c.lesson)).length")==511
+   assert page.evaluate("cards.filter(c=>c.lesson==='PRACTICE').length")==json.loads((ROOT/'daily-verb-cards/coverage.json').read_text())['newCards']
    assert page.evaluate("cards.filter(c=>c.lesson==='L7').length")==54
    assert page.evaluate("cards.filter(c=>c.lesson==='L8').length")==58
    page.click('[data-back-to-practice]');page.wait_for_function('window.ItalianGuidedStudy && !document.documentElement.classList.contains("course-booting")')
@@ -199,7 +200,7 @@ try:
    assert not errors,errors
    ctx.close()
   browser.close()
- report={'status':'pass','environment':'production' if LIVE else 'repository','focus':FOCUS,'route_cases':len(results),'model_answers_checked':sum(r['answers_checked'] for r in results),'cases':results,'navigation':'eight lessons and shared topic view; original six retained','quick_full':'passed','flashcard_round_trip':'draft, hint and position retained','partial_matching':'retained','unrelated_progress':'retained','legacy_page_flash':'not observed','language_button':'ITA / ENG; fixed width','anki':'unchanged'}
+ report={'status':'pass','environment':'production' if LIVE else 'repository','focus':FOCUS,'route_cases':len(results),'model_answers_checked':sum(r['answers_checked'] for r in results),'cases':results,'navigation':'eight lessons and shared topic view; original six retained','quick_full':'passed','flashcard_round_trip':'draft, hint and position retained','partial_matching':'retained','unrelated_progress':'retained','legacy_page_flash':'not observed','language_button':'ITA / ENG; fixed width','anki':'existing lesson notes unchanged; additive practice package verified separately'}
  (OUT/(('live-' if LIVE else '')+FOCUS+'-results.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='cases'},indent=2))
 except Exception:
  if page:

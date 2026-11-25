@@ -1,0 +1,2663 @@
+{
+  "version": "2026-11-25-release-1",
+  "existingLessonCards": 623,
+  "newCards": 234,
+  "newForms": 163,
+  "newUses": 51,
+  "newPatterns": 20,
+  "formCoverage": [
+    {
+      "verb": "essere",
+      "person": 0,
+      "form": "sono",
+      "key": "verb_essere_0",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "person": 1,
+      "form": "sei",
+      "key": "verb_essere_1",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "person": 2,
+      "form": "è",
+      "key": "verb_essere_2",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "person": 3,
+      "form": "siamo",
+      "key": "verb_essere_noi",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "person": 4,
+      "form": "siete",
+      "key": "verb_essere_voi",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "person": 5,
+      "form": "sono",
+      "key": "verb_essere_loro",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "person": 0,
+      "form": "ho",
+      "key": "italian-l4-avere-io",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "person": 1,
+      "form": "hai",
+      "key": "italian-l4-avere-tu",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "person": 2,
+      "form": "ha",
+      "key": "italian-l4-avere-lui-lei",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "person": 3,
+      "form": "abbiamo",
+      "key": "italian-l4-avere-noi",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "person": 4,
+      "form": "avete",
+      "key": "italian-l4-avere-voi",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "person": 5,
+      "form": "hanno",
+      "key": "italian-l4-avere-loro-essi",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "fare",
+      "person": 0,
+      "form": "faccio",
+      "key": "italian-daily-verb-fare-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "person": 1,
+      "form": "fai",
+      "key": "italian-l8-grammar-verb-of-question",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "fare",
+      "person": 2,
+      "form": "fa",
+      "key": "italian-daily-verb-fare-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "person": 3,
+      "form": "facciamo",
+      "key": "italian-daily-verb-fare-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "person": 4,
+      "form": "fate",
+      "key": "italian-daily-verb-fare-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "person": 5,
+      "form": "fanno",
+      "key": "italian-daily-verb-fare-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "person": 0,
+      "form": "sto",
+      "key": "italian-daily-verb-stare-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "person": 1,
+      "form": "stai",
+      "key": "italian-daily-verb-stare-present-tu",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "person": 2,
+      "form": "sta",
+      "key": "italian-daily-verb-stare-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "person": 3,
+      "form": "stiamo",
+      "key": "italian-daily-verb-stare-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "person": 4,
+      "form": "state",
+      "key": "italian-daily-verb-stare-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "person": 5,
+      "form": "stanno",
+      "key": "italian-daily-verb-stare-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "venire",
+      "person": 0,
+      "form": "vengo",
+      "key": "verb_venire_0",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "venire",
+      "person": 1,
+      "form": "vieni",
+      "key": "verb_venire_1",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "venire",
+      "person": 2,
+      "form": "viene",
+      "key": "verb_venire_2",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "venire",
+      "person": 3,
+      "form": "veniamo",
+      "key": "verb_venire_noi",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "venire",
+      "person": 4,
+      "form": "venite",
+      "key": "verb_venire_voi",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "venire",
+      "person": 5,
+      "form": "vengono",
+      "key": "verb_venire_loro",
+      "deck": "04 Irregular present forms",
+      "status": "existing"
+    },
+    {
+      "verb": "andare",
+      "person": 0,
+      "form": "vado",
+      "key": "italian-daily-verb-andare-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "andare",
+      "person": 1,
+      "form": "vai",
+      "key": "italian-daily-verb-andare-present-tu",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "andare",
+      "person": 2,
+      "form": "va",
+      "key": "italian-daily-verb-andare-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "andare",
+      "person": 3,
+      "form": "andiamo",
+      "key": "italian-daily-verb-andare-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "andare",
+      "person": 4,
+      "form": "andate",
+      "key": "italian-daily-verb-andare-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "andare",
+      "person": 5,
+      "form": "vanno",
+      "key": "italian-daily-verb-andare-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "chiamarsi",
+      "person": 0,
+      "form": "mi chiamo",
+      "key": "italian-l1-io_mi_chiamo",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "chiamarsi",
+      "person": 1,
+      "form": "ti chiami",
+      "key": "italian-l1-tu_ti_chiami",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "chiamarsi",
+      "person": 2,
+      "form": "si chiama",
+      "key": "italian-l1-lui_si_chiama",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "chiamarsi",
+      "person": 3,
+      "form": "ci chiamiamo",
+      "key": "italian-daily-verb-chiamarsi-present-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "chiamarsi",
+      "person": 4,
+      "form": "vi chiamate",
+      "key": "italian-daily-verb-chiamarsi-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "chiamarsi",
+      "person": 5,
+      "form": "si chiamano",
+      "key": "italian-daily-verb-chiamarsi-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "lavorare",
+      "person": 0,
+      "form": "lavoro",
+      "key": "italian-l7-form-work-io",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "lavorare",
+      "person": 1,
+      "form": "lavori",
+      "key": "italian-l7-form-work-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "lavorare",
+      "person": 2,
+      "form": "lavora",
+      "key": "italian-l7-form-work-marco",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "lavorare",
+      "person": 3,
+      "form": "lavoriamo",
+      "key": "italian-daily-verb-lavorare-present-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "lavorare",
+      "person": 4,
+      "form": "lavorate",
+      "key": "italian-daily-verb-lavorare-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "lavorare",
+      "person": 5,
+      "form": "lavorano",
+      "key": "italian-daily-verb-lavorare-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "parlare",
+      "person": 0,
+      "form": "parlo",
+      "key": "italian-l7-form-speak-io",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "parlare",
+      "person": 1,
+      "form": "parli",
+      "key": "italian-daily-verb-parlare-present-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "parlare",
+      "person": 2,
+      "form": "parla",
+      "key": "italian-daily-verb-parlare-present-lei",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "parlare",
+      "person": 3,
+      "form": "parliamo",
+      "key": "italian-daily-verb-parlare-present-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "parlare",
+      "person": 4,
+      "form": "parlate",
+      "key": "italian-l7-form-speak-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "parlare",
+      "person": 5,
+      "form": "parlano",
+      "key": "italian-l7-form-speak-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "abitare",
+      "person": 0,
+      "form": "abito",
+      "key": "verb_abitare_0",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "abitare",
+      "person": 1,
+      "form": "abiti",
+      "key": "verb_abitare_1",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "abitare",
+      "person": 2,
+      "form": "abita",
+      "key": "verb_abitare_2",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "abitare",
+      "person": 3,
+      "form": "abitiamo",
+      "key": "verb_abitare_noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "abitare",
+      "person": 4,
+      "form": "abitate",
+      "key": "verb_abitare_voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "abitare",
+      "person": 5,
+      "form": "abitano",
+      "key": "verb_abitare_loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "studiare",
+      "person": 0,
+      "form": "studio",
+      "key": "italian-l7-form-study-io",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "studiare",
+      "person": 1,
+      "form": "studi",
+      "key": "italian-l7-form-study-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "studiare",
+      "person": 2,
+      "form": "studia",
+      "key": "italian-daily-verb-studiare-present-lei",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "studiare",
+      "person": 3,
+      "form": "studiamo",
+      "key": "italian-l7-form-study-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "studiare",
+      "person": 4,
+      "form": "studiate",
+      "key": "italian-daily-verb-studiare-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "studiare",
+      "person": 5,
+      "form": "studiano",
+      "key": "italian-daily-verb-studiare-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "mangiare",
+      "person": 0,
+      "form": "mangio",
+      "key": "italian-daily-verb-mangiare-present-io",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "mangiare",
+      "person": 1,
+      "form": "mangi",
+      "key": "italian-l7-form-eat-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "mangiare",
+      "person": 2,
+      "form": "mangia",
+      "key": "italian-l7-form-eat-maria",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "mangiare",
+      "person": 3,
+      "form": "mangiamo",
+      "key": "italian-l7-form-eat-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "mangiare",
+      "person": 4,
+      "form": "mangiate",
+      "key": "italian-daily-verb-mangiare-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "mangiare",
+      "person": 5,
+      "form": "mangiano",
+      "key": "italian-daily-verb-mangiare-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "vivere",
+      "person": 0,
+      "form": "vivo",
+      "key": "verb_vivere_0",
+      "deck": "02 Regular -ERE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "vivere",
+      "person": 1,
+      "form": "vivi",
+      "key": "verb_vivere_1",
+      "deck": "02 Regular -ERE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "vivere",
+      "person": 2,
+      "form": "vive",
+      "key": "verb_vivere_2",
+      "deck": "02 Regular -ERE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "vivere",
+      "person": 3,
+      "form": "viviamo",
+      "key": "verb_vivere_noi",
+      "deck": "02 Regular -ERE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "vivere",
+      "person": 4,
+      "form": "vivete",
+      "key": "verb_vivere_voi",
+      "deck": "02 Regular -ERE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "vivere",
+      "person": 5,
+      "form": "vivono",
+      "key": "verb_vivere_loro",
+      "deck": "02 Regular -ERE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "vedere",
+      "person": 0,
+      "form": "vedo",
+      "key": "italian-daily-verb-vedere-present-io",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "vedere",
+      "person": 1,
+      "form": "vedi",
+      "key": "italian-daily-verb-vedere-present-tu",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "vedere",
+      "person": 2,
+      "form": "vede",
+      "key": "italian-daily-verb-vedere-present-lei",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "vedere",
+      "person": 3,
+      "form": "vediamo",
+      "key": "italian-daily-verb-vedere-present-noi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "vedere",
+      "person": 4,
+      "form": "vedete",
+      "key": "italian-daily-verb-vedere-present-voi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "vedere",
+      "person": 5,
+      "form": "vedono",
+      "key": "italian-daily-verb-vedere-present-loro",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "leggere",
+      "person": 0,
+      "form": "leggo",
+      "key": "italian-daily-verb-leggere-present-io",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "leggere",
+      "person": 1,
+      "form": "leggi",
+      "key": "italian-daily-verb-leggere-present-tu",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "leggere",
+      "person": 2,
+      "form": "legge",
+      "key": "italian-daily-verb-leggere-present-lei",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "leggere",
+      "person": 3,
+      "form": "leggiamo",
+      "key": "italian-daily-verb-leggere-present-noi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "leggere",
+      "person": 4,
+      "form": "leggete",
+      "key": "italian-daily-verb-leggere-present-voi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "leggere",
+      "person": 5,
+      "form": "leggono",
+      "key": "italian-daily-verb-leggere-present-loro",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scrivere",
+      "person": 0,
+      "form": "scrivo",
+      "key": "italian-daily-verb-scrivere-present-io",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scrivere",
+      "person": 1,
+      "form": "scrivi",
+      "key": "italian-daily-verb-scrivere-present-tu",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scrivere",
+      "person": 2,
+      "form": "scrive",
+      "key": "italian-daily-verb-scrivere-present-lei",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scrivere",
+      "person": 3,
+      "form": "scriviamo",
+      "key": "italian-daily-verb-scrivere-present-noi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scrivere",
+      "person": 4,
+      "form": "scrivete",
+      "key": "italian-daily-verb-scrivere-present-voi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scrivere",
+      "person": 5,
+      "form": "scrivono",
+      "key": "italian-daily-verb-scrivere-present-loro",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "dormire",
+      "person": 0,
+      "form": "dormo",
+      "key": "italian-daily-verb-dormire-present-io",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "dormire",
+      "person": 1,
+      "form": "dormi",
+      "key": "italian-daily-verb-dormire-present-tu",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "dormire",
+      "person": 2,
+      "form": "dorme",
+      "key": "italian-daily-verb-dormire-present-lei",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "dormire",
+      "person": 3,
+      "form": "dormiamo",
+      "key": "italian-daily-verb-dormire-present-noi",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "dormire",
+      "person": 4,
+      "form": "dormite",
+      "key": "italian-daily-verb-dormire-present-voi",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "dormire",
+      "person": 5,
+      "form": "dormono",
+      "key": "italian-daily-verb-dormire-present-loro",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "aprire",
+      "person": 0,
+      "form": "apro",
+      "key": "italian-daily-verb-aprire-present-io",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "aprire",
+      "person": 1,
+      "form": "apri",
+      "key": "italian-daily-verb-aprire-present-tu",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "aprire",
+      "person": 2,
+      "form": "apre",
+      "key": "italian-daily-verb-aprire-present-lei",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "aprire",
+      "person": 3,
+      "form": "apriamo",
+      "key": "italian-daily-verb-aprire-present-noi",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "aprire",
+      "person": 4,
+      "form": "aprite",
+      "key": "italian-daily-verb-aprire-present-voi",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "aprire",
+      "person": 5,
+      "form": "aprono",
+      "key": "italian-daily-verb-aprire-present-loro",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "finire",
+      "person": 0,
+      "form": "finisco",
+      "key": "italian-daily-verb-finire-present-io",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "finire",
+      "person": 1,
+      "form": "finisci",
+      "key": "italian-daily-verb-finire-present-tu",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "finire",
+      "person": 2,
+      "form": "finisce",
+      "key": "italian-daily-verb-finire-present-lei",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "finire",
+      "person": 3,
+      "form": "finiamo",
+      "key": "italian-daily-verb-finire-present-noi",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "finire",
+      "person": 4,
+      "form": "finite",
+      "key": "italian-daily-verb-finire-present-voi",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "finire",
+      "person": 5,
+      "form": "finiscono",
+      "key": "italian-daily-verb-finire-present-loro",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "dire",
+      "person": 0,
+      "form": "dico",
+      "key": "italian-daily-verb-dire-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dire",
+      "person": 1,
+      "form": "dici",
+      "key": "italian-daily-verb-dire-present-tu",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dire",
+      "person": 2,
+      "form": "dice",
+      "key": "italian-daily-verb-dire-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dire",
+      "person": 3,
+      "form": "diciamo",
+      "key": "italian-daily-verb-dire-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dire",
+      "person": 4,
+      "form": "dite",
+      "key": "italian-daily-verb-dire-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dire",
+      "person": 5,
+      "form": "dicono",
+      "key": "italian-daily-verb-dire-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "significare",
+      "person": 0,
+      "form": "significo",
+      "key": "italian-daily-verb-significare-present-io",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "significare",
+      "person": 1,
+      "form": "significhi",
+      "key": "italian-daily-verb-significare-present-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "significare",
+      "person": 2,
+      "form": "significa",
+      "key": "italian-daily-verb-significare-present-lei",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "significare",
+      "person": 3,
+      "form": "significhiamo",
+      "key": "italian-daily-verb-significare-present-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "significare",
+      "person": 4,
+      "form": "significate",
+      "key": "italian-daily-verb-significare-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "significare",
+      "person": 5,
+      "form": "significano",
+      "key": "italian-daily-verb-significare-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "potere",
+      "person": 0,
+      "form": "posso",
+      "key": "italian-daily-verb-potere-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "potere",
+      "person": 1,
+      "form": "puoi",
+      "key": "italian-daily-verb-potere-present-tu",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "potere",
+      "person": 2,
+      "form": "può",
+      "key": "italian-daily-verb-potere-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "potere",
+      "person": 3,
+      "form": "possiamo",
+      "key": "italian-daily-verb-potere-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "potere",
+      "person": 4,
+      "form": "potete",
+      "key": "italian-daily-verb-potere-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "potere",
+      "person": 5,
+      "form": "possono",
+      "key": "italian-daily-verb-potere-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "ripetere",
+      "person": 0,
+      "form": "ripeto",
+      "key": "italian-daily-verb-ripetere-present-io",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "ripetere",
+      "person": 1,
+      "form": "ripeti",
+      "key": "italian-daily-verb-ripetere-present-tu",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "ripetere",
+      "person": 2,
+      "form": "ripete",
+      "key": "italian-daily-verb-ripetere-present-lei",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "ripetere",
+      "person": 3,
+      "form": "ripetiamo",
+      "key": "italian-daily-verb-ripetere-present-noi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "ripetere",
+      "person": 4,
+      "form": "ripetete",
+      "key": "italian-daily-verb-ripetere-present-voi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "ripetere",
+      "person": 5,
+      "form": "ripetono",
+      "key": "italian-daily-verb-ripetere-present-loro",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "volere",
+      "person": 0,
+      "form": "voglio",
+      "key": "italian-daily-verb-volere-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "volere",
+      "person": 1,
+      "form": "vuoi",
+      "key": "italian-daily-verb-volere-present-tu",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "volere",
+      "person": 2,
+      "form": "vuole",
+      "key": "italian-daily-verb-volere-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "volere",
+      "person": 3,
+      "form": "vogliamo",
+      "key": "italian-daily-verb-volere-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "volere",
+      "person": 4,
+      "form": "volete",
+      "key": "italian-daily-verb-volere-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "volere",
+      "person": 5,
+      "form": "vogliono",
+      "key": "italian-daily-verb-volere-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dare",
+      "person": 0,
+      "form": "do",
+      "key": "italian-daily-verb-dare-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dare",
+      "person": 1,
+      "form": "dai",
+      "key": "italian-daily-verb-dare-present-tu",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dare",
+      "person": 2,
+      "form": "dà",
+      "key": "italian-daily-verb-dare-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dare",
+      "person": 3,
+      "form": "diamo",
+      "key": "italian-daily-verb-dare-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dare",
+      "person": 4,
+      "form": "date",
+      "key": "italian-daily-verb-dare-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dare",
+      "person": 5,
+      "form": "danno",
+      "key": "italian-daily-verb-dare-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "capire",
+      "person": 0,
+      "form": "capisco",
+      "key": "italian-daily-verb-capire-present-io",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "capire",
+      "person": 1,
+      "form": "capisci",
+      "key": "italian-daily-verb-capire-present-tu",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "capire",
+      "person": 2,
+      "form": "capisce",
+      "key": "italian-daily-verb-capire-present-lei",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "capire",
+      "person": 3,
+      "form": "capiamo",
+      "key": "italian-daily-verb-capire-present-noi",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "capire",
+      "person": 4,
+      "form": "capite",
+      "key": "italian-daily-verb-capire-present-voi",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "capire",
+      "person": 5,
+      "form": "capiscono",
+      "key": "italian-daily-verb-capire-present-loro",
+      "deck": "03 Regular -IRE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scusare",
+      "person": 0,
+      "form": "scuso",
+      "key": "italian-daily-verb-scusare-present-io",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scusare",
+      "person": 1,
+      "form": "scusi",
+      "key": "italian-daily-verb-scusare-present-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scusare",
+      "person": 2,
+      "form": "scusa",
+      "key": "italian-daily-verb-scusare-present-lei",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scusare",
+      "person": 3,
+      "form": "scusiamo",
+      "key": "italian-daily-verb-scusare-present-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scusare",
+      "person": 4,
+      "form": "scusate",
+      "key": "italian-daily-verb-scusare-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "scusare",
+      "person": 5,
+      "form": "scusano",
+      "key": "italian-daily-verb-scusare-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "uscire",
+      "person": 0,
+      "form": "esco",
+      "key": "italian-daily-verb-uscire-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "uscire",
+      "person": 1,
+      "form": "esci",
+      "key": "italian-daily-verb-uscire-present-tu",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "uscire",
+      "person": 2,
+      "form": "esce",
+      "key": "italian-daily-verb-uscire-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "uscire",
+      "person": 3,
+      "form": "usciamo",
+      "key": "italian-daily-verb-uscire-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "uscire",
+      "person": 4,
+      "form": "uscite",
+      "key": "italian-daily-verb-uscire-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "uscire",
+      "person": 5,
+      "form": "escono",
+      "key": "italian-daily-verb-uscire-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dispiacere",
+      "person": 0,
+      "form": "dispiaccio",
+      "key": "italian-daily-verb-dispiacere-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dispiacere",
+      "person": 1,
+      "form": "dispiaci",
+      "key": "italian-daily-verb-dispiacere-present-tu",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dispiacere",
+      "person": 2,
+      "form": "dispiace",
+      "key": "italian-daily-verb-dispiacere-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dispiacere",
+      "person": 3,
+      "form": "dispiacciamo",
+      "key": "italian-daily-verb-dispiacere-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dispiacere",
+      "person": 4,
+      "form": "dispiacete",
+      "key": "italian-daily-verb-dispiacere-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "dispiacere",
+      "person": 5,
+      "form": "dispiacciono",
+      "key": "italian-daily-verb-dispiacere-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "bere",
+      "person": 0,
+      "form": "bevo",
+      "key": "italian-daily-verb-bere-present-io",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "bere",
+      "person": 1,
+      "form": "bevi",
+      "key": "italian-daily-verb-bere-present-tu",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "bere",
+      "person": 2,
+      "form": "beve",
+      "key": "italian-daily-verb-bere-present-lei",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "bere",
+      "person": 3,
+      "form": "beviamo",
+      "key": "italian-daily-verb-bere-present-noi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "bere",
+      "person": 4,
+      "form": "bevete",
+      "key": "italian-daily-verb-bere-present-voi",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "bere",
+      "person": 5,
+      "form": "bevono",
+      "key": "italian-daily-verb-bere-present-loro",
+      "deck": "04 Irregular present forms",
+      "status": "new"
+    },
+    {
+      "verb": "lavare",
+      "person": 0,
+      "form": "lavo",
+      "key": "italian-l8-grammar-lavare",
+      "deck": "01 Regular -ARE forms",
+      "status": "existing"
+    },
+    {
+      "verb": "lavare",
+      "person": 1,
+      "form": "lavi",
+      "key": "italian-daily-verb-lavare-present-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "lavare",
+      "person": 2,
+      "form": "lava",
+      "key": "italian-daily-verb-lavare-present-lei",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "lavare",
+      "person": 3,
+      "form": "laviamo",
+      "key": "italian-daily-verb-lavare-present-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "lavare",
+      "person": 4,
+      "form": "lavate",
+      "key": "italian-daily-verb-lavare-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "lavare",
+      "person": 5,
+      "form": "lavano",
+      "key": "italian-daily-verb-lavare-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "salutare",
+      "person": 0,
+      "form": "saluto",
+      "key": "italian-daily-verb-salutare-present-io",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "salutare",
+      "person": 1,
+      "form": "saluti",
+      "key": "italian-daily-verb-salutare-present-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "salutare",
+      "person": 2,
+      "form": "saluta",
+      "key": "italian-daily-verb-salutare-present-lei",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "salutare",
+      "person": 3,
+      "form": "salutiamo",
+      "key": "italian-daily-verb-salutare-present-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "salutare",
+      "person": 4,
+      "form": "salutate",
+      "key": "italian-daily-verb-salutare-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "salutare",
+      "person": 5,
+      "form": "salutano",
+      "key": "italian-daily-verb-salutare-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "telefonare",
+      "person": 0,
+      "form": "telefono",
+      "key": "italian-daily-verb-telefonare-present-io",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "telefonare",
+      "person": 1,
+      "form": "telefoni",
+      "key": "italian-daily-verb-telefonare-present-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "telefonare",
+      "person": 2,
+      "form": "telefona",
+      "key": "italian-daily-verb-telefonare-present-lei",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "telefonare",
+      "person": 3,
+      "form": "telefoniamo",
+      "key": "italian-daily-verb-telefonare-present-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "telefonare",
+      "person": 4,
+      "form": "telefonate",
+      "key": "italian-daily-verb-telefonare-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "telefonare",
+      "person": 5,
+      "form": "telefonano",
+      "key": "italian-daily-verb-telefonare-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "bruciare",
+      "person": 0,
+      "form": "brucio",
+      "key": "italian-daily-verb-bruciare-present-io",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "bruciare",
+      "person": 1,
+      "form": "bruci",
+      "key": "italian-daily-verb-bruciare-present-tu",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "bruciare",
+      "person": 2,
+      "form": "brucia",
+      "key": "italian-daily-verb-bruciare-present-lei",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "bruciare",
+      "person": 3,
+      "form": "bruciamo",
+      "key": "italian-daily-verb-bruciare-present-noi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "bruciare",
+      "person": 4,
+      "form": "bruciate",
+      "key": "italian-daily-verb-bruciare-present-voi",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "bruciare",
+      "person": 5,
+      "form": "bruciano",
+      "key": "italian-daily-verb-bruciare-present-loro",
+      "deck": "01 Regular -ARE forms",
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "person": 0,
+      "form": "prendo",
+      "key": "italian-daily-verb-prendere-present-io",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "person": 1,
+      "form": "prendi",
+      "key": "italian-daily-verb-prendere-present-tu",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "person": 2,
+      "form": "prende",
+      "key": "italian-daily-verb-prendere-present-lei",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "person": 3,
+      "form": "prendiamo",
+      "key": "italian-daily-verb-prendere-present-noi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "person": 4,
+      "form": "prendete",
+      "key": "italian-daily-verb-prendere-present-voi",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "person": 5,
+      "form": "prendono",
+      "key": "italian-daily-verb-prendere-present-loro",
+      "deck": "02 Regular -ERE forms",
+      "status": "new"
+    }
+  ],
+  "usageCoverage": [
+    {
+      "verb": "essere",
+      "use": "laura-use-17-1",
+      "italian": "Sono Laura.",
+      "keys": [
+        "italian-l1-io_sono"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "use": "laura-use-18-1",
+      "italian": "Sei italiana.",
+      "keys": [
+        "italian-daily-use-essere-laura-use-18-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "essere",
+      "use": "laura-use-19-1",
+      "italian": "È un’insegnante.",
+      "keys": [
+        "italian-daily-use-essere-laura-use-19-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "essere",
+      "use": "laura-use-20-1",
+      "italian": "Siamo felici.",
+      "keys": [
+        "italian-l6-siamo-felici"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "use": "laura-use-21-1",
+      "italian": "Siete alti.",
+      "keys": [
+        "italian-l6-siete-alti"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "use": "laura-use-22-1",
+      "italian": "Sono a casa.",
+      "keys": [
+        "italian-daily-use-essere-laura-use-22-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "essere",
+      "use": "laura-use-23-1",
+      "italian": "Ci sono dei libri.",
+      "keys": [
+        "italian-l6-ci-sono-libri"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "use": "laura-use-24-1",
+      "italian": "Sono le tre.",
+      "keys": [
+        "italian-l6-sono-le-tre"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "essere",
+      "use": "origin-question",
+      "italian": "Di dove sei?",
+      "keys": [
+        "origin_di_tu"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-01-1",
+      "italian": "Io ho una penna",
+      "keys": [
+        "italian-daily-use-avere-laura-use-01-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-04-1",
+      "italian": "Ho fame",
+      "keys": [
+        "italian-l4-expression-fame"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-05-1",
+      "italian": "Ho sete",
+      "keys": [
+        "italian-l4-expression-sete"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-06-1",
+      "italian": "Ho caldo",
+      "keys": [
+        "italian-l4-expression-caldo"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-07-1",
+      "italian": "Ho freddo",
+      "keys": [
+        "italian-l4-expression-freddo"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-08-1",
+      "italian": "Ho paura",
+      "keys": [
+        "italian-l4-expression-paura"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-09-1",
+      "italian": "Ho sonno",
+      "keys": [
+        "italian-l4-expression-sonno"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-10-1",
+      "italian": "Ho fretta",
+      "keys": [
+        "italian-l4-expression-fretta"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-11-1",
+      "italian": "Ho ragione",
+      "keys": [
+        "italian-l4-expression-ragione"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-12-1",
+      "italian": "Ho torto",
+      "keys": [
+        "italian-l4-expression-torto"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "laura-use-13-1",
+      "italian": "Ho ... anni",
+      "keys": [
+        "italian-l4-expression-anni"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "avere",
+      "use": "age-question",
+      "italian": "Quanti anni hai?",
+      "keys": [
+        "italian-l5-review-age-question"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-25-1",
+      "italian": "fare una torta",
+      "keys": [
+        "italian-daily-use-fare-laura-use-25-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-25-2",
+      "italian": "fare un disegno",
+      "keys": [
+        "italian-daily-use-fare-laura-use-25-2"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-26-1",
+      "italian": "fare sport",
+      "keys": [
+        "italian-daily-use-fare-laura-use-26-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-26-2",
+      "italian": "fare i compiti",
+      "keys": [
+        "italian-daily-use-fare-laura-use-26-2"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-27-1",
+      "italian": "fare l’insegnante (essere insegnante)",
+      "keys": [
+        "italian-daily-use-fare-laura-use-27-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-27-2",
+      "italian": "fare l’infermiere (essere infermiere)",
+      "keys": [
+        "italian-daily-use-fare-laura-use-27-2"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-28-1",
+      "italian": "fa freddo",
+      "keys": [
+        "italian-daily-use-fare-laura-use-28-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-28-2",
+      "italian": "fa caldo",
+      "keys": [
+        "italian-daily-use-fare-laura-use-28-2"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-29-1",
+      "italian": "due più due fa quattro",
+      "keys": [
+        "italian-daily-use-fare-laura-use-29-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "laura-use-29-2",
+      "italian": "la strada fa tre chilometri",
+      "keys": [
+        "italian-daily-use-fare-laura-use-29-2"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "job-question",
+      "italian": "Che lavoro fai?",
+      "keys": [
+        "italian-daily-use-fare-job-question"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "fare",
+      "use": "job-cook",
+      "italian": "Faccio il cuoco.",
+      "keys": [
+        "italian-daily-use-fare-job-cook"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "use": "laura-use-30-1",
+      "italian": "Sto bene / Sto male",
+      "keys": [
+        "italian-l2-warm-002",
+        "italian-l2-warm-005"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "stare",
+      "use": "laura-use-31-1",
+      "italian": "Sto a casa stasera",
+      "keys": [
+        "italian-daily-use-stare-laura-use-31-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "use": "laura-use-32-1",
+      "italian": "stare in piedi",
+      "keys": [
+        "italian-daily-use-stare-laura-use-32-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "use": "laura-use-32-2",
+      "italian": "stare seduto /a",
+      "keys": [
+        "italian-daily-use-stare-laura-use-32-2"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "use": "laura-use-32-3",
+      "italian": "i piatti stanno nella credenza",
+      "keys": [
+        "italian-daily-use-stare-laura-use-32-3"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "use": "laura-use-33-1",
+      "italian": "Stai attento!",
+      "keys": [
+        "italian-daily-use-stare-laura-use-33-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "use": "laura-use-34-1",
+      "italian": "Questa giacca ti sta d’incanto",
+      "keys": [
+        "italian-daily-use-stare-laura-use-34-1"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "stare",
+      "use": "wellbeing-question",
+      "italian": "Come stai oggi?",
+      "keys": [
+        "italian-daily-use-stare-wellbeing-question"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "venire",
+      "use": "origin-informal",
+      "italian": "Da dove vieni tu?",
+      "keys": [
+        "origin_da_tu"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "venire",
+      "use": "origin-formal",
+      "italian": "Da dove viene Lei?",
+      "keys": [
+        "origin_da_lei"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "venire",
+      "use": "arrival-question",
+      "italian": "Quando vieni?",
+      "keys": [
+        "italian-l6-quando-vieni"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "andare",
+      "use": "example",
+      "italian": "Vado a Roma.",
+      "keys": [
+        "italian-daily-use-andare-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "chiamarsi",
+      "use": "name-question",
+      "italian": "Ciao! Come ti chiami?",
+      "keys": [
+        "italian-l5-review-name-tu"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "chiamarsi",
+      "use": "name-answer",
+      "italian": "Mi chiamo John.",
+      "keys": [
+        "italian-l1-io_mi_chiamo"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "lavorare",
+      "use": "office",
+      "italian": "Io lavoro in un ufficio.",
+      "keys": [
+        "italian-l7-sentence-office"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "lavorare",
+      "use": "chef",
+      "italian": "Marco lavora come cuoco.",
+      "keys": [
+        "italian-l7-sentence-chef"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "lavorare",
+      "use": "school",
+      "italian": "L’insegnante lavora in una scuola.",
+      "keys": [
+        "italian-l7-sentence-teacher"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "lavorare",
+      "use": "hospital",
+      "italian": "I dottori lavorano in ospedale.",
+      "keys": [
+        "italian-l7-sentence-doctors"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "lavorare",
+      "use": "workplace-question",
+      "italian": "Dove lavori?",
+      "keys": [
+        "italian-daily-use-lavorare-workplace-question"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "lavorare",
+      "use": "teacher-role",
+      "italian": "Lavoro come insegnante",
+      "keys": [
+        "italian-l8-grammar-come-as"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "parlare",
+      "use": "spanish",
+      "italian": "Io parlo spagnolo.",
+      "keys": [
+        "italian-l7-sentence-spanish"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "parlare",
+      "use": "two-languages",
+      "italian": "Lorenzo parla due lingue.",
+      "keys": [
+        "italian-l7-sentence-languages"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "parlare",
+      "use": "slowly",
+      "italian": "La nonna parla lentamente.",
+      "keys": [
+        "italian-l7-sentence-grandmother"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "parlare",
+      "use": "talking",
+      "italian": "I bambini parlano molto.",
+      "keys": [
+        "italian-l7-sentence-children"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "abitare",
+      "use": "example",
+      "italian": "Abiti a Roma?",
+      "keys": [
+        "italian-daily-use-abitare-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "studiare",
+      "use": "history",
+      "italian": "Io studio storia.",
+      "keys": [
+        "italian-daily-use-studiare-history"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "studiare",
+      "use": "italian",
+      "italian": "Noi studiamo l’italiano.",
+      "keys": [
+        "italian-daily-use-studiare-italian"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "studiare",
+      "use": "english",
+      "italian": "Voi studiate inglese?",
+      "keys": [
+        "italian-l7-sentence-study-english"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "studiare",
+      "use": "exam",
+      "italian": "I ragazzi studiano per l’esame.",
+      "keys": [
+        "italian-l7-sentence-exam"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "mangiare",
+      "use": "pizza",
+      "italian": "Tu mangi la pizza?",
+      "keys": [
+        "italian-daily-use-mangiare-pizza"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "mangiare",
+      "use": "chocolate",
+      "italian": "Maria mangia tanta cioccolata.",
+      "keys": [
+        "italian-daily-use-mangiare-chocolate"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "mangiare",
+      "use": "together",
+      "italian": "Voi mangiate con noi?",
+      "keys": [
+        "italian-l7-sentence-eat-with-us"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "mangiare",
+      "use": "pasta",
+      "italian": "Gli italiani mangiano tanta pasta.",
+      "keys": [
+        "italian-l7-sentence-pasta"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "vivere",
+      "use": "example",
+      "italian": "Vivo a Roma.",
+      "keys": [
+        "italian-daily-use-vivere-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "vedere",
+      "use": "example",
+      "italian": "Vedo la scuola.",
+      "keys": [
+        "italian-daily-use-vedere-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "leggere",
+      "use": "example",
+      "italian": "Leggo un libro.",
+      "keys": [
+        "italian-daily-use-leggere-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "scrivere",
+      "use": "spelling-question",
+      "italian": "Come si scrive “letto” in italiano?",
+      "keys": [
+        "italian-l6-scrive-letto"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "dormire",
+      "use": "example",
+      "italian": "Il bambino dorme.",
+      "keys": [
+        "italian-daily-use-dormire-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "aprire",
+      "use": "example",
+      "italian": "Apro la porta.",
+      "keys": [
+        "italian-daily-use-aprire-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "finire",
+      "use": "example",
+      "italian": "Finisco il libro.",
+      "keys": [
+        "italian-daily-use-finire-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "dire",
+      "use": "translation-question",
+      "italian": "Come si dice “bed” in italiano?",
+      "keys": [
+        "italian-l6-dice-bed"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "significare",
+      "use": "meaning-question",
+      "italian": "Che cosa significa “letto”?",
+      "keys": [
+        "italian-l6-significa-letto"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "potere",
+      "use": "repeat-formal",
+      "italian": "Come, scusi? Può ripetere, per favore?",
+      "keys": [
+        "italian-l6-repeat-formal"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "ripetere",
+      "use": "repeat-informal",
+      "italian": "Come, scusa? Puoi ripetere, per favore?",
+      "keys": [
+        "italian-l6-repeat-informal"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "volere",
+      "use": "example",
+      "italian": "Vuoi il tè o il caffè?",
+      "keys": [
+        "italian-daily-use-volere-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "dare",
+      "use": "use-tu-formal",
+      "italian": "Posso darle del tu?",
+      "keys": [
+        "italian-l6-darle-del-tu"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "capire",
+      "use": "not-understood",
+      "italian": "Non ho capito!",
+      "keys": [
+        "italian-l6-non-ho-capito"
+      ],
+      "status": "existing"
+    },
+    {
+      "verb": "capire",
+      "use": "present-example",
+      "italian": "Non capisco.",
+      "keys": [
+        "italian-daily-use-capire-present-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "scusare",
+      "use": "request-informal",
+      "italian": "Come, scusa?",
+      "keys": [
+        "italian-daily-use-scusare-request-informal"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "uscire",
+      "use": "example",
+      "italian": "Esco dal negozio.",
+      "keys": [
+        "italian-daily-use-uscire-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "dispiacere",
+      "use": "sympathy",
+      "italian": "Mi dispiace!",
+      "keys": [
+        "italian-daily-use-dispiacere-sympathy"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "bere",
+      "use": "example",
+      "italian": "Io bevo caffè.",
+      "keys": [
+        "italian-daily-use-bere-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "lavare",
+      "use": "example",
+      "italian": "Lavo i piatti.",
+      "keys": [
+        "italian-daily-use-lavare-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "salutare",
+      "use": "example",
+      "italian": "Saluto Anna.",
+      "keys": [
+        "italian-daily-use-salutare-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "telefonare",
+      "use": "example",
+      "italian": "Telefono ad Anna.",
+      "keys": [
+        "italian-daily-use-telefonare-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "bruciare",
+      "use": "example",
+      "italian": "Il pane brucia.",
+      "keys": [
+        "italian-daily-use-bruciare-example"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "use": "take-book",
+      "italian": "Prendo il libro.",
+      "keys": [
+        "italian-daily-use-prendere-take-book"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "use": "get-bread",
+      "italian": "Prendo il pane al supermercato.",
+      "keys": [
+        "italian-daily-use-prendere-get-bread"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "use": "catch-bus",
+      "italian": "Prendo l’autobus.",
+      "keys": [
+        "italian-daily-use-prendere-catch-bus"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "use": "have-coffee",
+      "italian": "Prendo un caffè.",
+      "keys": [
+        "italian-daily-use-prendere-have-coffee"
+      ],
+      "status": "new"
+    },
+    {
+      "verb": "prendere",
+      "use": "have-sandwich",
+      "italian": "Prendo un panino.",
+      "keys": [
+        "italian-daily-use-prendere-have-sandwich"
+      ],
+      "status": "new"
+    }
+  ],
+  "patternCoverage": [
+    {
+      "key": "italian-l7-family-are",
+      "status": "existing"
+    },
+    {
+      "key": "italian-l7-family-ere",
+      "status": "existing"
+    },
+    {
+      "key": "italian-l7-family-ire",
+      "status": "existing"
+    },
+    {
+      "key": "italian-l7-ending-io",
+      "status": "existing"
+    },
+    {
+      "key": "italian-l7-ending-tu",
+      "status": "existing"
+    },
+    {
+      "key": "italian-l7-ending-lei",
+      "status": "existing"
+    },
+    {
+      "key": "italian-l7-ending-noi",
+      "status": "existing"
+    },
+    {
+      "key": "italian-l7-ending-voi",
+      "status": "existing"
+    },
+    {
+      "key": "italian-l7-ending-loro",
+      "status": "existing"
+    },
+    {
+      "key": "italian-daily-pattern-ere-ending-0",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ere-ending-1",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ere-ending-2",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ere-ending-3",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ere-ending-4",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ere-ending-5",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ire-ending-0",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ire-ending-1",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ire-ending-2",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ire-ending-3",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ire-ending-4",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-ire-ending-5",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-family-potere",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-family-volere",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-family-bere",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-family-venire",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-family-uscire",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-family-dire",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-isc-noi-voi",
+      "status": "new"
+    },
+    {
+      "key": "italian-daily-pattern-regularity-tense",
+      "status": "new"
+    }
+  ],
+  "existingSourceSha256": "418a846aee692a35c2db38d2dd63c7ade3dc8063239e7e3cb83944035b3117e8",
+  "sourceFormCount": 210,
+  "sourceUseCount": 94,
+  "sourcePolicy": "Course examples have exact source locators. Added examples and full reference paradigms are labelled as study support. Prendere is learner-confirmed; exact Lesson 9 examples are unavailable.",
+  "importPolicy": "Additive new notes only. Existing lesson notes, GUIDs, decks and scheduling are not included or rewritten. Coverage uses existing notes where equivalent recall tasks already exist.",
+  "pronunciationPolicy": "Approximate English-friendly reading guides and broad IPA. No blanket claim of independent dictionary verification."
+}

@@ -1,6 +1,6 @@
 # Semester 1 source audit: Lessons 1–8
 
-**36 local original source files plus one separately identified recap examined.** This includes 89 slides, 69 PDF pages including one duplicate document, the Lesson 2 DOCX and two pronunciation JPEGs. This ledger records source content. **Source audit complete; local UI implementation underway.** Publication is not asserted here. The practice work uses a verified verb-example subset and eight sentence-tile rounds; the 116 phrase records are an inventory, not a claim that all 116 have drills.
+**36 local original source files plus one separately identified recap examined.** This includes 89 slides, 69 PDF pages including one duplicate document, the Lesson 2 DOCX and two pronunciation JPEGs. This ledger records source content. **Source audit complete.** Implementation is documented in [the verb and homework foundation](VERB_AND_HOMEWORK_FOUNDATION_20261125.md), with deployment results in the implementation report. The practice work uses a verified verb-example subset and eight sentence-tile rounds; the 116 phrase records are an inventory, not a claim that all 116 have drills.
 
 ## Actionable findings
 
@@ -9,7 +9,7 @@
 - **Keep textbook references visible.** There are 22 assigned textbook exercise references. Only two assigned exercise pages are supplied as scans: p166 ex12 and p172 ex9.
 - **Separate source variants.** Lesson 7 minutes/tables list `vivere`; slides list `vedere`. Both are authentic. Lesson 3 already gives `io vivo, tu vivi, lui/lei vive` for residence.
 - **Clarify transitive/intransitive per sentence.** Lesson 7 minutes pp3–4 use a broad verb label, but the sixteen model sentences include both direct objects and examples with no direct object. The phrase “hold an object” does not occur in the original native text.
-- **Keep Lesson 9 unconfirmed.** No original Lesson 9 source is present. The user-reported `pendere` must not silently become `prendere`.
+- **Record Lesson 9 confirmation separately from original evidence.** On 25 November 2026, Will confirmed that the verb was `prendere`. No original Lesson 9 source is present; Laura’s exact categories, examples and homework remain pending.
 
 ## Exact textbook homework references
 
@@ -263,7 +263,7 @@ The audit’s **116 useful-phrase records** and **34 use-category records** desc
 6. **Preserve source variants.** Keep original wording and source typos in the ledger. Record teaching corrections and adaptations separately.
 7. **Separate assignments.** Distinguish homework, classwork and optional revision. Keep exact page/exercise references. Missing pages or audio remain explicit gaps.
 8. **Label adaptations honestly.** A source-labelled verbatim phrase must match its cited source. Changed conjugations, new subjects or new examples are adapted or supplementary material.
-9. **Verify later lessons.** User-reported Lesson 9 content remains unverified until its originals arrive. Do not silently replace `pendere` with `prendere`.
+9. **Verify later lessons.** Will confirmed `prendere` on 25 November 2026. Preserve that learner confirmation while keeping Laura’s exact Lesson 9 categories, examples and homework pending until the originals arrive.
 10. **Keep counts meaningful.** Source inventory, implemented practice, validation and publication are separate states. Update each only with corresponding evidence.
 
 ## Repository evidence

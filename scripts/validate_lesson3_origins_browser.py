@@ -25,8 +25,9 @@ try:
     page.wait_for_function('!!window.__L3_ORIGINS_SINGULAR__')
     page.wait_for_selector('.guided-card-host .review-card')
     data=page.evaluate('({all:cards,sequence:ItalianLesson3Origins.sequence,moves:ItalianLesson3Origins.moves,core:ItalianLesson3Origins.core})')
-    assert len(data['all'])==623
-    assert sum(c['lesson'] not in ('L7','L8') for c in data['all'])==511
+    assert sum(c['lesson'] in ('L1','L2','L3','L4','L5','L6','L7','L8') for c in data['all'])==623
+    assert sum(c['lesson'] in ('L1','L2','L3','L4','L5','L6') for c in data['all'])==511
+    assert sum(c['lesson']=='PRACTICE' for c in data['all'])==json.loads((ROOT/'daily-verb-cards/coverage.json').read_text())['newCards']
     assert sum(c['lesson']=='L7' for c in data['all'])==54
     assert sum(c['lesson']=='L8' for c in data['all'])==58
     core=[c for c in data['all'] if c['lesson']=='L3' and c['deck']==data['core']]
@@ -64,6 +65,6 @@ try:
      (OUT/'core-cards.json').write_text(json.dumps(core,ensure_ascii=False,indent=2))
     ctx.close()
   browser.close()
- (OUT/'browser-results.json').write_text(json.dumps({'status':'pass','cases':results,'core_cards':15,'new_cards':0,'course_cards':623,'lesson8_cards':58,'original_course_cards':511,'lesson7_cards':54,'lesson3_cards':120,'retained_history':'pass'},indent=2))
+ (OUT/'browser-results.json').write_text(json.dumps({'status':'pass','cases':results,'core_cards':15,'new_lesson3_cards':0,'existing_lesson_cards':623,'daily_practice_additions':json.loads((ROOT/'daily-verb-cards/coverage.json').read_text())['newCards'],'lesson8_cards':58,'original_course_cards':511,'lesson7_cards':54,'lesson3_cards':120,'retained_history':'pass'},indent=2))
  print('PASS 60 actual card views: desktop/mobile, light/dark, complete replies, navigation and existing recall state.')
 finally:server.shutdown()

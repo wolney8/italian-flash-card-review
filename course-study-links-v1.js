@@ -9,7 +9,7 @@ function decorate(){const host=document.getElementById('guidedMain');if(!host||h
  const container=document.createElement('div');container.className='study-flash-return';
  if(back){const a=document.createElement('a');a.dataset.backToPractice='true';a.href=back;a.innerHTML='← '+pair('Back to practice','Torna agli esercizi');container.append(a);}
  if(topic){const a=document.createElement('a');a.dataset.topicPractice='true';a.href='/study/study-sheets.html?mode=learn&lesson='+topic.flashcards.lesson+'&topic='+topic.id+'&sheet='+(root.ItalianLibraryMap.subsets[topic.sets[0]]?.sheet||topic.sets[0])+'&set='+topic.sets[0];a.innerHTML=pair('Practise this topic','Esercitati su questo argomento');container.append(a);}
- if(!container.children.length){const a=document.createElement('a');a.href='/study/study-sheets.html?lesson='+card.dataset.lesson;a.innerHTML=pair('Lesson practice','Esercizi della lezione');container.append(a);}
+ if(!container.children.length){const a=document.createElement('a');const daily=card.dataset.lesson==='PRACTICE';a.href=daily?'/?page=daily-practice':'/study/study-sheets.html?lesson='+card.dataset.lesson;a.innerHTML=daily?pair('Daily practice','Esercizi quotidiani'):pair('Lesson practice','Esercizi della lezione');container.append(a);}
  const crumb=host.querySelector('.course-site-breadcrumb');if(crumb)crumb.after(container);else host.prepend(container);
 }
 root.ItalianStudyLinks={decorate,valid};

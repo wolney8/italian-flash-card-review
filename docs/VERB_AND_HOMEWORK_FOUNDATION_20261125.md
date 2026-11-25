@@ -2,7 +2,7 @@
 
 Date: 25 November 2026
 
-Status: local review build. No production deployment or Anki release in this update.
+Status: publication approved on 25 November 2026, including matching web and Anki learning points. Final deployment and package evidence is recorded in the release report.
 
 ## Why this change is needed
 
@@ -10,7 +10,7 @@ The live Daily practice bank already covered 34 verbs, all six present forms and
 
 The original-source audit also found that the Lesson 5 presentation lacked its own text extract. A same-basename extract contained the minutes instead. Some teaching content was embedded in pictures. The new audit preserves original filenames, extensions, hashes and page/slide locators, including the picture-only content. See `SEMESTER_1_SOURCE_AUDIT.md` and `source-audit-20261125.json`.
 
-## Local implementation
+## Implemented changes
 
 ### One shared verb reference
 
@@ -22,10 +22,12 @@ The original-source audit also found that the Lesson 5 presentation lacked its o
 - 88 new phrase questions: 44 short gaps and 44 meaning choices.
 - 1,062 Daily verb questions in total, preserving all 944 existing questions and their identities.
 - Eight new sentence-tile rounds use the same example records, including fare i compiti. This brings the sentence activity to 27 rounds and the six visual activities to 77 rounds.
+- 333 Daily verb flashcards cover all 210 present-form points, 94 usage examples and 29 pattern prompts. This virtual collection reuses 99 existing cards with their original keys and progress, alongside 234 new cards.
+- The additive Anki package contains those same 234 new cards: 163 forms, 51 phrases and 20 patterns. Existing course notes are not rewritten; an isolated native import and reimport verifies preservation of previous cards, review history, decks, note types and custom options.
 
 The new family filter is separate from Regular/Irregular in the present. The -isc model is explicitly regular, with noi/voi using the shorter stem. Course grouping keeps fare in -ARE, as Laura teaches, and dire in -IRE; explanatory notes record the historical alternative. Essere and avere are not ordinary -ERE model verbs.
 
-Prendere is provisional course coverage. The learner wrote pendere, but the meanings described point to prendere. The source note records that inference and asks for confirmation against the Lesson 9 slide. Its forms and added examples are checked grammar support. They are not attributed to Laura's unseen presentation.
+Will confirmed on 25 November 2026 that Lesson 9 covered prendere. Its coverage label records that confirmation. Laura's original slides and minutes remain unavailable, so her exact categories, examples and homework are still pending. The checked forms and supplementary examples remain clearly labelled; they are not attributed to her unseen presentation.
 
 ### Visible homework
 
@@ -64,7 +66,7 @@ Store ordinary Italian spelling separately from pronunciation support. Laura's m
 6. Record missing material or conflicting versions explicitly. Preserve Laura's wording and add a separate clarification for grammar errors.
 7. Verify the resulting questions and publish a coverage report with the release.
 
-No new Anki cards are generated in this foundation update. Later card additions must use the same checked learning points, retain stable note identities and be present as web flashcards before the deck release.
+The approved release adds matching web and Anki learning points from the checked material. Additions use stable note identities and are present as web flashcards before the package is released. Existing notes and their saved progress are preserved.
 
 ## Verification
 

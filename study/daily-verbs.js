@@ -104,7 +104,7 @@
     regular('salutare', 'to greet', extension, objects, 'Saluto Anna.', 'I greet Anna.'),
     regular('telefonare', 'to phone', extension, objects, 'Telefono ad Anna.', 'I phone Anna.'),
     regular('bruciare', 'to burn', extension, objects, 'Il pane brucia.', 'The bread is burning.', {singleI: true}),
-    regular('prendere', 'to take, get or have, depending on context', 'Reported in Lesson 9', 'The meanings you described point to prendere. Laura’s Lesson 9 slide is still needed to confirm her examples.', 'Prendo un caffè.', 'I’ll have a coffee.', {sourceStatus: 'learner-report-pending-source', reportedSpelling: 'pendere'})
+    regular('prendere', 'to take, get or have, depending on context', 'Lesson 9, confirmed by you', 'You confirmed that Lesson 9 covered prendere. Laura’s slides and minutes are still needed for her exact categories and examples.', 'Prendo un caffè.', 'I’ll have a coffee.', {sourceStatus: 'learner-report-pending-source', reportedSpelling: 'prendere', originalReportedSpelling: 'pendere', learnerConfirmedOn: '2026-11-25'})
   ];
 
   // Italian examples checked against the source audit. English is clarified where
