@@ -15,6 +15,7 @@
         <h2>Practice topics</h2>
         <nav id="topic-buttons" aria-label="Practice topics"></nav>
         <p class="visual-topic-links"><a href="/?page=articles-guide">Article tables and daily practice</a></p>
+        <p class="visual-topic-links"><a href="/?page=card&amp;lesson=PRACTICE">Daily verb flashcards</a> <span>Present forms, patterns and phrases.</span></p>
         <h2 class="visual-topic-heading">Visual exercises</h2>
         <nav class="visual-topic-links" aria-label="Visual exercises">
           <a href="/?page=visual-exercises&amp;activity=verbs">Match verb endings</a>
@@ -29,10 +30,12 @@
       <section id="work" aria-labelledby="topic-title">
         <div class="topic-head"><h2 id="topic-title"></h2><p lang="en-GB" id="topic-intro"></p></div>
         <div id="filters" class="filters" hidden>
-          <label>Verb group<select id="group"><option value="all">All verbs</option><option value="regular">Regular verbs</option><option value="irregular">Irregular verbs</option></select></label>
+          <label>Verb family<select id="family"><option value="all">All families</option><option value="are">First conjugation (-ARE)</option><option value="ere">Second conjugation (-ERE)</option><option value="ire">Third conjugation (-IRE)</option><option value="auxiliary">Essere and avere (auxiliaries)</option></select></label>
+          <label>Present pattern<select id="group"><option value="all">All present patterns</option><option value="regular">Regular in the present</option><option value="irregular">Irregular in the present</option></select></label>
           <label>Practise a verb<select id="verb"></select></label>
           <label id="focus-label">Practise<select id="focus"></select></label>
         </div>
+        <p id="verb-scope" class="verb-scope" lang="en-GB" data-ui-no-translate hidden><strong>Present tense.</strong> Each verb has all six forms. Open the reference to see the full table and how to use the verb.</p>
         <details id="reference"><summary id="ref-title">Quick reference</summary><div id="ref-body" lang="en-GB" data-ui-no-translate></div></details>
         <div id="exercise"></div>
       </section>

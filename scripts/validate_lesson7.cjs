@@ -89,7 +89,7 @@ async function main() {
     setTimeout: () => 0
   };
   vm.createContext(context);
-  for (const file of ['study/verb-reference-v1.js', 'lesson7/integration.js', 'study/library-v1.js', 'study/practice-session-v1.js']) {
+  for (const file of ['study/daily-verbs.js', 'study/verb-reference-view.js', 'study/verb-reference-v1.js', 'lesson7/integration.js', 'study/library-v1.js', 'study/practice-session-v1.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
   const verbs = window.ItalianVerbReference.verbs;

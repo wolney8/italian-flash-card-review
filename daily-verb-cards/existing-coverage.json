@@ -1,0 +1,156 @@
+{
+  "forms": {
+    "essere": {
+      "0": "verb_essere_0",
+      "1": "verb_essere_1",
+      "2": "verb_essere_2",
+      "3": "verb_essere_noi",
+      "4": "verb_essere_voi",
+      "5": "verb_essere_loro"
+    },
+    "venire": {
+      "0": "verb_venire_0",
+      "1": "verb_venire_1",
+      "2": "verb_venire_2",
+      "3": "verb_venire_noi",
+      "4": "verb_venire_voi",
+      "5": "verb_venire_loro"
+    },
+    "vivere": {
+      "0": "verb_vivere_0",
+      "1": "verb_vivere_1",
+      "2": "verb_vivere_2",
+      "3": "verb_vivere_noi",
+      "4": "verb_vivere_voi",
+      "5": "verb_vivere_loro"
+    },
+    "abitare": {
+      "0": "verb_abitare_0",
+      "1": "verb_abitare_1",
+      "2": "verb_abitare_2",
+      "3": "verb_abitare_noi",
+      "4": "verb_abitare_voi",
+      "5": "verb_abitare_loro"
+    },
+    "avere": {
+      "0": "italian-l4-avere-io",
+      "1": "italian-l4-avere-tu",
+      "2": "italian-l4-avere-lui-lei",
+      "3": "italian-l4-avere-noi",
+      "4": "italian-l4-avere-voi",
+      "5": "italian-l4-avere-loro-essi"
+    },
+    "chiamarsi": {
+      "0": "italian-l1-io_mi_chiamo",
+      "1": "italian-l1-tu_ti_chiami",
+      "2": "italian-l1-lui_si_chiama"
+    },
+    "lavorare": {
+      "0": "italian-l7-form-work-io",
+      "1": "italian-l7-form-work-tu",
+      "2": "italian-l7-form-work-marco"
+    },
+    "parlare": {
+      "0": "italian-l7-form-speak-io",
+      "4": "italian-l7-form-speak-voi",
+      "5": "italian-l7-form-speak-loro"
+    },
+    "studiare": {
+      "0": "italian-l7-form-study-io",
+      "1": "italian-l7-form-study-tu",
+      "3": "italian-l7-form-study-noi"
+    },
+    "mangiare": {
+      "1": "italian-l7-form-eat-tu",
+      "2": "italian-l7-form-eat-maria",
+      "3": "italian-l7-form-eat-noi"
+    },
+    "fare": {
+      "1": "italian-l8-grammar-verb-of-question"
+    },
+    "lavare": {
+      "0": "italian-l8-grammar-lavare"
+    }
+  },
+  "uses": {
+    "essere": {
+      "laura-use-20-1": "italian-l6-siamo-felici",
+      "laura-use-21-1": "italian-l6-siete-alti",
+      "laura-use-23-1": "italian-l6-ci-sono-libri",
+      "laura-use-24-1": "italian-l6-sono-le-tre",
+      "origin-question": "origin_di_tu",
+      "laura-use-17-1": "italian-l1-io_sono"
+    },
+    "avere": {
+      "laura-use-04-1": "italian-l4-expression-fame",
+      "laura-use-05-1": "italian-l4-expression-sete",
+      "laura-use-06-1": "italian-l4-expression-caldo",
+      "laura-use-07-1": "italian-l4-expression-freddo",
+      "laura-use-08-1": "italian-l4-expression-paura",
+      "laura-use-09-1": "italian-l4-expression-sonno",
+      "laura-use-10-1": "italian-l4-expression-fretta",
+      "laura-use-11-1": "italian-l4-expression-ragione",
+      "laura-use-12-1": "italian-l4-expression-torto",
+      "laura-use-13-1": "italian-l4-expression-anni",
+      "age-question": "italian-l5-review-age-question"
+    },
+    "venire": {
+      "origin-informal": "origin_da_tu",
+      "origin-formal": "origin_da_lei",
+      "arrival-question": "italian-l6-quando-vieni"
+    },
+    "lavorare": {
+      "office": "italian-l7-sentence-office",
+      "chef": "italian-l7-sentence-chef",
+      "school": "italian-l7-sentence-teacher",
+      "hospital": "italian-l7-sentence-doctors",
+      "teacher-role": "italian-l8-grammar-come-as"
+    },
+    "parlare": {
+      "spanish": "italian-l7-sentence-spanish",
+      "two-languages": "italian-l7-sentence-languages",
+      "slowly": "italian-l7-sentence-grandmother",
+      "talking": "italian-l7-sentence-children"
+    },
+    "studiare": {
+      "english": "italian-l7-sentence-study-english",
+      "exam": "italian-l7-sentence-exam"
+    },
+    "mangiare": {
+      "together": "italian-l7-sentence-eat-with-us",
+      "pasta": "italian-l7-sentence-pasta"
+    },
+    "scrivere": {
+      "spelling-question": "italian-l6-scrive-letto"
+    },
+    "dire": {
+      "translation-question": "italian-l6-dice-bed"
+    },
+    "significare": {
+      "meaning-question": "italian-l6-significa-letto"
+    },
+    "potere": {
+      "repeat-formal": "italian-l6-repeat-formal"
+    },
+    "ripetere": {
+      "repeat-informal": "italian-l6-repeat-informal"
+    },
+    "dare": {
+      "use-tu-formal": "italian-l6-darle-del-tu"
+    },
+    "capire": {
+      "not-understood": "italian-l6-non-ho-capito"
+    },
+    "chiamarsi": {
+      "name-answer": "italian-l1-io_mi_chiamo",
+      "name-question": "italian-l5-review-name-tu"
+    },
+    "stare": {
+      "laura-use-30-1": [
+        "italian-l2-warm-002",
+        "italian-l2-warm-005"
+      ]
+    }
+  },
+  "policy": "Reuse equivalent production tasks. Generic self-name cards cover the source personal-name examples; the existing name question covers the same question without the optional Ciao greeting. The two wellbeing cards separately cover Sto bene and Sto male. Preserve different recall purposes such as spelling and stress."
+}

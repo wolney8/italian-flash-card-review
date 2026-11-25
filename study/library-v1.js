@@ -107,13 +107,20 @@ function render(nav,host,params){
   if(lesson){
    const topics=lesson.topics.map(id=>M.topics.find(t=>t.id===id));
    const firstTopic=topics.find(t=>topicSets(t,lesson.id).some(id=>stats(id).done<stats(id).total))||topics[0];
-   content='<div class="library-layout has-lesson"><aside><h2>'+pair('Lessons','Lezioni')+'</h2>'+list+'</aside><section class="library-lesson-detail"><a class="library-mobile-back" href="'+libraryURL(null)+'">← '+pair('All lessons','Tutte le lezioni')+'</a><p class="eyebrow">'+pair('Lesson '+lesson.id.slice(1),'Lezione '+lesson.id.slice(1))+'</p><h2>'+pair(lesson.title,lesson.it)+'</h2><div class="library-actions"><a class="library-primary" href="'+href(chooseSet(firstTopic,lesson.id),lesson.id,firstTopic.id)+'">'+pair('Continue practice','Continua gli esercizi')+'</a><a href="../?page=card&lesson='+lesson.id+'">'+pair('Lesson flashcards','Carte della lezione')+'</a></div>'+topics.map(t=>topicRow(t,lesson.id,browse)).join('')+extraMarkup(lesson.extra,lesson.id,browse)+homeworkMarkup(lesson.id)+'</section></div>';
+   content='<div class="library-layout has-lesson"><aside><h2>'+pair('Lessons','Lezioni')+'</h2>'+list+'</aside><section class="library-lesson-detail"><a class="library-mobile-back" href="'+libraryURL(null)+'">← '+pair('All lessons','Tutte le lezioni')+'</a><p class="eyebrow">'+pair('Lesson '+lesson.id.slice(1),'Lezione '+lesson.id.slice(1))+'</p><h2>'+pair(lesson.title,lesson.it)+'</h2><div class="library-actions"><a class="library-primary" href="'+href(chooseSet(firstTopic,lesson.id),lesson.id,firstTopic.id)+'">'+pair('Continue practice','Continua gli esercizi')+'</a><a href="../?page=card&lesson='+lesson.id+'">'+pair('Lesson flashcards','Carte della lezione')+'</a></div>'+homeworkMarkup(lesson.id)+'<h3>'+pair('Study sheets','Schede di studio')+'</h3>'+topics.map(t=>topicRow(t,lesson.id,browse)).join('')+extraMarkup(lesson.extra,lesson.id,browse)+'</section></div>';
   }else content='<div class="library-view"><h2>'+pair('Choose a lesson','Scegli una lezione')+'</h2>'+list+'</div>';
  }else{
   const categories=[['conversation','Conversation','Conversazione'],['verbs','Verbs and pronouns','Verbi e pronomi'],['grammar','Articles and agreement','Articoli e concordanza'],['numbers','Numbers and age','Numeri ed età'],['sounds','Sounds and spelling','Suoni e ortografia'],['reference','Reference and mixed revision','Riferimenti e ripasso misto']];
   content='<div class="library-topic-view">'+categories.map(([id,en,it])=>'<section class="library-topic-section" id="topic-'+id+'"><h2>'+pair(en,it)+'</h2>'+M.topics.filter(t=>t.category===id).map(t=>topicRow(t,null,'topic')).join('')+'</section>').join('')+'</div>';
  }
  host.innerHTML='<div class="library-view" data-library-ready>'+content+'</div>';
+ host.querySelectorAll('[data-homework-item]').forEach(input => input.addEventListener('change', () => {
+  try {
+   const saved = JSON.parse(localStorage.getItem('italianHomeworkChecklist.v1') || '{}');
+   saved[input.dataset.homeworkItem] = input.checked;
+   localStorage.setItem('italianHomeworkChecklist.v1', JSON.stringify(saved));
+  } catch (_) {}
+ }));
  const library=libraryURL(lesson?.id,browse);
  root.ItalianStudyContext={library,lesson:lesson?.id||null,browse,libraryPage:true,breadcrumbs:[{label:'Study sheets',href:lesson?libraryURL(null):null},...(lesson?[{label:'Lesson '+lesson.id.slice(1)}]:[])]};
  document.title=(lesson?'Lesson '+lesson.id.slice(1)+' · ':'')+'Study sheets · Italian for Beginners';
@@ -122,13 +129,30 @@ function render(nav,host,params){
 function homeworkMarkup(lessonId) {
  const assignment = M.homework[lessonId];
  if (!assignment) return '';
- const pages = assignment.book.map(([page,en,it]) =>
+ const evidence = root.ItalianHomeworkEvidence?.[lessonId];
+ let done = {};
+ try { done = JSON.parse(localStorage.getItem('italianHomeworkChecklist.v1') || '{}'); } catch (_) {}
+ const rows = (items, type) => items.map(item => {
+   const id = lessonId + ':' + type + ':' + item.id;
+   const links = (item.links || []).filter(link => sets[link.set]).map(link =>
+     '<a href="'+esc(href(link.set,lessonId,null))+'">'+esc(link.label)+'</a>').join('');
+   return '<li class="homework-item"><label><input type="checkbox" data-homework-item="'+esc(id)+'"'+(done[id]?' checked':'')+'><span><strong>'+esc(item.label)+'</strong><span class="homework-task">'+esc(item.task)+'</span></span></label>'+
+     (links?'<div class="homework-practice-links">'+links+'</div>':'')+
+     '<small class="homework-source">'+esc(item.source.file)+' · '+esc(item.source.locator)+'</small></li>';
+ }).join('');
+ const pages = evidence ? rows(evidence.book,'book') : assignment.book.map(([page,en,it]) =>
    '<li><strong>'+esc(page)+'</strong> '+pair(en,it)+'</li>').join('');
  const quizzes = (assignment.quizzes || []).map(([en,it,id]) =>
    '<li><a href="https://dashboard.blooket.com/set/'+esc(id)+'">'+pair(en,it)+'</a></li>').join('');
- return '<details class="library-extras library-homework"><summary>'+pair('Homework and revision','Compiti e ripasso')+'</summary>'+
-   '<h3>'+pair('Course handbook','Libro di corso')+'</h3><p lang="it">Nuovo Espresso Plus 1</p><ul>'+pages+'</ul>'+
-   (quizzes ? '<h3>'+pair('Optional online revision','Ripasso online facoltativo')+'</h3><ul>'+quizzes+'</ul>' : '')+'</details>';
+ const reference = (evidence?.reference || []).map(item => '<li><strong>'+esc(item.label)+'</strong> '+esc(item.task)+'<small class="homework-source">'+esc(item.source.file)+' · '+esc(item.source.locator)+'</small></li>').join('');
+ return '<section class="library-homework" aria-labelledby="homework-title-'+lessonId+'"><h3 id="homework-title-'+lessonId+'">'+pair('Homework checklist','Compiti da completare')+'</h3>'+
+   '<p class="homework-intro" lang="en-GB" data-ui-no-translate>Tick each task when you finish it. Your ticks are saved in this browser.</p>'+
+   '<h4>'+pair('Course handbook','Libro di corso')+'</h4><p lang="it">Nuovo Espresso Plus 1</p><ul class="homework-list" lang="en-GB" data-ui-no-translate>'+pages+'</ul>'+
+   (lessonId==='L1'?'<p class="homework-source">Laura lists exercises 1 to 4 across pages 164 and 165 without assigning each exercise to one page.</p>':'')+
+   (evidence?.handouts.length?'<h4>'+pair('Worksheets and speaking','Schede e pratica orale')+'</h4><ul class="homework-list" lang="en-GB" data-ui-no-translate>'+rows(evidence.handouts,'handout')+'</ul>':'')+
+   (reference||quizzes?'<details class="homework-revision"><summary>'+pair('Further reading and optional revision','Approfondimenti e ripasso facoltativo')+'</summary>'+
+   (reference?'<h4>'+pair('Book references','Riferimenti nel libro')+'</h4><ul lang="en-GB" data-ui-no-translate>'+reference+'</ul>':'')+
+   (quizzes?'<h4>'+pair('Online practice','Esercizi online')+'</h4><ul>'+quizzes+'</ul>':'')+'</details>':'')+'</section>';
 }
 function extraMarkup(ids,lesson,browse){if(!ids.length)return '';return '<details class="library-extras"><summary>'+pair('Extra practice','Esercizi aggiuntivi')+'</summary>'+ids.filter(id=>sets[id]).map(id=>'<a class="library-topic-row" href="'+href(id,lesson,null,browse)+'"><span><strong>'+pair(sets[id].title,sets[id].it)+'</strong><small>'+progress([id])+'</small></span><span aria-hidden="true">›</span></a>').join('')+'</details>';}
 function context(active,params){

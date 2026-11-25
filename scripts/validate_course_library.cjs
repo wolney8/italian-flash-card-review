@@ -5,7 +5,7 @@ const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p
 const map=require('../study/library-map-v1.js'),extra=require('../study/library-content-v1.js');
 const B=require('../study/practice-bank-v1.js'),O=require('../study/practice-options-v1.js'),L6=require('../lesson6/content.js');
 const source=JSON.parse(zlib.gunzipSync(Buffer.from(read('study/study-sheets-v5.js').match(/const B="([^"]+)"/)[1],'base64')));
-const context={window:{},module:{exports:{}},console};vm.runInNewContext(read('study/verb-reference-v1.js'),context);
+const context={window:{},module:{exports:{}},console};for(const file of ['study/daily-verbs.js','study/verb-reference-view.js','study/verb-reference-v1.js'])vm.runInNewContext(read(file),context);
 const original=B.enhance(source.concat(L6.sheets),[],O,context.window.ItalianVerbReference.verbs);
 const data=original.concat(extra.sheets),byId=new Map(data.map(s=>[s.slug,s]));
 assert.equal(original.length,31);assert.equal(new Set(data.map(s=>s.slug)).size,data.length,'Do not replace old sheets');
@@ -52,5 +52,5 @@ for(const [name,markers] of Object.entries({
 assert.ok(!read('study/study-sheets-v5.js').includes('studyPathPicker'),'Remove mismatched library dropdown');
 const preserved=JSON.parse(read('docs/library-source-preservation.json'));
 for(const [name,hash] of Object.entries(preserved)){assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,name))).digest('hex'),hash,'Canonical source changed: '+name);}
-const report={status:'pass',lessons:6,existing_routes:original.length,added_routes:extra.sheets.length,total_routes:data.length,existing_tasks:original.reduce((n,s)=>n+s.questions.length,0),added_tasks:extra.sheets.reduce((n,s)=>n+s.questions.length,0),total_tasks:count,multiple_choice:choices,matching,ordering,lesson4_source_tasks:27,lesson5_source_tasks:32,question_identities:'legacy slug-qN retained; subsets select keys rather than copying questions',anki:'unchanged'};
+const report={status:'pass',lessons:6,existing_routes:original.length,added_routes:extra.sheets.length,total_routes:data.length,existing_tasks:original.reduce((n,s)=>n+s.questions.length,0),added_tasks:extra.sheets.reduce((n,s)=>n+s.questions.length,0),total_tasks:count,multiple_choice:choices,matching,ordering,lesson4_source_tasks:27,lesson5_source_tasks:32,question_identities:'legacy slug-qN retained; subsets select keys rather than copying questions',anki:'existing lesson notes unchanged; additive practice package verified separately'};
 const out=path.join(root,'artifacts/course-library');fs.mkdirSync(out,{recursive:true});fs.writeFileSync(path.join(out,'content-results.json'),JSON.stringify(report,null,2));fs.writeFileSync(path.join(out,'all-sheets.json'),JSON.stringify(data));console.log(JSON.stringify(report,null,2));

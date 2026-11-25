@@ -1,3 +1,19 @@
+@import url('./verb-reference-view.css');
+
+/* Daily flashcards, including reused lesson cards, follow the course palette
+   instead of the legacy review card's fixed dark colours. */
+.guided-card-host .review-card[data-lesson="PRACTICE"] {
+  --paper: inherit;
+  --paper2: inherit;
+  --ink: inherit;
+  --line: inherit;
+  --muted: inherit;
+  --green: inherit;
+  --recall: inherit;
+  --answer: inherit;
+  color: var(--ink);
+}
+
 /* Practice content lives inside the guided course. Its palette, typeface and
    native form colour scheme follow the same theme as the course header. */
 .course-practice {
@@ -92,6 +108,9 @@
   background: var(--paper);
   color: var(--ink);
 }
+.course-practice .filters label { min-width: 0; flex: 1 1 200px; }
+.course-practice .filters select { width: 100%; min-width: 0; }
+.course-practice .verb-scope { margin-top: 12px; color: var(--muted); font-size: .9rem; }
 .course-practice details { margin: 14px 0; }
 .course-practice summary {
   width: fit-content;
@@ -104,6 +123,7 @@
   padding: 5px 12px;
   border-left: 3px solid var(--line);
 }
+.course-practice #ref-body:has(.verb-reference-card) { padding: 14px 0; border-left: 0; }
 .course-practice #ref-body p + p, .course-practice .feedback p + p { margin-top: 6px; }
 .course-practice table { margin: 5px 0 8px; border-collapse: collapse; font-size: .94rem; }
 .course-practice :is(th, td) { padding: 4px 12px 4px 0; border-bottom: 1px solid var(--line); text-align: left; }
@@ -172,6 +192,7 @@
 .course-practice .listen { margin: 4px 0; padding: 4px 9px; font-size: .88rem; }
 .course-practice .feedback { margin-top: 16px; padding: 12px 14px; border-left: 3px solid var(--correct); background: var(--practice-selected); }
 .course-practice .feedback.review { border-color: var(--hint); background: var(--practice-review); }
+.course-practice .question-source { font-size: .8rem; color: var(--muted); overflow-wrap: anywhere; }
 .course-practice .finished p { margin: 8px 0; }
 .course-practice .finished li { margin: 6px 0; }
 .course-practice .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

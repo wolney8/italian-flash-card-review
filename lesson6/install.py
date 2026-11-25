@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[1]
 checks={
  'index.html':['lesson6/content.js','lesson6/styles.css'],
  'study/study-sheets.html':['../lesson6/content.js','../lesson6/styles.css'],
- 'course-data-loader-v1.js':['finalCards.concat(lesson6Cards,lesson7Cards,lesson6Supplements,lesson8Cards)'],
+ 'course-data-loader-v1.js':['finalCards.concat(lesson6Cards,lesson7Cards,lesson6Supplements,lesson8Cards,practiceCards)'],
  'guided-course-v2.js':["['L6', 'Numbers, Essere and Questions'"],
  'study/study-sheets-v5.js':['data=data.concat(window.ITALIAN_L6.sheets)','window.ITALIAN_L6.checkAnswer']
 }
@@ -13,4 +13,4 @@ for name,markers in checks.items():
     content=(ROOT/name).read_text()
     for marker in markers:
         if marker not in content:raise RuntimeError(f'{name}: missing integration {marker}')
-print('Lesson 6 web integration verified; source files unchanged; Anki remains paused.')
+print('Lesson 6 web integration verified; source files unchanged; Daily practice additions retained.')

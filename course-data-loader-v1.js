@@ -53,7 +53,7 @@
     return decoded;
   }
 
-  function validateCards(coreCards, lesson5Cards, lesson8Cards) {
+  function validateCards(coreCards, lesson5Cards, lesson8Cards, practiceCards) {
     if (coreCards.length !== EXPECTED_CORE_CARDS) {
       throw new Error(`Expected ${EXPECTED_CORE_CARDS} cards in Lessons 1–4, received ${coreCards.length}.`);
     }
@@ -75,7 +75,8 @@
     const lesson7Cards=window.ITALIAN_L7?.cards||[];
     const lesson6Supplements=window.ITALIAN_L7?.lesson6Supplements?.cards||[];
     if(lesson7Cards.some(c=>c.lesson!=='L7')||lesson6Supplements.some(c=>c.lesson!=='L6'))throw new Error('Invalid lesson extension assignment.');
-    const expanded=finalCards.concat(lesson6Cards,lesson7Cards,lesson6Supplements,lesson8Cards);
+    if(practiceCards.some(c=>c.lesson!=='PRACTICE'))throw new Error('Invalid daily practice collection assignment.');
+    const expanded=finalCards.concat(lesson6Cards,lesson7Cards,lesson6Supplements,lesson8Cards,practiceCards);
     if(new Set(expanded.map(c=>c.key)).size!==expanded.length)throw new Error('Duplicate course card keys.');
     return expanded;
   }
@@ -110,6 +111,10 @@
       if (lesson === 'L8' && window.ItalianLesson8) {
         const {title, description} = window.ItalianLesson8.lesson;
         return {number: '8', title, description};
+      }
+      if (lesson === 'PRACTICE' && window.ItalianDailyVerbCards) {
+        const {title, description} = window.ItalianDailyVerbCards.collection;
+        return {number:'Practice', title, description};
       }
       if(lesson==='L7'&&window.ITALIAN_L7)return {number:'7',title:window.ITALIAN_L7.libraryLesson?.title||'Regular -ARE verbs',description:window.ITALIAN_L7.libraryLesson?.description||'Regular verb endings, stress and everyday sentences.'};
       if(lesson==='L6')return {number:'6',title:'Numbers, Essere and Questions',description:'Number-building patterns, negatives, intonation and useful questions.'};
@@ -161,7 +166,7 @@
         <div class="card-position">Card ${position} of ${total} · ${escapeHtml(promptSummary)}</div>
         <div class="flip-shell"><div class="flip-card-inner">
           <section class="card-side card-face recall-side" aria-hidden="false"><div class="side-label recall-label">Recall side</div><div class="deck-label">${escapeHtml(card.lesson)} · ${escapeHtml(card.deck)}</div><div class="topic-panel">${card.panel || ''}</div><div class="front-body">${front}</div></section>
-          <section class="card-side card-face answer-side" aria-hidden="true"><div class="side-label answer-label-main">Answer side</div><div class="answer-body"><div class="answer-label">Answer</div><div class="italian">${card.answer || ''}</div>${card.pron ? `<div class="phon">${card.pron}</div>` : ''}${card.meaning ? `<div class="section"><div class="label">Natural English</div><div class="natural">${card.meaning}</div></div>` : ''}${card.literal ? `<div class="section"><div class="label">Literal construction</div><div class="literal">${card.literal}</div></div>` : ''}${usage ? `<div class="section"><div class="label">Use / word jobs</div><div class="usage">${usage}</div></div>` : ''}${pattern ? `<div class="section"><div class="label">Rule / forms</div><div class="pattern">${pattern}</div></div>` : ''}${clarification ? `<details class="extra clarification-block"><summary>Clarification</summary><div class="inside">${clarification}</div></details>` : ''}<details class="extra"><summary>Course source</summary><div class="inside">${reference}<p>${escapeHtml(card.key)}</p></div></details></div></section>
+          <section class="card-side card-face answer-side" aria-hidden="true"><div class="side-label answer-label-main">Answer side</div><div class="answer-body"><div class="answer-label">Answer</div><div class="italian"${card.answerLang ? ' lang="'+(card.answerLang==='en'?'en':'it')+'"' : ''}>${card.answer || ''}</div>${card.pron ? `<div class="phon">${card.pron}</div>` : ''}${card.meaning ? `<div class="section"><div class="label">Natural English</div><div class="natural">${card.meaning}</div></div>` : ''}${card.literal ? `<div class="section"><div class="label">Literal construction</div><div class="literal">${card.literal}</div></div>` : ''}${usage ? `<div class="section"><div class="label">Use / word jobs</div><div class="usage">${usage}</div></div>` : ''}${pattern ? `<div class="section"><div class="label">Rule / forms</div><div class="pattern">${pattern}</div></div>` : ''}${clarification ? `<details class="extra clarification-block"><summary>Clarification</summary><div class="inside">${clarification}</div></details>` : ''}<details class="extra"><summary>Course source</summary><div class="inside">${reference}<p>${escapeHtml(card.key)}</p></div></details></div></section>
         </div></div>
         <div class="card-actions"><button class="reveal-button" type="button" aria-expanded="false">Flip to answer side</button><button class="card-comment-button" type="button" data-comment-scope="card">Comment on this card</button></div>
       </article>`;
@@ -203,7 +208,8 @@
     window.__COURSE_DATA_READY__ = true;
     window.__COURSE_DATA_REPORT__ = {
       cards: finalCards.length,
-      lessons: new Set(finalCards.map(card => card.lesson)).size,
+      lessons: new Set(finalCards.filter(card => /^L\d+$/.test(card.lesson)).map(card => card.lesson)).size,
+      practiceCards: finalCards.filter(card => card.lesson === 'PRACTICE').length,
       subdecks: new Set(finalCards.map(card => `${card.lesson}::${card.deck}`)).size
     };
 
@@ -218,16 +224,17 @@
       throw new Error('This browser cannot decompress the course card data.');
     }
 
-    const [coreEncoded, lesson5Encoded, lesson8Cards] = await Promise.all([
+    const [coreEncoded, lesson5Encoded, lesson8Cards, practiceCards] = await Promise.all([
       loadEncodedGroup(CORE_FILES),
       loadEncodedGroup(LESSON5_FILES),
-      window.ItalianLesson8 ? window.ItalianLesson8.loadCards() : []
+      window.ItalianLesson8 ? window.ItalianLesson8.loadCards() : [],
+      window.ItalianDailyVerbCards ? window.ItalianDailyVerbCards.loadCards() : []
     ]);
     const [coreCards, lesson5Cards] = await Promise.all([
       decodeCards(coreEncoded, 'Lessons 1–4'),
       decodeCards(lesson5Encoded, 'Lesson 5')
     ]);
-    const finalCards = validateCards(coreCards, lesson5Cards, lesson8Cards);
+    const finalCards = validateCards(coreCards, lesson5Cards, lesson8Cards, practiceCards);
 
     const waitForApp = () => {
       const appReady = typeof cards !== 'undefined' && Array.isArray(cards) && typeof renderView === 'function';

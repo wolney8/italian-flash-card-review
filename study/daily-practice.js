@@ -1,4 +1,6 @@
 import './daily-verbs.js';
+import './verb-reference-view.js';
+import './verb-reference-v1.js';
 import './daily-patterns.js';
 import './daily-phrases.js';
 
@@ -11,18 +13,21 @@ export function mountPractice(main, signal) {
   const key = 'italianDailyPractice.v1';
   const size = 8;
   const topics = [
-    {id:'verbs',title:'Verb forms',description:'Match each person to a present-tense form. For regular verbs, practise writing the ending too.'},
+    {id:'verbs',title:'Verb forms',description:'Practise all six present forms, from io to loro. Choose a family, a verb or a type of question.'},
     ...window.ItalianDailyPatterns.topics,
     {id:'questions',title:'Questions and classroom phrases',description:'Ask who, what, where, when, why and how. Practise asking Laura for help.'},
     {id:'objects',title:'Direct objects',description:'Find who or what the verb acts on. Learn to spot phrases that tell you where or to whom.'}
   ];
   const verbs = window.ItalianDailyVerbs.verbs;
-  let state = {day:dayNumber, topic:'verbs', group:'all', verb:'all', focus:{}, sessions:{}};
+  const familyKeys = ['are','ere','ire','auxiliary'];
+  const regularity = verb => verb.tenses?.presente?.regularity || verb.kind;
+  let state = {day:dayNumber, topic:'verbs', family:'all', group:'all', verb:'all', focus:{}, sessions:{}};
   try {
     const saved = JSON.parse(localStorage.getItem(key));
     if (saved && topics.some(t => t.id === saved.topic)) {
       state.topic = saved.topic;
       state.group = ['regular','irregular'].includes(saved.group) ? saved.group : 'all';
+      state.family = familyKeys.includes(saved.family) ? saved.family : 'all';
       state.verb = saved.verb || 'all';
       if (saved.focus && typeof saved.focus === 'object') state.focus = saved.focus;
       if (saved.day === dayNumber && saved.sessions && typeof saved.sessions === 'object') state.sessions = saved.sessions;
@@ -36,7 +41,8 @@ export function mountPractice(main, signal) {
   function idForSession() {
     const base = state.topic === 'verbs' ? ['verbs',state.group,state.verb].join(':') : state.topic;
     const focus = state.focus[state.topic] || 'all';
-    return focus === 'all' ? base : base + ':' + focus;
+    const existing = focus === 'all' ? base : base + ':' + focus;
+    return state.topic === 'verbs' && state.family !== 'all' ? existing + ':family:' + state.family : existing;
   }
   function italianVoice() {
     if (!('speechSynthesis' in window)) return undefined;
@@ -69,20 +75,25 @@ export function mountPractice(main, signal) {
     byId('topic-intro').textContent = topic.description;
     byId('topic-buttons').innerHTML = topics.map(t => '<button type="button" data-topic="'+t.id+'" aria-pressed="'+(t.id===state.topic)+'">'+esc(t.title)+'</button>').join('');
     byId('filters').hidden = !['verbs','articles'].includes(state.topic);
-    for (const field of ['group','verb']) byId(field).parentElement.hidden = state.topic !== 'verbs';
+    for (const field of ['family','group','verb']) byId(field).parentElement.hidden = state.topic !== 'verbs';
+    byId('verb-scope').hidden = state.topic !== 'verbs';
+    byId('family').value = state.family;
+    const familyVerbs = verbs.filter(v => state.family === 'all' || v.courseGroup === state.family);
+    for (const option of byId('group').options) option.disabled = option.value !== 'all' && !familyVerbs.some(v => regularity(v) === option.value);
+    if (state.group !== 'all' && !familyVerbs.some(v => regularity(v) === state.group)) state.group = 'all';
     byId('group').value = state.group;
-    const options = verbs.filter(v => state.group === 'all' || v.kind === state.group).sort((a,b) => a.name.localeCompare(b.name,'it'));
+    const options = familyVerbs.filter(v => state.group === 'all' || regularity(v) === state.group).sort((a,b) => a.name.localeCompare(b.name,'it'));
     if (!options.some(v => v.name === state.verb)) state.verb = 'all';
     byId('verb').innerHTML = '<option value="all">Mix all '+options.length+' verbs</option>' + options.map(v => '<option value="'+esc(v.name)+'">'+esc(v.name)+' ('+esc(v.meaning)+')</option>').join('');
     byId('verb').value = state.verb;
-    const regularSelection = options.some(v => v.kind === 'regular' && (state.verb === 'all' || state.verb === v.name));
+    const regularSelection = options.some(v => regularity(v) === 'regular' && (state.verb === 'all' || state.verb === v.name));
+    const allRows = state.topic === 'verbs' ? options.filter(v => state.verb === 'all' || v.name === state.verb).flatMap(v => window.ItalianDailyVerbs.exercises(v.name).map(q => ({...q,verbName:v.name})))
+      : ['questions','objects'].includes(state.topic) ? window.ItalianDailyPhrases.exercises(state.topic) : window.ItalianDailyPatterns.exercises(state.topic);
     const focusOptions = state.topic === 'articles' ? [['all','All articles'],['definite','Definite (the)'],['indefinite','Indefinite (a or an)'],['partitive','Partitive (some)']]
-      : [['all','All tasks'],['match','Match forms and subjects'],['whole','Write whole forms'],...(regularSelection ? [['ending','Write endings']] : [])];
+      : [['all','All tasks'],['match','Match forms and subjects'],['whole','Write whole forms'],...(regularSelection ? [['ending','Write endings']] : []),...(state.topic === 'verbs' && allRows.some(q => q.skill === 'phrase') ? [['phrase','Use verbs in phrases']] : [])];
     if (!focusOptions.some(([id]) => id === state.focus[state.topic])) state.focus[state.topic]='all';
     byId('focus').innerHTML=focusOptions.map(([id,label]) => '<option value="'+id+'">'+esc(label)+'</option>').join('');
     byId('focus').value=state.focus[state.topic];
-    const allRows = state.topic === 'verbs' ? options.filter(v => state.verb === 'all' || v.name === state.verb).flatMap(v => window.ItalianDailyVerbs.exercises(v.name).map(q => ({...q,verbName:v.name})))
-      : ['questions','objects'].includes(state.topic) ? window.ItalianDailyPhrases.exercises(state.topic) : window.ItalianDailyPatterns.exercises(state.topic);
     const skill = state.focus[state.topic];
     const data = skill === 'all' ? allRows : allRows.filter(q => q.skill === skill);
     rows = new Map(data.map(q => [q.id,q]));
@@ -110,14 +121,9 @@ export function mountPractice(main, signal) {
     };
     const verb = verbs.find(v => v.name === (q && q.verbName || refVerb || state.verb)) || verbs[0];
     refVerb = verb.name;
-    byId('ref-title').textContent = state.topic === 'verbs' ? 'See the forms of '+verb.name : 'Quick reference';
+    byId('ref-title').textContent = state.topic === 'verbs' ? 'See all six forms and uses of '+verb.name : 'Quick reference';
     if (state.topic !== 'verbs') {byId('ref-body').innerHTML = sections[state.topic](); return;}
-    const pronouns = ['io','tu','lui / lei / Lei','noi','voi','loro'];
-    const headings = verb.parts ? ['Subject','Present form','Ending'] : ['Subject','Present form'];
-    const forms = pronouns.map((p,i) => verb.parts ? [p,verb.forms[i],'-'+verb.parts[i].ending] : [p,verb.forms[i]]);
-    byId('ref-body').innerHTML = '<p><b lang="it">'+esc(verb.name)+'</b> · '+esc(verb.meaning)+' · '+esc(verb.kind)+'</p>'+table(headings,forms)+
-      '<p>Polite <i lang="it">Lei</i> uses the same form as <i lang="it">lui</i> and <i lang="it">lei</i>. The traditional <i lang="it">esso/essa</i> also takes that form. You’ll rarely need it in conversation.</p>'+
-      '<p><i lang="it">'+esc(verb.example)+'</i> '+esc(verb.translation)+'</p><p>'+esc(verb.source)+'.</p>';
+    byId('ref-body').innerHTML = window.ItalianVerbReferenceView.render(window.ItalianVerbReference.find(verb.name));
   }
 
   function render(focus = false) {
@@ -132,6 +138,7 @@ export function mountPractice(main, signal) {
       return;
     }
     const result = session.results[session.index];
+    const sourceNote = result && q.source ? '<p class="question-source">' + esc(window.ItalianVerbReferenceView.sourceLabel(q.source)) + '</p>' : '';
     const stim = q.stimulus.map(s => '<p>'+(s.label ? '<strong>'+esc(s.label)+'</strong> ' : '')+'<span lang="'+(s.lang==='it'?'it':'en')+'">'+esc(s.text)+'</span></p>').join('');
     const audioWord = state.topic === 'sounds' && (result || q.id.startsWith('sounds-read-')) ? q.word : '';
     const answerLang = q.answerLang === 'en' ? 'en' : 'it';
@@ -140,7 +147,7 @@ export function mountPractice(main, signal) {
       : '<label class="entry">Your answer<input type="text" name="answer" lang="'+answerLang+'" required autocomplete="off" autocapitalize="none" spellcheck="false" value="'+esc(result?.value||'')+'"></label>';
     box.innerHTML = '<article class="panel"><div class="meter"><progress value="'+session.index+'" max="'+session.ids.length+'"></progress>Question '+(session.index+1)+' of '+session.ids.length+'</div><h3 class="question-title" tabindex="-1" lang="en-GB" data-ui-no-translate>'+esc(q.task)+'</h3><div class="stimulus" lang="en-GB" data-ui-no-translate>'+stim+'</div>'+(audioWord ? '<button type="button" class="listen" data-action="listen" data-word="'+esc(audioWord)+'"'+(italianVoice()?'':' hidden')+'>Hear the Italian</button>' : '')+
       '<form>'+inputs+(result ? '' : '<details><summary>Hint</summary><p lang="en-GB" data-ui-no-translate>'+esc(q.hint)+'</p></details><div class="controls"><button class="primary" type="submit">Check answer</button><button type="button" class="secondary" data-action="reveal">Show answer</button></div>')+'</form>'+
-      (result ? '<div role="status" lang="en-GB" data-ui-no-translate class="feedback '+(result.correct?'':'review')+'"><p><b>'+(result.correct?'Correct.':result.revealed?'Answer':'The answer is')+'</b> <span lang="'+answerLang+'">'+esc(q.answer)+'</span></p><p>'+esc(q.explanation)+'</p></div><div class="controls"><button class="primary" data-action="next">'+(session.index+1===session.ids.length?'Finish round':'Next question')+'</button></div>' : '')+'</article>';
+      (result ? '<div role="status" lang="en-GB" data-ui-no-translate class="feedback '+(result.correct?'':'review')+'"><p><b>'+(result.correct?'Correct.':result.revealed?'Answer':'The answer is')+'</b> <span lang="'+answerLang+'">'+esc(q.answer)+'</span></p><p>'+esc(q.explanation)+'</p>'+sourceNote+'</div><div class="controls"><button class="primary" data-action="next">'+(session.index+1===session.ids.length?'Finish round':'Next question')+'</button></div>' : '')+'</article>';
     if (result) box.querySelectorAll('input').forEach(el => {el.disabled=true;});
     if (focus) (result ? box.querySelector('[data-action="next"]') : box.querySelector('h3')).focus();
   }
@@ -168,6 +175,7 @@ export function mountPractice(main, signal) {
     byId('topic-buttons').querySelector('[aria-pressed="true"]').focus();
   });
   byId('group').addEventListener('change', e => {state.group=e.target.value; state.verb='all'; loadTopic();});
+  byId('family').addEventListener('change', e => {state.family=e.target.value; state.verb='all'; loadTopic();});
   byId('verb').addEventListener('change', e => {state.verb=e.target.value; loadTopic();});
   byId('focus').addEventListener('change', e => {state.focus[state.topic]=e.target.value; loadTopic();});
   if ('speechSynthesis' in window) speechSynthesis.addEventListener('voiceschanged', () => {
