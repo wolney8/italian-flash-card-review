@@ -150,7 +150,7 @@ export async function mountPractice(main, signal) {
   }
   function checkpointMarkup(session) {
     const round = session.index/session.roundSize;
-    return '<section class="df-panel"><p class="df-kicker">Round '+round+' of '+Math.ceil(session.steps.length/session.roundSize)+' checkpoint</p><h2 tabindex="-1" id="focusTaskTitle">A good place for a breather</h2><p>Take about a minute if you want. Breaks are included in the approximate time budget.</p><p class="df-muted">Your place is saved. Active practice time is paused here. Skipped steps remain unfinished.</p><div class="df-actions">'+button('continue-round','Start the next round','df-primary')+button('save','Save for later today')+'</div></section>'+sessionControls(session);
+    return '<section class="df-panel"><p class="df-kicker">Round '+round+' of '+Math.ceil(session.steps.length/session.roundSize)+' checkpoint</p><h2 tabindex="-1" id="focusTaskTitle">A good place for a breather</h2><p>Take about a minute if you want. Breaks are included in the approximate time budget.</p><p class="df-muted">Your place is saved. Active practice time is paused here. Skipped steps remain unfinished.</p><div class="df-actions">'+button('continue-round','Start the next round','df-primary')+button('save','Save for later today')+'</div></section>';
   }
   function hint(item, session) {
     return item.hint ? '<details class="df-support"'+(session.difficulty==='gentle'?' open':'')+'><summary>Hint</summary><p>'+explain(item.hint)+'</p></details>' : '';
@@ -194,7 +194,9 @@ export async function mountPractice(main, signal) {
     const heading = '<div class="df-work-head"><div><p class="df-kicker">Daily Focus · '+cap(session.difficulty)+'</p><h1>'+session.duration+'-minute drill</h1></div>'+button('pause','Pause')+'</div>'+
       '<div class="df-progress">'+window.ItalianLearningSession.progressMarkup({label:'Meaningful steps completed',completed:stats.completed,total:stats.assigned})+'<p class="df-muted">'+stats.required+' completed steps, including active recall, qualify this drill.</p></div>';
     if (!slot) return heading+summaryMarkup(false);
-    return heading+(stats.qualifies?'<div class="df-ready"><p><strong>You have done enough to qualify.</strong> Finish here, or keep practising if you want.</p>'+button('finish','Finish drill','df-primary')+'</div>':'')+(atCheckpoint(session)?checkpointMarkup(session):stepMarkup(session,slot)+sessionControls(session));
+    const qualifying = stats.qualifies ? '<div class="df-ready df-ready-early" data-focus-early role="status" aria-live="polite"><p><strong>You have done enough to qualify.</strong> Finish here, or keep practising if you want.</p>'+button('finish','Finish drill','df-primary')+'</div>' : '';
+    // The early-finish notice follows the activity, never precedes or obscures it.
+    return heading+(atCheckpoint(session)?checkpointMarkup(session):stepMarkup(session,slot))+qualifying+sessionControls(session);
   }
   function summaryMarkup(withHeading = true) {
     const session = getSession();
