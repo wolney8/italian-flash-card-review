@@ -6,7 +6,20 @@ const B=require('../study/practice-bank-v1.js'),O=require('../study/practice-opt
 const packed=fs.readFileSync(path.join(root,'study/study-sheets-v5.js'),'utf8').match(/const B="([^"]+)"/)[1];
 const baseline=JSON.parse(zlib.gunzipSync(Buffer.from(packed,'base64'))).concat(L6.sheets);
 const before=JSON.stringify(baseline),categories=[];
-global.window={};require('../study/verb-reference-v1.js');
+global.window={};require('../study/daily-verbs.js');require('../study/verb-reference-view.js');require('../study/verb-reference-v1.js');
+const reference=window.ItalianVerbReference;
+assert.equal(reference.verbs.length,35,'The shared reference includes every known verb');
+assert.deepEqual(reference.verbs.map(v=>v.name),window.ItalianDailyVerbs.verbs.map(v=>v.name));
+for(const verb of reference.verbs){
+ assert.equal(verb.forms.length,6,verb.name+' needs all six present forms');
+ assert.deepEqual(verb.forms,window.ItalianDailyVerbs.verbs.find(v=>v.name===verb.name).forms);
+}
+const referenceMarkup=reference.markup();
+assert.equal((referenceMarkup.match(/class="verb-reference-table"/g)||[]).length,35);
+assert.equal((referenceMarkup.match(/<th scope="row">/g)||[]).length,210,'Every form is in the visible six-row table');
+assert.equal((referenceMarkup.match(/class="verb-entry" open/g)||[]).length,1,'Open only the first reference entry by default');
+assert.ok(!referenceMarkup.includes('verb-plurals'),'Plural forms must not require another disclosure');
+assert.ok(referenceMarkup.includes('id="di-da-dove"')&&referenceMarkup.includes('id="agreement"'),'Retain the explanatory comparisons');
 const enhanced=B.enhance(baseline,categories,O,window.ItalianVerbReference.verbs);
 assert.equal(JSON.stringify(baseline),before,'Canonical source must not be mutated');
 assert.equal(enhanced.length,31);assert.equal(enhanced.filter(s=>s.practice).length,11);

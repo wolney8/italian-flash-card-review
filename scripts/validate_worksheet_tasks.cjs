@@ -20,7 +20,8 @@ const document = {
 };
 const context = vm.createContext({window, document, location, Event, URL, URLSearchParams, console, setTimeout});
 const modules = [
-  'lesson6/content.js', 'lesson7/content.js', 'study/verb-reference-v1.js',
+  'lesson6/content.js', 'lesson7/content.js', 'study/daily-verbs.js',
+  'study/verb-reference-view.js', 'study/verb-reference-v1.js',
   'study/practice-options-v1.js', 'study/practice-bank-v1.js', 'study/library-content-v1.js',
   'study/library-map-v1.js', 'lesson7/integration.js', 'lesson8-practice/content.js',
   'lesson8-practice/core-study.js', 'lesson8-practice/study.js', 'lesson8-practice/catalogue.js',
@@ -96,7 +97,7 @@ for (const mode of ['learn', 'review']) {
   const browseRoutes = ['browse=lesson', 'browse=topic', ...library.map.lessons.map(lesson => 'browse=lesson&lesson='+lesson.id)];
   for (const query of browseRoutes) {
     location.search = 'mode='+mode+'&'+query;
-    const navigation = {}, page = {};
+    const navigation = {}, page = {querySelectorAll:()=>[]};
     library.render(navigation, page, location.searchParams);
     let catalogueLinks = 0;
     for (const [,href] of (navigation.innerHTML+page.innerHTML).matchAll(/href="([^"]+)"/g)) {

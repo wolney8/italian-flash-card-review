@@ -60,3 +60,24 @@ html[data-italian-theme=dark] .study-pack-sheet .guided-sheet-finish .guided-she
 .library-homework li { margin-block: .5rem; line-height: 1.5; }
 .library-homework li .editorial-label { display: inline; }
 .library-homework a { color: var(--ink); text-decoration: underline; }
+.library-homework { margin: 1.5rem 0 2rem; padding: 1.1rem; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+.library-homework h3 { margin-top: 0; }
+.library-homework h4 { margin: 1.25rem 0 .3rem; font-size: 1rem; }
+.library-homework .homework-intro { margin: .5rem 0 1rem; }
+.library-homework .homework-list { list-style: none; padding: 0; }
+.homework-item { padding: .8rem 0; border-bottom: 1px solid var(--line); }
+.homework-item:last-child { border-bottom: 0; }
+.homework-item label { display: flex; align-items: flex-start; gap: .7rem; cursor: pointer; }
+.homework-item input { flex: 0 0 1.2rem; width: 1.2rem; height: 1.2rem; margin: .2rem 0 0; accent-color: var(--accent, #176b60); }
+.homework-item input:focus-visible { outline: 3px solid var(--accent, #176b60); outline-offset: 3px; }
+.homework-item input:checked + span > strong { text-decoration: line-through; }
+.homework-task { display: block; margin-top: .2rem; line-height: 1.5; }
+.homework-source { display: block; margin: .4rem 0 0 1.9rem; font-size: .875rem; line-height: 1.45; color: var(--muted, var(--ink)); overflow-wrap: anywhere; }
+.homework-practice-links { display: flex; flex-wrap: wrap; gap: .45rem .8rem; margin: .6rem 0 0 1.9rem; }
+.homework-practice-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: .95rem; }
+.homework-revision { margin-top: 1.2rem; border-top: 1px solid var(--line); padding-top: .8rem; }
+.homework-revision > summary { cursor: pointer; min-height: 44px; align-content: center; }
+@media (max-width: 520px) {
+ .library-homework { padding: .8rem; }
+ .homework-source { margin-left: 0; }
+}

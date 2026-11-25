@@ -5,7 +5,7 @@ const root=path.resolve(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p
 const map=require('../study/library-map-v1.js'),extra=require('../study/library-content-v1.js');
 const B=require('../study/practice-bank-v1.js'),O=require('../study/practice-options-v1.js'),L6=require('../lesson6/content.js');
 const source=JSON.parse(zlib.gunzipSync(Buffer.from(read('study/study-sheets-v5.js').match(/const B="([^"]+)"/)[1],'base64')));
-const context={window:{},module:{exports:{}},console};vm.runInNewContext(read('study/verb-reference-v1.js'),context);
+const context={window:{},module:{exports:{}},console};for(const file of ['study/daily-verbs.js','study/verb-reference-view.js','study/verb-reference-v1.js'])vm.runInNewContext(read(file),context);
 const original=B.enhance(source.concat(L6.sheets),[],O,context.window.ItalianVerbReference.verbs);
 const data=original.concat(extra.sheets),byId=new Map(data.map(s=>[s.slug,s]));
 assert.equal(original.length,31);assert.equal(new Set(data.map(s=>s.slug)).size,data.length,'Do not replace old sheets');

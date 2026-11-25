@@ -123,6 +123,29 @@ export function mountPractice(main, signal) {
     sentenceRound('work-question','What do you do for a living? (one friend)',['Che','lavoro','fai'],
       ['1. Which or what','2. Noun','3. Verb'],'Lavoro means job here. Choose the tu form of fare for the verb.','?')
   ];
+  // Reuse Laura's checked wording from the same catalogue as the verb tables.
+  // Existing round identities stay unchanged so saved attempts still match.
+  const coursePhraseRounds = [
+    ['fare','laura-use-26-2',['Verb','Plural article','Homework'],'Keep fare in the infinitive. Compiti is masculine and plural.'],
+    ['fare','laura-use-25-1',['Verb','Article','Cake'],'Use fare for making something. Torta is feminine and singular.'],
+    ['fare','laura-use-25-2',['Verb','Article','Drawing'],'Use fare for creating something. Disegno is masculine and singular.'],
+    ['lavorare','hospital',['Article','Subject','Verb','Preposition','Workplace'],'The doctors are several people. Use the loro form of lavorare.'],
+    ['parlare','slowly',['Article','Subject','Verb','How she speaks'],'La nonna is one person. Lentamente tells you how she speaks.'],
+    ['mangiare','together',['Subject','Verb','Preposition','With whom'],'Voi addresses several people. Keep con noi together at the end.'],
+    ['studiare','italian',['Subject','Verb','What we study'],'Noi includes the speaker. The language is what we study.'],
+    ['stare','laura-use-31-1',['Verb','Preposition','Place','When'],'Use the io form of stare. This model places stasera at the end.']
+  ].map(([name,useId,labels,hint]) => {
+    const use = verbs.find(verb => verb.name === name)?.uses.find(item => item.id === useId);
+    if (!use) throw new Error('Missing checked course phrase: ' + name + '/' + useId);
+    const punctuation = use.italian.match(/[.!?]$/)?.[0] || '';
+    const words = use.italian.replace(/[.!?]$/, '').split(/\s+/);
+    if (words.length !== labels.length) throw new Error('Course phrase labels do not match its words: ' + useId);
+    const round = sentenceRound('course-' + name + '-' + useId, use.english, words,
+      labels.map((label,index) => (index + 1) + '. ' + label), hint, punctuation);
+    round.title = 'Build a phrase from Laura’s lesson';
+    return round;
+  });
+  sentenceRounds.push(...coursePhraseRounds);
   function matchingRound(id,title,task,pairs,hint,boxLang = 'en') {
     return {id,title,task,hint,boxLang,boxes:pairs.map(([box]) => box),
       tiles:pairs.map(([,text],box) => ({text,box})),

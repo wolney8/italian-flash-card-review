@@ -63,7 +63,7 @@
     const {signal}=controller;
     host.setAttribute('aria-busy','true');
     try {
-      const [main,module]=await Promise.all([template(page),import(new URL('study/'+page+'.js?v=practice-routes-1',base).href)]);
+      const [main,module]=await Promise.all([template(page),import(new URL('study/'+page+'.js?v=20261125verbs',base).href)]);
       if (signal.aborted || !host.isConnected) return;
       main.insertAdjacentHTML('afterbegin',breadcrumb);
       returnLink(main);
