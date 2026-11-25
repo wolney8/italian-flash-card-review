@@ -204,4 +204,63 @@ test('Automatic difficulty reasons do not claim the learner set a manual flag',(
   assert.equal(e.reasonFor(item),'A recent answer needs another try');e.setFlag('item',item.id,true);assert.equal(e.reasonFor(item),'You flagged this item');
 });
 
+
+test('Weekly activity is Monday through Sunday in London, even across DST',()=>{
+  now=Date.parse('2026-11-25T16:00:00Z');const e=make();
+  assert.deepEqual(e.weekly().map(d=>d.day),['2026-11-23','2026-11-24','2026-11-25','2026-11-26','2026-11-27','2026-11-28','2026-11-29']);
+  now=Date.parse('2026-03-29T23:20:00Z');
+  assert.deepEqual(e.weekly().map(d=>d.day),['2026-03-30','2026-03-31','2026-04-01','2026-04-02','2026-04-03','2026-04-04','2026-04-05']);
+  now=Date.parse('2026-10-25T22:40:00Z');
+  assert.deepEqual(e.weekly().map(d=>d.day),['2026-10-19','2026-10-20','2026-10-21','2026-10-22','2026-10-23','2026-10-24','2026-10-25']);
+});
+test('Study-area choice is optional, separate from difficulty, and remembered',()=>{
+  const store=storage(),e=make(store);
+  assert.equal(e.preferences().focusMode,'smart');assert.deepEqual(e.preferences().focusTopics,[]);
+  e.preferences({focusMode:'blend',focusTopics:['articles','verbs'],difficulty:'challenge'});
+  const loaded=make(store);
+  assert.deepEqual(loaded.preferences().focusTopics,['articles','verbs']);
+  assert.equal(loaded.preferences().difficulty,'challenge');
+  assert.equal(loaded.preferences().focusMode,'blend');
+  assert.equal(loaded.getState().flags.topic.articles,undefined,'Choosing a topic must not mark it difficult');
+  loaded.preferences({focusMode:'smart'});
+  const smart=loaded.createSession(mixed,{duration:2});
+  assert.equal(smart.steps.length,4);assert.ok(new Set(smart.steps.map(x=>x.item.topicId)).size>1);
+  assert.equal(smart.focusMode,'smart');
+});
+test('Blended practice includes chosen areas and rotates other topics',()=>{
+  const e=make();const session=e.createSession(mixed,{duration:5,focusMode:'blend',focusTopics:['articles']});
+  assert.equal(session.steps.length,8);
+  assert.ok(session.steps.some(x=>x.item.topicId==='articles'));
+  assert.ok(session.steps.some(x=>x.item.topicId!=='articles'));
+  assert.ok(session.steps.some(x=>x.reason==='You chose articles'));
+  assert.equal(e.isFlagged('topic','articles'),false);
+});
+test('Only selected areas constrain the queue, swaps and repeated settings',()=>{
+  const e=make();const session=e.createSession(mixed,{duration:5,focusMode:'only',focusTopics:['articles','sounds']});
+  assert.equal(session.steps.length,8);
+  assert.ok(session.steps.every(x=>['articles','sounds'].includes(x.item.topicId)));
+  e.swap(mixed);assert.ok(['articles','sounds'].includes(e.currentStep().item.topicId));
+  const json=e.backup();const restored=make();restored.restore(json);
+  assert.deepEqual(restored.getSession().focusTopics,['articles','sounds']);
+  assert.equal(restored.getSession().focusMode,'only');
+  assert.throws(()=>e.createSession(mixed,{duration:5,focusMode:'only',focusTopics:[]}),/Choose at least one/);
+  assert.throws(()=>e.createSession(pool.slice(0,8),{duration:60,focusMode:'only',focusTopics:['articles']}),/Not enough approved questions/);
+});
+test('New UI supports bilingual controls without translating authored learning material',()=>{
+  const ui=require('../study/daily-focus-ui-locale.js');
+  assert.equal(ui.translate('A week of practice'),'Una settimana di pratica');
+  assert.equal(ui.translate('Smart mix (recommended)'),'Mix intelligente (consigliato)');
+  assert.equal(ui.translate('2-minute drill'),'Esercizio di 2 minuti');
+  assert.equal(ui.translate('Step 3 of 8 · Round 1 of 5'),'Attività 3 di 8 · Turno 1 di 5');
+  assert.equal(ui.translate('Last practised here 12 days ago'),'Ultimo ripasso qui 12 giorni fa');
+  assert.equal(ui.translate('You chose articles'),'Hai scelto articoli');
+  const fs=require('node:fs'),path=require('node:path');
+  const page=fs.readFileSync(path.join(__dirname,'../study/daily-focus.js'),'utf8');
+  const css=fs.readFileSync(path.join(__dirname,'../study/daily-focus.css'),'utf8');
+  assert.ok(page.includes("stepMarkup(session,slot))+qualifying+sessionControls(session)"),'Ready notice must follow the question');
+  assert.ok(page.includes("italian-interface-language-changed"),'Language toggle must rerender Today');
+  assert.ok(page.includes("weekday:'short'"),'Weekday names must use the chosen locale');
+  assert.ok(css.includes('df-ready-arrive')&&css.includes('prefers-reduced-motion:reduce'));
+});
+
 console.log('\n'+checks.length+' Daily Focus engine scenarios passed.');

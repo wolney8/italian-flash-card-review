@@ -223,6 +223,21 @@ All **14 GitHub workflows** passed on the first full preview commit `03ed2e09b5c
 
 The existing repository has preservation checks for the course library, repeatable practice, lessons, recall layout, interface language, navigation, themes and learning controls. Run the affected checks alongside the new state tests. Browser checks must cover the actual preview and report their scope. Do not claim actual iPhone, Safari, offline, assistive-technology or automatic cross-device verification from a desktop preview.
 
+
+## Refinements for the one-week preview review
+
+Requested on 25 November 2026. These changes remain on PR 31, not on production.
+
+- **Calendar:** The weekly panel always displays the current London calendar week, Monday through Sunday. Days ahead show no completed activity. Historical credits keep their original London completion date, including BST/GMT transitions.
+- **Early completion:** The invitation to finish appears after the active question or checkpoint, not above it. It enters with a small movement and fade, without grabbing focus. Reduced-motion preferences disable this animation.
+- **English / Italian switch:** Daily Focus has dedicated interface translations covering its buttons, instructions, status, weekday labels, results, settings and accessible labels. The selected locale uses Italy's weekday and month names, while all dates still use the London time zone. Approved Italian source text, answers and English teaching prompts retain their established content and stable IDs. Switching languages must not create a new session, discard answers or change scoring.
+- **Secondary options alignment:** The spoken-recall checkbox aligns with the Difficulty selector in two equal columns on desktop; on a narrow screen they stack.
+- **Study-area choice:** Smart mix stays the default and continues to prioritise flags, difficult items and due reviews. Under the optional adjustments area, a learner can select **Blend my topics with weak areas** or **Only my selected topics**, with simple topic checkboxes. Choices persist in the browser and backup but are distinct from difficulty and from **Needs practice** flags. A chosen topic is never counted as self-reported weakness. If a restricted topic lacks enough approved questions for the selected budget, offer a shorter duration or Smart mix rather than inventing questions.
+- **New-question repeats / swapping:** New drills carry the selected-topic mode and topic IDs, and swaps in restricted drills must use only allowed topics. All 75% completion rules and item identities remain unchanged.
+- **Trial:** Keep the existing approval gate: this is a review preview until explicitly approved for publication. No Anki update is required. After launch, use it for seven days before cosmetic iteration.
+
+Verification additions cover Monday/Sunday and DST, topic settings and persistence, blended versus restricted selection, swap restrictions, Italian interface labels, banner placement and reduced motion. Physical Safari, iPhone and Mac sign-in/continuity remain unverified.
+
 ## Delivery and one-week trial
 
 1. Finish the smallest working preview and record exact verification results here.

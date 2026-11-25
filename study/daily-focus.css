@@ -123,3 +123,25 @@
 @media(max-width:600px){.df-home{align-items:stretch;flex-direction:column;padding:19px}.df-heading{flex-wrap:wrap;gap:10px}.df-heading h1{font-size:2.35rem}.df-status{max-width:none}.df-duration{gap:6px}.df-duration label{flex:1 1 52px;padding:10px 4px}.df-duration label:has(:checked){padding:9px 3px}.df-session{align-items:stretch;flex-direction:column}.df-session .df-actions{flex-wrap:wrap}.df-work-head{align-items:start}.df-options{grid-template-columns:1fr}.df-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.df-ready{align-items:stretch;flex-direction:column}.df-week{gap:4px}.df-day{font-size:.82rem}.df-controls>div{width:100%}.df-controls button{flex:1 1 130px}.df-step-tools{gap:5px}.df-step-tools button{flex:1 1 130px}.df-actions .df-primary{min-width:0}.df-work-head button{flex:none}.df-progress{margin-top:13px}.df-panel{border-radius:12px}.daily-focus{padding-top:10px}}
 @media(prefers-reduced-motion:reduce){.daily-focus *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 @media(max-width:600px){.df-duration label{font-size:.9rem;white-space:nowrap}.df-step-tools>div{display:flex;flex-wrap:wrap;gap:8px}}
+
+/* Align difficulty and spoken-practice options at a shared baseline. */
+.daily-focus .df-adjustment-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end;gap:16px}
+.daily-focus .df-setting-field{display:grid;gap:7px;min-width:0;margin:0}
+.daily-focus .df-setting-field select{min-height:48px;width:100%}
+.daily-focus .df-spoken-setting{display:grid;gap:7px;align-self:stretch;min-width:0}
+.daily-focus .df-setting-heading{font-size:.9rem;font-weight:600}
+.daily-focus .df-spoken-setting .df-check{margin:0!important;min-height:48px;padding:8px 12px;border:1px solid var(--practice-control-border,var(--line));border-radius:9px;background:var(--paper);display:flex!important;align-items:center;gap:10px}
+.daily-focus .df-study-areas{padding:17px 0 2px;margin-top:18px;border:0;border-top:1px solid var(--line);min-width:0}
+.daily-focus .df-study-areas legend{font-weight:700;padding:0 0 7px}
+.daily-focus .df-study-areas>label{display:block;font-weight:600;margin:7px 0}
+.daily-focus .df-study-areas>select{max-width:100%;width:100%;min-height:46px}
+.daily-focus .df-study-areas>.df-muted{margin-top:10px}
+.daily-focus .df-topic-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:15px}
+.daily-focus .df-topic-choice{display:flex;align-items:center;gap:11px;min-height:46px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.daily-focus .df-topic-choice:has(:checked){background:var(--df-tint);border-color:var(--green)}
+.daily-focus .df-topic-choice input{flex:none;width:19px;height:19px;accent-color:var(--green)}
+/* The qualifying invitation follows the practice card, and respects reduced motion. */
+.daily-focus .df-ready-early{animation:df-ready-arrive .34s ease-out both;transform-origin:top center}
+@keyframes df-ready-arrive{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.daily-focus .df-adjustment-row,.daily-focus .df-topic-choices{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.daily-focus .df-ready-early{animation:none}}
