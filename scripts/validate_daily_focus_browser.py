@@ -56,8 +56,8 @@ try:
     days=page.locator('.df-week .df-day > span:first-child').all_inner_texts()
     assert_true(days==['lun','mar','mer','gio','ven','sab','dom'],'Italian weekdays are incorrect: '+str(days))
     assert_true(page.locator('#focusTopicMode').input_value()=='blend','Language switch lost study-area mode')
-    page.locator('.df-adjustments summary').click()
     assert_true('articles' in page.evaluate('ItalianDailyFocus.preferences().focusTopics'),'Language switch lost chosen topic')
+    assert_true(page.locator('.df-adjustments').get_attribute('open') is not None,'The adjusted controls did not stay expanded')
 
     page.select_option('#focusTopicMode','only')
     page.locator('input[name=focusTopic][value=articles]').check()
