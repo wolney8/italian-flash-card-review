@@ -19,6 +19,7 @@ jobs:
         run: |
           node --check study/daily-focus-engine.js
           node --check study/daily-focus-content.js
+          node --check study/daily-focus-language.js
           node --check study/daily-focus.js
           node --check daily-focus-hooks.js
       - name: Verify practice, completion, persistence and transfer

@@ -46,7 +46,7 @@ let poolCache;
 function topicFor(value) {
   const text = String(value || '').toLowerCase();
   if (/article|partitiv|plural|singolare/.test(text)) return 'articles';
-  if (/preposition|in.the|on.the|from.the/.test(text)) return 'prepositions';
+  if (/preposition|^(?:\d+\s+)?(?:in the|on the|from the)(?:\s*[,/·]|$)/.test(text)) return 'prepositions';
   if (/sound|pronunc|phonetic|alphabet|spelling|silent.h|town.code|(?:^|[- ])(?:c|g)[- ]columns/.test(text)) return 'sounds';
   if (/number|calculation/.test(text)) return 'numbers';
   if (/useful.question|question.word|classroom|^questions/.test(text)) return 'questions';
@@ -55,7 +55,23 @@ function topicFor(value) {
   return 'conversation';
 }
 function topicForSheet(sheet) { return topicFor(typeof sheet === 'string' ? sheet : sheet.slug); }
-function topicForCard(card) { return topicFor(card.deck || card.key); }
+function topicForCard(card,preparedTask) {
+  const authored=root.ItalianLesson8CardTasks?.get(card.key) || root.ItalianEarlyCardTasks?.get(card);
+  const instruction=String(card.prompt || '').match(/class=["'][^"']*\binstruction\b[^"']*["'][^>]*>([\s\S]*?)<\/(?:div|p)>/i)?.[1] || '';
+  const task=String(preparedTask || authored?.task || card.task || instruction).replace(/<[^>]*>/g,' ').toLowerCase();
+  const cue=String(card.prompt || '')+' '+JSON.stringify(authored?.stimulus || card.cues || []);
+  // A mixed deck title must not override what this specific card asks the learner to do.
+  if(/\b(?:pronounce|pronunciation|spelling|soft sound|hard sound|letter name|sound of)\b/.test(task))return 'sounds';
+  if(/\b(?:direct object|indirect object|subject complement|transitive|intransitive)\b/.test(task))return 'objects';
+  if(/\b(?:combine|join)\b/.test(task) && /\b(?:in|su|da|di|a)\s*\+\s*(?:il|lo|la|l[’']|i|gli|le)\b/i.test(cue))return 'prepositions';
+  if(/\b(?:definite|indefinite|partitive|article)\b/.test(task))return 'articles';
+  const names=new Set(['essere','avere','fare','stare','venire','andare','chiamarsi','lavorare',...(root.ItalianDailyVerbs?.verbs || []).map(verb=>verb.name)]);
+  if(/\b(?:conjugat\w*|present form|verb form|infinitive)\b/.test(task))return 'verbs';
+  if(/\b(?:use|using|form of)\s+([\p{L}]+)/gu.test(task)){
+    for(const match of task.matchAll(/\b(?:use|using|form of)\s+([\p{L}]+)/gu))if(names.has(match[1]))return 'verbs';
+  }
+  return topicFor(card.deck || card.key);
+}
 function textOf(html) {
   const doc = new DOMParser().parseFromString(String(html || '').replace(/<br\s*\/?\s*>/gi,'\n'), 'text/html');
   doc.querySelectorAll('.editorial-label-sub,script,style,button,img,audio,video').forEach(el=>el.remove());
@@ -223,7 +239,7 @@ function cardItem(card) {
   }
   const answer=card.primaryAnswer || textOf(card.answer),hint=textOf(doc.querySelector('.clue')?.innerHTML || '');
   if (!goodText(task) || !goodText(answer) || answer.length>280 || task.length>300 || stimulus.some(row=>row.text.length>400)) return null;
-  const topicId=topicForCard(card),meaning=textOf(card.meaning),usage=textOf(card.usage);
+  const topicId=topicForCard(card,task),meaning=textOf(card.meaning),usage=textOf(card.usage);
   return {id:'card:'+card.key,sourceId:card.key,aliases:[card.key],topicId,topicTitle:titles[topicId],type:'flashcard',
     task,stimulus,answer,answers:[answer],answerLang:card.answerLang || (card.task_kind==='concept'?'en':'it'),choices:[],hint,
     explanation:[meaning,usage].filter(Boolean).join('\n'),meaning,usage,
@@ -257,23 +273,26 @@ async function buildPool({refresh=false}={}) {
   poolCache=[...new Map(rows.map(item=>[item.id,item])).values()];
   return clone(poolCache);
 }
-function normalise(value) {
-  return String(value ?? '').normalize('NFC').toLocaleLowerCase('it').replace(/[‘’]/g,"'")
-    .replace(/[“”]/g,'"').replace(/[.!?,;:]/g,'').replace(/\s+/g,' ').trim();
+function normalise(value,mode='accent') {
+  let text=String(value ?? '').normalize('NFC').toLocaleLowerCase('it').replace(/[‘’]/g,"'")
+    .replace(/[“”]/g,'"').replace(/\s+/g,' ').trim();
+  if(mode!=='punctuation')text=text.replace(/[.!?,;:]/g,'').trim();
+  return text;
 }
-function variants(value,subjects=[]) {
-  const valueNorm=normalise(value),set=new Set([valueNorm]);
+function variants(value,subjects=[],mode='accent') {
+  const valueNorm=normalise(value,mode),set=new Set([valueNorm]);
   for (const subject of subjects) {
-    const prefix=normalise(subject)+' ';
+    const prefix=normalise(subject,mode)+' ';
     if (valueNorm.startsWith(prefix)) set.add(valueNorm.slice(prefix.length));
   }
   return set;
 }
 function matchAnswer(item,value) {
   // Accent and apostrophe differences may change Italian meaning. Keep those meaningful.
-  const input=variants(value,item.optionalSubjects),answers=item.answers?.length?item.answers:[item.answer];
-  if (!normalise(value)) return false;
-  return answers.some(answer=>[...variants(answer,item.optionalSubjects)].some(v=>input.has(v)));
+  const mode=item.answerMode || 'accent';
+  const input=variants(value,item.optionalSubjects,mode),answers=item.answers?.length?item.answers:[item.answer];
+  if (!normalise(value,mode)) return false;
+  return answers.some(answer=>[...variants(answer,item.optionalSubjects,mode)].some(v=>input.has(v)));
 }
 function safeJSON(storageKind,key,fallback={}) {try{return JSON.parse(root[storageKind]?.getItem(key)||'null') || fallback;}catch(_){return fallback;}}
 function readLegacyHistory(pool=poolCache || []) {

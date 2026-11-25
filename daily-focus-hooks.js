@@ -8,7 +8,7 @@
     if(root.ItalianDailyFocusContent?.topicFor)return root.ItalianDailyFocusContent.topicFor(value);
     const text=String(value || '').toLowerCase();
     if(/article|partitiv|plural|singolare/.test(text))return 'articles';
-    if(/preposition|in.the|on.the|from.the/.test(text))return 'prepositions';
+    if(/preposition|^(?:\d+\s+)?(?:in the|on the|from the)(?:\s*[,/·]|$)/.test(text))return 'prepositions';
     if(/sound|pronunc|phonetic|alphabet|spelling|silent.h|town.code|(?:^|[- ])(?:c|g)[- ]columns/.test(text))return 'sounds';
     if(/number|calculation/.test(text))return 'numbers';
     if(/useful.question|question.word|classroom|^questions/.test(text))return 'questions';
@@ -16,6 +16,7 @@
     if(/verb|pronoun|essere|avere|fare|stare|venire|andare|chiamarsi|lavorare|parlare|studiare|mangiare|vivere|abitare|negative|^l7-(?:class|homework|endings|families|connected)|^l6-recap/.test(text))return 'verbs';
     return 'conversation';
   }
+  const cardTopic=card=>root.ItalianDailyFocusContent?.topicForCard(card) || topicFor(card.deck || card.key);
   function button(kind,id,label) {
     const el=document.createElement('button');el.type='button';el.className='focus-flag guided-secondary';
     el.dataset.focusFlagKind=kind;el.dataset.focusFlagId=id;el.dataset.focusFlagLabel=label;
@@ -68,8 +69,8 @@
     if(card && cardHost){
       // The toolbar is outside the authored card content and its reveal state.
       const item=root.ItalianDailyFocusContent?.cardItem(card);
-      if(root.ItalianDailyFocusContent && !item)group(cardHost,null,topicFor(card.deck || card.key),{topicOnly:true});
-      else group(cardHost,item || {id:'card:'+card.key,task:'Flashcard '+card.key},topicFor(card.deck || card.key));
+      if(root.ItalianDailyFocusContent && !item)group(cardHost,null,cardTopic(card),{topicOnly:true});
+      else group(cardHost,item || {id:'card:'+card.key,task:'Flashcard '+card.key},cardTopic(card));
     }
     document.querySelectorAll('.study-pack-sheet').forEach(sheet=>{
       const topicId=topicFor(sheet.id),actions=sheet.querySelector('.hero .actions');
@@ -109,7 +110,7 @@
   root.addEventListener('italian-flashcard-assessed',event=>{
     const {card,rating:confidence,at}=event.detail || {};
     if(!card || !['known','again','unsure'].includes(confidence))return;
-    const topicId=topicFor(card.deck || card.key);
+    const topicId=cardTopic(card);
     root.ItalianDailyFocus?.recordExternalAttempt({id:'card:'+card.key,sourceId:card.key,topicId,topicTitle:titles[topicId],type:'flashcard',origin:'flashcard',task:'Flashcard recall'},
       {correct:null,confidence,at:Number.isFinite(at)?at:Date.now()});
   });

@@ -5,6 +5,8 @@
 **Delivery stage:** Working preview. Production publication remains a separate approval step.
 **Purpose:** Start useful practice quickly, using the approved course, with one small completed drill enough for the day.
 
+**Shared preview:** [Open Daily Focus](https://deploy-preview-31--italian-flash-card-review.netlify.app/?page=daily-focus). This is PR 31's separate preview origin. The shared-preview browser checks below were performed at source head `03ed`; later changes require the applicable checks again.
+
 ## Existing work and release boundary
 
 The preceding verb-reference layout work was completed in PR 30 and published at production commit `83197afeb5fc5655467a7bc7d25d237aa4acd6d4`. Its usage-card layout, Italian/English styling and additive Anki update remain the baseline. Daily Focus is an additional practice route, not a replacement for existing Daily practice, flashcards or study sheets.
@@ -170,6 +172,7 @@ A browser bookmark or home-screen shortcut can make Today easier to open. It doe
 | `study/daily-focus.js`, `.html`, `.css` | Accessible Today setup, drill, pause/checkpoint, summary, history and transfer UI. |
 | `daily-focus-hooks.js` | Reversible Needs practice controls and explicit checked-attempt observations on existing screens. |
 | Existing route/header files | Entry links and shared shell integration only. |
+| `study/daily-focus-language.js` | Safe presentation annotations for Italian references and English meanings, without changing canonical text. |
 | `scripts/validate_daily_focus_engine.cjs` | State-transition and preservation checks. |
 
 Avoid rewriting canonical lesson files to make the new feature work. Record source traceability and adapter provenance. Keep this plan alongside the repository so it travels with the implementation.
@@ -184,13 +187,19 @@ The preview was checked at a **375 px phone viewport** in light and dark themes.
 
 The longer-session recovery path was also exercised in the browser: a 30-minute drill started with 40 steps, one reading step was completed, and the draft **Di dov** was saved. After a page refresh, resumption restored the exact question and draft at **1/40**. Shortening to two minutes retained **1/4**. Swapping removed the old draft while leaving progress at **1/4**. Two skips followed by **I don't know** produced a recoverable **2/4** partial result with **Complete 1 more step**. The result was labelled as a two-minute version shortened from 30 minutes. Today's completed status from the earlier drill remained intact.
 
+On the shared PR 31 preview, a fresh origin defaulted to **five minutes**. Keyboard ArrowLeft selected the two-minute radio option. Enter started the drill, marked the reading step, advanced, and submitted a typed answer. The typed **ONO.** was accepted against the approved **ono** answer, confirming harmless case and terminal-punctuation handling through the visible form. The drill was saved at **2/4**.
+
+The actual browser backup controls were exercised on that preview: export downloaded a JSON file, the file chooser accepted it, the import preview showed **one saved drill**, and **Merge this backup** reported one saved drill without duplication. This verifies a browser export/import round trip in the tested environment. It does not establish automatic sync or a transfer between a physical Mac and phone.
+
+The same saved drill was also opened in two real browser tabs. Advancing from step 2 to step 3 in one tab updated the other tab to the correct question, with a notice explaining the change. Both retained 2/4 completed steps.
+
 The content review checked 64 curated reading extracts for standalone meaning. Existing content checks retained **857 stored web cards**, the **333-card Daily collection** and the **234-card Anki add-on identity set**. No new Anki package was generated for Daily Focus.
 
 Independent review identified and the implementation corrected a stale-backup conflict that could otherwise turn a valid shortened 6/8 completion into an invalid 6/40 record. Finished session targets and finish dates are now immutable across that merge. Additional fixes clear swapped drafts, retain exposure identity per replacement item, preserve the spoken setting, keep previous-day activity when a drill resumes, and guard the displayed question against a second tab changing its position before submission.
 
 | Case | Required evidence | Current state |
 | --- | --- | --- |
-| All five durations and independent difficulty | Engine target assertions and UI selection | Engine passed; full UI duration sweep pending |
+| All five durations and independent difficulty | Engine target assertions and UI selection | Engine passed; shared-preview default 5 and keyboard selection of 2 passed; full UI duration sweep unverified |
 | Wrong answer and I don't know count as practice | State test with retained incorrect result and revisit signal | Engine and browser paths passed |
 | Too many skips | Partial summary states exact remaining count and supports recovery | Engine and browser partial-result paths passed |
 | Swap | Same assigned total; completed count unchanged | Engine and browser paths passed, including cleared replacement draft |
@@ -203,12 +212,14 @@ Independent review identified and the implementation corrected a stale-backup co
 | Content update | Snapshot/ID test retains old results and available resumption | Engine passed |
 | Old browser progress | Existing keys remain unchanged; exposure excluded from recall | Isolated store, legacy-history and content-preservation checks passed |
 | Missing history | No invented review date or whole-course overdue state | Engine passed |
-| Transfer | Validated export/import round trip, merge and bad-file rejection | Engine passed; actual browser file-transfer controls pending |
-| Multi-tab use and storage failure | Stale-write handling and visible save failure | Engine passed; UI guard reviewed, actual two-tab browser test pending |
+| Transfer | Validated export/import round trip, merge and bad-file rejection | Engine and actual browser download/file-chooser/merge round trip passed without duplication; physical cross-device transfer unverified |
+| Multi-tab use and storage failure | Stale-write handling and visible save failure | Engine passed; actual same-session two-tab browser check passed: advancing in one tab refreshed the other to the same step with a clear notice |
 | Active time | Background, pause and idle periods excluded | Engine pause/cap passed; browser visibility/idle behaviour pending |
 | Navigation, theme and language styles | Browser checks on Today and existing flagged screens | Today route and light/dark phone-width preview passed; existing-screen flag sweep pending |
-| Phone controls and keyboard | Narrow viewport, no horizontal overflow, usable focus/controls | 375 px viewport and button heights passed; physical-device and full keyboard sweep unverified |
-| Canonical content and Anki parity | Existing content/identity validation; no Anki files changed | 857 stored cards, 333 Daily collection entries and 234 add-on identities retained; CI pending |
+| Phone controls and keyboard | Narrow viewport, no horizontal overflow, usable focus/controls | 375 px viewport and button heights passed; shared-preview keyboard duration/start/read/next/typed-submit path passed; physical-device and comprehensive keyboard sweep unverified |
+| Canonical content and Anki parity | Existing content/identity validation; no Anki files changed | 857 stored cards, 333 Daily collection entries and 234 add-on identities retained; all 14 CI workflows passed at preview commit `03ed2e09b5cd01365439ad69ea34b88e9c233e5e` |
+
+All **14 GitHub workflows** passed on the first full preview commit `03ed2e09b5cd01365439ad69ea34b88e9c233e5e`, and Netlify built the preview successfully. Final follow-up checks are recorded in the PR.
 
 The existing repository has preservation checks for the course library, repeatable practice, lessons, recall layout, interface language, navigation, themes and learning controls. Run the affected checks alongside the new state tests. Browser checks must cover the actual preview and report their scope. Do not claim actual iPhone, Safari, offline, assistive-technology or automatic cross-device verification from a desktop preview.
 
