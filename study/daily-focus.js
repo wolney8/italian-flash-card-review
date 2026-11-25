@@ -108,8 +108,8 @@ export async function mountPractice(main, signal) {
       const complete = day.state === 'completed';
       const self = day.selfReported?.length > 0;
       const mark = complete ? '✓' : self ? '•' : day.state === 'in progress' || day.state === 'saved for later' ? '○' : '·';
-      return '<div class="df-day" data-complete="'+complete+'"'+(day.day===today()?' aria-current="date"':'')+' aria-label="'+esc(dateLabel(stamp)+': '+(complete?'completed web drill':self?'self-reported activity':day.state))+'"><span>'+name+'</span><b aria-hidden="true">'+mark+'</b><span>'+stamp.getUTCDate()+'</span></div>';
-    }).join('')+'</div><p class="df-muted">✓ Completed web drill · ○ Practice started · • Self-reported study</p>';
+      return '<div class="df-day" data-complete="'+complete+'"'+(day.day===today()?' aria-current="date"':'')+' aria-label="'+esc(dateLabel(stamp)+': '+(complete?translateUI('Completed web drill'):self?translateUI('Self-reported study'):translateUI(cap(day.state))))+'"><span>'+name+'</span><b aria-hidden="true">'+mark+'</b><span>'+stamp.getUTCDate()+'</span></div>';
+    }).join('')+'</div><p class="df-muted">✓ '+translateUI('Completed web drill')+' · ○ '+translateUI('Practice started')+' · • '+translateUI('Self-reported study')+'</p>';
   }
   function sessionRows() {
     const state = engine.getState();
