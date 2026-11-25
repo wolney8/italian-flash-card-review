@@ -121,7 +121,10 @@ def build(output):
             template=collection.models.new_template('Recall')
             template.update(id=stable_number('daily-verb-template:recall'),qfmt=FRONT,afmt=BACK)
             collection.models.add_template(model,template)
+            # Register the stable ID, then let Anki stamp the changed note type
+            # so an existing import receives its updated styling.
             collection.models.update(model)
+            collection.models.update(model, preserve_usn=False)
             deck(collection,PARENT)
             decks={name:deck(collection,PARENT+'::'+name) for name in sorted({card['deck'] for card in cards})}
             notes=[]
