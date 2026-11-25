@@ -26,6 +26,7 @@
     "Choose the areas you want":"Scegli gli argomenti",
     "Smart mix already prioritises flagged, difficult and due items. Choosing topics does not mark them as difficult.":"Il mix intelligente dà priorità agli elementi segnalati, difficili e da ripassare. Selezionare un argomento non lo segna come difficile.",
     "Choose at least one area for the selected mode.":"Scegli almeno un argomento per questa modalità.",
+    "Choose at least one study area or use Smart mix.":"Scegli almeno un argomento oppure usa il mix intelligente.",
     "With Smart mix, you can leave everything else alone.":"Con il mix intelligente non devi scegliere altro.",
     "Start my drill":"Inizia l’esercizio","Start another drill":"Inizia un altro esercizio",
     "One qualifying drill is enough for today, including the two-minute option.":"Un esercizio completato è sufficiente per oggi, anche quello di due minuti.",
@@ -34,6 +35,7 @@
     "Review answers":"Rivedi le risposte","New questions":"Nuove domande","Resume":"Riprendi",
     "A week of practice":"Una settimana di pratica",
     "Monday to Sunday":"Da lunedì a domenica",
+    "Activity from Monday to Sunday":"Attività da lunedì a domenica",
     "Completed web drill":"Esercizio online completato",
     "Practice started":"Pratica iniziata","Self-reported study":"Studio dichiarato",
     "Studied in Anki or your workbook?":"Hai studiato su Anki o sul quaderno?",
@@ -163,6 +165,8 @@
     if((m=raw.match(/^(\d+) saved drills?$/)))return m[1]+' esercizi salvati';
     if((m=raw.match(/^Showing the latest (\d+) drills\. Older work is retained in your backup\.$/)))return 'Mostriamo gli ultimi '+m[1]+' esercizi. I precedenti restano nel backup.';
     if((m=raw.match(/^Recorded today: (.*)\.$/)))return 'Registrato oggi: '+m[1]+'.';
+    if((m=raw.match(/^Not enough approved questions in those areas for (\d+) minutes\. Choose a shorter drill or Smart mix\.$/)))return 'Non ci sono abbastanza domande approvate per '+m[1]+' minuti. Scegli una durata più breve o il mix intelligente.';
+    if((m=raw.match(/^Flag (.+)$/)))return 'Segnala '+(labels[m[1]]||m[1]);
     if((m=raw.match(/^Your confidence: (.*)$/)))return 'La tua sicurezza: '+(labels[m[1]]||m[1]);
     if((m=raw.match(/^Shortened to (\d+) minutes\. Your completed work is retained\.$/)))return 'Ridotto a '+m[1]+' minuti. Le attività completate restano salvate.';
     if((m=raw.match(/^Backup merged\. (\d+) drills? (?:is|are) saved here\.$/)))return 'Backup unito. Qui sono salvati '+m[1]+' esercizi.';
