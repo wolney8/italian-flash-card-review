@@ -3,6 +3,7 @@
   'use strict';
   const base = new URL('.', document.currentScript.src);
   const pages = new Map([
+    ['daily-focus','Daily Focus'],
     ['daily-practice','Daily practice'],
     ['visual-exercises','Visual exercises'],
     ['jobs-in-photos','Jobs in photographs'],
@@ -63,7 +64,7 @@
     const {signal}=controller;
     host.setAttribute('aria-busy','true');
     try {
-      const [main,module]=await Promise.all([template(page),import(new URL('study/'+page+'.js?v=20261125cards',base).href)]);
+      const [main,module]=await Promise.all([template(page),import(new URL('study/'+page+'.js?v=20261125focus1',base).href)]);
       if (signal.aborted || !host.isConnected) return;
       main.insertAdjacentHTML('afterbegin',breadcrumb);
       returnLink(main);

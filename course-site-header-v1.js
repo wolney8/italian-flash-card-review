@@ -11,7 +11,7 @@ function header(o={}){
  const href=key=>key==='topics'?(study?'':'study/')+'study-sheets.html?mode='+(o.mode==='review'?'review':'learn'):base+'?page='+key;
  const practice=['daily-practice','visual-exercises','jobs-in-photos','articles-guide'].includes(o.current)||(o.current==='card'&&o.lesson==='PRACTICE');
  const active=practice?'daily-practice':o.current==='card'?'lessons':o.current||'home';
- const items=[['home','Inizio','Home'],['lessons','Lezioni','Lessons'],['topics','Schede di studio','Study sheets'],['daily-practice','Esercizi quotidiani','Daily practice']];
+ const items=[['home','Inizio','Home'],['daily-focus','Oggi','Today'],['lessons','Lezioni','Lessons'],['topics','Schede di studio','Study sheets'],['daily-practice','Esercizi quotidiani','Daily practice']];
  const nav=items.map(([key,it,en])=>'<a href="'+href(key)+'" data-guide-to="'+key+'"'+(active===key?(practice&&o.current!==key?' aria-current="location"':' aria-current="page"'):'')+'>'+pair(it,en,!!o.italianFirst)+'</a>').join('');
  const comment='<button type="button" class="course-site-comment" data-guide-comment data-study-editorial-comment>'+pair('Commenti','Comments',!!o.italianFirst)+'</button>';
  const order='<button type="button" class="course-site-language" data-guide-label-order data-study-editorial-language aria-label="Change interface language"><span class="ui-language-choice" lang="it">ITA</span><span aria-hidden="true"> / </span><span class="ui-language-choice" lang="en">ENG</span></button>';

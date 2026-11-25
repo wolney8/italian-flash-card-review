@@ -1,0 +1,31 @@
+name: Daily Focus integrity
+on:
+  pull_request:
+    paths: ['study/daily-focus*', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
+  push:
+    branches: [main]
+    paths: ['study/daily-focus*', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
+permissions:
+  contents: read
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check Daily Focus modules
+        run: |
+          node --check study/daily-focus-engine.js
+          node --check study/daily-focus-content.js
+          node --check study/daily-focus.js
+          node --check daily-focus-hooks.js
+      - name: Verify practice, completion, persistence and transfer
+        run: node scripts/validate_daily_focus_engine.cjs
+      - name: Preserve shared content and navigation
+        run: |
+          node scripts/build_daily_verb_cards.cjs --check
+          node scripts/validate_recall_layout.cjs
+          node scripts/validate_course_library.cjs
+          node scripts/validate_navigation_consistency.cjs
