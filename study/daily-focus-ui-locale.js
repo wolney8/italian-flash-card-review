@@ -177,6 +177,13 @@
   function apply(scope, locale) {
     if (!scope) return;
     const italian=locale==='it';
+    // The interface follows the chosen locale, but approved English prompts
+    // remain English for speech readers even when the surrounding UI is Italian.
+    const main=scope.matches?.('.daily-focus') ? scope : scope.querySelector('.daily-focus');
+    if(main)main.lang=italian?'it':'en-GB';
+    for(const element of scope.querySelectorAll('.df-task h2,.df-review-list h3,.df-reading,.df-stimulus strong,.df-support p')) {
+      element.lang='en-GB';
+    }
     const walker=document.createTreeWalker(scope,NodeFilter.SHOW_TEXT);
     const nodes=[];let node;
     while((node=walker.nextNode()))nodes.push(node);
