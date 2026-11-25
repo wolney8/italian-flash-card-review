@@ -1,6 +1,7 @@
 import './daily-focus-content.js?v=20261125focus1';
 import './verb-reference-view.js?v=20261125cards';
 import './daily-focus-language.js?v=20261125focus1';
+import './daily-focus-ui-locale.js?v=20261125week1';
 
 export async function mountPractice(main, signal) {
   const engine = window.ItalianDailyFocus;
@@ -10,6 +11,9 @@ export async function mountPractice(main, signal) {
   const notice = main.querySelector('#focusNotice');
   const warning = main.querySelector('#focusStorage');
   const displayText = value => String(value ?? '').replace(/\u2014/g, ':');
+  const interfaceLocale = () => window.ItalianUI?.language || document.documentElement.dataset.uiLanguage || 'en';
+  const translateUI = text => interfaceLocale()==='it' ? window.ItalianDailyFocusLocale.translate(text) : text;
+  const localiseScreen = () => window.ItalianDailyFocusLocale?.apply(main,interfaceLocale());
   const esc = value => displayText(value).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
   const explain = value => window.ItalianDailyFocusLanguage.formatExplanation(displayText(value));
   const it = value => language.formatItalian(displayText(value));
@@ -19,7 +23,7 @@ export async function mountPractice(main, signal) {
   const labelFor = {question:'Short exercise', flashcard:'Flashcard', reading:'Read and remember', spoken:'Spoken or quiet recall'};
   const durations = [2,5,10,30,60];
   const today = () => engine.dayKey(Date.now());
-  const dateLabel = value => new Intl.DateTimeFormat('en-GB', {timeZone:'Europe/London',day:'numeric',month:'short'}).format(new Date(value));
+  const dateLabel = value => new Intl.DateTimeFormat(interfaceLocale()==='it'?'it-IT':'en-GB', {timeZone:'Europe/London',day:'numeric',month:'short'}).format(new Date(value));
   const timeLabel = ms => ms < 60000 ? Math.floor(ms/1000)+' sec' : Math.floor(ms/60000)+' min '+Math.floor(ms%60000/1000)+' sec';
   let pool = [];
   let mode = 'home';
@@ -49,7 +53,7 @@ export async function mountPractice(main, signal) {
   function announce(message) {
     const anchor = view.querySelector('.df-task');
     const previousTop = anchor?.getBoundingClientRect().top;
-    notice.textContent = message;
+    notice.textContent = translateUI(message);
     notice.hidden = !message;
     restorePosition(anchor,previousTop);
   }
@@ -61,7 +65,7 @@ export async function mountPractice(main, signal) {
   function storageStatus() {
     const state = engine.persistence();
     warning.hidden = state.ok;
-    warning.textContent = state.ok ? '' : state.message;
+    warning.textContent = state.ok ? '' : translateUI(state.message);
   }
   function atCheckpoint(session) {
     return !!session && session.duration >= 30 && session.index > 0 && session.index < session.steps.length && session.index % session.roundSize === 0 && !(session.checkpoints || []).includes(session.index);
@@ -100,7 +104,7 @@ export async function mountPractice(main, signal) {
     const rows = engine.weekly();
     return '<div class="df-week" aria-label="Activity over the last seven days">'+rows.map(day => {
       const stamp = new Date(day.day+'T12:00:00Z');
-      const name = new Intl.DateTimeFormat('en-GB',{weekday:'short',timeZone:'Europe/London'}).format(stamp);
+      const name = new Intl.DateTimeFormat(interfaceLocale()==='it'?'it-IT':'en-GB',{weekday:'short',timeZone:'Europe/London'}).format(stamp).replace(/\.$/,'');
       const complete = day.state === 'completed';
       const self = day.selfReported?.length > 0;
       const mark = complete ? '✓' : self ? '•' : day.state === 'in progress' || day.state === 'saved for later' ? '○' : '·';
@@ -216,6 +220,7 @@ export async function mountPractice(main, signal) {
     const previousTop = anchor?.getBoundingClientRect().top;
     const scroll = window.scrollY;
     view.innerHTML = mode==='home'?homeMarkup():mode==='drill'?drillMarkup():mode==='review'?reviewMarkup():summaryMarkup();
+    localiseScreen();
     renderedSessionKey = sessionKey(getSession());
     storageStatus();
     if (mode==='drill' && previousTop !== undefined) restorePosition(view.querySelector('.df-task'),previousTop);
@@ -235,7 +240,7 @@ export async function mountPractice(main, signal) {
     const session=getSession();
     switch(action) {
       case 'start': start(); break;
-      case 'again': { const previous=engine.getSession(control.dataset.session);start({duration:previous.duration,difficulty:previous.difficulty,avoidIds:previous.steps.map(step=>step.item.id)}); break; }
+      case 'again': { const previous=engine.getSession(control.dataset.session);start({duration:previous.duration,difficulty:previous.difficulty,focusMode:previous.focusMode || 'smart',focusTopics:previous.focusTopics || [],avoidIds:previous.steps.map(step=>step.item.id)}); break; }
       case 'resume': sessionId=control.dataset.session;engine.resume(sessionId);mode='drill';showShorten=false;announce('');render(true);break;
       case 'continue': engine.resume(sessionId);if(session.index>=session.steps.length){const index=session.steps.findIndex(s=>s.status!=='completed');if(index>=0)engine.revisit(index,sessionId);}mode='drill';render(true);break;
       case 'read': engine.markRead(sessionId);render(true);break;
@@ -291,7 +296,7 @@ export async function mountPractice(main, signal) {
   },{signal});
   main.addEventListener('change', async event => {
     try {
-      if(event.target.name==='duration') {engine.preferences({duration:Number(event.target.value)});view.querySelector('#focusBudget').textContent=budgetText(Number(event.target.value));}
+      if(event.target.name==='duration') {engine.preferences({duration:Number(event.target.value)});view.querySelector('#focusBudget').textContent=translateUI(budgetText(Number(event.target.value)));}
       if(event.target.id==='focusDifficulty')engine.preferences({difficulty:event.target.value});
       if(event.target.id==='focusSpoken'){speech=event.target.checked;engine.preferences({spoken:speech});}
       if(event.target.id==='focusImport'&&event.target.files[0]) {
@@ -304,6 +309,13 @@ export async function mountPractice(main, signal) {
   const interaction = () => {lastInteraction=Date.now();};
   ['pointerdown','keydown','input','scroll','touchstart'].forEach(name=>document.addEventListener(name,interaction,{signal,passive:true}));
   document.addEventListener('visibilitychange',()=>{activeTick();lastTick=Date.now();if(!document.hidden){lastInteraction=Date.now();if(renderedDay!==today()){renderedDay=today();if(mode==='home')render();}}},{signal});
+  window.addEventListener('italian-interface-language-changed',()=>{
+    const advanced=view.querySelector('.df-adjustments')?.open;
+    const options=view.querySelector('.df-settings')?.open;
+    render();
+    if(advanced&&view.querySelector('.df-adjustments'))view.querySelector('.df-adjustments').open=true;
+    if(options&&view.querySelector('.df-settings'))view.querySelector('.df-settings').open=true;
+  },{signal});
   window.addEventListener('focus',()=>{lastTick=Date.now();lastInteraction=Date.now();},{signal});
   window.addEventListener('blur',activeTick,{signal});
   window.addEventListener('pagehide',()=>{activeTick();if(isActive())engine.saveLater(sessionId);},{signal});

@@ -10,6 +10,8 @@
   const DURATIONS = [2, 5, 10, 30, 60];
   const STEP_COUNTS = {2:4, 5:8, 10:16, 30:40, 60:80};
   const DIFFICULTIES = ['gentle', 'standard', 'challenge'];
+  const FOCUS_MODES = ['smart', 'blend', 'only'];
+  const topicList = value => Array.isArray(value) && value.length <= 20 && value.every(validKey) ? [...new Set(value)] : null;
   const STEP_TYPES = ['question', 'flashcard', 'reading', 'spoken'];
   const DAY_MS = 86400000;
   const londonDate = new Intl.DateTimeFormat('en-GB', {timeZone:'Europe/London', year:'numeric', month:'2-digit', day:'2-digit'});
@@ -49,7 +51,7 @@
     return result;
   }
   function freshState() {
-    return {version:1, revision:0, preferences:{duration:5, difficulty:'standard', spoken:false, updatedAt:0}, currentSessionId:null,
+    return {version:1, revision:0, preferences:{duration:5, difficulty:'standard', spoken:false, focusMode:'smart', focusTopics:[], updatedAt:0}, currentSessionId:null,
       sessions:{}, events:{}, flags:{item:{}, topic:{}}, legacy:{}, days:{}, checkins:{}, issues:{}, updatedAt:0};
   }
   function snapshot(item) {
@@ -76,11 +78,19 @@
       state.preferences.duration = DURATIONS.includes(Number(data.preferences.duration)) ? Number(data.preferences.duration) : 5;
       state.preferences.difficulty = DIFFICULTIES.includes(data.preferences.difficulty) ? data.preferences.difficulty : 'standard';
       state.preferences.spoken = data.preferences.spoken === true;
+      if (data.preferences.focusMode !== undefined && !FOCUS_MODES.includes(data.preferences.focusMode)) throw Error('This backup has an invalid study-area mode.');
+      state.preferences.focusMode = data.preferences.focusMode || 'smart';
+      if (data.preferences.focusTopics !== undefined && !topicList(data.preferences.focusTopics)) throw Error('This backup has invalid study areas.');
+      state.preferences.focusTopics = topicList(data.preferences.focusTopics || []);
       state.preferences.updatedAt = finiteTime(data.preferences.updatedAt) ? Number(data.preferences.updatedAt) : 0;
     }
     for (const [id, session] of Object.entries(data.sessions)) {
       if (!validKey(id) || !session || session.id !== id || !Array.isArray(session.steps) || !session.steps.length || session.steps.length > 80) throw Error('This backup contains an invalid session.');
       if (!DURATIONS.includes(Number(session.duration)) || !DURATIONS.includes(Number(session.originalDuration)) || Number(session.originalDuration)<Number(session.duration) || !DIFFICULTIES.includes(session.difficulty)) throw Error('This backup contains invalid session settings.');
+      if (session.focusMode !== undefined && !FOCUS_MODES.includes(session.focusMode)) throw Error('This backup contains an invalid topic mode.');
+      if (session.focusTopics !== undefined && !topicList(session.focusTopics)) throw Error('This backup contains invalid selected topics.');
+      session.focusMode = session.focusMode || 'smart';
+      session.focusTopics = topicList(session.focusTopics || []);
       if (!['in-progress','saved','partial','completed'].includes(session.status)) throw Error('This backup contains an invalid session status.');
       if (!finiteTime(session.createdAt) || !finiteTime(session.updatedAt) || !finiteTime(session.activeMs)) throw Error('This backup contains an invalid session time.');
       if (!Number.isInteger(session.index) || session.index < 0 || session.index > session.steps.length) throw Error('This backup contains an invalid session position.');
@@ -263,6 +273,8 @@
       if (!candidates.length) throw Error('No suitable approved questions are available.');
       const seed = settings.seed || uid('select');
       const difficulty = settings.difficulty || 'standard';
+      const chosenTopics = new Set(settings.focusTopics || []);
+      const guidedMix = settings.focusMode === 'blend' && chosenTopics.size > 0;
       const recentItems = new Set(Object.values(state.sessions).filter(s => now() - s.createdAt < DAY_MS).flatMap(s => s.steps.map(step => step.item.id)));
       const preferred = item => (item.difficulty === difficulty ? 1 : 0) + (difficulty === 'gentle' ? (item.type === 'reading' || item.choices?.length ? 1 : 0) : difficulty === 'challenge' ? (item.type !== 'reading' && !item.choices?.length ? 1 : 0) : 0);
       function category(item) {
@@ -288,14 +300,23 @@
         const preferredType = readingSlot ? 'reading' : flashSlot ? 'flashcard' : null;
         const filtered = preferredType ? possible.filter(item => item.type === preferredType) : possible.filter(item => item.type !== 'reading');
         if (filtered.length) possible = filtered;
+        // A blended drill includes explicit choices while retaining the weak-area mix.
+        if (guidedMix && index % 3 === 1) {
+          const chosen = possible.filter(item => chosenTopics.has(item.topicId));
+          if (chosen.length) possible = chosen;
+        }
         const desired = plans[index % plans.length];
         possible.sort((a,b) => {
-          const score = item => {const meta=metadata.get(item.id);return (meta.category === desired ? 16 : 0) + (meta.category === 'flagged' ? 4 : 0) + meta.preferred * 2
+          const score = item => {const meta=metadata.get(item.id);return (meta.category === desired ? 16 : 0) + (meta.category === 'flagged' ? 4 : 0) + meta.preferred * 2 + (guidedMix && chosenTopics.has(item.topicId) ? 9 : 0)
             - (topics[item.topicId] || 0) * 5 - (recentItems.has(item.id) ? 12 : 0) - (types[item.type] || 0);};
           return score(b) - score(a) || metadata.get(a.id).hash - metadata.get(b.id).hash;
         });
         const choice = possible[0];
-        selected.push({item:choice, reason:reasonFor(choice)});
+        const reason = reasonFor(choice);
+        const chosenReason = (settings.focusMode === 'only' || guidedMix) && chosenTopics.has(choice.topicId)
+          && ['No review recorded here yet','Familiar practice from today','Earlier web practice; no review date recorded'].includes(reason)
+            ? 'You chose ' + (choice.topicTitle || choice.topicId).toLowerCase() : reason;
+        selected.push({item:choice, reason:chosenReason});
         topics[choice.topicId] = (topics[choice.topicId] || 0) + 1;
         types[choice.type] = (types[choice.type] || 0) + 1;
         candidates = candidates.filter(item => item.id !== choice.id);
@@ -361,31 +382,54 @@
           state.preferences.difficulty = value.difficulty;
         }
         if(value.spoken!==undefined)state.preferences.spoken=value.spoken===true;
+        if(value.focusMode!==undefined){
+          if(!FOCUS_MODES.includes(value.focusMode))throw Error('Choose a valid study-area option.');
+          state.preferences.focusMode=value.focusMode;
+        }
+        if(value.focusTopics!==undefined){
+          const topics=topicList(value.focusTopics);
+          if(!topics)throw Error('Choose valid study areas.');
+          state.preferences.focusTopics=topics;
+        }
         state.preferences.updatedAt = timeStamp(); save(); return clone(state.preferences);
       },
       createSession(pool, settings = {}) {
         sync();
         const duration = Number(settings.duration || state.preferences.duration);
         const difficulty = settings.difficulty || state.preferences.difficulty;
+        const focusMode=settings.focusMode || state.preferences.focusMode || 'smart';
+        const focusTopics=topicList(settings.focusTopics === undefined ? state.preferences.focusTopics || [] : settings.focusTopics);
+        if(!FOCUS_MODES.includes(focusMode)||!focusTopics)throw Error('Choose a valid study-area setting.');
+        if(focusMode!=='smart' && !focusTopics.length)throw Error('Choose at least one study area or use Smart mix.');
         if (!DURATIONS.includes(duration) || !DIFFICULTIES.includes(difficulty)) throw Error('Choose valid drill settings.');
         const avoidIds=new Set(Array.isArray(settings.avoidIds)?settings.avoidIds.filter(validKey):[]);
         let selectionPool=pool,selectionNote='';
+        if (focusMode==='only') {
+          const permitted=new Set(focusTopics);
+          selectionPool=(pool||[]).filter(item=>permitted.has(item.topicId));
+          const distinct=new Map(selectionPool.map(item=>[item.id,item]));
+          const required=STEP_COUNTS[duration];
+          if(distinct.size<required || [...distinct.values()].filter(item=>item.type!=='reading').length < required-Math.floor(required/4)) {
+            throw Error('Not enough approved questions in those areas for '+duration+' minutes. Choose a shorter drill or Smart mix.');
+          }
+        }
         if(avoidIds.size){
           const unique=new Map();
-          for(const item of pool||[]){try{const approved=snapshot(item);unique.set(approved.id,approved);}catch{}}
+          for(const item of selectionPool||[]){try{const approved=snapshot(item);unique.set(approved.id,approved);}catch{}}
           const alternatives=[...unique.values()].filter(item=>!avoidIds.has(item.id));
           const target=STEP_COUNTS[duration];
           if(alternatives.length>=target&&alternatives.filter(item=>item.type!=='reading').length>=target-Math.floor(target/4))selectionPool=alternatives;
           else selectionNote='Some questions from the earlier drill may return because there are not enough suitable alternatives for this duration.';
         }
-        const chosen = select(selectionPool, STEP_COUNTS[duration], {difficulty});
+        const chosen = select(selectionPool, STEP_COUNTS[duration], {difficulty,focusMode,focusTopics});
+        if(chosen.length !== STEP_COUNTS[duration])throw Error('There are not enough suitable questions for this drill length. Choose a shorter duration or different areas.');
         const id = uid('focus');
-        const session = {id, duration, originalDuration:duration, difficulty, selectionNote,
+        const session = {id, duration, originalDuration:duration, difficulty, focusMode, focusTopics, selectionNote,
           steps:chosen.map((entry, index) => ({id:id + '-step-' + index, item:entry.item, reason:entry.reason, status:'pending', revealed:false, result:null, updatedAt:now(), swaps:[]})),
           index:0, status:'in-progress', createdAt:now(), updatedAt:timeStamp(), activeMs:0, creditedAt:null, creditDay:null,
           roundSize:duration >= 30 ? 8 : STEP_COUNTS[duration], breakSeconds:duration >= 30 ? 60 : 0, shortenedFrom:null, checkpoints:[]};
         state.sessions[id] = session; state.currentSessionId = id;
-        state.preferences = {...state.preferences,duration,difficulty,updatedAt:timeStamp()};
+        state.preferences = {...state.preferences,duration,difficulty,focusMode,focusTopics,updatedAt:timeStamp()};
         state.days[dayKey(now())]={skipAt:null,updatedAt:timeStamp()};
         return touch(session);
       },
@@ -424,8 +468,9 @@
         const session=mutable(id),step=slotFor(session);if(step.status==='completed')throw Error('Only unfinished steps can be swapped.');
         const excluded=session.steps.map(s=>s.item.id).concat(step.swaps||[]);
         const readingCount=session.steps.filter(s=>s.item.type==='reading' && s.id!==step.id).length;
-        const eligible=(pool||[]).filter(item=>item.type!=='reading' || readingCount<Math.floor(session.steps.length/4));
-        const replacement=select(eligible,1,{difficulty:session.difficulty,exclude:excluded})[0];
+        const allowed=new Set(session.focusTopics||[]);
+        const eligible=(pool||[]).filter(item=>(session.focusMode!=='only'||allowed.has(item.topicId)) && (item.type!=='reading' || readingCount<Math.floor(session.steps.length/4)));
+        const replacement=select(eligible,1,{difficulty:session.difficulty,exclude:excluded,focusMode:session.focusMode,focusTopics:session.focusTopics})[0];
         step.swaps=(step.swaps||[]).concat(step.item.id);step.item=replacement.item;step.reason=replacement.reason;step.status='pending';step.revealed=false;step.result=null;step.draft='';step.updatedAt=timeStamp();return touch(session);
       },
       advance(id){const session=mutable(id),step=slotFor(session);if(step.status==='pending')throw Error('Answer, skip or swap this question first.');session.index=Math.min(session.steps.length,session.index+1);return touch(session);},
@@ -469,8 +514,13 @@
         return {state:value,day,completedSessions:completed.map(s=>s.id),selfReported:Object.values(state.checkins).filter(c=>dayKey(c.at)===day)};
       },
       weekly(date=now()){
-        const end=dayKey(date), noon=Date.parse(end+'T12:00:00Z');
-        return Array.from({length:7},(_,i)=>api.status(noon-(6-i)*DAY_MS));
+        // Always show the Monday-to-Sunday calendar week in Europe/London,
+        // including future days as not started. UTC noon avoids DST boundaries.
+        const selectedDay=dayKey(date);
+        const noon=Date.parse(selectedDay+'T12:00:00Z');
+        const daysSinceMonday=(new Date(noon).getUTCDay()+6)%7;
+        const monday=noon-daysSinceMonday*DAY_MS;
+        return Array.from({length:7},(_,i)=>api.status(monday+i*DAY_MS));
       },
       skipToday(){sync();const day=dayKey(now());state.days[day]={skipAt:now(),updatedAt:timeStamp()};save();return api.status();},
       undoSkipToday(){sync();const day=dayKey(now());state.days[day]={skipAt:null,updatedAt:timeStamp()};save();return api.status();},
