@@ -7,12 +7,14 @@
   overflow-wrap: anywhere;
 }
 .verb-reference-card :is(h3, h4, h5, p) { margin: 0; }
+.verb-reference-card .learning-it { color: var(--green, var(--mint)); font-style: italic; }
+.verb-reference-card .learning-gloss { color: var(--accent, var(--pink)); font-style: italic; }
 .verb-reference-card .verb-card-heading { margin-bottom: 18px; }
 .verb-reference-card .verb-card-heading h3 { font-size: 1.35rem; line-height: 1.3; }
 .verb-reference-card .verb-card-meaning { display: inline-block; margin-left: .5em; font-size: .9em; font-weight: 400; }
 .verb-reference-card .verb-card-meta { margin-top: 6px; font-size: .88rem; color: var(--muted); }
 .verb-reference-card .verb-coverage-notice { margin-top: 10px; padding: 10px 12px; border-left: 3px solid var(--hint); background: var(--paper2); font-size: .88rem; }
-.verb-reference-card .verb-reference-columns { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 24px; }
+.verb-reference-card .verb-reference-columns { display: grid; grid-template-columns: minmax(0, 1fr); gap: 26px; }
 .verb-reference-card :is(.verb-forms-column, .verb-uses-column) { min-width: 0; }
 .verb-reference-card .verb-reference-table { width: 100%; margin: 0; border-collapse: collapse; font-size: 1rem; }
 .verb-reference-card .verb-reference-table caption { padding: 0 0 10px; color: var(--ink); font-weight: 600; text-align: left; }
@@ -24,19 +26,19 @@
 .verb-reference-card :is(.verb-person-note, .verb-pattern-note) { margin-top: 12px; font-size: .875rem; }
 .verb-reference-card .verb-uses-column h4 { font-size: 1rem; font-weight: 600; }
 .verb-reference-card .verb-usage-intro { margin-top: 7px; font-size: .9rem; }
-.verb-reference-card .verb-use-group { margin-top: 13px; }
-.verb-reference-card .verb-use-group h5 { margin: 0 0 5px; font-size: .88rem; font-weight: 600; color: var(--green); }
-.verb-reference-card .verb-use { margin-top: 7px; padding: 9px 12px; border-left: 3px solid var(--line); background: var(--paper2); border-radius: 0 7px 7px 0; }
-.verb-reference-card .verb-use p + p { margin-top: 4px; }
+.verb-reference-card .verb-use-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
+.verb-reference-card .verb-use { min-width: 0; padding: 15px 16px; border: 1px solid var(--line); background: var(--paper2); border-radius: 10px; }
+.verb-reference-card .verb-use:only-child { grid-column: 1 / -1; }
+.verb-reference-card .verb-use h5 { margin: 0 0 9px; font-size: .9rem; font-weight: 600; color: var(--ink); }
+.verb-reference-card .verb-use p + p { margin-top: 7px; }
 .verb-reference-card .verb-use-italian { font-size: 1.06rem; font-weight: 600; }
-.verb-reference-card .verb-use-note { font-size: .875rem; }
-.verb-example-source { font-size: .8rem; }
-.verb-reference-card .verb-example-source { color: var(--muted); }
+.verb-reference-card .verb-use-english { font-size: 1rem; }
+.verb-reference-card .verb-use .verb-use-note { margin-top: 12px; font-size: .875rem; color: var(--ink); }
 .verb-reference-card .verb-reference-notes { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); font-size: .875rem; color: var(--muted); }
 .verb-reference-card .verb-reference-notes p + p { margin-top: 5px; }
 @container (max-width: 660px) {
-  .verb-reference-card .verb-reference-columns { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .verb-reference-card .verb-use-grid { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
-  .verb-reference-card .verb-reference-columns { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .verb-reference-card .verb-use-grid { grid-template-columns: minmax(0, 1fr); }
 }

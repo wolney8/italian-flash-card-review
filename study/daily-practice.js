@@ -1,6 +1,6 @@
-import './daily-verbs.js';
-import './verb-reference-view.js';
-import './verb-reference-v1.js';
+import './daily-verbs.js?v=20261125language';
+import './verb-reference-view.js?v=20261125cards';
+import './verb-reference-v1.js?v=20261125cards';
 import './daily-patterns.js';
 import './daily-phrases.js';
 
@@ -19,6 +19,8 @@ export function mountPractice(main, signal) {
     {id:'objects',title:'Direct objects',description:'Find who or what the verb acts on. Learn to spot phrases that tell you where or to whom.'}
   ];
   const verbs = window.ItalianDailyVerbs.verbs;
+  const language = window.ItalianVerbReferenceView;
+  const explain = (text, name) => language.formatExplanation(text, verbs.find(verb => verb.name === name));
   const familyKeys = ['are','ere','ire','auxiliary'];
   const regularity = verb => verb.tenses?.presente?.regularity || verb.kind;
   let state = {day:dayNumber, topic:'verbs', family:'all', group:'all', verb:'all', focus:{}, sessions:{}};
@@ -138,16 +140,17 @@ export function mountPractice(main, signal) {
       return;
     }
     const result = session.results[session.index];
-    const sourceNote = result && q.source ? '<p class="question-source">' + esc(window.ItalianVerbReferenceView.sourceLabel(q.source)) + '</p>' : '';
-    const stim = q.stimulus.map(s => '<p>'+(s.label ? '<strong>'+esc(s.label)+'</strong> ' : '')+'<span lang="'+(s.lang==='it'?'it':'en')+'">'+esc(s.text)+'</span></p>').join('');
+    const stim = q.stimulus.map(s => '<p>'+(s.label ? '<strong>'+esc(s.label)+'</strong> ' : '')+'<span'+(s.lang==='it'?' class="learning-it"':['Meaning','In English'].includes(s.label)?' class="learning-gloss"':'')+' lang="'+(s.lang==='it'?'it':'en')+'">'+esc(s.text)+'</span></p>').join('');
+    const meaningParts = q.skill === 'phrase' ? (q.explanation || '').split(' = ') : [];
+    const explanation = meaningParts.length === 2 ? language.formatItalian(meaningParts[0])+' = '+language.formatMeaning(meaningParts[1]) : explain(q.explanation,q.verbName);
     const audioWord = state.topic === 'sounds' && (result || q.id.startsWith('sounds-read-')) ? q.word : '';
     const answerLang = q.answerLang === 'en' ? 'en' : 'it';
     const choices = q.choices && q.choices.length;
     const inputs = choices ? '<fieldset class="choice-list"><legend class="sr">Choose one answer</legend>'+q.choices.map(c => '<label data-ui-no-translate lang="'+answerLang+'"><input type="radio" required name="answer" value="'+esc(c)+'"'+(result?.value===c?' checked':'')+'>'+esc(c)+'</label>').join('')+'</fieldset>'
       : '<label class="entry">Your answer<input type="text" name="answer" lang="'+answerLang+'" required autocomplete="off" autocapitalize="none" spellcheck="false" value="'+esc(result?.value||'')+'"></label>';
-    box.innerHTML = '<article class="panel"><div class="meter"><progress value="'+session.index+'" max="'+session.ids.length+'"></progress>Question '+(session.index+1)+' of '+session.ids.length+'</div><h3 class="question-title" tabindex="-1" lang="en-GB" data-ui-no-translate>'+esc(q.task)+'</h3><div class="stimulus" lang="en-GB" data-ui-no-translate>'+stim+'</div>'+(audioWord ? '<button type="button" class="listen" data-action="listen" data-word="'+esc(audioWord)+'"'+(italianVoice()?'':' hidden')+'>Hear the Italian</button>' : '')+
-      '<form>'+inputs+(result ? '' : '<details><summary>Hint</summary><p lang="en-GB" data-ui-no-translate>'+esc(q.hint)+'</p></details><div class="controls"><button class="primary" type="submit">Check answer</button><button type="button" class="secondary" data-action="reveal">Show answer</button></div>')+'</form>'+
-      (result ? '<div role="status" lang="en-GB" data-ui-no-translate class="feedback '+(result.correct?'':'review')+'"><p><b>'+(result.correct?'Correct.':result.revealed?'Answer':'The answer is')+'</b> <span lang="'+answerLang+'">'+esc(q.answer)+'</span></p><p>'+esc(q.explanation)+'</p>'+sourceNote+'</div><div class="controls"><button class="primary" data-action="next">'+(session.index+1===session.ids.length?'Finish round':'Next question')+'</button></div>' : '')+'</article>';
+    box.innerHTML = '<article class="panel"><div class="meter"><progress value="'+session.index+'" max="'+session.ids.length+'"></progress>Question '+(session.index+1)+' of '+session.ids.length+'</div><h3 class="question-title" tabindex="-1" lang="en-GB" data-ui-no-translate>'+explain(q.task,q.verbName)+'</h3><div class="stimulus" lang="en-GB" data-ui-no-translate>'+stim+'</div>'+(audioWord ? '<button type="button" class="listen" data-action="listen" data-word="'+esc(audioWord)+'"'+(italianVoice()?'':' hidden')+'>Hear the Italian</button>' : '')+
+      '<form>'+inputs+(result ? '' : '<details><summary>Hint</summary><p lang="en-GB" data-ui-no-translate>'+explain(q.hint,q.verbName)+'</p></details><div class="controls"><button class="primary" type="submit">Check answer</button><button type="button" class="secondary" data-action="reveal">Show answer</button></div>')+'</form>'+
+      (result ? '<div role="status" lang="en-GB" data-ui-no-translate class="feedback '+(result.correct?'':'review')+'"><p><b>'+(result.correct?'Correct.':result.revealed?'Answer':'The answer is')+'</b> <span class="'+(answerLang==='it'?'learning-it':'learning-gloss')+'" lang="'+answerLang+'">'+esc(q.answer)+'</span></p><p>'+explanation+'</p></div><div class="controls"><button class="primary" data-action="next">'+(session.index+1===session.ids.length?'Finish round':'Next question')+'</button></div>' : '')+'</article>';
     if (result) box.querySelectorAll('input').forEach(el => {el.disabled=true;});
     if (focus) (result ? box.querySelector('[data-action="next"]') : box.querySelector('h3')).focus();
   }

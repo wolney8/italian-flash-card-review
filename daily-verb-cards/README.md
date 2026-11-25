@@ -45,9 +45,11 @@ Reused cards are virtual views of the original records. Their keys and saved con
 - `content.js` provides the web renderer and virtual collection views.
 - `build_anki.py` uses the native Anki engine to export the new records.
 
+The shared language formatter marks Italian words and quoted English meanings in italic text with distinct colours. The same generated markup is used in the new web and Anki cards.
+
 Each production card asks for one form or phrase. English instructions identify the task before the cue. Form cards include the selected subject and a full reference table on the back. Formal Lei shares the third-person singular; the back also explains esso/essa. Concept answers carry English language tags, while Italian production answers carry Italian language tags.
 
-Course examples retain source filenames and page/slide locators. Added examples and completed reference paradigms are labelled as study support. Prendere is confirmed by the learner; its interim model examples are added practice, not quotations from the unavailable Lesson 9 slides.
+Course examples retain source filenames and page/slide locators in the source data and optional source details. The verb-reference example cards omit these repeated labels and sit in a responsive grid above the six-form table. Added examples and completed reference paradigms are labelled as study support. Prendere is confirmed by the learner; its interim model examples are added practice, not quotations from the unavailable Lesson 9 slides.
 
 Pronunciation is presented as an approximate English-friendly reading guide, with broad IPA. The package makes no blanket claim that every pronunciation has independent dictionary verification. The review specifically checks stress and hard/soft C/G/SC contrasts, including **leggo / leggono** with hard G and **esci** with soft SC.
 
