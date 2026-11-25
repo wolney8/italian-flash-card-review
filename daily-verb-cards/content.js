@@ -12,15 +12,15 @@
   function renderCard(row) {
     if (!row.key || !row.task || !row.answer || !row.source) throw new Error('Invalid daily verb card: ' + row.key);
     const cues = row.cues.map(cue => '<div class="recall-cue"><span class="recall-cue-label" lang="en">' +
-      escape(cue.label) + '</span><span lang="' + cue.lang + '">' + escape(cue.text) + '</span></div>').join('');
+      escape(cue.label) + '</span><span' + (cue.lang==='it'?' class="learning-it"':['Verb meaning','In English'].includes(cue.label)?' class="learning-gloss"':'') + ' lang="' + cue.lang + '">' + escape(cue.text) + '</span></div>').join('');
     return {
       key:row.key, lesson:collection.id, deck:row.deck,
       panel:'<div class="panel-head"><div class="panel-copy"><div class="panel-title">' + escape(row.deck.slice(3)) + '</div></div></div>',
-      prompt:'<div class="recall-exercise" data-ui-no-translate><p class="instruction" lang="en">' + escape(row.task) + '</p><div class="focus recall-cues">' + cues + '</div>' +
-        (row.hint ? '<div class="clue" lang="en">' + escape(row.hint) + '</div>' : '') + '</div>',
+      prompt:'<div class="recall-exercise" data-ui-no-translate><p class="instruction" lang="en">' + (row.display?.task || escape(row.task)) + '</p><div class="focus recall-cues">' + cues + '</div>' +
+        (row.hint ? '<div class="clue" lang="en">' + (row.display?.hint || escape(row.hint)) + '</div>' : '') + '</div>',
       answer:escape(row.answer),answerLang:row.answerLang,
       pron:row.guide ? '<div class="pronunciation-compact"><div class="pron-guide-line">' + escape(row.guide) + '</div><div class="pron-ipa-line">/' + escape(row.ipa) + '/</div></div>' : '',
-      meaning:escape(row.meaning), literal:'', usage:escape(row.usage), pattern:row.rule,
+      meaning:row.display?.meaning || escape(row.meaning), literal:'', usage:row.display?.usage || escape(row.usage), pattern:row.rule,
       clarification:row.guide ? '<p>Approximate English-friendly reading guide. Capitals mark stress. Hold doubled consonants slightly longer.</p>' : '',
       reference:escape(row.sourceClass + ' · ' + row.source),
       primaryAnswer:row.answer, guide:row.guide, ipa:row.ipa,
@@ -29,7 +29,7 @@
     };
   }
   async function loadCards() {
-    const responses = await Promise.all(['cards.json','coverage.json'].map(file => fetch(new URL(file+'?v=20261125release1',assetBase))));
+    const responses = await Promise.all(['cards.json','coverage.json'].map(file => fetch(new URL(file+'?v=20261125release2',assetBase))));
     if(responses.some(response=>!response.ok))throw new Error('Could not load daily verb flashcards.');
     const [records,map]=await Promise.all(responses.map(response=>response.json()));
     coverage=map;

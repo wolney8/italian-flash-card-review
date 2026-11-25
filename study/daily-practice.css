@@ -1,4 +1,15 @@
-@import url('./verb-reference-view.css');
+@import url('./verb-reference-view.css?v=20261125cards');
+
+:is(.course-practice, .review-card[data-lesson="PRACTICE"]) .learning-it,
+.review-card[data-lesson="PRACTICE"] .italian[lang="it"] {
+  color: var(--green);
+  font-style: italic;
+}
+:is(.course-practice, .review-card[data-lesson="PRACTICE"]) .learning-gloss,
+.review-card[data-lesson="PRACTICE"] .natural {
+  color: var(--accent);
+  font-style: italic;
+}
 
 /* Daily flashcards, including reused lesson cards, follow the course palette
    instead of the legacy review card's fixed dark colours. */

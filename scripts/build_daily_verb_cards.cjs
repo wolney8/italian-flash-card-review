@@ -7,7 +7,9 @@ const read=file=>fs.readFileSync(path.join(ROOT,file),'utf8');
 const parse=file=>JSON.parse(read(file));
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
 const window={};vm.runInNewContext(read('study/daily-verbs.js'),{window});
+vm.runInNewContext(read('study/verb-reference-view.js'),{window});
 const {verbs,courseGroups}=window.ItalianDailyVerbs;
+const language=window.ItalianVerbReferenceView;
 const pronunciation=parse('daily-verb-cards/pronunciation.json');
 const phrasePronunciation=parse('daily-verb-cards/phrase-pronunciation.json');
 const existing=parse('daily-verb-cards/existing-coverage.json');
@@ -32,16 +34,24 @@ function meaning(verb,index){
   if(verb.name==='chiamarsi')return ['I am called','you are called, one person informally','he/she is called; you are called, politely','we are called','you are called, several people','they are called'][index];
   return index===2?'he/she '+third+'; you '+base+', politely':[['I',base],['you',base],[],['we',base],['you',base],['they',base]][index].join(' ');
 }
-function table(verb){return '<div class="l7-form-list">'+people.map(([person],index)=>'<div class="l7-form-row"><span>'+esc(person)+'</span><b>'+esc(verb.forms[index])+'</b></div>').join('')+'</div>';}
+function table(verb){return '<div class="l7-form-list">'+people.map(([person],index)=>'<div class="l7-form-row">'+language.formatItalian(person)+'<b>'+language.formatItalian(verb.forms[index])+'</b></div>').join('')+'</div>';}
 function rule(verb){
   const family=courseGroups[verb.courseGroup],regularity=verb.kind==='regular'?'Regular in the present.':'Irregular in the present: learn each form.';
   const pattern=verb.isc?' Add -isc- for io, tu, lui/lei/Lei and loro. Noi and voi use the shorter stem.':verb.reflexive?' Keep the matching reflexive word: mi, ti, si, ci, vi, si.':verb.hardC?' H keeps the hard C sound before i: significhi, significhiamo.':verb.singleI?' Keep one i in forms such as '+(verb.name==='studiare'?'studi and studiamo':verb.name==='mangiare'?'mangi and mangiamo':'bruci and bruciamo')+'.':'';
-  return '<p>'+esc(family)+'. '+esc(regularity+pattern)+'</p>'+table(verb);
+  return '<p>'+language.formatExplanation(family+'. '+regularity+pattern,verb)+'</p>'+table(verb);
 }
 function add(card){
   if(oldKeys.has(card.key)||cards.some(row=>row.key===card.key))throw new Error('Duplicate new key: '+card.key);
   if(JSON.stringify(card).includes('\u2014'))throw new Error('Em dash in new card: '+card.key);
-  cards.push({guide:'',ipa:'',hint:'',meaning:'',usage:'',rule:'',answerLang:card.kind==='pattern'?'en':'it',...card});
+  const row={guide:'',ipa:'',hint:'',meaning:'',usage:'',rule:'',answerLang:card.kind==='pattern'?'en':'it',...card};
+  const verb=verbs.find(item=>item.name===row.verb);
+  row.display={
+    task:language.formatExplanation(row.task,verb),
+    hint:language.formatExplanation(row.hint,verb),
+    meaning:row.meaning?language.formatMeaning(row.meaning):'',
+    usage:language.formatExplanation(row.usage,verb)
+  };
+  cards.push(row);
 }
 for(const verb of verbs){
   if(!pronunciation.forms[verb.name]||pronunciation.forms[verb.name].length!==6)throw new Error('Missing pronunciation rows: '+verb.name);
@@ -98,7 +108,7 @@ for(const verb of verbs){
       source:use.source.kind==='laura'?use.source.file+' · '+use.source.location:use.source.label+(use.source.url?' · '+use.source.url:'')});
   }
 }
-function pattern(id,task,cues,answer,usage,ruleText,source){add({key:'italian-daily-pattern-'+id,kind:'pattern',deck:decks.patterns,task,cues,answer,usage,rule:'<p>'+esc(ruleText)+'</p>',sourceClass:'ADDED STUDY SUPPORT',source});}
+function pattern(id,task,cues,answer,usage,ruleText,source){add({key:'italian-daily-pattern-'+id,kind:'pattern',deck:decks.patterns,task,cues,answer,usage,rule:'<p>'+language.formatExplanation(ruleText)+'</p>',sourceClass:'ADDED STUDY SUPPORT',source});}
 for(const [family,model] of [['ere','leggere'],['ire','dormire']]){
   const verb=verbs.find(row=>row.name===model),endings=family==='ere'?['-o','-i','-e','-iamo','-ete','-ono']:['-o','-i','-e','-iamo','-ite','-ono'];
   people.forEach(([person,english],index)=>pattern(family+'-ending-'+index,'Give only the present-tense ending for this regular verb group.',[
@@ -124,7 +134,7 @@ pattern('regularity-tense','Choose the accurate label for these forms.',
   'Regular in the present','Check each new tense separately.',
   'A regular present pattern does not guarantee that every other tense follows a regular pattern.',
   'Treccani, leggere: https://www.treccani.it/vocabolario/leggere/');
-const manifest={version:'2026-11-25-release-1',existingLessonCards:623,newCards:cards.length,
+const manifest={version:'2026-11-25-release-2',existingLessonCards:623,newCards:cards.length,
   newForms:cards.filter(card=>card.kind==='form').length,newUses:cards.filter(card=>card.kind==='use').length,newPatterns:cards.filter(card=>card.kind==='pattern').length,
   formCoverage,usageCoverage,
   patternCoverage:[...['are','ere','ire'].map(family=>({key:'italian-l7-family-'+family,status:'existing'})),...['io','tu','lei','noi','voi','loro'].map(person=>({key:'italian-l7-ending-'+person,status:'existing'})),...cards.filter(card=>card.kind==='pattern').map(card=>({key:card.key,status:'new'}))],

@@ -43,6 +43,10 @@ details { margin-top:1.2em; font-size:.85em; }
 .nightMode,.night_mode { color:#f8f4e8; background:#202521; }
 .nightMode small,.night_mode small,.nightMode b,.night_mode b,.nightMode h2,.night_mode h2 { color:#abd5c1; }
 .nightMode .recall-cue-label,.night_mode .recall-cue-label { color:#cad8d1; }
+.learning-it,h1[lang="it"] { color:#285a50; font-style:italic; }
+.learning-gloss { color:#8c4938; font-style:italic; }
+.nightMode .learning-it,.night_mode .learning-it,.nightMode h1[lang="it"],.night_mode h1[lang="it"] { color:#abd5c1; }
+.nightMode .learning-gloss,.night_mode .learning-gloss { color:#f0b39a; }
 '''
 
 
@@ -56,9 +60,11 @@ def stable_guid(key):
 
 def prompt(card):
     cues = ''.join('<div class="recall-cue"><span class="recall-cue-label" lang="en">' + escape(cue['label']) +
-                   '</span><span lang="' + cue['lang'] + '">' + escape(cue['text']) + '</span></div>' for cue in card['cues'])
-    hint = '<p class="clue" lang="en">' + escape(card['hint']) + '</p>' if card['hint'] else ''
-    return '<div class="recall-exercise"><p class="instruction" lang="en">' + escape(card['task']) + '</p>' + cues + hint + '</div>'
+                   '</span><span' + (' class="learning-it"' if cue['lang']=='it' else ' class="learning-gloss"' if cue['label'] in ('Verb meaning','In English') else '') +
+                   ' lang="' + cue['lang'] + '">' + escape(cue['text']) + '</span></div>' for cue in card['cues'])
+    display=card.get('display',{})
+    hint = '<p class="clue" lang="en">' + display.get('hint',escape(card['hint'])) + '</p>' if card['hint'] else ''
+    return '<div class="recall-exercise"><p class="instruction" lang="en">' + display.get('task',escape(card['task'])) + '</p>' + cues + hint + '</div>'
 
 
 def deck(collection, name):
@@ -123,8 +129,8 @@ def build(output):
                 note=collection.new_note(model)
                 note.guid=stable_guid(card['key'])
                 values={'Key':card['key'],'Prompt':prompt(card),'Answer':escape(card['answer']),
-                        'Pronunciation':escape(card['guide']),'IPA':escape(card['ipa']),'Meaning':escape(card['meaning']),
-                        'Use':escape(card['usage']),'Rule':card['rule'],'Source':escape(card['sourceClass']+' · '+card['source']),
+                        'Pronunciation':escape(card['guide']),'IPA':escape(card['ipa']),'Meaning':card.get('display',{}).get('meaning',escape(card['meaning'])),
+                        'Use':card.get('display',{}).get('usage',escape(card['usage'])),'Rule':card['rule'],'Source':escape(card['sourceClass']+' · '+card['source']),
                         'Topic':escape(card['deck']),'AnswerLanguage':card['answerLang']}
                 for name,value in values.items():
                     note[name]=value
