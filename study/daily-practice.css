@@ -1,5 +1,19 @@
 @import url('./verb-reference-view.css');
 
+/* Daily flashcards, including reused lesson cards, follow the course palette
+   instead of the legacy review card's fixed dark colours. */
+.guided-card-host .review-card[data-lesson="PRACTICE"] {
+  --paper: inherit;
+  --paper2: inherit;
+  --ink: inherit;
+  --line: inherit;
+  --muted: inherit;
+  --green: inherit;
+  --recall: inherit;
+  --answer: inherit;
+  color: var(--ink);
+}
+
 /* Practice content lives inside the guided course. Its palette, typeface and
    native form colour scheme follow the same theme as the course header. */
 .course-practice {

@@ -244,7 +244,7 @@
   }
   function header(){
     return window.ItalianCourseChrome.header({
-      context:'guided',current:state.page,dark,italianFirst,menuOpen
+      context:'guided',current:state.page,lesson:state.lesson,dark,italianFirst,menuOpen
     });
   }
   function crumbs(segments){
