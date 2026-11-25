@@ -70,10 +70,30 @@ try:
     else:
      assert page.locator('.library-lesson-detail [data-library-topic]').count()==9
     has_homework=page.evaluate('(id)=>Boolean(ItalianLibraryMap.homework[id])','L'+str(i))
-    homework=page.locator('details.library-homework')
+    homework=page.locator('section.library-homework')
     assert homework.count()==int(has_homework)
     if has_homework:
-     assert homework.get_attribute('open') is None and homework.locator('li').count()>0
+     assert homework.is_visible()
+     evidence=page.evaluate('(id)=>ItalianHomeworkEvidence[id]','L'+str(i))
+     expected_items=[('book',item) for item in evidence['book']]+[('handout',item) for item in evidence['handouts']]
+     expected_ids=['L'+str(i)+':'+kind+':'+item['id'] for kind,item in expected_items]
+     assert homework.locator('[data-homework-item]').evaluate_all('(els)=>els.map(el=>el.dataset.homeworkItem)')==expected_ids
+     actual_rows=homework.locator('.homework-item').evaluate_all('''els=>els.map(el=>({
+      label:el.querySelector('label strong').textContent,
+      task:el.querySelector('.homework-task').textContent,
+      source:el.querySelector('.homework-source').textContent
+     }))''')
+     assert actual_rows==[{'label':item['label'],'task':item['task'],'source':item['source']['file']+' · '+item['source']['locator']} for _,item in expected_items]
+     revision=homework.locator('details.homework-revision')
+     has_revision=bool(evidence['reference']) or page.evaluate('(id)=>Boolean(ItalianLibraryMap.homework[id].quizzes?.length)','L'+str(i))
+     assert revision.count()==int(has_revision)
+     if has_revision:assert revision.get_attribute('open') is None
+     if i==1:
+      first_tick=homework.locator('[data-homework-item]').first
+      first_tick.check()
+      visit('/study/study-sheets.html?mode=learn&lesson=L1')
+      assert first_tick.is_checked(),'Homework tick must survive a reload'
+      first_tick.uncheck()
     check_layout()
    page.screenshot(path=str(OUT/f'lessons-{width}-{theme}.png'),full_page=True,animations='disabled')
    visit('/study/study-sheets.html?browse=topic')
