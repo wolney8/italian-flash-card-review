@@ -51,7 +51,7 @@ function topicFor(value) {
   if (/number|calculation/.test(text)) return 'numbers';
   if (/useful.question|question.word|classroom|^questions/.test(text)) return 'questions';
   if (/object|word.jobs|grammar.in.context/.test(text)) return 'objects';
-  if (/verb|pronoun|essere|avere|fare|stare|venire|andare|chiamarsi|lavorare|parlare|studiare|mangiare|vivere|abitare|negative|^l7-(?:class|homework|endings|families|connected)|^l6-recap/.test(text)) return 'verbs';
+  if (/verb|pronoun|essere|avere|fare|stare|venire|andare|chiamarsi|lavorare|parlare|studiare|mangiare|vivere|abitare|negative|^l9-|^l7-(?:class|homework|endings|families|connected)|^l6-recap/.test(text)) return 'verbs';
   return 'conversation';
 }
 function topicForSheet(sheet) { return topicFor(typeof sheet === 'string' ? sheet : sheet.slug); }
@@ -138,7 +138,7 @@ async function allSheets() {
   if (root.ItalianStudyData?.length) return clone(root.ItalianStudyData);
   const initial = (await baseSheets()).concat(root.ITALIAN_L6.sheets || [],root.ITALIAN_L7.sheets || [],root.ITALIAN_L7.lesson6Supplements?.sheets || []);
   const enhanced = root.ItalianPracticeBank.enhance(initial,[],root.ItalianPracticeOptions,root.ItalianVerbReference.verbs);
-  const rows = enhanced.concat(root.ItalianLibraryContent.sheets || [],root.ItalianLesson8.sheets || []);
+  const rows = enhanced.concat(root.ItalianLibraryContent.sheets || [],root.ItalianLesson8.sheets || [],root.ItalianLesson9?.sheets || []);
   return [...new Map(rows.map(sheet=>[sheet.slug,sheet])).values()];
 }
 async function waitForCards() {

@@ -53,7 +53,7 @@
     return decoded;
   }
 
-  function validateCards(coreCards, lesson5Cards, lesson8Cards, practiceCards) {
+  function validateCards(coreCards, lesson5Cards, lesson8Cards, practiceCards, lesson9Cards) {
     if (coreCards.length !== EXPECTED_CORE_CARDS) {
       throw new Error(`Expected ${EXPECTED_CORE_CARDS} cards in Lessons 1–4, received ${coreCards.length}.`);
     }
@@ -76,7 +76,8 @@
     const lesson6Supplements=window.ITALIAN_L7?.lesson6Supplements?.cards||[];
     if(lesson7Cards.some(c=>c.lesson!=='L7')||lesson6Supplements.some(c=>c.lesson!=='L6'))throw new Error('Invalid lesson extension assignment.');
     if(practiceCards.some(c=>c.lesson!=='PRACTICE'))throw new Error('Invalid daily practice collection assignment.');
-    const expanded=finalCards.concat(lesson6Cards,lesson7Cards,lesson6Supplements,lesson8Cards,practiceCards);
+    if(lesson9Cards.some(c=>c.lesson!=='L9'))throw new Error('Invalid Lesson 9 flashcard assignment.');
+    const expanded=finalCards.concat(lesson6Cards,lesson7Cards,lesson6Supplements,lesson8Cards,practiceCards,lesson9Cards);
     if(new Set(expanded.map(c=>c.key)).size!==expanded.length)throw new Error('Duplicate course card keys.');
     return expanded;
   }
@@ -116,6 +117,7 @@
         const {title, description} = window.ItalianDailyVerbCards.collection;
         return {number:'Practice', title, description};
       }
+      if(lesson==='L9'&&window.ItalianLesson9)return {number:'9',title:window.ItalianLesson9.lesson.title,description:window.ItalianLesson9.lesson.description};
       if(lesson==='L7'&&window.ITALIAN_L7)return {number:'7',title:window.ITALIAN_L7.libraryLesson?.title||'Regular -ARE verbs',description:window.ITALIAN_L7.libraryLesson?.description||'Regular verb endings, stress and everyday sentences.'};
       if(lesson==='L6')return {number:'6',title:'Numbers, Essere and Questions',description:'Number-building patterns, negatives, intonation and useful questions.'};
       return meta[lesson] || previous(lesson);
@@ -224,17 +226,18 @@
       throw new Error('This browser cannot decompress the course card data.');
     }
 
-    const [coreEncoded, lesson5Encoded, lesson8Cards, practiceCards] = await Promise.all([
+    const [coreEncoded, lesson5Encoded, lesson8Cards, practiceCards, lesson9Cards] = await Promise.all([
       loadEncodedGroup(CORE_FILES),
       loadEncodedGroup(LESSON5_FILES),
       window.ItalianLesson8 ? window.ItalianLesson8.loadCards() : [],
-      window.ItalianDailyVerbCards ? window.ItalianDailyVerbCards.loadCards() : []
+      window.ItalianDailyVerbCards ? window.ItalianDailyVerbCards.loadCards() : [],
+      window.ItalianLesson9 ? window.ItalianLesson9.cards : []
     ]);
     const [coreCards, lesson5Cards] = await Promise.all([
       decodeCards(coreEncoded, 'Lessons 1–4'),
       decodeCards(lesson5Encoded, 'Lesson 5')
     ]);
-    const finalCards = validateCards(coreCards, lesson5Cards, lesson8Cards, practiceCards);
+    const finalCards = validateCards(coreCards, lesson5Cards, lesson8Cards, practiceCards, lesson9Cards);
 
     const waitForApp = () => {
       const appReady = typeof cards !== 'undefined' && Array.isArray(cards) && typeof renderView === 'function';

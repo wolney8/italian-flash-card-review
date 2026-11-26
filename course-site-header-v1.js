@@ -9,11 +9,11 @@ function pair(it,en,italianFirst){
 function header(o={}){
  const study=o.context==='study',base=study?'../':'';
  const href=key=>key==='topics'?(study?'':'study/')+'study-sheets.html?mode='+(o.mode==='review'?'review':'learn'):base+'?page='+key;
- const practice=['daily-practice','visual-exercises','jobs-in-photos','articles-guide'].includes(o.current)||(o.current==='card'&&o.lesson==='PRACTICE');
- const active=practice?'daily-practice':o.current==='card'?'lessons':o.current||'home';
- const items=[['home','Inizio','Home'],['daily-focus','Focus quotidiano','Daily Focus'],['lessons','Lezioni','Lessons'],['topics','Schede di studio','Study sheets'],['daily-practice','Esercizi quotidiani','Daily Practice']];
+ const practice=['today','daily-focus','daily-practice','visual-exercises','jobs-in-photos','articles-guide'].includes(o.current)||(o.current==='card'&&o.lesson==='PRACTICE');
+ const active=practice?'today':o.current==='card'?'lessons':o.current||'home';
+ const items=[['home','Inizio','Home'],['today','Oggi','Today'],['lessons','Lezioni','Lessons'],['topics','Schede di studio','Study Sheets']];
  const nav=items.map(([key,it,en])=>'<a href="'+href(key)+'" data-guide-to="'+key+'"'+(active===key?(practice&&o.current!==key?' aria-current="location"':' aria-current="page"'):'')+'>'+pair(it,en,!!o.italianFirst)+'</a>').join('');
- const comment='<button type="button" class="course-site-comment" data-guide-comment data-study-editorial-comment aria-label="Comments" title="Comments"><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.3 11.2a8.2 8.2 0 0 1-8.5 8.1 8.1 8.1 0 0 1-3.5-.9L3 20l1.7-5.1a8.2 8.2 0 0 1 7-12.2 8.2 8.2 0 0 1 8.6 8.5Z"/><path d="M8 11.3h8"/></svg></button>';
+ const comment='<button type="button" class="course-site-comment" data-guide-comment data-study-editorial-comment aria-label="Comments" title="Comments"><svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.3 11.2a8.2 8.2 0 0 1-8.5 8.1 8.1 8.1 0 0 1-3.5-.9L3 20l1.7-5.1a8.2 8.2 0 0 1 7-12.2 8.2 8.2 0 0 1 8.6 8.5Z"/></svg></button>';
  const order='<button type="button" class="course-site-language" data-guide-label-order data-study-editorial-language aria-label="Change interface language"><span class="ui-language-choice" lang="it">ITA</span><span aria-hidden="true"> / </span><span class="ui-language-choice" lang="en">ENG</span></button>';
  const theme='<button type="button" class="course-site-theme" data-guide-theme data-study-editorial-theme title="Change colour theme" aria-label="Switch to '+(o.dark?'light':'dark')+' mode"><span aria-hidden="true">'+(o.dark?'☀':'☾')+'</span><span>'+(o.dark?'Light':'Dark')+'</span></button>';
  const menu='<button type="button" class="course-site-menu" data-guide-menu data-study-editorial-menu aria-controls="courseSiteNavigation" aria-expanded="'+!!o.menuOpen+'"><span aria-hidden="true">☰</span><span>Menu</span></button>';

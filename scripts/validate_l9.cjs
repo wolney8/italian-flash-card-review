@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const data=require('../lesson9/content.js');
+assert.equal(data.lesson.id,'L9');
+assert.equal(data.lesson.date,'2026-11-24');
+assert.deepEqual(data.sheets.map(s=>s.slug),['l9-conjugation-groups','l9-are-recap','l9-ere-class','l9-ere-homework']);
+assert.deepEqual(data.sheets.map(s=>s.questions.length),[21,12,30,23]);
+assert.equal(data.cards.length,22);
+assert.equal(new Set(data.cards.map(c=>c.key)).size,22);
+assert(data.cards.every(c=>c.lesson==='L9'&&c.reference&&c.prompt&&c.answer&&c.meaning));
+assert(data.cards.every(c=>c.key.startsWith('l9-')));
+assert.equal(data.examples.length,16);
+assert(data.examples.every(e=>e.source===data.sourceFiles.minutes));
+assert.equal(data.forms.prendere.join(','),'prendo,prendi,prende,prendiamo,prendete,prendono');
+for(const verb of ['prendere','leggere','vivere','vedere','correre']){
+ const rows=data.sheets.find(s=>s.slug==='l9-ere-class').questions.filter(q=>q.id.startsWith('l9-class-'+verb+'-'));
+ assert.equal(rows.length,6,verb);
+ assert.deepEqual(rows.map(row=>row.model),Array.from(data.forms[verb]));
+}
+const homework=data.sheets.find(s=>s.slug==='l9-ere-homework');
+assert.equal(homework.questions.filter(q=>q.sourceActivity==='2').length,10);
+assert.equal(homework.questions.filter(q=>q.sourceActivity==='3').length,6);
+assert.equal(homework.questions.filter(q=>q.sourceActivity==='4').length,6);
+assert(homework.study_sections.some(s=>s.items.some(line=>line.includes('not automatically graded'))));
+assert(!JSON.stringify(data).includes('—'),'Do not use em dashes in authored lesson content');
+const loader=read('course-data-loader-v1.js');
+assert.match(loader,/lesson9Cards/);
+const library=read('study/study-sheets.html');
+assert.match(library,/lesson9\/catalogue.js/);
+const ui=read('course-site-header-v1.js');
+assert.match(ui,/\['today','Oggi','Today'\]/);
+assert(!ui.includes("['daily-practice','Esercizi quotidiani','Daily Practice']"));
+const practice=read('course-practice-routes-v1.js');
+assert.match(practice,/\['today','Today'\]/);
+const focus=read('study/daily-focus-content.js');
+assert.match(focus,/ItalianLesson9\?\.sheets/);
+assert.match(focus,/'L9'/);
+console.log('PASS Lesson 9: 4 source-aligned sheets, 86 graded items, 16 sourced examples, 22 distinct future Anki/Web cards, homework separation and Today routing');

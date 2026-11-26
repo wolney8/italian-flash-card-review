@@ -74,7 +74,8 @@
     LESSON_ITALIAN[lesson.id] = lesson.it;
     for (const topic of topics) STUDY_ITALIAN[topic.title] = topic.it;
   }
-  const PRACTICE_COLLECTION = window.ItalianDailyVerbCards?.collection;
+  if(window.ItalianLesson9){const lesson=window.ItalianLesson9.lesson;LESSONS.push([lesson.id,lesson.title,lesson.description]);LESSON_ITALIAN.L9=lesson.it;}
+   const PRACTICE_COLLECTION = window.ItalianDailyVerbCards?.collection;
   const knownCollection = id => LESSONS.some(lesson => lesson[0] === id) || id === PRACTICE_COLLECTION?.id;
   const isReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   let state = {page: 'home', lesson: null, deck: '', index: 0, finished: false};

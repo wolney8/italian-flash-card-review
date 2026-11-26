@@ -18,7 +18,7 @@ def route(page, view):
     expect(page.locator('#guidedExperience .course-site-header')).to_have_count(1)
     expect(page.locator(VIEWS[view])).to_be_visible()
     expect(page.locator('.course-site-navigation [aria-current]')).to_have_attribute(
-        'data-guide-to', 'daily-practice')
+        'data-guide-to', 'today')
 
 
 
@@ -113,7 +113,8 @@ def check_navigation(browser, base):
                 check_aliases(page, base)
                 check_worksheet_entries(page, base)
             page.goto(base + '/?page=home')
-            header_link(page, 'Daily Practice').click()
+            header_link(page, 'Today').click()
+            page.get_by_role('tab', name='Practice', exact=False).click()
             route(page, 'daily-practice')
             theme(page, 'light')
 
@@ -178,7 +179,8 @@ def check_navigation(browser, base):
             page.go_forward()
             expect(picker).to_have_value('sentence')
 
-            header_link(page, 'Daily Practice').click()
+            header_link(page, 'Today').click()
+            page.get_by_role('tab', name='Practice', exact=False).click()
             route(page, 'daily-practice')
             assert 'activity' not in parse_qs(urlsplit(page.url).query)
             page.get_by_role('link', name='Jobs in photographs').click()
@@ -202,7 +204,8 @@ def check_navigation(browser, base):
             header_link(page, 'Study sheets').click()
             expect(page.locator('[data-library-ready]')).to_be_visible()
             theme(page, 'dark')
-            header_link(page, 'Daily Practice').click()
+            header_link(page, 'Today').click()
+            page.get_by_role('tab', name='Practice', exact=False).click()
             route(page, 'daily-practice')
             theme(page, 'dark')
             assert not errors, errors

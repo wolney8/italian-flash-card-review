@@ -8,6 +8,12 @@ Study sheets|||Schede di studio
 Daily practice|||Esercizi quotidiani
 Daily Practice|||Esercizi quotidiani
 Daily Focus|||Focus quotidiano
+Today|||Oggi
+Focus|||Focus
+Practice|||Esercizi
+Choose a study mode|||Scegli come studiare
+Prepared daily drills|||Esercizi quotidiani preparati
+Choose a topic and practise|||Scegli un argomento ed esercitati
 Compare Regular Present-Tense Endings|||Confronta le desinenze regolari del presente
 Present Tense: Regular Verb Endings|||Presente: desinenze dei verbi regolari
 Compare all three regular conjugation families. The first three rows are singular.|||Confronta le tre coniugazioni regolari. Le prime tre righe sono al singolare.

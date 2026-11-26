@@ -3,7 +3,6 @@ import './verb-reference-view.js?v=20261125cards';
 import './verb-reference-v1.js?v=20261125cards';
 import './daily-patterns.js';
 import './daily-phrases.js';
-import {renderComparison} from './present-conjugation-comparison.js?v=20261126';
 
 export function mountPractice(main, signal) {
   const byId = id => main.querySelector('#'+id);
@@ -41,8 +40,6 @@ export function mountPractice(main, signal) {
   let pool = [];
   let session;
   let refVerb = '';
-  let referenceKey = null;
-  let overviewScope = null;
   function idForSession() {
     const base = state.topic === 'verbs' ? ['verbs',state.group,state.verb].join(':') : state.topic;
     const focus = state.focus[state.topic] || 'all';
@@ -105,26 +102,9 @@ export function mountPractice(main, signal) {
     pool = orderFor(data,idForSession());
     session = state.sessions[idForSession()];
     if (!session || !Array.isArray(session.ids) || !session.ids.length || !session.ids.every(id => rows.has(id)) || !Array.isArray(session.results)) start();
-    updateOverview();
+    byId('reference').open = false;
     save();
     render();
-  }
-
-  function updateOverview() {
-    const panel=byId('overview');
-    const visible=state.topic==='verbs';
-    panel.hidden=!visible;
-    if(!visible)return;
-    if(!panel.dataset.loaded){
-      byId('overview-body').innerHTML=renderComparison(verbs);
-      panel.dataset.loaded='true';
-    }
-    const all=state.family==='all'&&state.group==='all'&&state.verb==='all';
-    const mode=all?'all':'filtered';
-    if(overviewScope!==mode){
-      if(all)panel.open=true;
-      overviewScope=mode;
-    }
   }
 
   function table(head, records) {
@@ -144,24 +124,19 @@ export function mountPractice(main, signal) {
     const verb = verbs.find(v => v.name === (q && q.verbName || refVerb || state.verb)) || verbs[0];
     refVerb = verb.name;
     byId('ref-title').textContent = state.topic === 'verbs' ? 'See all six forms and uses of '+verb.name : 'Quick reference';
-    const key=state.topic==='verbs' ? 'verb:'+verb.name : 'topic:'+state.topic;
-    // Leave the expanded reference in place while checking and advancing.
-    if(key===referenceKey)return;
-    referenceKey=key;
-    if(state.topic !== 'verbs'){byId('ref-body').innerHTML=sections[state.topic]();return;}
-    byId('ref-body').innerHTML=window.ItalianVerbReferenceView.render(window.ItalianVerbReference.find(verb.name));
+    if (state.topic !== 'verbs') {byId('ref-body').innerHTML = sections[state.topic](); return;}
+    byId('ref-body').innerHTML = window.ItalianVerbReferenceView.render(window.ItalianVerbReference.find(verb.name));
   }
 
   function render(focus = false) {
-    const box=byId('exercise');
-    const oldTop=box.getBoundingClientRect().top;
-    const q=rows.get(session.ids[session.index]);
+    const box = byId('exercise');
+    const q = rows.get(session.ids[session.index]);
     reference(q);
     if (!q) {
       const correct = session.results.filter(r => r.correct).length;
       const missed = session.ids.filter((id,i) => !session.results[i]?.correct);
       box.innerHTML = '<div class="panel finished"><h3 tabindex="-1" class="question-title">Round complete</h3><p>'+correct+' of '+session.ids.length+' correct on the first attempt.</p><div class="controls">'+(missed.length ? '<button class="primary" data-action="retry">Practise these '+missed.length+' again</button>' : '')+'<button class="'+(missed.length?'secondary':'primary')+'" data-action="more">Another round</button></div></div>';
-      if(focus)focusCurrent(box,oldTop,'h3');
+      if (focus) box.querySelector('h3').focus();
       return;
     }
     const result = session.results[session.index];
@@ -177,21 +152,7 @@ export function mountPractice(main, signal) {
       '<form>'+inputs+(result ? '' : '<details><summary>Hint</summary><p lang="en-GB" data-ui-no-translate>'+explain(q.hint,q.verbName)+'</p></details><div class="controls"><button class="primary" type="submit">Check answer</button><button type="button" class="secondary" data-action="reveal">Show answer</button></div>')+'</form>'+
       (result ? '<div role="status" lang="en-GB" data-ui-no-translate class="feedback '+(result.correct?'':'review')+'"><p><b>'+(result.correct?'Correct.':result.revealed?'Answer':'The answer is')+'</b> <span class="'+(answerLang==='it'?'learning-it':'learning-gloss')+'" lang="'+answerLang+'">'+esc(q.answer)+'</span></p><p>'+explanation+'</p></div><div class="controls"><button class="primary" data-action="next">'+(session.index+1===session.ids.length?'Finish round':'Next question')+'</button></div>' : '')+'</article>';
     if (result) box.querySelectorAll('input').forEach(el => {el.disabled=true;});
-    if(focus)focusCurrent(box,oldTop,result?'[data-action="next"]':'h3');
-  }
-
-  function focusCurrent(box,previousTop,selector){
-    const target=box.querySelector(selector);
-    target?.focus({preventScroll:true});
-    const rect=box.getBoundingClientRect();
-    // Only the current question is re-rendered; keep it anchored under open references.
-    const shift=rect.top-previousTop;
-    if(Number.isFinite(previousTop)&&Math.abs(shift)>1)window.scrollBy({top:shift,behavior:'instant'});
-    const after=box.getBoundingClientRect();
-    if(after.top<6||after.top>window.innerHeight-130){
-      const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      box.scrollIntoView({block:'start',behavior:reduce?'instant':'smooth'});
-    }
+    if (focus) (result ? box.querySelector('[data-action="next"]') : box.querySelector('h3')).focus();
   }
 
   function grade(value, revealed) {
@@ -243,9 +204,9 @@ export function mountPractice(main, signal) {
         break;
       }
       case 'reveal': grade('',true); break;
-      case 'next': session.index++; save(); render(true); break;
-      case 'more': start(session.round+1); render(true); break;
-      case 'retry': start(session.round, session.ids.filter((_,i) => !session.results[i]?.correct)); render(true); break;
+      case 'next': session.index++; save(); byId('reference').open=false; render(true); break;
+      case 'more': start(session.round+1); byId('reference').open=false; render(true); break;
+      case 'retry': start(session.round, session.ids.filter((_,i) => !session.results[i]?.correct)); byId('reference').open=false; render(true); break;
     }
   });
   loadTopic();
