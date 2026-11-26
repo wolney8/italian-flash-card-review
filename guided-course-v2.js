@@ -581,8 +581,8 @@
   });
   window.addEventListener('popstate',()=>{menuOpen=false;state=stateFromUrl();render();});
   window.addEventListener('hashchange',()=>{if(location.hash.match(/^#lesson-L\d+$/i)){state=stateFromUrl();render();}});
-  window.addEventListener('italian-course-data-ready',()=>{ready=true;render();});
-  window.addEventListener('pageshow',()=>{ready=Boolean(window.__COURSE_DATA_READY__);render();});
+  window.addEventListener('italian-course-data-ready',()=>{ready=true;renderKeepingCardFace();});
+  window.addEventListener('pageshow',()=>{ready=Boolean(window.__COURSE_DATA_READY__);renderKeepingCardFace();});
   window.ItalianFlashcards={getState:()=>({...state}),currentCard,cardList,activeCardList,navigate,moveCard,flip,recordConfidence,toggleFocus,renderKeepingCardFace};
   activate();
 })();

@@ -32,5 +32,6 @@ const verbs=ctx.window.ItalianDailyVerbs.verbs;
   const header=require('../course-site-header-v1.js').header({context:'guided',current:'daily-practice'});
   assert.ok(header.includes('Daily Practice') && header.includes('Daily Focus'));
   assert.ok(header.includes('<svg aria-hidden="true"'),'Comments must be an icon-only control');
+  assert.match(read('guided-course-v2.js'),/italian-course-data-ready'.*renderKeepingCardFace\(\)/,'Late data refresh must preserve a flipped card');
   console.log('PASS Regular conjugations, singular/plural comparison, references stay open and header labels are consistent.');
 })().catch(e=>{console.error(e);process.exitCode=1;});
