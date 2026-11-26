@@ -1,5 +1,5 @@
 import './daily-focus-content.js?v=20261126words1';
-import './verb-reference-view.js?v=20261125cards';
+import './verb-reference-view.js?v=20261126references1';
 import './daily-focus-language.js?v=20261125focus1';
 import './daily-focus-ui-locale.js?v=20261125week1';
 
@@ -87,7 +87,7 @@ export async function mountPractice(main, signal) {
   }
   function modelAnswer(item) {
     const answer = window.ItalianTypedAnswers.describe(item).model;
-    return /^en/.test(item.answerLang || '') ? meaning(answer) : it(answer);
+    return /^en/.test(item.answerLang || '') ? meaning(answer) : language.formatItalian(displayText(answer), language.verbForQuestion(item));
   }
   function readingBody(item) {
     if (item.readingLines?.length) return '<p>'+item.readingLines.map(line => line.lang === 'it' ? it(line.text) : explain(line.text)).join(' ')+'</p>';

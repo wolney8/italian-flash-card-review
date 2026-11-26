@@ -1,4 +1,16 @@
 /* Shared by Daily practice and the verb study-sheet reference. */
+:root { --verb-added-colour: #8b4d15; }
+html[data-italian-theme="dark"], body:is(.nightMode, .night_mode) { --verb-added-colour: #f0c58b; }
+html[data-italian-theme="light"] { --verb-added-colour: #8b4d15; }
+.verb-stem { color: var(--green, var(--mint, currentColor)); }
+:is(.verb-ending, .verb-infix) { color: var(--verb-added-colour); font-weight: 700; }
+:is(.verb-reference-card, .conj-reference) .verb-form-legend {
+  margin: 0 0 12px;
+  font-size: .875rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.conj-matrix caption { padding: 0 0 8px; text-align: left; font-size: .875rem; color: var(--muted); }
 .verb-reference-card {
   container-type: inline-size;
   min-width: 0;
@@ -22,8 +34,8 @@
 .verb-reference-card .verb-reference-table thead th { font-weight: 600; font-size: .875rem; }
 .verb-reference-card .verb-reference-table tbody th { width: 43%; font-weight: 600; }
 .verb-reference-card :is(.verb-person-gloss, .verb-reading-guide) { display: block; margin-top: 3px; font-size: .875rem; font-weight: 400; line-height: 1.4; color: var(--muted); }
-.verb-reference-card .verb-written-form { font-weight: 600; }
-.verb-reference-card :is(.verb-person-note, .verb-pattern-note) { margin-top: 12px; font-size: .875rem; }
+.verb-reference-card .verb-written-form { color: var(--green, var(--mint)); font-weight: 600; }
+.verb-reference-card :is(.verb-person-note, .verb-pattern-note, .verb-spelling-note) { margin-top: 12px; font-size: .875rem; }
 .verb-reference-card .verb-uses-column h4 { font-size: 1rem; font-weight: 600; }
 .verb-reference-card .verb-usage-intro { margin-top: 7px; font-size: .9rem; }
 .verb-reference-card .verb-use-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }

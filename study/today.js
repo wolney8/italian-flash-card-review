@@ -30,7 +30,7 @@ export function mountPractice(main, signal) {
     }
     if(!modules.has(tab)){
       const page=tab==='focus'?'daily-focus':'daily-practice';
-      modules.set(tab,import(new URL('study/'+page+'.js?v=20261126words1',ROOT).href));
+      modules.set(tab,import(new URL('study/'+page+'.js?v=20261126references1',ROOT).href));
     }
     return {node:document.importNode(templates.get(tab),true),module:await modules.get(tab)};
   }

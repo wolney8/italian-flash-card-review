@@ -35,7 +35,12 @@ try:
    expect(page).to_have_url(base+'/?page=today&tab=practice')
    page.locator('#exercise .panel').wait_for(timeout=60000)
    assert page.locator('#overview').get_attribute('open') is not None
-   assert page.locator('#overview .conj-matrix').count()==2
+   assert page.locator('#overview .conj-matrix').count()==1
+   expect(page.locator('#overview .conj-matrix tbody tr')).to_have_count(6)
+   for row in page.locator('#overview .conj-matrix tbody tr').all():
+    expect(row).to_be_visible()
+   assert page.locator('#overview .conj-plural').count()==0
+   expect(page.locator('#reference-links [data-reference=all]')).to_be_visible()
    page.locator('#ref-title').click()
    assert page.locator('#reference').get_attribute('open') is not None
    if page.locator('#exercise input[type=radio]').count():
