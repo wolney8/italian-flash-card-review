@@ -104,10 +104,12 @@ def check_navigation(browser, base):
         )
         context.route('**/*', lambda request: request.continue_() if
                       urlsplit(request.request.url).netloc == urlsplit(base).netloc else request.abort())
-        context.add_init_script("""if (localStorage.getItem('italianCourseThemeV1') === null) {
-            localStorage.setItem('italianCourseThemeV1','light');
-            localStorage.setItem('italianCourseLanguageV1','en');
-        }""")
+        context.add_init_script("""try {
+            if (localStorage.getItem('italianCourseThemeV1') === null) {
+                localStorage.setItem('italianCourseThemeV1','light');
+                localStorage.setItem('italianCourseLanguageV1','en');
+            }
+        } catch (_) { /* Sandbox and about:blank frames have no storage origin. */ }""")
         page = context.new_page()
         errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
