@@ -172,7 +172,7 @@ try:
    assert page.evaluate("cards.filter(c=>c.lesson==='PRACTICE').length")==json.loads((ROOT/'daily-verb-cards/coverage.json').read_text())['newCards']
    assert page.evaluate("cards.filter(c=>c.lesson==='L7').length")==54
    assert page.evaluate("cards.filter(c=>c.lesson==='L8').length")==58
-    assert page.evaluate("cards.filter(c=>c.lesson==='L9').length")==22
+   assert page.evaluate("cards.filter(c=>c.lesson==='L9').length")==22
    page.click('[data-back-to-practice]');page.wait_for_function('window.ItalianGuidedStudy && !document.documentElement.classList.contains("course-booting")')
    q=page.locator('.quiz-question:not([hidden])');assert q.get_attribute('data-progress-key')==qid
    assert q.locator('input').input_value()=='Io sono di Na'
