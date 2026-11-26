@@ -257,3 +257,16 @@ Verification additions cover Monday/Sunday and DST, topic settings and persisten
 - Cosmetic redesign during the first week of real use.
 
 No additional content or infrastructure decision is required from Will to build the preview. The routine selection, state and UI choices stay with the implementation. Production approval follows a concrete reviewable result.
+
+## Daily Practice reference and navigation polish, 26 November 2026
+
+This change is added to the existing unmerged PR 31 preview. It does not publish to production or modify Anki.
+
+- **Reference comparison:** The All Families / All Present Patterns / Mix All Verbs selection reveals a readable comparison table for the first three singular present-tense forms across regular -ARE, -ERE and -IRE. A separate column illustrates the regular -isc- pattern. The plural subject forms are available within a second disclosure panel. Examples come from the already checked verb catalogue: parlare, leggere, dormire and finire. No content is attributed to the unavailable Lesson 9 minutes.
+- **Future expansion:** The comparison is explicitly labelled Present Tense. Past and future tables require the new course materials and verified verb forms. Do not automatically infer or fabricate Laura's future teaching sequence.
+- **Other references:** Existing Daily Practice references for articles, soft/hard C/G sounds, articulated prepositions, classroom question words, and direct objects remain available and unchanged.
+- **Persistent reference state:** Pressing Check Answer or Next Question updates the exercise panel only. Existing open/closed state of the reference and conjugation overview is retained; focus uses preventScroll and a targeted in-page anchor rather than returning to the top. Reduced-motion preferences suppress the brief question transition.
+- **Consistent navigation:** Visible links use **Daily Focus** and **Daily Practice** in Title Case, matching their page titles and breadcrumbs. The shared Comments control uses a single accessible speech-bubble icon in both language orders, preserving the existing feedback action. The responsive header continues to offer mobile navigation.
+- **Verification:** Add a source-derived conjugation check and a Chromium browser test for header visibility, comparison rows, default open state, reference persistence through an answer and Next Question, and mobile overflow. All historical card IDs, lesson exercise IDs, source labels, and Anki notes remain unchanged.
+- **Next source:** Lesson 9 minutes were received by the learner on 26 November and will be supplied after this UI run. Do not incorporate their contents until actually available and reviewed.
+

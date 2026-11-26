@@ -4,7 +4,7 @@
   const base = new URL('.', document.currentScript.src);
   const pages = new Map([
     ['daily-focus','Daily Focus'],
-    ['daily-practice','Daily practice'],
+    ['daily-practice','Daily Practice'],
     ['visual-exercises','Visual exercises'],
     ['jobs-in-photos','Jobs in photographs'],
     ['articles-guide','Articles']

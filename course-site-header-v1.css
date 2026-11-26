@@ -38,3 +38,10 @@
  .course-site-tools{width:100%;justify-content:flex-end}
 }
 @media print{.course-site-header,.course-site-breadcrumb{display:none!important}}
+
+/* Comments remains a full-size keyboard/touch control without consuming a text column. */
+.course-site-navigation .course-site-comment{flex:0 0 46px;min-width:46px;width:46px;padding:8px;white-space:nowrap}
+.course-site-navigation .course-site-comment svg{width:22px;height:22px;display:block;flex:none}
+.course-site-navigation{flex:1 1 auto;justify-content:flex-end}
+.course-site-navigation a{min-width:0}
+@media(max-width:960px){.course-site-navigation .course-site-comment{width:100%;justify-content:flex-start;padding:11px 14px}}

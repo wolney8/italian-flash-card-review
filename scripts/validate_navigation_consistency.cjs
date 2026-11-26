@@ -28,21 +28,23 @@ for(const italianFirst of [true,false])for(const dark of [true,false])for(const 
  assert.match(guided,/aria-controls="courseSiteNavigation"/);
  assert.match(guided,/data-guide-label-order/);
  assert.match(study,/data-study-editorial-language/);
- assert.equal((guided.match(/class="editorial-label-sub"/g)||[]).length,6);
- assert.equal((study.match(/class="editorial-label-sub"/g)||[]).length,6);
+ assert.equal((guided.match(/class="editorial-label-sub"/g)||[]).length,5);
+ assert.equal((study.match(/class="editorial-label-sub"/g)||[]).length,5);
  for(const [html,base] of [[guided,'https://course.test/'],[study,'https://course.test/study/study-sheets.html']]){
-  const daily=Array.from(html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)).find(item=>item[2].includes('Daily practice'));
+  const daily=Array.from(html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)).find(item=>item[2].includes('Daily Practice'));
   assert.ok(daily,'The shared course header must link to Daily practice');
   const url=new URL(daily[1],base);
   assert.equal(url.pathname,'/');
   assert.equal(url.searchParams.get('page'),'daily-practice');
-  const today=Array.from(html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)).find(item=>item[2].includes('Today'));
+  const today=Array.from(html.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/g)).find(item=>item[2].includes('Daily Focus'));
   assert.ok(today,'The shared course header must link to Daily Focus');
   const focusUrl=new URL(today[1],base);
   assert.equal(focusUrl.pathname,'/');
   assert.equal(focusUrl.searchParams.get('page'),'daily-focus');
  }
  assert.match(guided,/aria-current="page"/);
+ assert.match(guided, /data-guide-comment[^>]*aria-label="Comments"/);
+ assert.match(study, /data-study-editorial-comment[^>]*aria-label="Comments"/);
  variants++;
 }
 const breadcrumbs=[
