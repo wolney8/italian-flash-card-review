@@ -266,7 +266,7 @@
     return `<main id="guidedMain" class="guided-main">
       <p class="guided-eyebrow">${coursePill()}</p>
       <h1 tabindex="-1" class="guided-title editorial-hero-title">${labelPair('Scegli cosa studiare.','Choose what to study.')}</h1>
-      <section class="df-home" aria-labelledby="homeFocusTitle"><div><p class="guided-eyebrow">A little practice for today</p><h2 id="homeFocusTitle">Daily Focus</h2><p>A prepared mix from your course. Choose your time and begin.</p></div><a href="?page=daily-focus" data-guide-to="daily-focus" class="guided-primary">Open Daily Focus</a></section>
+      <section class="df-home" aria-labelledby="homeFocusTitle"><div><p class="guided-eyebrow">A little practice for today</p><h2 id="homeFocusTitle">Daily Focus</h2><p>A prepared mix from your course. Choose your time and begin.</p></div><a href="?page=today" class="guided-primary">Open Daily Focus</a></section>
       <div class="guided-choices">
         <a href="?page=lessons" data-guide-to="lessons" class="guided-choice"><span class="guided-choice-icon" aria-hidden="true">▣</span><strong>${labelPair('Lezioni','Lesson flashcards')}</strong><b>${labelPair('Scegli una lezione','Choose a lesson')}</b></a>
         <a href="study/study-sheets.html?mode=learn" data-guide-to="topics" class="guided-choice"><span class="guided-choice-icon" aria-hidden="true">▤</span><strong>${labelPair('Schede di studio','Study sheets')}</strong><b>${labelPair('Scegli un argomento','Choose a topic')}</b></a>
@@ -511,7 +511,7 @@
       return;
     }
     const title=practiceRoutes.title(page);
-    const segments=['daily-practice','daily-focus'].includes(page)?[]:[{label:'Daily Practice',to:'daily-practice'}];
+    const segments=['today','daily-practice','daily-focus'].includes(page)?[]:[{label:'Daily Practice',to:'daily-practice'}];
     segments.push({label:title});
     previousPracticeHeader=chrome;
     document.title=title+' | Italian for Beginners';
