@@ -184,7 +184,7 @@ const cards=[
   ['endings-plural','Which endings follow noi, voi and loro with regular -ERE verbs?','-iamo, -ete, -ono','Three plural endings','Keep the subject order: noi, voi, loro.'],
   ['subject-omission','Why is the subject pronoun often omitted in Italian?','The verb ending usually identifies the subject.','Subject pronouns','Use the verb ending to identify who performs the action.']
  ].map(([key,cue,answer,meaning,pattern])=>makeCard('rule-'+key,'01 -ERE Patterns',
-   'Recall the rule from Laura’s lesson.',cue,answer,meaning,pattern,sourceFiles.minutes+' p. 2')))
+   'Recall the rule from Laura’s lesson.',cue,answer,meaning,pattern,sourceFiles.minutes+' p. 2'))
 ];
 root.ItalianLesson9={lesson,sourceFiles,forms,endings,examples,sheets,cards,version:'2026-11-26-source-review'};
 if(typeof module!=='undefined'&&module.exports)module.exports=root.ItalianLesson9;
