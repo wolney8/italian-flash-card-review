@@ -1,4 +1,5 @@
 /* Read-only adapters over the approved course banks. No new lesson/card identities. */
+import './typed-answer-policy.js?v=20261126words1';
 const root = window;
 const base = new URL('.', import.meta.url);
 const titles = Object.freeze({
@@ -290,7 +291,7 @@ function variants(value,subjects=[],mode='accent') {
 function matchAnswer(item,value) {
   // Accent and apostrophe differences may change Italian meaning. Keep those meaningful.
   const mode=item.answerMode || 'accent';
-  const input=variants(value,item.optionalSubjects,mode),answers=item.answers?.length?item.answers:[item.answer];
+  const input=variants(value,item.optionalSubjects,mode),answers=root.ItalianTypedAnswers.describe(item).answers;
   if (!normalise(value,mode)) return false;
   return answers.some(answer=>[...variants(answer,item.optionalSubjects,mode)].some(v=>input.has(v)));
 }

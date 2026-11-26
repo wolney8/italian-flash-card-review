@@ -1,4 +1,4 @@
-import './daily-focus-content.js?v=20261125focus1';
+import './daily-focus-content.js?v=20261126words1';
 import './verb-reference-view.js?v=20261125cards';
 import './daily-focus-language.js?v=20261125focus1';
 import './daily-focus-ui-locale.js?v=20261125week1';
@@ -85,7 +85,10 @@ export async function mountPractice(main, signal) {
       return '<p>'+(line.label ? '<strong>'+esc(line.label)+'</strong>' : '')+html+'</p>';
     }).join('')+'</div>' : '';
   }
-  function modelAnswer(item) { return item.answerLang === 'en' || item.answerLang === 'en-GB' ? meaning(item.answer) : it(item.answer); }
+  function modelAnswer(item) {
+    const answer = window.ItalianTypedAnswers.describe(item).model;
+    return /^en/.test(item.answerLang || '') ? meaning(answer) : it(answer);
+  }
   function readingBody(item) {
     if (item.readingLines?.length) return '<p>'+item.readingLines.map(line => line.lang === 'it' ? it(line.text) : explain(line.text)).join(' ')+'</p>';
     return '<p>'+explain(item.reading || item.explanation || item.hint)+'</p>';
@@ -172,6 +175,7 @@ export async function mountPractice(main, signal) {
   }
   function stepMarkup(session, slot) {
     const item = slot.item;
+    const answerPolicy = window.ItalianTypedAnswers.describe(item);
     const completed = slot.status==='completed';
     const flash = ['flashcard','spoken'].includes(item.type);
     let response = '';
@@ -185,10 +189,10 @@ export async function mountPractice(main, signal) {
       const answerLang = /^en/.test(item.answerLang || '') ? 'en' : 'it';
       const choices = item.choices || [];
       const draft = slot.draft || '';
-      const input = choices.length ? '<fieldset class="df-options"><legend>Choose one answer</legend>'+choices.map(choice=>'<label><input type="radio" name="answer" value="'+esc(choice)+'" required'+(draft===choice?' checked':'')+'><span class="'+(answerLang==='it'?'learning-it':'')+'" lang="'+answerLang+'">'+esc(choice)+'</span></label>').join('')+'</fieldset>' : '<label class="df-answer-label" for="focusAnswer">Your answer<input id="focusAnswer" class="df-answer" type="text" name="answer" lang="'+answerLang+'" required autocomplete="off" autocapitalize="none" spellcheck="false" value="'+esc(draft)+'"></label>';
+      const input = choices.length ? '<fieldset class="df-options"><legend>Choose one answer</legend>'+choices.map(choice=>'<label><input type="radio" name="answer" value="'+esc(choice)+'" required'+(draft===choice?' checked':'')+'><span class="'+(answerLang==='it'?'learning-it':'')+'" lang="'+answerLang+'">'+esc(choice)+'</span></label>').join('')+'</fieldset>' : '<label class="df-answer-label" for="focusAnswer">Your answer<input id="focusAnswer" class="df-answer" type="text" name="answer" lang="'+answerLang+'"'+(answerPolicy.guidance?' aria-describedby="focusAnswerGuidance"':'')+' required autocomplete="off" autocapitalize="none" spellcheck="false" value="'+esc(draft)+'"></label>'+(answerPolicy.guidance?'<p id="focusAnswerGuidance" class="typed-answer-guidance" lang="en-GB" data-focus-source data-ui-no-translate>'+esc(answerPolicy.guidance)+'</p>':'');
       response = '<form id="focusAnswerForm">'+input+hint(item,session)+'<div class="df-actions"><button type="submit" class="df-primary">Check answer</button>'+button('unknown','I don’t know')+'</div></form>';
     }
-    return '<article class="df-panel df-task"><p class="df-step-position">Step '+(session.index+1)+' of '+session.steps.length+(session.duration>=30?' · Round '+(Math.floor(session.index/session.roundSize)+1)+' of '+Math.ceil(session.steps.length/session.roundSize):'')+'</p><div class="df-step-meta"><span>'+esc(item.topicTitle || cap(item.topicId))+'</span><span>'+labelFor[item.type]+'</span></div><h2 tabindex="-1" id="focusTaskTitle">'+explain(item.task)+'</h2><p class="df-reason">'+esc(slot.reason || 'No review recorded here yet')+'</p>'+stimulus(item)+response+(completed?'<div class="df-actions">'+button('next',session.index===session.steps.length-1?'See my summary':'Next step','df-primary')+'</div>':'')+'<div class="df-step-tools"><div>'+flagButton('item',item.id,item.task)+(item.topicId?flagButton('topic',item.topicId,item.topicTitle || item.topicId,'Flag this topic'):'')+'</div>'+button('show-issue','Flag an issue for later','df-quiet')+'</div>'+(showIssue?'<form id="focusIssueForm" class="df-issue"><label for="focusIssueNote">A quick note for later<textarea id="focusIssueNote" maxlength="2000" placeholder="What needs checking?" required></textarea></label><div class="df-actions"><button class="df-primary" type="submit">Save issue</button>'+button('hide-issue','Cancel')+'</div></form>':'')+(!completed?'<div class="df-utility">'+button('skip','Skip question','df-quiet')+button('swap','Swap question','df-quiet')+'</div>':'')+'</article>';
+    return '<article class="df-panel df-task"><p class="df-step-position">Step '+(session.index+1)+' of '+session.steps.length+(session.duration>=30?' · Round '+(Math.floor(session.index/session.roundSize)+1)+' of '+Math.ceil(session.steps.length/session.roundSize):'')+'</p><div class="df-step-meta"><span>'+esc(item.topicTitle || cap(item.topicId))+'</span><span>'+labelFor[item.type]+'</span></div><h2 tabindex="-1" id="focusTaskTitle">'+explain(answerPolicy.task)+'</h2><p class="df-reason">'+esc(slot.reason || 'No review recorded here yet')+'</p>'+stimulus(item)+response+(completed?'<div class="df-actions">'+button('next',session.index===session.steps.length-1?'See my summary':'Next step','df-primary')+'</div>':'')+'<div class="df-step-tools"><div>'+flagButton('item',item.id,item.task)+(item.topicId?flagButton('topic',item.topicId,item.topicTitle || item.topicId,'Flag this topic'):'')+'</div>'+button('show-issue','Flag an issue for later','df-quiet')+'</div>'+(showIssue?'<form id="focusIssueForm" class="df-issue"><label for="focusIssueNote">A quick note for later<textarea id="focusIssueNote" maxlength="2000" placeholder="What needs checking?" required></textarea></label><div class="df-actions"><button class="df-primary" type="submit">Save issue</button>'+button('hide-issue','Cancel')+'</div></form>':'')+(!completed?'<div class="df-utility">'+button('skip','Skip question','df-quiet')+button('swap','Swap question','df-quiet')+'</div>':'')+'</article>';
   }
   function drillMarkup() {
     const session = getSession();

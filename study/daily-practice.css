@@ -67,6 +67,12 @@
   outline-offset: 3px;
 }
 .course-practice [hidden] { display: none !important; }
+.course-practice .typed-answer-guidance {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 400;
+}
 .course-practice .workspace {
   display: grid;
   grid-template-columns: minmax(165px, 225px) minmax(0, 1fr);
