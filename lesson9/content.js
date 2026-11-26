@@ -145,7 +145,13 @@ const sheets=[
   section('learn','-ARE recap and exceptions','Ripasso di -ARE ed eccezioni',[
    'For regular -ARE present-tense verbs, the six endings are -o, -i, -a, -iamo, -ate, -ano.',
    'The verbs <span lang="it">fare</span> and <span lang="it">stare</span> are irregular. Learn their actual forms rather than inventing an -ARE ending.'
-  ])
+  ]),
+  {stage:'examples',type:'table',title:'Regular and irregular -ARE forms',titleIt:'Forme -ARE regolari e irregolari',
+   headers:['Subject','lavorare','fare','stare'],headersIt:['Soggetto','lavorare','fare','stare'],
+   rows:people.map((person,i)=>[person,
+     ['lavoro','lavori','lavora','lavoriamo','lavorate','lavorano'][i],
+     ['faccio','fai','fa','facciamo','fate','fanno'][i],
+     ['sto','stai','sta','stiamo','state','stanno'][i]])}
  ],areRecap),
  sheet('l9-ere-class','Regular -ERE Verb Tables','Tabelle dei verbi regolari in -ERE',
  'Class worksheet: conjugate five regular -ERE verbs for all six subjects.','Class practice',[
@@ -163,7 +169,10 @@ const sheets=[
   section('learn','Use the regular -ERE endings','Usa le desinenze regolari in -ERE',[
    'Check the subject first. Then remove -ERE and add the present-tense ending.',
    'Exercise 5 of Laura’s homework is personal writing. Complete it in your book: Io leggo..., Io prendo..., Io vivo..., Io vedo..., Io scrivo.... This is not automatically graded.'
-  ])
+  ]),
+  {stage:'examples',type:'table',title:'Remember: regular -ERE present tense',titleIt:'Ricorda: presente regolare in -ERE',
+   headers:['Subject','Ending','Prendere'],headersIt:['Soggetto','Desinenza','Prendere'],
+   rows:people.map((person,i)=>[person,'-'+endings[i],forms.prendere[i]])}
  ],homeworkQuestions)
 ];
 function makeCard(key,deck,task,cue,answer,meaning,pattern,src){
