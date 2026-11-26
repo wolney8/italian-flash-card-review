@@ -263,7 +263,7 @@ async function buildPool({refresh=false}={}) {
   // Never cache an incomplete set that silently omits flashcard activities.
   await waitForCards();
   const seenCards=new Set();
-  for (const lesson of ['L1','L2','L3','L4','L5','L6','L7','L8','PRACTICE']) {
+  for (const lesson of ['L1','L2','L3','L4','L5','L6','L7','L8','L9','PRACTICE']) {
     for (const card of root.ItalianFlashcards?.cardList(lesson) || []) {
       if (seenCards.has(card.key)) continue;
       seenCards.add(card.key);
