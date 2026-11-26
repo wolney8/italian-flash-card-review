@@ -142,7 +142,7 @@ async function allSheets() {
   return [...new Map(rows.map(sheet=>[sheet.slug,sheet])).values()];
 }
 async function waitForCards() {
-  const ready=()=>root.__COURSE_DATA_READY__ && root.ItalianFlashcards?.cardList('L1')?.length;
+  const ready=()=>root.__COURSE_DATA_READY__ && (!root.ItalianLesson9 || root.__LESSON9_READY__) && root.ItalianFlashcards?.cardList('L1')?.length;
   if(ready())return;
   await new Promise((resolve,reject)=>{
     let timeout;

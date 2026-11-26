@@ -1,7 +1,7 @@
 name: Daily Focus integrity
 on:
   pull_request:
-    paths: ['study/daily-focus*', 'study/today*', 'lesson9/**', 'scripts/validate_today_browser.py', 'scripts/validate_l9.cjs', 'study/daily-practice*', 'study/present-conjugation-comparison.js', 'scripts/validate_conjugation*', 'scripts/validate_daily_practice_browser.py', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
+    paths: ['study/daily-focus*', 'study/today*', 'lesson9/**', 'scripts/validate_l9.cjs', 'scripts/validate_today_browser.py', 'study/daily-practice*', 'study/present-conjugation-comparison.js', 'scripts/validate_conjugation*', 'scripts/validate_daily_practice_browser.py', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
   push:
     branches: [main]
     paths: ['study/daily-focus*', 'study/daily-practice*', 'study/present-conjugation-comparison.js', 'scripts/validate_conjugation*', 'scripts/validate_daily_practice_browser.py', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
@@ -25,6 +25,7 @@ jobs:
           node --check study/today.js
           node --check lesson9/content.js
           node --check lesson9/catalogue.js
+          node --check lesson9/integration.js
           node --check daily-focus-hooks.js
       - name: Verify practice, completion, persistence and transfer
         run: |

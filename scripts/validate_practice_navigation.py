@@ -13,8 +13,11 @@ ACTIVITIES = {'verbs', 'sounds', 'sentence', 'forms', 'articles', 'numbers'}
 
 
 def route(page, view):
+    target='today' if view=='daily-practice' else view
     page.wait_for_url(lambda url: urlsplit(url).path == '/' and
-                      parse_qs(urlsplit(url).query).get('page') == [view])
+                      parse_qs(urlsplit(url).query).get('page') == [target])
+    if view=='daily-practice':
+        assert parse_qs(urlsplit(page.url).query).get('tab') == ['practice']
     expect(page.locator('#guidedExperience .course-site-header')).to_have_count(1)
     expect(page.locator(VIEWS[view])).to_be_visible()
     expect(page.locator('.course-site-navigation [aria-current]')).to_have_attribute(
