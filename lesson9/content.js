@@ -74,7 +74,7 @@ const familyWords=[
 ];
 const familyQuestions=[
  ...[['first','-ARE','Parl___'],['second','-ERE','Legg___'],['third','-IRE','Dorm___']].map(([n,a,stem],i)=>
-   question({id:'family-'+n,task:'Complete the infinitive ending for this conjugation.',stimulus:[textLine(stem,'Infinitive','it')],answer:a.slice(1),choices:['are','ere','ire'],hint:'Infinitives end in -ARE, -ERE or -IRE.',source:'families',page:1,activity:'1',n:i+1})),
+   question({id:'family-'+n,task:'Complete the infinitive ending for this conjugation.',stimulus:[textLine(stem,'Infinitive','it')],answer:a.slice(1).toLowerCase(),choices:['are','ere','ire'],hint:'Infinitives end in -ARE, -ERE or -IRE.',source:'families',page:1,activity:'1',n:i+1})),
  ...familyWords.map(([verb,answer],i)=>question({id:'sort-'+verb,task:'Choose the conjugation family for this infinitive.',stimulus:[textLine(verb,'Infinitive','it')],answer,choices:['-ARE','-ERE','-IRE'],hint:'Look at the final three letters.',source:'families',page:1,activity:'2',n:i+1})),
  matched('family-match-meanings','Match the six Italian verbs to their English meanings.',
  [['parlare','to speak'],['leggere','to read'],['dormire','to sleep'],['lavorare','to work'],['scrivere','to write'],['partire','to leave']], 'families',1,'3'),
