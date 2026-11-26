@@ -74,7 +74,7 @@
     const {signal}=controller;
     host.setAttribute('aria-busy','true');
     try {
-      const [main,module]=await Promise.all([template(page),import(new URL('study/'+page+'.js?v=20261126words1',base).href)]);
+      const [main,module]=await Promise.all([template(page),import(new URL('study/'+page+'.js?v=20261126references1',base).href)]);
       if (signal.aborted || !host.isConnected) return;
       main.insertAdjacentHTML('afterbegin',breadcrumb);
       returnLink(main);

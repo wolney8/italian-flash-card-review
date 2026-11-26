@@ -161,8 +161,7 @@ def check_sheets(browser, base):
             question.locator('.check-button').click()
             expect(question).to_have_attribute('data-result', 'wrong' if variant == 2 else 'correct')
             expect(question.locator('.model-answer')).to_be_visible()
-            model = question.locator('.model-answer').evaluate("el => Array.from(el.childNodes).filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim()")
-            assert model == word, (key, model, word)
+            expect(question.locator('.model-answer > .model-answer-text')).to_have_text(word)
         # The existing accent-aware checker still distinguishes e from è.
         page.goto(base + '/study/study-sheets.html?mode=learn&sheet=l6-essere-gaps&stage=practise', wait_until='domcontentloaded')
         page.locator('.study-pack-sheet[data-guided-pilot=ready]').wait_for(timeout=60000)

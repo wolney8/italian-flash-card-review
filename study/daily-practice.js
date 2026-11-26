@@ -1,10 +1,11 @@
 import './daily-verbs.js?v=20261125language';
-import './verb-reference-view.js?v=20261125cards';
+import './verb-reference-view.js?v=20261126references1';
 import './verb-reference-v1.js?v=20261125cards';
 import './daily-patterns.js';
 import './daily-phrases.js';
 import './typed-answer-policy.js?v=20261126words1';
-import {renderComparison} from './present-conjugation-comparison.js?v=20261126';
+import {renderComparison} from './present-conjugation-comparison.js?v=20261126references1';
+import {referenceSheets, referenceFor, referenceHref, renderReference, renderQuickReference} from './practice-reference-library.js?v=20261126references1';
 
 export function mountPractice(main, signal) {
   const byId = id => main.querySelector('#'+id);
@@ -44,6 +45,11 @@ export function mountPractice(main, signal) {
   let refVerb = '';
   let referenceKey = null;
   let overviewScope = null;
+  let activeReference = '';
+  let referenceViewKey = '';
+  byId('reference-links').innerHTML = [{id:'all',title:'Browse all reference sheets'}, ...referenceSheets].map(sheet =>
+    '<a class="practice-nav-row" data-reference="'+sheet.id+'" href="'+esc(referenceHref(sheet.id))+'">'+esc(sheet.title)+'</a>'
+  ).join('');
   function idForSession() {
     const base = state.topic === 'verbs' ? ['verbs',state.group,state.verb].join(':') : state.topic;
     const focus = state.focus[state.topic] || 'all';
@@ -79,7 +85,7 @@ export function mountPractice(main, signal) {
     const topic = topics.find(t => t.id === state.topic);
     byId('topic-title').textContent = topic.title;
     byId('topic-intro').textContent = topic.description;
-    byId('topic-buttons').innerHTML = topics.map(t => '<button type="button" data-topic="'+t.id+'" aria-pressed="'+(t.id===state.topic)+'">'+esc(t.title)+'</button>').join('');
+    byId('topic-buttons').innerHTML = [...topics].sort((a,b) => a.title.localeCompare(b.title,'en')).map(t => '<button type="button" class="practice-nav-row" data-topic="'+t.id+'" aria-pressed="'+(t.id===state.topic&&!activeReference)+'">'+esc(t.title)+'</button>').join('');
     byId('filters').hidden = !['verbs','articles'].includes(state.topic);
     for (const field of ['family','group','verb']) byId(field).parentElement.hidden = state.topic !== 'verbs';
     byId('verb-scope').hidden = state.topic !== 'verbs';
@@ -128,20 +134,7 @@ export function mountPractice(main, signal) {
     }
   }
 
-  function table(head, records) {
-    return '<div class="table-wrap"><table><thead><tr>'+head.map(v => '<th scope="col">'+esc(v)+'</th>').join('')+'</tr></thead><tbody>'+records.map(row => '<tr>'+row.map((v,i) => i ? '<td>'+esc(v)+'</td>' : '<th scope="row">'+esc(v)+'</th>').join('')+'</tr>').join('')+'</tbody></table></div>';
-  }
-
   function reference(q) {
-    const sections = {
-      articles: () => table(['The (one)','The (several)','A or an','Some (several)'],[
-        ['il libro','i libri','un libro','dei libri'],['lo studente','gli studenti','uno studente','degli studenti'],['l’amico','gli amici','un amico','degli amici'],['la casa','le case','una casa','delle case'],['l’amica','le amiche','un’amica','delle amiche']
-      ]) + '<p>The plural definite articles are <b>i, gli, le</b>. For “some”, join <b>di</b> to the definite article. With an amount, use a singular form such as <i lang="it">del pane</i> or <i lang="it">dell’acqua</i>.</p>',
-      sounds: () => table(['Spelling','First sound','Try saying'],[['ce, ci','ch in chip','cena, cinema'],['che, chi','k in key','che, chi'],['ge, gi','j in jam','gelato, giro'],['ghe, ghi','g in go','ghepardo, ghisa']]) + '<p>Before <b>e</b> or <b>i</b>, an <b>h</b> keeps c and g hard. Before <b>a, o, u</b>, c and g are normally hard already.</p>',
-      prepositions: () => table(['Base','il','lo','la','l’','i','gli','le'],[['in','nel','nello','nella','nell’','nei','negli','nelle'],['su','sul','sullo','sulla','sull’','sui','sugli','sulle'],['da','dal','dallo','dalla','dall’','dai','dagli','dalle']]) + '<p>These joined forms are called <i lang="it">preposizioni articolate</i>. For “from a”, keep <i lang="it">da</i> separate, as in <i lang="it">da una scuola</i>.</p>',
-      questions: () => table(['English','Italian'],[['Who?','Chi?'],['What?','Che cosa? / Cosa?'],['Where?','Dove?'],['When?','Quando?'],['Why?','Perché?'],['How?','Come?']]) + '<p><i lang="it">Come si dice … in italiano?</i> means “How do you say … in Italian?” <i lang="it">Che cosa significa …?</i> means “What does … mean?”</p>',
-      objects: () => '<p><b>Anna mangia una mela.</b> Anna eats what? An apple. <i lang="it">Una mela</i> is the direct object. This use of <i lang="it">mangiare</i> is transitive.</p><p><b>Anna dorme in cucina.</b> Anna is sleeping. Where? In the kitchen. <i lang="it">In cucina</i> gives a place. <i lang="it">Dormire</i> is intransitive.</p><p><b>Anna mangia.</b> You can leave the food unspoken. <i lang="it">Mangiare</i> can still take an object.</p>'
-    };
     const verb = verbs.find(v => v.name === (q && q.verbName || refVerb || state.verb)) || verbs[0];
     refVerb = verb.name;
     byId('ref-title').textContent = state.topic === 'verbs' ? 'See all six forms and uses of '+verb.name : 'Quick reference';
@@ -149,7 +142,7 @@ export function mountPractice(main, signal) {
     // Leave the expanded reference in place while checking and advancing.
     if(key===referenceKey)return;
     referenceKey=key;
-    if(state.topic !== 'verbs'){byId('ref-body').innerHTML=sections[state.topic]();return;}
+    if(state.topic !== 'verbs'){byId('ref-body').innerHTML=renderQuickReference(state.topic);return;}
     byId('ref-body').innerHTML=window.ItalianVerbReferenceView.render(window.ItalianVerbReference.find(verb.name));
   }
 
@@ -172,12 +165,13 @@ export function mountPractice(main, signal) {
     const explanation = meaningParts.length === 2 ? language.formatItalian(meaningParts[0])+' = '+language.formatMeaning(meaningParts[1]) : explain(q.explanation,q.verbName);
     const audioWord = state.topic === 'sounds' && (result || q.id.startsWith('sounds-read-')) ? q.word : '';
     const answerLang = q.answerLang === 'en' ? 'en' : 'it';
+    const modelMarkup = answerLang === 'it' ? language.formatVerbText(answerPolicy.model, verbs.find(verb => verb.name === q.verbName)) : esc(answerPolicy.model);
     const choices = q.choices && q.choices.length;
     const inputs = choices ? '<fieldset class="choice-list"><legend class="sr">Choose one answer</legend>'+q.choices.map(c => '<label data-ui-no-translate lang="'+answerLang+'"><input type="radio" required name="answer" value="'+esc(c)+'"'+(result?.value===c?' checked':'')+'>'+esc(c)+'</label>').join('')+'</fieldset>'
       : '<label class="entry">Your answer<input type="text" name="answer" lang="'+answerLang+'"'+(answerPolicy.guidance?' aria-describedby="practiceAnswerGuidance"':'')+' required autocomplete="off" autocapitalize="none" spellcheck="false" value="'+esc(result?.value||'')+'"></label>'+(answerPolicy.guidance?'<p id="practiceAnswerGuidance" class="typed-answer-guidance" lang="en-GB" data-ui-no-translate>'+esc(answerPolicy.guidance)+'</p>':'');
     box.innerHTML = '<article class="panel"><div class="meter"><progress value="'+session.index+'" max="'+session.ids.length+'"></progress>Question '+(session.index+1)+' of '+session.ids.length+'</div><h3 class="question-title" tabindex="-1" lang="en-GB" data-ui-no-translate>'+explain(answerPolicy.task,q.verbName)+'</h3><div class="stimulus" lang="en-GB" data-ui-no-translate>'+stim+'</div>'+(audioWord ? '<button type="button" class="listen" data-action="listen" data-word="'+esc(audioWord)+'"'+(italianVoice()?'':' hidden')+'>Hear the Italian</button>' : '')+
       '<form>'+inputs+(result ? '' : '<details><summary>Hint</summary><p lang="en-GB" data-ui-no-translate>'+explain(q.hint,q.verbName)+'</p></details><div class="controls"><button class="primary" type="submit">Check answer</button><button type="button" class="secondary" data-action="reveal">Show answer</button></div>')+'</form>'+
-      (result ? '<div role="status" lang="en-GB" data-ui-no-translate class="feedback '+(result.correct?'':'review')+'"><p><b>'+(result.correct?'Correct.':result.revealed?'Answer':'The answer is')+'</b> <span class="'+(answerLang==='it'?'learning-it':'learning-gloss')+'" lang="'+answerLang+'">'+esc(answerPolicy.model)+'</span></p><p>'+explanation+'</p></div><div class="controls"><button class="primary" data-action="next">'+(session.index+1===session.ids.length?'Finish round':'Next question')+'</button></div>' : '')+'</article>';
+      (result ? '<div role="status" lang="en-GB" data-ui-no-translate class="feedback '+(result.correct?'':'review')+'"><p><b>'+(result.correct?'Correct.':result.revealed?'Answer':'The answer is')+'</b> <span class="'+(answerLang==='it'?'learning-it':'learning-gloss')+'" lang="'+answerLang+'">'+modelMarkup+'</span></p><p>'+explanation+'</p></div><div class="controls"><button class="primary" data-action="next">'+(session.index+1===session.ids.length?'Finish round':'Next question')+'</button></div>' : '')+'</article>';
     if (result) box.querySelectorAll('input').forEach(el => {el.disabled=true;});
     if(focus)focusCurrent(box,oldTop,result?'[data-action="next"]':'h3');
   }
@@ -211,12 +205,82 @@ export function mountPractice(main, signal) {
     render(true);
   }
 
+  function referenceUrl(id, verb = '') {
+    const url = new URL(location.href);
+    url.searchParams.set('page','today');
+    url.searchParams.set('tab','practice');
+    if(id)url.searchParams.set('reference',id);else url.searchParams.delete('reference');
+    if(id==='verb-forms'&&verb)url.searchParams.set('verb',verb);else url.searchParams.delete('verb');
+    url.hash='';
+    return url.pathname+url.search;
+  }
+
+  function focusView(target) {
+    if(!target)return;
+    target.focus({preventScroll:true});
+    const bounds=target.getBoundingClientRect();
+    if(bounds.top<8||bounds.top>window.innerHeight-100){
+      target.scrollIntoView({block:'start',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+    }
+  }
+
+  function showReference(id, {push=false,focus=false,verb=''} = {}) {
+    if(signal.aborted||!main.isConnected)return;
+    activeReference=id==='all'||referenceFor(id)?id:id?'all':'';
+    if(push)history.pushState({},'',referenceUrl(activeReference,verb));
+    byId('practice-drill').hidden=Boolean(activeReference);
+    byId('practice-reference-view').hidden=!activeReference;
+    for(const link of byId('reference-links').querySelectorAll('[data-reference]')){
+      if(link.dataset.reference===activeReference)link.setAttribute('aria-current','page');
+      else link.removeAttribute('aria-current');
+    }
+    for(const button of byId('topic-buttons').querySelectorAll('[data-topic]'))button.setAttribute('aria-pressed',String(!activeReference&&button.dataset.topic===state.topic));
+    if(activeReference){
+      const sheet=referenceFor(activeReference);
+      const nextKey=activeReference+':'+verb;
+      if(nextKey!==referenceViewKey){
+        byId('practice-reference-title').textContent=sheet?.title||'Reference sheets';
+        byId('practice-reference-intro').textContent=sheet?.description||'Keep these tables and reminders to hand. You can open a sheet whenever you need it.';
+        byId('practice-reference-body').innerHTML=renderReference(activeReference,{verb});
+        referenceViewKey=nextKey;
+      }
+      byId('practice-reference-view').querySelector('.reference-back').hidden=activeReference==='all';
+      if(focus)focusView(byId('practice-reference-title'));
+    }else if(focus){
+      focusView(byId('exercise').querySelector('input[name=answer]:not(:disabled), [data-action=next], .question-title'));
+    }
+  }
+
+  function restoreReference() {
+    const url=new URL(location.href);
+    if(url.searchParams.get('page')!=='today'||url.searchParams.get('tab')!=='practice')return;
+    showReference(url.searchParams.get('reference')||'',{verb:url.searchParams.get('verb')||''});
+  }
+
+  main.addEventListener('click', e => {
+    const link=e.target.closest('a[data-reference]');
+    if(link&&main.contains(link)&&e.button===0&&!e.metaKey&&!e.ctrlKey&&!e.shiftKey&&!e.altKey){
+      e.preventDefault();
+      showReference(link.dataset.reference,{push:true,focus:true});
+    }
+    if(e.target.closest('[data-reference-return]'))showReference('',{push:true,focus:true});
+  },{signal});
+  byId('practice-reference-view').addEventListener('change',e=>{
+    if(e.target.id==='practice-reference-verb'){
+      const selected=e.target.value;
+      showReference('verb-forms',{push:true,verb:selected});
+      byId('practice-reference-verb')?.focus({preventScroll:true});
+    }
+  },{signal});
+  window.addEventListener('popstate',restoreReference,{signal});
+
   byId('topic-buttons').addEventListener('click', e => {
     const button=e.target.closest('[data-topic]');
-    if (!button || button.dataset.topic===state.topic) return;
-    state.topic=button.dataset.topic;
-    loadTopic();
-    byId('topic-buttons').querySelector('[aria-pressed="true"]').focus();
+    if(!button)return;
+    const changed=button.dataset.topic!==state.topic;
+    if(activeReference)showReference('',{push:true});
+    if(changed){state.topic=button.dataset.topic;loadTopic();}
+    byId('topic-buttons').querySelector('[aria-pressed="true"]')?.focus({preventScroll:true});
   });
   byId('group').addEventListener('change', e => {state.group=e.target.value; state.verb='all'; loadTopic();});
   byId('family').addEventListener('change', e => {state.family=e.target.value; state.verb='all'; loadTopic();});
@@ -251,4 +315,5 @@ export function mountPractice(main, signal) {
     }
   });
   loadTopic();
+  restoreReference();
 }

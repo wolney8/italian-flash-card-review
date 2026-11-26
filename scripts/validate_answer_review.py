@@ -246,7 +246,7 @@ def run_case(browser, base, width, height, language, theme, reduced, live):
           const q=document.querySelector('.quiz-question:not([hidden])');
           const answer=q?.querySelector('.model-answer'), dock=document.querySelector('.flow-bottom-dock');
           if(!answer || answer.hidden || !dock)return false;
-          const label=answer.querySelector('strong'), text=[...answer.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
+          const label=answer.querySelector('strong'), text=answer.querySelector('.model-answer-text')||[...answer.childNodes].find(n=>n.nodeType===3&&n.textContent.trim());
           let rect;
           if(text){const range=document.createRange();range.selectNodeContents(text);rect=range.getBoundingClientRect();}
           else rect=answer.querySelector('.practice-match-key p')?.getBoundingClientRect();

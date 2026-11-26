@@ -1,15 +1,16 @@
 name: Daily Focus integrity
 on:
   pull_request:
-    paths: ['index.html', 'study/daily-focus*', 'study/today*', 'lesson9/**', 'scripts/validate_l9.cjs', 'scripts/validate_today_browser.py', 'study/daily-practice*', 'study/typed-answer-policy.js', 'study/study-sheets-v5.js', 'study/study-sheets.html', 'scripts/validate_typed_answers*', 'study/present-conjugation-comparison.js', 'scripts/validate_conjugation*', 'scripts/validate_daily_practice_browser.py', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
+    paths: ['index.html', 'study/daily-focus*', 'study/today*', 'lesson9/**', 'scripts/validate_l9.cjs', 'scripts/validate_today_browser.py', 'study/daily-practice*', 'study/practice-reference*', 'study/verb-reference-view.*', 'study/typed-answer-policy.js', 'study/study-sheets-v5.js', 'study/study-sheets.html', 'scripts/validate_typed_answers*', 'study/present-conjugation-comparison.js', 'scripts/validate_conjugation*', 'scripts/validate_daily_practice_browser.py', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
   push:
     branches: [main]
-    paths: ['index.html', 'study/daily-focus*', 'study/today*', 'study/daily-practice*', 'study/typed-answer-policy.js', 'study/study-sheets-v5.js', 'study/study-sheets.html', 'scripts/validate_typed_answers*', 'study/present-conjugation-comparison.js', 'scripts/validate_conjugation*', 'scripts/validate_daily_practice_browser.py', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
+    paths: ['index.html', 'study/daily-focus*', 'study/today*', 'study/daily-practice*', 'study/practice-reference*', 'study/verb-reference-view.*', 'study/typed-answer-policy.js', 'study/study-sheets-v5.js', 'study/study-sheets.html', 'scripts/validate_typed_answers*', 'study/present-conjugation-comparison.js', 'scripts/validate_conjugation*', 'scripts/validate_daily_practice_browser.py', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
 permissions:
   contents: read
 jobs:
   integrity:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,6 +22,9 @@ jobs:
           node --check study/daily-focus-content.js
           node --check study/typed-answer-policy.js
           node --check study/daily-practice.js
+          node --check study/practice-reference-library.js
+          node --check study/present-conjugation-comparison.js
+          node --check study/verb-reference-view.js
           node --check study/study-sheets-v5.js
           node --check study/daily-focus-language.js
           node --check study/daily-focus-ui-locale.js

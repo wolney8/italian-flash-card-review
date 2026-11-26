@@ -1,4 +1,4 @@
-@import url('./verb-reference-view.css?v=20261125cards');
+@import url('./verb-reference-view.css?v=20261126references1');
 
 :is(.course-practice, .review-card[data-lesson="PRACTICE"]) .learning-it,
 .review-card[data-lesson="PRACTICE"] .italian[lang="it"] {
@@ -79,33 +79,33 @@
   gap: clamp(20px, 4vw, 48px);
   margin-top: 30px;
 }
-.course-practice aside h2 { margin-bottom: 8px; color: var(--muted); font-size: .9rem; }
-.course-practice #topic-buttons { display: flex; flex-direction: column; gap: 3px; }
-.course-practice #topic-buttons button {
-  padding: 9px 11px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--ink);
-  font-weight: 600;
-  text-align: left;
+.course-practice .practice-sidebar { display:grid; align-content:start; gap:24px; min-width:0; }
+.course-practice .practice-nav-group h2 { margin:0 0 9px; color:var(--muted); font-family:inherit; font-size:.9rem; font-weight:600; line-height:1.35; }
+.course-practice .practice-nav { display:grid; gap:4px; }
+.course-practice .practice-nav-row {
+  display:flex;
+  align-items:center;
+  width:100%;
+  min-width:0;
+  min-height:44px;
+  padding:9px 11px;
+  border:1px solid transparent;
+  border-radius:9px;
+  background:transparent;
+  color:var(--ink);
+  font:inherit;
+  font-size:.94rem;
+  font-weight:600;
+  line-height:1.4;
+  text-align:left;
+  text-decoration:none;
+  overflow-wrap:anywhere;
+  cursor:pointer;
 }
-.course-practice #topic-buttons button:hover { background: var(--paper2); }
-.course-practice #topic-buttons button[aria-pressed="true"] {
-  border-color: var(--green);
-  background: var(--practice-selected);
-}
-.course-practice .visual-topic-heading { margin-top: 18px; }
-.course-practice .visual-topic-links { display: grid; gap: 3px; }
-.course-practice .visual-topic-links a {
-  width: fit-content;
-  padding: 5px 10px;
-  border-radius: 6px;
-  color: var(--green);
-  font-weight: 600;
-  text-underline-offset: .2em;
-}
-.course-practice .visual-topic-links a:hover { background: var(--paper2); }
+.course-practice .practice-nav-row:hover { border-color:var(--line); background:var(--paper2); }
+.course-practice .practice-nav-row:is([aria-pressed="true"],[aria-current="page"]) { border-color:var(--green); background:var(--practice-selected); color:var(--green); }
+.course-practice #reference-links .practice-nav-row[data-reference="all"] { background:var(--paper2); border-color:var(--line); }
+.course-practice #reference-links .practice-nav-row[data-reference="all"][aria-current="page"] { background:var(--practice-selected); border-color:var(--green); }
 .course-practice #work { min-width: 0; }
 .course-practice .topic-head h2 { font-size: 1.85rem; line-height: 1.15; }
 .course-practice .filters { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
@@ -216,9 +216,10 @@
 
 @media (max-width: 720px) {
   .course-practice .workspace { grid-template-columns: minmax(0, 1fr); gap: 18px; margin-top: 18px; }
-  .course-practice #topic-buttons, .course-practice .visual-topic-links { display: flex; flex-flow: row wrap; gap: 4px; }
-  .course-practice #topic-buttons button, .course-practice .visual-topic-links a { padding: 6px 8px; font-size: .9rem; }
-  .course-practice .visual-topic-heading { margin: 10px 0 2px; }
+  .course-practice .practice-sidebar { gap:16px; }
+  .course-practice .practice-nav { grid-template-columns:repeat(2,minmax(0,1fr)); gap:5px; }
+  .course-practice .practice-nav-row { padding:8px 10px; border-color:var(--line); font-size:.9rem; }
+  .course-practice #reference-links .practice-nav-row[data-reference=all] { grid-column:1/-1; }
   .course-practice .topic-head h2 { font-size: 1.6rem; }
 }
 @media (max-width: 420px) {
@@ -240,10 +241,42 @@
 .course-practice .conj-matrix small{display:block;color:var(--muted);font-size:.83rem;margin-top:3px;font-weight:400}
 .course-practice .conj-matrix th .learning-it{display:block}
 .course-practice .conj-family-name{display:block;white-space:nowrap;margin-bottom:3px}
-.course-practice .conj-plural{margin:13px 0}
-.course-practice .conj-plural>summary{min-height:44px}
 .course-practice .conj-note{font-size:.92rem;line-height:1.55;margin:9px 0;color:var(--ink)}
 .course-practice #exercise{scroll-margin-top:20px}
 .course-practice #exercise>.panel{animation:daily-practice-enter .20s ease-out both}
 @keyframes daily-practice-enter{from{opacity:.6;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.course-practice #exercise>.panel{animation:none}}
+
+/* Permanent references occupy the same content column as the preserved drill. */
+.course-practice #practice-reference-view { min-width:0; scroll-margin-top:16px; }
+.course-practice .practice-reference-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:20px; }
+.course-practice .reference-back { color:var(--green); font-size:.92rem; font-weight:600; text-underline-offset:.2em; }
+.course-practice .practice-reference-heading { margin-bottom:22px; }
+.course-practice .practice-reference-heading h2 { font:600 clamp(1.6rem,3vw,2rem)/1.2 var(--practice-heading); margin:4px 0 9px; scroll-margin-top:16px; }
+.course-practice .practice-reference-heading > p:last-child { color:var(--muted); max-width:65ch; }
+.course-practice .reference-eyebrow { font-size:.85rem; color:var(--green); font-weight:600; }
+.course-practice .practice-reference-catalogue { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.course-practice .practice-reference-card { display:grid; grid-template-rows:auto 1fr auto; gap:10px; min-width:0; min-height:160px; padding:20px; border:1px solid var(--line); border-radius:12px; background:var(--paper); color:var(--ink); text-decoration:none; }
+.course-practice .practice-reference-card:hover { border-color:var(--green); background:var(--paper2); }
+.course-practice .practice-reference-card > strong { font-size:1.08rem; }
+.course-practice .practice-reference-card > span:not(.reference-card-action) { color:var(--muted); font-size:.93rem; }
+.course-practice .reference-card-action { color:var(--green); font-size:.9rem; font-weight:600; }
+.course-practice #practice-reference-body > .conj-reference { margin-top:0; }
+.course-practice .reference-verb-picker { display:grid; gap:7px; max-width:440px; margin-bottom:24px; font-weight:600; }
+.course-practice .reference-verb-picker select { width:100%; min-width:0; }
+.course-practice .reference-section { margin-bottom:26px; }
+.course-practice .reference-section > h3 { font:600 1.2rem/1.3 var(--practice-heading); margin-bottom:12px; }
+.course-practice .reference-rule-table { width:100%; min-width:520px; }
+.course-practice .reference-rule-table :is(th,td) { padding:10px 12px; vertical-align:top; }
+.course-practice .reference-rule-table thead th { background:var(--paper2); }
+.course-practice .reference-rule-table th[scope=row] { font-weight:600; }
+.course-practice .reference-rule-table small { display:block; font-size:.84rem; font-weight:400; margin-top:5px; color:var(--muted); }
+.course-practice .reference-note-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.course-practice .reference-note-grid > article { min-width:0; padding:18px; border:1px solid var(--line); border-radius:10px; background:var(--paper); }
+.course-practice .reference-note-grid h3 { font-size:1rem; margin-bottom:8px; }
+.course-practice .reference-note-grid p, .course-practice .reference-extra { font-size:.94rem; }
+.course-practice .reference-table-scroll:focus-visible { outline:3px solid var(--editorial-focus); outline-offset:3px; }
+@media (max-width:720px) {
+  .course-practice .practice-reference-catalogue, .course-practice .reference-note-grid { grid-template-columns:minmax(0,1fr); }
+  .course-practice .practice-reference-card { min-height:130px; }
+}

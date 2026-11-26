@@ -156,7 +156,8 @@
       const title = panelTitle(card.panel, card.deck);
       const front = window.ItalianCardFront.render(card);
       const promptSummary = truncate(stripHtml(front), 86);
-      const pattern = card.pattern || card.rule || '';
+      const rawPattern = card.pattern || card.rule || '';
+      const pattern = window.ItalianDailyVerbCards?.referencePattern?.(rawPattern) || rawPattern;
       const reference = card.reference || card.source || '';
       const usage = card.usage || '';
       const clarification = card.clarification || '';
