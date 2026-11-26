@@ -1,0 +1,46 @@
+name: Daily Focus integrity
+on:
+  pull_request:
+    paths: ['study/daily-focus*', 'study/today*', 'lesson9/**', 'scripts/validate_l9.cjs', 'scripts/validate_today_browser.py', 'study/daily-practice*', 'study/present-conjugation-comparison.js', 'scripts/validate_conjugation*', 'scripts/validate_daily_practice_browser.py', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
+  push:
+    branches: [main]
+    paths: ['study/daily-focus*', 'study/daily-practice*', 'study/present-conjugation-comparison.js', 'scripts/validate_conjugation*', 'scripts/validate_daily_practice_browser.py', 'daily-focus-hooks.js', 'guided-course-v2.js', 'course-practice-routes-v1.js', 'course-site-header-v1.js', 'scripts/validate_daily_focus*', '.github/workflows/daily-focus.yml']
+permissions:
+  contents: read
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check Daily Focus modules
+        run: |
+          node --check study/daily-focus-engine.js
+          node --check study/daily-focus-content.js
+          node --check study/daily-focus-language.js
+          node --check study/daily-focus-ui-locale.js
+          node --check study/daily-focus.js
+          node --check study/today.js
+          node --check lesson9/content.js
+          node --check lesson9/catalogue.js
+          node --check lesson9/integration.js
+          node --check daily-focus-hooks.js
+      - name: Verify practice, completion, persistence and transfer
+        run: |
+          node scripts/validate_daily_focus_engine.cjs
+          node scripts/validate_l9.cjs
+          node scripts/validate_conjugation_comparison.cjs
+      - name: Verify Daily Focus in a browser
+        run: |
+          python -m pip install playwright==1.57.0
+          python scripts/validate_daily_focus_browser.py
+          python scripts/validate_today_browser.py
+          python scripts/validate_daily_practice_browser.py
+      - name: Preserve shared content and navigation
+        run: |
+          node scripts/build_daily_verb_cards.cjs --check
+          node scripts/validate_recall_layout.cjs
+          node scripts/validate_course_library.cjs
+          node scripts/validate_navigation_consistency.cjs

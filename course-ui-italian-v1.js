@@ -6,6 +6,19 @@ Home|||Inizio
 Lessons|||Lezioni
 Study sheets|||Schede di studio
 Daily practice|||Esercizi quotidiani
+Daily Practice|||Esercizi quotidiani
+Daily Focus|||Focus quotidiano
+Today|||Oggi
+Focus|||Focus
+Practice|||Esercizi
+Choose a study mode|||Scegli come studiare
+Prepared daily drills|||Esercizi quotidiani preparati
+Choose a topic and practise|||Scegli un argomento ed esercitati
+Compare Regular Present-Tense Endings|||Confronta le desinenze regolari del presente
+Present Tense: Regular Verb Endings|||Presente: desinenze dei verbi regolari
+Compare all three regular conjugation families. The first three rows are singular.|||Confronta le tre coniugazioni regolari. Le prime tre righe sono al singolare.
+Show Plural Forms (noi, voi, loro)|||Mostra le forme plurali (noi, voi, loro)
+Subject|||Soggetto
 Visual exercises|||Esercizi visivi
 Practice topics|||Argomenti da ripassare
 Match verb endings|||Abbina le desinenze verbali

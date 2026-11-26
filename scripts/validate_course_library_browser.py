@@ -55,11 +55,11 @@ try:
     assert page.locator('.course-site-language').inner_text().replace(' ','').replace('\n','')=='ITA/ENG'
     assert not errors,errors
    visit('/study/study-sheets.html?mode=learn')
-   assert page.locator('[data-library-lesson]').count()==8
-   assert page.locator('[data-library-lesson]').evaluate_all("els=>els.map(el=>el.dataset.libraryLesson)")==['L1','L2','L3','L4','L5','L6','L7','L8']
+   assert page.locator('[data-library-lesson]').count()==9
+   assert page.locator('[data-library-lesson]').evaluate_all("els=>els.map(el=>el.dataset.libraryLesson)")==['L1','L2','L3','L4','L5','L6','L7','L8','L9']
    assert page.locator('#studyPathPicker').count()==0
    assert len(page.evaluate('window.__oldFrame'))==0,'Legacy study chrome painted during load'
-   for i in range(1,9):
+   for i in range(1,10):
     visit('/study/study-sheets.html?mode=learn&lesson=L'+str(i))
     assert page.locator('.library-lesson-detail [data-library-topic]').count()>2
     if i<=6:
@@ -67,8 +67,10 @@ try:
      assert page.locator('details.library-extras:not(.library-homework)').get_attribute('open') is None
     elif i==7:
      assert page.locator('.library-lesson-detail [data-library-topic]').count()==8
-    else:
+    elif i==8:
      assert page.locator('.library-lesson-detail [data-library-topic]').count()==9
+    else:
+     assert page.locator('.library-lesson-detail [data-library-topic]').count()==4
     has_homework=page.evaluate('(id)=>Boolean(ItalianLibraryMap.homework[id])','L'+str(i))
     homework=page.locator('section.library-homework')
     assert homework.count()==int(has_homework)
@@ -100,21 +102,23 @@ try:
    assert page.locator('.library-topic-section').count()==6
    check_layout()
    dataset=page.evaluate('ItalianStudyData');assert len(dataset)==len({s['slug'] for s in dataset})
-   assert sum(not s['slug'].startswith(('l7-','l8-')) and s['slug']!='l6-recap-useful-requests' for s in dataset)==58
-   assert len(dataset)==82 and sum(len(s['questions']) for s in dataset)==831
+   assert sum(not s['slug'].startswith(('l7-','l8-','l9-')) and s['slug']!='l6-recap-useful-requests' for s in dataset)==58
+   assert len(dataset)==86 and sum(len(s['questions']) for s in dataset)==917
    assert sum(s['slug'].startswith('l7-') for s in dataset)==14
    l8=[s for s in dataset if s['slug'].startswith('l8-')]
    assert len(l8)==9
    assert sum(len(s['questions']) for s in l8 if s.get('sourceKind')=='Extra practice')==56
    assert sum(len(s['questions']) for s in l8 if s.get('sourceKind')!='Extra practice')==59
    assert sum(s['slug']=='l6-recap-useful-requests' for s in dataset)==1
+   assert sum(s['slug'].startswith('l9-') for s in dataset)==4
+   assert sum(len(s['questions']) for s in dataset if s['slug'].startswith('l9-'))==86
    if FOCUS=='all':route_data=dataset
    elif FOCUS=='legacy':route_data=dataset[:9]
    elif FOCUS=='lesson6':route_data=[s for s in dataset if s['slug'].startswith('l6-')]
    elif FOCUS=='numbers':route_data=[s for s in dataset if s['slug']=='l6-number-patterns']
    else:route_data=[s for s in dataset if s['slug'] in ['class1-introductions','class4-silent-h','l6-number-patterns','l6-intonation','practice-essere','practice-things-pronouns']]
    for sheet in route_data:
-    slug=sheet['slug'];visit('/study/study-sheets.html?sheet='+slug)
+    slug=sheet['slug'];print('Opening sheet: '+slug,flush=True);visit('/study/study-sheets.html?sheet='+slug)
     page.wait_for_selector('.quiz-question:not([hidden])')
     assert page.evaluate('ItalianGuidedStudy.getState().step')=='practise'
     assert page.locator('#librarySetPicker').count()==1
@@ -168,6 +172,7 @@ try:
    assert page.evaluate("cards.filter(c=>c.lesson==='PRACTICE').length")==json.loads((ROOT/'daily-verb-cards/coverage.json').read_text())['newCards']
    assert page.evaluate("cards.filter(c=>c.lesson==='L7').length")==54
    assert page.evaluate("cards.filter(c=>c.lesson==='L8').length")==58
+   assert page.evaluate("cards.filter(c=>c.lesson==='L9').length")==22
    page.click('[data-back-to-practice]');page.wait_for_function('window.ItalianGuidedStudy && !document.documentElement.classList.contains("course-booting")')
    q=page.locator('.quiz-question:not([hidden])');assert q.get_attribute('data-progress-key')==qid
    assert q.locator('input').input_value()=='Io sono di Na'
@@ -200,7 +205,7 @@ try:
    assert not errors,errors
    ctx.close()
   browser.close()
- report={'status':'pass','environment':'production' if LIVE else 'repository','focus':FOCUS,'route_cases':len(results),'model_answers_checked':sum(r['answers_checked'] for r in results),'cases':results,'navigation':'eight lessons and shared topic view; original six retained','quick_full':'passed','flashcard_round_trip':'draft, hint and position retained','partial_matching':'retained','unrelated_progress':'retained','legacy_page_flash':'not observed','language_button':'ITA / ENG; fixed width','anki':'existing lesson notes unchanged; additive practice package verified separately'}
+ report={'status':'pass','environment':'production' if LIVE else 'repository','focus':FOCUS,'route_cases':len(results),'model_answers_checked':sum(r['answers_checked'] for r in results),'cases':results,'navigation':'nine lessons and shared topic view; original six retained','quick_full':'passed','flashcard_round_trip':'draft, hint and position retained','partial_matching':'retained','unrelated_progress':'retained','legacy_page_flash':'not observed','language_button':'ITA / ENG; fixed width','anki':'existing lesson notes unchanged; additive practice package verified separately'}
  (OUT/(('live-' if LIVE else '')+FOCUS+'-results.json')).write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='cases'},indent=2))
 except Exception:
  if page:

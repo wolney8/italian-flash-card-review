@@ -3,7 +3,9 @@
   'use strict';
   const base = new URL('.', document.currentScript.src);
   const pages = new Map([
-    ['daily-practice','Daily practice'],
+    ['today','Today'],
+    ['daily-focus','Daily Focus'],
+    ['daily-practice','Daily Practice'],
     ['visual-exercises','Visual exercises'],
     ['jobs-in-photos','Jobs in photographs'],
     ['articles-guide','Articles']
@@ -17,7 +19,9 @@
     const page = current.searchParams.get('page') || alias;
     const url = new URL(base);
     url.search = current.search;
-    url.searchParams.set('page',page);
+    const old=page==='daily-focus'?'focus':page==='daily-practice'?'practice':null;
+    url.searchParams.set('page',old?'today':page);
+    if(old)url.searchParams.set('tab',old);
     if (page !== 'visual-exercises') {
       url.searchParams.delete('activity');
       url.searchParams.delete('round');
@@ -28,6 +32,13 @@
     return;
   }
 
+  const previous=current.searchParams.get('page');
+  if(previous==='daily-focus'||previous==='daily-practice'){
+    current.searchParams.set('page','today');
+    current.searchParams.set('tab',previous==='daily-focus'?'focus':'practice');
+    location.replace(current.href);
+    return;
+  }
   const templates = new Map();
   let controller;
   function unmount() {
@@ -63,7 +74,7 @@
     const {signal}=controller;
     host.setAttribute('aria-busy','true');
     try {
-      const [main,module]=await Promise.all([template(page),import(new URL('study/'+page+'.js?v=20261125cards',base).href)]);
+      const [main,module]=await Promise.all([template(page),import(new URL('study/'+page+'.js?v=20261125focus1',base).href)]);
       if (signal.aborted || !host.isConnected) return;
       main.insertAdjacentHTML('afterbegin',breadcrumb);
       returnLink(main);

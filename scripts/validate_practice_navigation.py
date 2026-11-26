@@ -13,12 +13,15 @@ ACTIVITIES = {'verbs', 'sounds', 'sentence', 'forms', 'articles', 'numbers'}
 
 
 def route(page, view):
+    target='today' if view=='daily-practice' else view
     page.wait_for_url(lambda url: urlsplit(url).path == '/' and
-                      parse_qs(urlsplit(url).query).get('page') == [view])
+                      parse_qs(urlsplit(url).query).get('page') == [target])
+    if view=='daily-practice':
+        assert parse_qs(urlsplit(page.url).query).get('tab') == ['practice']
     expect(page.locator('#guidedExperience .course-site-header')).to_have_count(1)
     expect(page.locator(VIEWS[view])).to_be_visible()
     expect(page.locator('.course-site-navigation [aria-current]')).to_have_attribute(
-        'data-guide-to', 'daily-practice')
+        'data-guide-to', 'today')
 
 
 
@@ -101,10 +104,12 @@ def check_navigation(browser, base):
         )
         context.route('**/*', lambda request: request.continue_() if
                       urlsplit(request.request.url).netloc == urlsplit(base).netloc else request.abort())
-        context.add_init_script("""if (localStorage.getItem('italianCourseThemeV1') === null) {
-            localStorage.setItem('italianCourseThemeV1','light');
-            localStorage.setItem('italianCourseLanguageV1','en');
-        }""")
+        context.add_init_script("""try {
+            if (localStorage.getItem('italianCourseThemeV1') === null) {
+                localStorage.setItem('italianCourseThemeV1','light');
+                localStorage.setItem('italianCourseLanguageV1','en');
+            }
+        } catch (_) { /* Sandbox and about:blank frames have no storage origin. */ }""")
         page = context.new_page()
         errors = []
         page.on('pageerror', lambda error: errors.append(str(error)))
@@ -113,7 +118,8 @@ def check_navigation(browser, base):
                 check_aliases(page, base)
                 check_worksheet_entries(page, base)
             page.goto(base + '/?page=home')
-            header_link(page, 'Daily practice').click()
+            header_link(page, 'Today').click()
+            page.get_by_role('tab', name='Practice', exact=False).click()
             route(page, 'daily-practice')
             theme(page, 'light')
 
@@ -178,7 +184,8 @@ def check_navigation(browser, base):
             page.go_forward()
             expect(picker).to_have_value('sentence')
 
-            header_link(page, 'Daily practice').click()
+            header_link(page, 'Today').click()
+            page.get_by_role('tab', name='Practice', exact=False).click()
             route(page, 'daily-practice')
             assert 'activity' not in parse_qs(urlsplit(page.url).query)
             page.get_by_role('link', name='Jobs in photographs').click()
@@ -199,10 +206,11 @@ def check_navigation(browser, base):
             route(page, 'jobs-in-photos')
             theme(page, 'dark')
 
-            header_link(page, 'Study sheets').click()
+            header_link(page, 'Study Sheets').click()
             expect(page.locator('[data-library-ready]')).to_be_visible()
             theme(page, 'dark')
-            header_link(page, 'Daily practice').click()
+            header_link(page, 'Today').click()
+            page.get_by_role('tab', name='Practice', exact=False).click()
             route(page, 'daily-practice')
             theme(page, 'dark')
             assert not errors, errors

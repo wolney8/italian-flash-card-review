@@ -1,0 +1,147 @@
+/* Daily Focus reuses the shared editorial palette and language treatment. */
+.df-home{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px;margin:24px 0;border:1px solid var(--line);border-radius:16px;background:var(--paper2)}
+.df-home h2{margin:4px 0;font:600 1.8rem/1.2 Georgia,serif;color:var(--ink)}
+.df-home p{margin:6px 0;color:var(--muted)}
+.daily-focus{max-width:900px;margin:auto;--df-tint:color-mix(in srgb,var(--green) 9%,var(--paper));--df-warm:color-mix(in srgb,var(--accent) 8%,var(--paper));font-size:1rem}
+.daily-focus *{box-sizing:border-box}
+.daily-focus :is(h2,h3){font-family:var(--practice-heading,Georgia,serif);font-weight:600;line-height:1.2}
+.daily-focus h2{font-size:clamp(1.45rem,3.5vw,2rem)}
+.daily-focus h3{font-size:1.22rem}
+.daily-focus p+p{margin-top:10px}
+.daily-focus :is(button,input,select,textarea){font:inherit}
+.daily-focus :is(button,.df-link-button){min-height:44px;padding:9px 15px;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--practice-control-border,var(--line));border-radius:10px;color:var(--ink);background:var(--paper);font-weight:600;line-height:1.3;cursor:pointer;text-decoration:none}
+.daily-focus button:hover:not(:disabled){background:var(--paper2);border-color:var(--green)}
+.daily-focus button:disabled{opacity:.6;cursor:wait}
+.daily-focus .df-primary{background:var(--primary,var(--green));border-color:var(--primary,var(--green));color:var(--primary-ink,var(--paper))}
+.daily-focus .df-primary:hover:not(:disabled){background:var(--primary,var(--green));filter:brightness(.93)}
+.daily-focus .df-quiet{border-color:transparent;background:transparent;font-weight:500;text-decoration:underline;text-underline-offset:.2em}
+.daily-focus :is(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--editorial-focus,var(--accent));outline-offset:4px}
+.daily-focus [hidden]{display:none!important}
+.daily-focus .learning-it{color:var(--green);font-style:italic}
+.daily-focus .learning-gloss{color:var(--accent);font-style:italic}
+.df-kicker{font-size:.9rem;font-weight:600;color:var(--green);margin-bottom:6px!important}
+.df-muted,.df-device{color:var(--muted);font-size:.9rem;line-height:1.5}
+.df-lede{color:var(--muted);max-width:55ch;margin-top:10px!important}
+.df-heading{display:flex;align-items:start;justify-content:space-between;gap:15px;margin-bottom:24px}
+.df-status{flex:none;max-width:45%;border:1px solid var(--line);border-radius:24px;background:var(--paper2);padding:7px 12px;font-size:.88rem;font-weight:600;color:var(--green)}
+.df-panel{padding:clamp(18px,3vw,28px);border:1px solid var(--line);background:var(--paper);border-radius:16px;margin-bottom:20px;min-width:0}
+.df-panel h2+p,.df-panel h3+p{margin-top:9px}
+.df-duration{display:flex;gap:8px;flex-wrap:wrap;padding:0;margin:18px 0 12px;border:0}
+.df-duration legend{font-weight:600;margin-bottom:9px}
+.df-duration label{position:relative;display:flex;flex:1 1 80px;align-items:center;justify-content:center;min-height:52px;cursor:pointer;border:1px solid var(--practice-control-border,var(--line));border-radius:10px;background:var(--paper);padding:12px;font-weight:600}
+.df-duration input{position:absolute;opacity:0;width:1px;height:1px}
+.df-duration label:has(:checked){background:var(--df-tint);border:2px solid var(--green);padding:11px;color:var(--green)}
+.df-duration label:has(:focus-visible){outline:3px solid var(--editorial-focus,var(--accent));outline-offset:3px}
+.df-adjustments{border-top:1px solid var(--line);padding-top:10px;margin:18px 0!important}
+.df-adjustments summary{min-height:44px;display:list-item;align-content:center}
+.df-adjustment-row{display:flex;align-items:start;gap:18px;flex-wrap:wrap;padding:10px 0}
+.df-adjustment-row>label{display:grid;gap:6px;flex:1 1 200px;font-size:.95rem;font-weight:600}
+.df-adjustment-row select{width:100%}
+.df-check{display:flex!important;align-items:center;gap:10px;font-weight:400!important;min-height:44px}
+.df-check input{width:20px;height:20px;accent-color:var(--green)}
+.df-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+.df-actions .df-primary{min-width:155px}
+.df-utility{display:flex;flex-wrap:wrap;gap:5px;margin-top:13px}
+.df-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin:16px 0}
+.df-day{display:grid;justify-items:center;gap:7px;padding:10px 2px;border:1px solid var(--line);border-radius:10px;font-size:.88rem;color:var(--muted);background:var(--paper)}
+.df-day b{font-size:1.2rem;color:var(--green);line-height:1.2}
+.df-day[data-complete=true]{background:var(--df-tint);border-color:var(--green)}
+.df-day[aria-current=date]{box-shadow:inset 0 -3px var(--accent)}
+.df-sessions{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:12px}
+.df-session{padding:15px;border:1px solid var(--line);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:14px;background:var(--paper)}
+.df-session strong{display:block;margin-bottom:4px}
+.df-session .df-actions{margin:0;flex:none}
+.df-work-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.df-work-head h1{font-size:clamp(1.8rem,4.5vw,2.7rem)}
+.df-progress{margin-bottom:18px}
+.df-progress .learning-session-progress-label{font-size:.94rem}
+.df-progress .learning-session-progress-track{height:10px}
+.df-step-meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;color:var(--muted);font-size:.9rem;margin-bottom:10px}
+.df-step-position{font-size:.88rem;font-weight:600;color:var(--green);margin-bottom:9px!important}
+.df-task{scroll-margin-top:16px}
+.df-task h2{max-width:40ch}
+.df-stimulus{border-left:3px solid var(--hint,var(--line));padding-left:16px;margin:20px 0;display:grid;gap:10px;font-size:1.12rem;line-height:1.5}
+.df-stimulus strong{display:block;color:var(--muted);font-size:.88rem;font-weight:600;margin-bottom:2px}
+.df-stimulus .learning-it{font-size:1.15em}
+.df-reason{font-size:.88rem;color:var(--muted);margin-top:9px!important}
+.df-reading{font-size:1.08rem;line-height:1.65;max-width:65ch;margin:18px 0}
+.df-reading p+p{margin-top:12px}
+.df-answer-label{display:grid;gap:7px;font-weight:600;max-width:580px}
+.daily-focus .df-answer{min-height:49px;width:100%;font-size:1.08rem}
+.df-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:0;padding:0;margin:18px 0;gap:9px}
+.df-options legend{font-size:.9rem;font-weight:600;padding-bottom:7px}
+.df-options label{display:flex;align-items:center;gap:10px;border:1px solid var(--practice-control-border,var(--line));border-radius:10px;min-height:49px;padding:12px;cursor:pointer}
+.df-options label:has(:checked){border-color:var(--green);background:var(--df-tint)}
+.df-options input{width:18px;height:18px;flex:none;accent-color:var(--green)}
+.df-options span{overflow-wrap:anywhere}
+.df-support{margin:18px 0 0!important}
+.df-support p{padding:6px 0 6px 12px;border-left:3px solid var(--line);margin-top:4px}
+.df-feedback{padding:18px;border:1px solid var(--line);border-left:4px solid var(--green);border-radius:10px;background:var(--df-tint);margin-top:20px}
+.df-feedback[data-review=true]{border-left-color:var(--accent);background:var(--df-warm)}
+.df-model{font-size:1.35rem;font-weight:600;line-height:1.4;margin:7px 0!important}
+.df-rating{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.df-rating button[aria-pressed=true],.df-flag[aria-pressed=true]{border-color:var(--green);background:var(--df-tint);color:var(--green)}
+.df-step-tools{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:20px;padding-top:12px}
+.df-step-tools button{font-size:.9rem}
+.df-controls{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:18px 0 10px}
+.df-controls>div{display:flex;flex-wrap:wrap;gap:8px}
+.df-ready{border:1px solid var(--green);border-radius:10px;padding:12px 15px;background:var(--df-tint);margin:15px 0;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.df-ready p{font-size:.94rem}
+.df-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}
+.df-stat{padding:15px 10px;background:var(--paper2);border:1px solid var(--line);border-radius:12px}
+.df-stat strong{display:block;font:600 1.75rem/1.2 Georgia,serif;color:var(--green);margin-bottom:5px}
+.df-stat span{font-size:.9rem;color:var(--muted)}
+.df-celebrate{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:1px solid var(--green);border-radius:50%;color:var(--green);background:var(--df-tint);font-size:1.5rem;margin-bottom:13px;animation:df-arrive .25s ease-out}
+.df-review-list{list-style:none;padding:0;display:grid;gap:14px}
+.df-review-list>li{padding:17px;border:1px solid var(--line);border-radius:12px;overflow-wrap:anywhere}
+.df-review-list h3{font:600 1.05rem/1.4 inherit;margin:8px 0}
+.df-review-list .df-stimulus{margin:10px 0;font-size:1rem}
+.df-review-list p{margin-top:7px}
+.df-issue{margin-top:12px}
+.df-issue label{display:grid;gap:6px;font-weight:600}
+.df-issue textarea{width:100%;min-height:85px;padding:12px;background:var(--paper);color:var(--ink);border:1px solid var(--practice-control-border,var(--line));border-radius:10px;resize:vertical}
+.df-notice{padding:12px 16px;margin-bottom:15px;border:1px solid var(--green);border-radius:10px;background:var(--paper2);color:var(--ink)}
+.df-warning{padding:15px;margin-bottom:18px;border:2px solid var(--accent);border-radius:10px;color:var(--ink);background:var(--paper)}
+.df-device{margin:25px 0 0!important}
+.df-settings{margin-top:26px!important;padding-top:16px;border-top:1px solid var(--line)}
+.df-settings h3{margin:18px 0 8px}
+.df-settings label{display:grid;gap:8px;margin-top:12px}
+.df-settings input[type=file]{padding:10px 0;max-width:100%;font-size:.9rem}
+.df-transfer-plan{margin-top:12px;padding:14px;border:1px solid var(--line);border-radius:10px}
+.df-topic-flags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.df-topic-flags button{font-size:.9rem}
+.df-topic-flags button[aria-pressed=true]{background:var(--df-tint);border-color:var(--green)}
+.daily-focus-flag-tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;font:500 .9rem/1.4 'Avenir Next',system-ui,sans-serif;color:var(--ink)}
+.daily-focus-flag-tools button{min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);font:inherit;cursor:pointer}
+.daily-focus-flag-tools button[aria-pressed=true]{border-color:var(--green);color:var(--green);background:var(--paper2)}
+.daily-focus-flag-tools button:focus-visible{outline:3px solid var(--editorial-focus,var(--accent));outline-offset:3px}
+.focus-practice-flags{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;font:500 .9rem/1.4 'Avenir Next',system-ui,sans-serif;color:var(--ink)}
+.focus-practice-flags .focus-flag{min-height:44px;padding:8px 12px;border:1px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink);font:inherit;cursor:pointer}
+.focus-practice-flags .focus-flag[aria-pressed=true]{border-color:var(--green);color:var(--green);background:var(--paper2)}
+.focus-practice-flags .focus-flag:focus-visible{outline:3px solid var(--editorial-focus,var(--accent));outline-offset:3px}
+@keyframes df-arrive{from{transform:scale(.9);opacity:.6}to{transform:scale(1);opacity:1}}
+@media(max-width:600px){.df-home{align-items:stretch;flex-direction:column;padding:19px}.df-heading{flex-wrap:wrap;gap:10px}.df-heading h1{font-size:2.35rem}.df-status{max-width:none}.df-duration{gap:6px}.df-duration label{flex:1 1 52px;padding:10px 4px}.df-duration label:has(:checked){padding:9px 3px}.df-session{align-items:stretch;flex-direction:column}.df-session .df-actions{flex-wrap:wrap}.df-work-head{align-items:start}.df-options{grid-template-columns:1fr}.df-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.df-ready{align-items:stretch;flex-direction:column}.df-week{gap:4px}.df-day{font-size:.82rem}.df-controls>div{width:100%}.df-controls button{flex:1 1 130px}.df-step-tools{gap:5px}.df-step-tools button{flex:1 1 130px}.df-actions .df-primary{min-width:0}.df-work-head button{flex:none}.df-progress{margin-top:13px}.df-panel{border-radius:12px}.daily-focus{padding-top:10px}}
+@media(prefers-reduced-motion:reduce){.daily-focus *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:600px){.df-duration label{font-size:.9rem;white-space:nowrap}.df-step-tools>div{display:flex;flex-wrap:wrap;gap:8px}}
+
+/* Align difficulty and spoken-practice options at a shared baseline. */
+.daily-focus .df-adjustment-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:end;gap:16px}
+.daily-focus .df-setting-field{display:grid;gap:7px;min-width:0;margin:0}
+.daily-focus .df-setting-field select{min-height:48px;width:100%}
+.daily-focus .df-spoken-setting{display:grid;gap:7px;align-self:stretch;min-width:0}
+.daily-focus .df-setting-heading{font-size:.9rem;font-weight:600}
+.daily-focus .df-spoken-setting .df-check{margin:0!important;min-height:48px;padding:8px 12px;border:1px solid var(--practice-control-border,var(--line));border-radius:9px;background:var(--paper);display:flex!important;align-items:center;gap:10px}
+.daily-focus .df-study-areas{padding:17px 0 2px;margin-top:18px;border:0;border-top:1px solid var(--line);min-width:0}
+.daily-focus .df-study-areas legend{font-weight:700;padding:0 0 7px}
+.daily-focus .df-study-areas>label{display:block;font-weight:600;margin:7px 0}
+.daily-focus .df-study-areas>select{max-width:100%;width:100%;min-height:46px}
+.daily-focus .df-study-areas>.df-muted{margin-top:10px}
+.daily-focus .df-topic-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:15px}
+.daily-focus .df-topic-choice{display:flex;align-items:center;gap:11px;min-height:46px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.daily-focus .df-topic-choice:has(:checked){background:var(--df-tint);border-color:var(--green)}
+.daily-focus .df-topic-choice input{flex:none;width:19px;height:19px;accent-color:var(--green)}
+/* The qualifying invitation follows the practice card, and respects reduced motion. */
+.daily-focus .df-ready-early{animation:df-ready-arrive .34s ease-out both;transform-origin:top center}
+@keyframes df-ready-arrive{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.daily-focus .df-adjustment-row,.daily-focus .df-topic-choices{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.daily-focus .df-ready-early{animation:none}}

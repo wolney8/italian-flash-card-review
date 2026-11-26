@@ -74,7 +74,8 @@
     LESSON_ITALIAN[lesson.id] = lesson.it;
     for (const topic of topics) STUDY_ITALIAN[topic.title] = topic.it;
   }
-  const PRACTICE_COLLECTION = window.ItalianDailyVerbCards?.collection;
+  if(window.ItalianLesson9){const lesson=window.ItalianLesson9.lesson;LESSONS.push([lesson.id,lesson.title,lesson.description]);LESSON_ITALIAN.L9=lesson.it;}
+   const PRACTICE_COLLECTION = window.ItalianDailyVerbCards?.collection;
   const knownCollection = id => LESSONS.some(lesson => lesson[0] === id) || id === PRACTICE_COLLECTION?.id;
   const isReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
   let state = {page: 'home', lesson: null, deck: '', index: 0, finished: false};
@@ -129,6 +130,7 @@
     progress.flashcards.confidence=progress.flashcards.confidence||{};
     progress.flashcards.confidence[card.key]=rating;
     sessionWrite(PROGRESS_KEY,progress);
+    window.dispatchEvent(new CustomEvent('italian-flashcard-assessed',{detail:{card,rating,at:Date.now()}}));
     if(!window.ItalianFlashFlow?.graded(card,rating))moveCard(1);
   }
   function startReviewAgain(){
@@ -264,11 +266,12 @@
     return `<main id="guidedMain" class="guided-main">
       <p class="guided-eyebrow">${coursePill()}</p>
       <h1 tabindex="-1" class="guided-title editorial-hero-title">${labelPair('Scegli cosa studiare.','Choose what to study.')}</h1>
+      <section class="df-home" aria-labelledby="homeFocusTitle"><div><p class="guided-eyebrow">A little practice for today</p><h2 id="homeFocusTitle">Daily Focus</h2><p>A prepared mix from your course. Choose your time and begin.</p></div><a href="?page=today" class="guided-primary">Open Daily Focus</a></section>
       <div class="guided-choices">
         <a href="?page=lessons" data-guide-to="lessons" class="guided-choice"><span class="guided-choice-icon" aria-hidden="true">▣</span><strong>${labelPair('Lezioni','Lesson flashcards')}</strong><b>${labelPair('Scegli una lezione','Choose a lesson')}</b></a>
         <a href="study/study-sheets.html?mode=learn" data-guide-to="topics" class="guided-choice"><span class="guided-choice-icon" aria-hidden="true">▤</span><strong>${labelPair('Schede di studio','Study sheets')}</strong><b>${labelPair('Scegli un argomento','Choose a topic')}</b></a>
       </div>
-      ${validResume?`<section class="guided-resume"><div><strong>${labelPair('Continua','Continue')}</strong><span>${last.lesson === PRACTICE_COLLECTION?.id ? 'Daily practice' : 'Lesson '+last.lesson.slice(1)} · ${esc(lessonInfo(last.lesson)[1])} · ${totalViewed(last.lesson)} answers viewed</span></div><a href="${esc(urlFor({page:'card',...last}))}" data-guide-resume class="guided-primary">${labelPair('Riprendi','Resume')} →</a></section>`:''}
+      ${validResume?`<section class="guided-resume"><div><strong>${labelPair('Continua','Continue')}</strong><span>${last.lesson === PRACTICE_COLLECTION?.id ? 'Daily Practice' : 'Lesson '+last.lesson.slice(1)} · ${esc(lessonInfo(last.lesson)[1])} · ${totalViewed(last.lesson)} answers viewed</span></div><a href="${esc(urlFor({page:'card',...last}))}" data-guide-resume class="guided-primary">${labelPair('Riprendi','Resume')} →</a></section>`:''}
       <div class="editorial-context-link"><a href="?page=course" data-guide-to="course">${labelPair('Percorso del corso','Course pathway')} →</a></div>
     </main>`;
   }
@@ -277,7 +280,7 @@
       const total=cardList(id).length, viewed=totalViewed(id),pct=total?100*viewed/total:0;
       return `<a class="guided-lesson" href="${esc(urlFor({page:'card',lesson:id}))}" data-guide-lesson="${id}"><span class="guided-lesson-number">${id.slice(1)}</span><span class="guided-lesson-copy"><strong>${lessonLabel(id)}</strong><small>${total} cards · ${viewed} answers viewed</small><span class="guided-track"><span style="width:${pct}%"></span></span></span><span class="guided-chevron" aria-hidden="true">›</span></a>`;
     }).join(''):'<p class="guided-muted" role="status">Loading lessons…</p>';
-    const practice = ready && PRACTICE_COLLECTION ? '<section class="guided-topic-group"><h2>Daily practice</h2><a class="guided-topic" href="'+esc(urlFor({page:'card',lesson:PRACTICE_COLLECTION.id}))+'" data-guide-lesson="'+PRACTICE_COLLECTION.id+'"><strong>'+lessonLabel(PRACTICE_COLLECTION.id)+'</strong><span>'+cardList(PRACTICE_COLLECTION.id).length+' cards across the course</span></a></section>' : '';
+    const practice = ready && PRACTICE_COLLECTION ? '<section class="guided-topic-group"><h2>Daily Practice</h2><a class="guided-topic" href="'+esc(urlFor({page:'card',lesson:PRACTICE_COLLECTION.id}))+'" data-guide-lesson="'+PRACTICE_COLLECTION.id+'"><strong>'+lessonLabel(PRACTICE_COLLECTION.id)+'</strong><span>'+cardList(PRACTICE_COLLECTION.id).length+' cards across the course</span></a></section>' : '';
     return `<main class="guided-main" id="guidedMain">${crumbs([{label:'Beginners · Semester 1',to:'course'},{label:'Lessons'}])}<h1 class="guided-title" tabindex="-1">${uiLabel('Choose a lesson')}</h1><div class="guided-lessons">${content}</div>${practice}</main>`;
   }
   function topics() {
@@ -297,7 +300,7 @@
       '<div role="status" class="guided-info">Loading flashcards…</div></main>';
     const [id]=lessonInfo(lesson);
     const isPractice=id === PRACTICE_COLLECTION?.id;
-    const collectionCrumbs=isPractice ? [{label:'Daily practice',to:'daily-practice'},{label:'Verb flashcards'}] : [{label:'Lessons',to:'lessons'},{label:'Lesson '+id.slice(1)}];
+    const collectionCrumbs=isPractice ? [{label:'Daily Practice',to:'daily-practice'},{label:'Verb flashcards'}] : [{label:'Lessons',to:'lessons'},{label:'Lesson '+id.slice(1)}];
     const all=cardList(lesson),decks=topicSequence(lesson);
     if(state.deck&&!decks.includes(state.deck)){
       const keys=window.ITALIAN_L6?.legacyTopics?.[state.deck];
@@ -344,7 +347,7 @@
         (state.reviewOnly?'<button class="guided-secondary" data-guide-all-cards>All cards</button>':'')+
         (next?'<button class="guided-primary" data-guide-next-topic>'+labelPair(next.type==='topic'?'Prossimo argomento':'Prossima lezione',next.type==='topic'?'Next topic':'Next lesson')+' →</button>':'')+
         '<button class="guided-secondary" data-guide-restart>'+labelPair('Ripeti','Repeat topic')+'</button>'+
-        '<button class="guided-secondary" data-guide-to="'+(isPractice?'daily-practice':'lessons')+'">'+(isPractice?'Daily practice':labelPair('Tutte le lezioni','All lessons'))+'</button>'+
+        '<button class="guided-secondary" data-guide-to="'+(isPractice?'daily-practice':'lessons')+'">'+(isPractice?'Daily Practice':labelPair('Tutte le lezioni','All lessons'))+'</button>'+
         '</div></section></main>';
     }
     const isReviewed=!!viewed[current.key];
@@ -361,7 +364,7 @@
       crumbs(isPractice ? collectionCrumbs : [{label:'Beginners · Semester 1',to:'course'},...collectionCrumbs])+
       '<section class="guided-card-layout">'+
       '<div class="guided-card-heading"><div><p class="guided-eyebrow">'+
-      (isPractice?labelPair('Esercizi quotidiani','Daily practice'):labelPair('Lezione '+id.slice(1),'Lesson '+id.slice(1)))+'</p>'+
+      (isPractice?labelPair('Esercizi quotidiani','Daily Practice'):labelPair('Lezione '+id.slice(1),'Lesson '+id.slice(1)))+'</p>'+
       '<h1 class="guided-title" tabindex="-1">'+esc(current.deck)+'</h1></div>'+
       '<span class="guided-card-count">'+(state.reviewOnly?'Targeted review · ':'')+
       labelPair('Carta '+(state.index+1)+' di '+total,'Card '+(state.index+1)+' of '+total)+
@@ -508,7 +511,7 @@
       return;
     }
     const title=practiceRoutes.title(page);
-    const segments=page==='daily-practice'?[]:[{label:'Daily practice',to:'daily-practice'}];
+    const segments=['today','daily-practice','daily-focus'].includes(page)?[]:[{label:'Daily Practice',to:'daily-practice'}];
     segments.push({label:title});
     previousPracticeHeader=chrome;
     document.title=title+' | Italian for Beginners';
@@ -579,8 +582,8 @@
   });
   window.addEventListener('popstate',()=>{menuOpen=false;state=stateFromUrl();render();});
   window.addEventListener('hashchange',()=>{if(location.hash.match(/^#lesson-L\d+$/i)){state=stateFromUrl();render();}});
-  window.addEventListener('italian-course-data-ready',()=>{ready=true;render();});
-  window.addEventListener('pageshow',()=>{ready=Boolean(window.__COURSE_DATA_READY__);render();});
+  window.addEventListener('italian-course-data-ready',()=>{ready=true;renderKeepingCardFace();});
+  window.addEventListener('pageshow',()=>{ready=Boolean(window.__COURSE_DATA_READY__);renderKeepingCardFace();});
   window.ItalianFlashcards={getState:()=>({...state}),currentCard,cardList,activeCardList,navigate,moveCard,flip,recordConfidence,toggleFocus,renderKeepingCardFace};
   activate();
 })();
