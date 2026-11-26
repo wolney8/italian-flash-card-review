@@ -118,7 +118,7 @@ try:
    elif FOCUS=='numbers':route_data=[s for s in dataset if s['slug']=='l6-number-patterns']
    else:route_data=[s for s in dataset if s['slug'] in ['class1-introductions','class4-silent-h','l6-number-patterns','l6-intonation','practice-essere','practice-things-pronouns']]
    for sheet in route_data:
-    slug=sheet['slug'];visit('/study/study-sheets.html?sheet='+slug)
+    slug=sheet['slug'];print('Opening sheet: '+slug,flush=True);visit('/study/study-sheets.html?sheet='+slug)
     page.wait_for_selector('.quiz-question:not([hidden])')
     assert page.evaluate('ItalianGuidedStudy.getState().step')=='practise'
     assert page.locator('#librarySetPicker').count()==1

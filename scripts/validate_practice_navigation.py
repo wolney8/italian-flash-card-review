@@ -204,7 +204,7 @@ def check_navigation(browser, base):
             route(page, 'jobs-in-photos')
             theme(page, 'dark')
 
-            header_link(page, 'Study sheets').click()
+            header_link(page, 'Study Sheets').click()
             expect(page.locator('[data-library-ready]')).to_be_visible()
             theme(page, 'dark')
             header_link(page, 'Today').click()

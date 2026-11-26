@@ -51,7 +51,7 @@ const textLine=(text,label='Sentence',lang='it')=>({text,label,lang});
 function question({id,task,stimulus=[],answer,choices,answers=[],hint='',source='minutes',page=2,activity='',n=null,type='text',mode='accent'}){
   const text=typeof stimulus==='string'?[textLine(stimulus)]:stimulus;
   const prompt='<span lang="en" data-ui-no-translate>'+escape(task)+'</span>'+text.map(line=>'<br><span lang="'+escape(line.lang)+'">'+escape(line.text)+'</span>').join('');
-  return {id:'l9-'+id,type,kind:'word',task,stimulus:text,prompt,model:answer,answers:[answer,...answers],
+  return {id:'l9-'+id,type:choices?.length?'choice':type,kind:'word',task,stimulus:text,prompt,model:answer,answers:[answer,...answers],
     choices:choices||[],optional_subjects:[],answer_mode:mode,hint:escape(hint),explanation:'',
     source:sourceFiles[source],sourcePage:page,sourceActivity:activity,sourceItem:n,
     support:{hint:{en:hint,it:'',html:''},lines:[]}};
