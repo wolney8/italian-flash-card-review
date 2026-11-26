@@ -141,6 +141,12 @@
 .worksheet-cue-label { font-size:.93rem; font-weight:600; }
 .worksheet-cue > [lang]:last-child { min-width:0; }
 .worksheet-stimulus img { max-width:100%; height:auto; }
+.study-pack-sheet .typed-answer-guidance {
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:.92rem;
+  line-height:1.5;
+}
 @media(max-width:520px) {
   .worksheet-content .worksheet-task { font-size:1.05rem; }
   .worksheet-cue { display:block; }
