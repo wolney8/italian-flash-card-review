@@ -228,7 +228,7 @@ def check_study_tables(page, base):
     page.locator('.study-pack-sheet[data-guided-pilot=ready]').wait_for(timeout=60000)
     table = page.locator('section.panel[data-study-stage=learn]:not([hidden]) table')
     expect(table).to_have_count(1)
-    headers = table.locator('thead th').all_inner_texts()
+    headers = [text.strip().lower() for text in table.locator('thead th').all_text_contents()]
     assert len(headers) == 7 and headers[-3:] == ['noi','voi','loro'], headers
     actual = table.locator('tbody tr').evaluate_all('rows => rows.map(row => Array.from(row.children).map(cell => cell.textContent.trim()))')
     expected = page.evaluate('ItalianDailyVerbs.verbs.map(verb => [verb.name, ...verb.forms])')
