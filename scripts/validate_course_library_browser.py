@@ -110,8 +110,8 @@ try:
    assert sum(len(s['questions']) for s in l8 if s.get('sourceKind')=='Extra practice')==56
    assert sum(len(s['questions']) for s in l8 if s.get('sourceKind')!='Extra practice')==59
    assert sum(s['slug']=='l6-recap-useful-requests' for s in dataset)==1
-    assert sum(s['slug'].startswith('l9-') for s in dataset)==4
-    assert sum(len(s['questions']) for s in dataset if s['slug'].startswith('l9-'))==86
+   assert sum(s['slug'].startswith('l9-') for s in dataset)==4
+   assert sum(len(s['questions']) for s in dataset if s['slug'].startswith('l9-'))==86
    if FOCUS=='all':route_data=dataset
    elif FOCUS=='legacy':route_data=dataset[:9]
    elif FOCUS=='lesson6':route_data=[s for s in dataset if s['slug'].startswith('l6-')]

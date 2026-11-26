@@ -30,7 +30,7 @@ const verbs=ctx.window.ItalianDailyVerbs.verbs;
   assert.doesNotMatch(practice,/byId\('reference'\)\.open\s*=\s*false/,'Next Question must not close the expanded reference');
   assert.match(read('course-site-header-v1.js'),/class="course-site-comment"[^>]*aria-label="Comments"/);
   const header=require('../course-site-header-v1.js').header({context:'guided',current:'daily-practice'});
-  assert.ok(header.includes('Daily Practice') && header.includes('Daily Focus'));
+  assert.ok(header.includes('Today') && !header.includes('Daily Practice') && !header.includes('Daily Focus'),'Today replaces the two separate top menu links');
   assert.ok(header.includes('<svg aria-hidden="true"'),'Comments must be an icon-only control');
   assert.match(read('guided-course-v2.js'),/italian-course-data-ready'.*renderKeepingCardFace\(\)/,'Late data refresh must preserve a flipped card');
   console.log('PASS Regular conjugations, singular/plural comparison, references stay open and header labels are consistent.');
