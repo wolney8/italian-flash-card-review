@@ -25,8 +25,8 @@ try:
             assert page.locator('h1').filter(has_text='Daily Practice').count()>=1
             assert page.locator('#overview').is_visible()
             assert page.locator('#overview').get_attribute('open') is not None
-            assert page.locator('#overview .conj-matrix').count()==1
-            assert page.locator('#overview .conj-matrix tr').count()==4
+            assert page.locator('#overview .conj-matrix').count()==2
+            assert page.locator('#overview .conj-matrix').first.locator('tr').count()==4
             assert page.locator('#overview .conj-plural').count()==1
             assert page.locator('#overview .conj-plural').get_attribute('open') is None
             assert page.locator('#overview').inner_text().count('finisco')>=1

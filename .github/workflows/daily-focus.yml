@@ -24,7 +24,8 @@ jobs:
           node --check study/daily-focus.js
           node --check daily-focus-hooks.js
       - name: Verify practice, completion, persistence and transfer
-        run: node scripts/validate_daily_focus_engine.cjs
+        run: |
+          node scripts/validate_daily_focus_engine.cjs
           node scripts/validate_conjugation_comparison.cjs
       - name: Verify Daily Focus in a browser
         run: |
