@@ -9,6 +9,7 @@ from html import escape
 import json
 from pathlib import Path
 import sqlite3
+import sys
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
 
@@ -17,6 +18,9 @@ from anki.import_export_pb2 import ExportAnkiPackageOptions
 from anki.utils import base91
 
 FOLDER = Path(__file__).resolve().parent
+sys.path.insert(0, str(FOLDER.parent / 'scripts'))
+from anki_verb_display import append_verb_display_css, format_verb_displays
+
 PARENT = 'Italian - Daily Practice - Verbs'
 MODEL = 'Italian Course - Daily Verb Recall v1'
 FIELDS = ('Key', 'Prompt', 'Answer', 'Pronunciation', 'IPA', 'Meaning', 'Use', 'Rule', 'Source', 'Topic', 'AnswerLanguage')
@@ -48,6 +52,25 @@ details { margin-top:1.2em; font-size:.85em; }
 .nightMode .learning-it,.night_mode .learning-it,.nightMode h1[lang="it"],.night_mode h1[lang="it"] { color:#abd5c1; }
 .nightMode .learning-gloss,.night_mode .learning-gloss { color:#f0b39a; }
 '''
+CSS = append_verb_display_css(CSS)
+
+
+def reference_verbs(card):
+    """Explicit source-model references for the approved pattern-card keys."""
+    if card.get('verb'):
+        return [card['verb']]
+    key = card['key']
+    if key.startswith('italian-daily-pattern-ere-ending-'):
+        return ['leggere']
+    if key.startswith('italian-daily-pattern-ire-ending-'):
+        return ['dormire']
+    if key.startswith('italian-daily-pattern-family-'):
+        return [key.removeprefix('italian-daily-pattern-family-')]
+    if key == 'italian-daily-pattern-isc-noi-voi':
+        return ['finire', 'capire']
+    if key == 'italian-daily-pattern-regularity-tense':
+        return ['leggere']
+    return []
 
 
 def stable_number(value):
@@ -108,6 +131,12 @@ def build(output):
     keys=[card['key'] for card in cards]
     if len(set(keys))!=len(keys) or len(cards)!=manifest['newCards']:
         raise ValueError('Card inventory mismatch')
+    display = {row['key']: row for row in format_verb_displays([
+        {'key':card['key'], 'verb':card.get('verb'),
+         'answer':escape(card['answer']), 'answerLanguage':card['answerLang'],
+         'pattern':card['rule'], 'referenceVerbs':reference_verbs(card)}
+        for card in cards
+    ])}
     with TemporaryDirectory() as folder:
         work=Path(folder)
         collection=Collection(str(work/'collection.anki2'))
@@ -131,9 +160,9 @@ def build(output):
             for card in cards:
                 note=collection.new_note(model)
                 note.guid=stable_guid(card['key'])
-                values={'Key':card['key'],'Prompt':prompt(card),'Answer':escape(card['answer']),
+                values={'Key':card['key'],'Prompt':prompt(card),'Answer':display[card['key']]['answer'],
                         'Pronunciation':escape(card['guide']),'IPA':escape(card['ipa']),'Meaning':card.get('display',{}).get('meaning',escape(card['meaning'])),
-                        'Use':card.get('display',{}).get('usage',escape(card['usage'])),'Rule':card['rule'],'Source':escape(card['sourceClass']+' · '+card['source']),
+                        'Use':card.get('display',{}).get('usage',escape(card['usage'])),'Rule':display[card['key']]['pattern'],'Source':escape(card['sourceClass']+' · '+card['source']),
                         'Topic':escape(card['deck']),'AnswerLanguage':card['answerLang']}
                 for name,value in values.items():
                     note[name]=value
