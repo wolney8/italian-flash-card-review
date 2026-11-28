@@ -1,7 +1,7 @@
 # Lesson 9 source audit and staging plan
 
 **Lesson:** 9, 24 November 2026
-**Status:** Review preview only. No production deployment or Anki import.
+**Status:** Website published. Lesson 9 is included in the full Anki update, with a [28 November 2026 formatting correction](ANKI_FORMAT_REPAIR_2026-11-28.md). All 22 Lesson 9 records are unchanged by that correction. No import into the learner's personal collection has been performed.
 **Source rule:** No invented handbook questions and no AI-generated pictures.
 
 ## Files reviewed and what they contain
@@ -51,11 +51,11 @@ The illustration grid on PowerPoint slide 6 is not a photograph. Do not use it f
 
 ## Web / Anki parity and import plan
 
-- The proposed **22 new Lesson 9 card records** live in the same static \`lesson9/content.js\` catalogue as the website's L9 deck. Categories: 6 \`01 -ERE Patterns\` cards and 16 \`02 Laura’s Model Sentences\` cards.
+- The **22 Lesson 9 card records** live in the same static \`lesson9/content.js\` catalogue as the website's L9 deck. Categories: 6 \`01 -ERE Patterns\` cards and 16 \`02 Laura’s Model Sentences\` cards.
 - The existing Daily Verbs add-on already covers individual verb forms for several of these verbs. Do not create duplicate direct form cards.
-- Review the proposed wording and content on the website first. Then derive a new \`.apkg\` from these exact card records, using stable GUIDs derived from their \`key\` and the pre-existing note type, not regenerated positional IDs.
-- Test import into a copy of a collection containing all previous decks. Confirm 22 new cards, zero changes to prior note IDs and schedules, and a zero-duplicate second import.
-- When the Anki import is approved, provide a working verified download as well as matching web cards. Until then, do not label it deployed or imported.
+- `lesson9/build_anki.py` derives the new `.apkg` from these exact records. GUIDs and numeric IDs derive from stable keys. Its dedicated Lesson 9 note type retains the released Lesson 7 fourteen-field schema, with a dynamic lesson label, avoiding a change to existing Lesson 7 templates.
+- Native Anki 26.09.4 testing imports the full package into both a fresh collection and an isolated collection containing all previous decks. The update adds exactly 22 cards, preserves all 857 existing native identities and schedules, and adds zero duplicates on repeat import.
+- The user authorised the full package on 27 November 2026. It includes the previous releases and corrections, Daily Verbs, and Lesson 9. Review history and deck presets are excluded. See `ANKI_FULL_UPDATE_2026-11-27.md` for the release scope and import settings.
 - New verbs in the handouts such as *correre*, *ricevere*, *perdere*, *vendere*, *partire*, *sentire* and *ballare* are source-backed in worksheets. Extending every verb's general-purpose drill catalogue and Anki form decks is a **follow-up**, with deduplication review.
 
 **Verification scope:** Source audit checked across all six attachments, including images and tables. New module and browser tests must pass before production approval. One-week Focus trial before cosmetic iteration remains the plan.

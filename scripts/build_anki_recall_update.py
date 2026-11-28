@@ -143,6 +143,11 @@ def restore_archive_ids(source, output, originals):
                 raise ValueError('Unexpected personal review history in export')
             with db:
                 db.execute('UPDATE col SET decks=?', (json.dumps(restored_decks, ensure_ascii=False),))
+                # Some legacy packages retain a learning-step count and last-
+                # review metadata even after a native unscheduled export. The
+                # distributable must contain neither. This touches only the
+                # disposable package, never the learner's installed collection.
+                db.execute('UPDATE cards SET left=0,data=?', ('{}',))
                 db.execute('UPDATE cards SET id=-id,nid=-nid')
                 db.execute('UPDATE notes SET id=-id')
                 for nid, guid, model, ordinal, cid in identity:
