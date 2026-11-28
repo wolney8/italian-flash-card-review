@@ -190,6 +190,7 @@ def build(output, reference_package=None):
     from anki.import_export_pb2 import ExportAnkiPackageOptions
     sys.path.insert(0, str(ROOT / 'scripts'))
     from anki_verb_display import VERB_DISPLAY_CSS
+    from anki_card_presentation import apply_card_presentation
     source_bytes = SOURCE.read_bytes()
     source = load_source()
     displays = display_records(source)
@@ -209,6 +210,7 @@ def build(output, reference_package=None):
             template = collection.models.new_template('Recall')
             template.update(id=ident('italian-l9-template:recall'), qfmt=FRONT, afmt=BACK)
             collection.models.add_template(model, template)
+            model = apply_card_presentation(model)
             collection.models.update(model)
             collection.models.update(model, preserve_usn=False)
             make_deck(collection, PARENT, PARENT_ID)

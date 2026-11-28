@@ -20,6 +20,7 @@ from anki.utils import base91
 FOLDER = Path(__file__).resolve().parent
 sys.path.insert(0, str(FOLDER.parent / 'scripts'))
 from anki_verb_display import append_verb_display_css, format_verb_displays
+from anki_card_presentation import apply_card_presentation
 
 PARENT = 'Italian - Daily Practice - Verbs'
 MODEL = 'Italian Course - Daily Verb Recall v1'
@@ -150,6 +151,7 @@ def build(output):
             template=collection.models.new_template('Recall')
             template.update(id=stable_number('daily-verb-template:recall'),qfmt=FRONT,afmt=BACK)
             collection.models.add_template(model,template)
+            model = apply_card_presentation(model)
             # Register the stable ID, then let Anki stamp the changed note type
             # so an existing import receives its updated styling.
             collection.models.update(model)

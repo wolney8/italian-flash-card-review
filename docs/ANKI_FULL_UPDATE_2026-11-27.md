@@ -1,5 +1,10 @@
 # Full Italian Anki update, 27 November 2026
 
+**Superseded for import by the [28 November formatting correction](ANKI_FORMAT_REPAIR_2026-11-28.md).**
+The original content inventory below remains accurate. Its narrow visual sample
+missed inherited styling problems in older templates. Use the corrected package
+and its formatting-only import settings when the full update is already installed.
+
 One ordinary `.apkg` contains **879 notes and cards**. It can update the matching
 released decks or populate a fresh collection. It is not a collection replacement.
 
@@ -106,7 +111,7 @@ python daily-verb-cards/build_anki.py daily.apkg
 python lesson9/build_anki.py lesson9.apkg --reference-package lesson7-final.apkg
 python scripts/validate_l9_anki.py lesson9.apkg --reference-package lesson7-final.apkg
 python scripts/build_anki_full_update.py baseline-manifest.json daily.apkg lesson9.apkg full.apkg
-python scripts/validate_anki_full_update.py baseline-manifest.json full.apkg --lesson9-component lesson9.apkg --report validation.json
+python scripts/validate_anki_full_update.py baseline-manifest.json full.apkg --lesson9-component lesson9.apkg --shared-presentation --report validation.json
 ```
 
 `scripts/anki_verb_display.py` and `.cjs` bridge to the actual website formatter.

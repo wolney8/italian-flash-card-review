@@ -77,8 +77,21 @@ def validate(package, reference_package=None):
         assert tuple(field['name'] for field in model['flds']) == build.FIELDS
         assert model['sortf'] == 0
         assert len(model['tmpls']) == 1 and model['tmpls'][0]['ord'] == 0
-        assert model['tmpls'][0]['qfmt'] == build.FRONT
-        assert model['tmpls'][0]['afmt'] == build.BACK
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        from anki_card_presentation import (
+            CARD_PRESENTATION_CSS, CSS_END, CSS_START, apply_card_presentation,
+        )
+        from anki_verb_display import VERB_DISPLAY_CSS
+        # The canonical field order and conditionals remain the source of
+        # truth; the shared adapter adds presentation wrappers to that layout.
+        canonical_layout = apply_card_presentation({
+            'id': build.MODEL_ID, 'css': '',
+            'tmpls': [{'qfmt': build.FRONT, 'afmt': build.BACK}],
+        })
+        assert model['tmpls'][0]['qfmt'] == canonical_layout['tmpls'][0]['qfmt']
+        assert model['tmpls'][0]['afmt'] == canonical_layout['tmpls'][0]['afmt']
+        for side, original in (('qfmt', build.FRONT), ('afmt', build.BACK)):
+            assert re.findall(r'{{.*?}}', model['tmpls'][0][side], re.S) == re.findall(r'{{.*?}}', original, re.S)
         assert '{{Answer}}' not in model['tmpls'][0]['qfmt']
         assert '{{Pattern}}' not in model['tmpls'][0]['qfmt']
         assert '{{NaturalEnglish}}' not in model['tmpls'][0]['qfmt']
@@ -86,9 +99,10 @@ def validate(package, reference_package=None):
         assert 'LESSON 7' not in model['tmpls'][0]['afmt']
         if reference_package:
             assert model['css'].startswith(build.reference_css(reference_package)), 'Released card styling was not retained'
-        sys.path.insert(0, str(ROOT / 'scripts'))
-        from anki_verb_display import VERB_DISPLAY_CSS
         assert VERB_DISPLAY_CSS in model['css'], 'Shared colour/display stylesheet missing'
+        assert model['css'].count(CSS_START) == model['css'].count(CSS_END) == 1
+        assert CARD_PRESENTATION_CSS.rstrip() in model['css'], 'Current shared card presentation missing'
+        assert apply_card_presentation(model) == model, 'Shared card presentation is not idempotent'
         decks = json.loads(database.execute('SELECT decks FROM col').fetchone()[0])
         rows = database.execute('''SELECT n.id,n.guid,n.mid,n.flds,c.id,c.did,c.ord,c.type,c.queue,c.ivl,c.reps,c.lapses,c.odid,c.odue
                                    FROM notes n JOIN cards c ON c.nid=n.id''').fetchall()
@@ -147,7 +161,8 @@ def validate(package, reference_package=None):
         assert {row['key'] for row in registry['identities']} == set(canonical)
         return {'status': 'passed', 'notes': 22, 'cards': 22, 'patterns': 6, 'model_sentences': 16,
                 'full_references': reference_count, 'stable_identities': 22, 'review_rows': 0,
-                'source_unchanged': True, 'database': member, 'model_id': build.MODEL_ID,
+                'source_unchanged': True, 'shared_presentation': True,
+                'database': member, 'model_id': build.MODEL_ID,
                 'package_sha256': registry['package_sha256']}
     finally:
         database.close()

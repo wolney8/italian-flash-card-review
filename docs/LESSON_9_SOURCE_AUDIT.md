@@ -1,7 +1,7 @@
 # Lesson 9 source audit and staging plan
 
 **Lesson:** 9, 24 November 2026
-**Status:** Website published. Lesson 9 is included in the verified 27 November 2026 full Anki update package. No import into the learner's personal collection has been performed.
+**Status:** Website published. Lesson 9 is included in the full Anki update, with a [28 November 2026 formatting correction](ANKI_FORMAT_REPAIR_2026-11-28.md). All 22 Lesson 9 records are unchanged by that correction. No import into the learner's personal collection has been performed.
 **Source rule:** No invented handbook questions and no AI-generated pictures.
 
 ## Files reviewed and what they contain

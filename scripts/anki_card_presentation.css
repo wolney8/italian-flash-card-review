@@ -1,0 +1,259 @@
+/* Italian shared card presentation: start */
+/* Export-only warm editorial presentation. Field HTML and semantic spans stay intact. */
+.card,
+.card:not(.nightMode):not(.night_mode) {
+  --bg:#f8f3eb; --paper:#fffcf7; --paper2:#f3e8db;
+  --ink:#332d28; --muted:#675b52; --line:#dacabe;
+  --accent:#8c4938; --pink:#8c4938; --soft:#f3e8db; --green:#285d47;
+  --anki-stem:#285d47; --anki-ending:#8b4d15; --anki-gloss:#8c4938;
+  background:var(--bg); color:var(--ink);
+  font:18px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  text-align:left; margin:0; padding:24px 16px;
+}
+.card.nightMode,
+.card.night_mode,
+.nightMode .card:not(.nightMode):not(.night_mode),
+.night_mode .card:not(.nightMode):not(.night_mode) {
+  --bg:#1d1c1a; --paper:#292622; --paper2:#37302b;
+  --ink:#f6e8dc; --muted:#d5c2b4; --line:#65574c;
+  --accent:#f0b39a; --pink:#f0b39a; --soft:#37302b; --green:#bcd4bd;
+  --anki-stem:#bcd4bd; --anki-ending:#f0c58b; --anki-gloss:#f0b39a;
+  background:var(--bg); color:var(--ink);
+}
+.card .anki-course,
+.card section.anki-course {
+  box-sizing:border-box; width:100%; max-width:760px; min-width:0;
+  margin:0 auto; padding:24px 28px;
+  background:var(--paper); color:var(--ink);
+  border:1px solid var(--line); border-radius:18px;
+  text-align:left; overflow-wrap:anywhere;
+}
+.anki-course *, .anki-course *::before, .anki-course *::after { box-sizing:border-box; }
+.anki-course img, .anki-course svg { max-width:100%; height:auto; }
+.anki-course p { margin:0 0 .8em; }
+.anki-course p:last-child { margin-bottom:0; }
+.anki-course .deck-label,
+.anki-course .l6-kicker,
+.anki-course .l7-kicker,
+.anki-course > small {
+  display:block; color:var(--muted); font-size:12px; font-weight:600;
+  letter-spacing:.045em; line-height:1.5; text-transform:none;
+  margin:0 0 16px; overflow-wrap:anywhere;
+}
+
+/* Keep genuine illustrations and choice content, with a compact neutral header. */
+.anki-course .topic-panel,
+.anki-course .anki-topic-panel {
+  width:100%; max-width:none; margin:0 0 22px; padding:14px 16px;
+  border:1px solid var(--line); border-radius:12px;
+  background:var(--paper2); color:var(--ink); text-align:left;
+}
+.anki-course .panel-head {
+  display:flex; align-items:center; justify-content:flex-start;
+  gap:12px; margin:0; min-width:0;
+}
+.anki-course .panel-copy { flex:1 1 auto; min-width:0; }
+.anki-course .panel-badge {
+  display:flex; align-items:center; justify-content:center;
+  flex:0 0 auto; width:auto; height:42px; min-width:42px;
+  padding:3px 10px; border:1px solid var(--line); border-radius:21px;
+  color:var(--ink); background:var(--paper);
+  font:600 12px/1.1 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  text-align:center; white-space:nowrap; overflow-wrap:normal; word-break:normal;
+}
+.anki-course .panel-title {
+  margin:0; color:var(--ink); font:500 22px/1.25 Georgia,"Times New Roman",serif;
+}
+.anki-course .panel-subtitle {
+  margin-top:4px; color:var(--muted); font-size:14px; font-weight:400; line-height:1.45;
+}
+.anki-course .panel-badge .gram,
+.anki-course .panel-title .gram { color:inherit!important; border-bottom:0!important; }
+.anki-course .choice-row {
+  display:flex; flex-wrap:wrap; align-items:stretch; justify-content:center;
+  gap:8px; margin:14px 0 0; padding:0;
+}
+.anki-course .choice-chip {
+  display:flex; align-items:center; justify-content:center;
+  flex:0 1 auto; min-width:64px; min-height:38px; max-width:100%;
+  margin:0; padding:6px 12px; border:1px solid var(--line); border-radius:8px;
+  color:var(--ink); background:var(--paper); font-size:17px; font-weight:600; line-height:1.35;
+  text-align:center; box-shadow:none;
+}
+/* Legacy card backs already suppress the front's choice chips. */
+.anki-course.anki-back .choice-row { display:none; }
+
+/* One clear instruction, followed by an Italian target or labelled cue. */
+.anki-course .front-body,
+.anki-course .answer-body { width:100%; max-width:none; margin:0; padding:0; }
+.anki-course .answer-body { border:0; border-radius:0; background:transparent; }
+.anki-course .anki-task,
+.anki-course .ask {
+  margin:0; color:var(--ink); font-size:20px; line-height:1.5; font-weight:400;
+}
+.anki-course .instruction,
+.anki-course .anki-instruction,
+.anki-course .anki-task > span[style]:first-child {
+  display:block; margin:0 0 16px; color:var(--ink);
+  font-size:20px; font-weight:600; font-style:normal; line-height:1.5;
+}
+.anki-course .focus {
+  margin:14px 0 18px; color:var(--ink);
+  font:500 29px/1.4 Georgia,"Times New Roman",serif;
+}
+.anki-course .clue,
+.anki-course .review-instruction {
+  margin:18px 0 0; color:var(--muted); font-size:15px; line-height:1.5;
+  font-weight:400; font-style:normal;
+}
+.anki-course .review-instruction { padding-top:16px; border-top:1px solid var(--line); }
+.anki-course .recall-exercise { margin:0; }
+.anki-course .recall-cue,
+.anki-course .anki-task > span[style] + span[style],
+.anki-course .focus > span[style] {
+  display:block; margin:14px 0!important; padding:0 0 0 13px;
+  border-left:2px solid var(--line); font-size:24px; font-weight:400; line-height:1.4;
+}
+.anki-course .recall-cue-label,
+.anki-course .anki-task > span[style] > span[style*="font-size"],
+.anki-course .focus > span[style] > span[style*="font-size"] {
+  display:block; margin:0 0 4px; color:var(--muted);
+  font-size:14px!important; line-height:1.5; font-weight:600!important; font-style:normal;
+}
+.anki-course .recall-cue > span[lang|="en"]:not(.recall-cue-label),
+.anki-course .anki-task > span[style] + span[style] > span[lang|="en"]:last-child:not([style*="font-size"]),
+.anki-course .focus > span[style] > span[lang|="en"]:last-child:not([style*="font-size"]) {
+  color:var(--anki-gloss); font-style:italic;
+}
+.anki-course [lang|="it"],
+.anki-course .learning-it {
+  color:var(--green); font-style:italic;
+}
+.anki-course .learning-gloss,
+.anki-course .anki-gloss {
+  color:var(--anki-gloss); font-style:italic;
+}
+/* Labels and instructional English remain neutral, even in a translated cue. */
+.anki-course .recall-cue-label[lang|="en"] {
+  color:var(--muted); font-style:normal;
+}
+
+/* A stable answer → pronunciation → meaning → explanation reading order. */
+.anki-course .anki-answer {
+  margin:0 0 16px; font:500 34px/1.35 Georgia,"Times New Roman",serif;
+  overflow-wrap:anywhere;
+}
+.anki-course .anki-answer:not([lang]) { color:var(--ink); }
+.anki-course .anki-answer[lang|="it"] { color:var(--green); font-style:italic; }
+/* L6/L7 share one unlabelled answer field for Italian and English rules.
+   Their authored pronunciation field is populated only for spoken Italian.
+   Anki removes the adjacent wrapper when that conditional field is empty;
+   English conceptual answers therefore keep their neutral presentation. */
+.anki-course.l6-card > .italian.anki-answer:has(+ .anki-pronunciation),
+.anki-course.l7-card > .italian.anki-answer:has(+ .anki-pronunciation) {
+  color:var(--green); font-style:italic;
+}
+.anki-course .anki-answer[lang|="en"],
+.anki-course .l9-answer-en { color:var(--ink); font-style:normal; }
+.anki-course .l9-answer-en { font-family:inherit; font-size:24px; line-height:1.5; }
+.anki-course .answer-label,
+.anki-course .label,
+.anki-course h2 {
+  margin:0 0 7px; color:var(--muted); font-size:13px; font-weight:650;
+  line-height:1.5; letter-spacing:.035em; text-transform:none;
+}
+.anki-course .section,
+.anki-course .anki-explanation {
+  font-size:17px; line-height:1.55; text-align:left; overflow-wrap:anywhere;
+}
+.anki-course .section { margin:22px 0 0; padding-top:17px; border-top:1px solid var(--line); }
+.anki-course .anki-back h2,
+.anki-course.anki-back > h2 { margin-top:22px; }
+.anki-course .anki-gloss { font-size:22px; font-weight:400; line-height:1.5; }
+.anki-course .anki-explanation + .anki-explanation { margin-top:18px; }
+.anki-course .anki-pronunciation {
+  margin:10px 0 20px; color:var(--muted); font-size:17px; font-weight:400; line-height:1.6;
+}
+.anki-course .pronunciation-compact { margin:0; }
+.anki-course .pron-guide-line { margin:0; font-size:17px; line-height:1.55; }
+.anki-course .pron-ipa-line,
+.anki-course .ipa { color:var(--muted); font:15px/1.55 Arial,sans-serif; }
+.anki-course .anki-pronunciation > b { color:var(--muted); font-size:13px; font-weight:600; }
+.anki-course hr { border:0; border-top:1px solid var(--line); margin:20px 0; }
+.anki-course details { margin:20px 0 0; color:var(--muted); font-size:15px; line-height:1.6; }
+.anki-course summary { color:var(--ink); font-size:15px; font-weight:600; cursor:pointer; }
+.anki-course details > .inside,
+.anki-course details > p { margin-top:10px; }
+.anki-course details,
+.anki-course details *,
+.anki-course a { overflow-wrap:anywhere; word-break:normal; }
+.anki-course a { color:var(--accent); }
+.anki-course .tiny { color:var(--muted); font-size:12px; }
+
+/* Tables and literal tiles retain their content at narrow review widths. */
+.anki-course table {
+  width:100%; max-width:100%; border-collapse:collapse; table-layout:fixed;
+  margin:12px 0; font-size:16px; line-height:1.5; text-align:left;
+}
+.anki-course th,
+.anki-course td { padding:8px 7px; border-bottom:1px solid var(--line); vertical-align:top; overflow-wrap:anywhere; }
+.anki-course th { color:var(--ink); font-weight:600; }
+.anki-course .l6-table-scroll { max-width:100%; overflow-x:auto; }
+.anki-course .l7-form-list { margin:12px 0; }
+.anki-course .l7-form-row {
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:6px 12px; align-items:baseline; padding:8px 0; border-bottom:1px solid var(--line);
+  font-size:17px; line-height:1.5;
+}
+.anki-course.l7-card .l7-form-row {
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);
+}
+.anki-course .l7-form-row > * { min-width:0; overflow-wrap:anywhere; }
+.anki-course .tiles,
+.anki-course .literal > .tiles {
+  display:grid!important; grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))!important;
+  grid-auto-rows:1fr!important; align-items:stretch!important; justify-content:start; gap:10px!important;
+}
+.anki-course .word-tile,
+.anki-course .literal > .tiles > .word-tile {
+  display:flex!important; flex-direction:column!important; justify-content:flex-start!important;
+  width:100%!important; min-width:0!important; max-width:none!important;
+  height:100%!important; min-height:0!important; margin:0!important; padding:12px!important;
+  border:1px solid var(--line); border-radius:9px; background:var(--paper2);
+}
+.anki-course .word-tile > span { font-size:18px; line-height:1.45; }
+.anki-course .word-tile small { color:var(--muted); font-size:13px; line-height:1.45; }
+.anki-course .l7-word-tiles { gap:8px; }
+.anki-course .l7-word-tile { background:var(--paper2); border:1px solid var(--line); padding:10px; }
+.anki-course .l7-word-tile small { color:var(--muted); }
+
+/* These exact canonical spans override general language styling. */
+.card .anki-course .verb-stem { color:var(--anki-stem); }
+.card .anki-course .verb-ending,
+.card .anki-course .verb-infix { color:var(--anki-ending); font-weight:700; }
+.anki-course .anki-verb-reference { margin-top:20px; padding-top:16px; border-top:1px solid var(--line); }
+.anki-course .anki-verb-reference h3 { margin:0 0 9px; color:var(--ink); font-size:18px; line-height:1.45; }
+.anki-course .verb-form-legend,
+.anki-course .anki-verb-note { font-size:15px; line-height:1.5; }
+.anki-course .anki-verb-table tbody th { width:44%; }
+
+@media(max-width:600px) {
+  .card, .card:not(.nightMode):not(.night_mode) { padding:12px 9px; }
+  .card .anki-course, .card section.anki-course { padding:20px 17px; border-radius:14px; }
+  .anki-course .topic-panel, .anki-course .anki-topic-panel { padding:12px; margin-bottom:20px; }
+  .anki-course .panel-title { font-size:20px; }
+  .anki-course .panel-subtitle { font-size:13px; }
+  .anki-course .panel-head { gap:10px; }
+  .anki-course .choice-chip { min-width:57px; padding:6px 10px; font-size:16px; }
+  .anki-course .anki-answer { font-size:30px; }
+  .anki-course .focus { font-size:27px; }
+  .anki-course .recall-cue,
+  .anki-course .anki-task > span[style] + span[style],
+  .anki-course .focus > span[style] { font-size:23px; }
+  .anki-course .l7-form-row,
+  .anki-course.l7-card .l7-form-row { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  .anki-course .l7-form-row > span:last-child { grid-column:1/-1; font-size:16px; }
+  .anki-course .anki-gloss { font-size:21px; }
+  .anki-course th, .anki-course td { padding:7px 5px; }
+}
+/* Italian shared card presentation: end */

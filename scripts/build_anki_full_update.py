@@ -23,6 +23,7 @@ from anki.import_export_pb2 import (
 )
 
 from anki_verb_display import append_verb_display_css, format_verb_displays
+from build_anki_format_repair import apply_presentation_to_collection
 from build_anki_recall_update import Originals, restore_archive_ids
 
 
@@ -200,6 +201,7 @@ def build(manifest_path: Path, daily_path: Path, lesson9_path: Path, output: Pat
             if any(log['conflicting'] for log in logs):
                 raise ValueError('Native importer reported conflicting notes')
             presentation = update_course_display(collection)
+            presentation['note_type_formatting'] = apply_presentation_to_collection(collection)
             notes = [collection.get_note(identifier) for identifier in collection.find_notes('')]
             keys = [key_for(note) for note in notes]
             if len(keys) != expected_total or len(set(keys)) != expected_total:

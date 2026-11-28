@@ -387,7 +387,7 @@ def check_colours(notes, models):
     return {'models_with_shared_light_dark_palette': len(used_models)}
 
 
-def validate(manifest_path, package, lesson9_component=None):
+def validate(manifest_path, package, lesson9_component=None, shared_presentation=False):
     manifest = json.loads(manifest_path.read_text())
     old_count, new_count = manifest['expected_existing_cards'], manifest['expected_new_cards']
     total = old_count + new_count
@@ -432,10 +432,17 @@ def validate(manifest_path, package, lesson9_component=None):
             updated = notes_snapshot(fresh, rendered=True)
             assert set(updated) - set(baseline) == {c['key'] for c in source['l9']['cards']}
             models = {m['id']: m for m in fresh.models.all()}
+            if shared_presentation:
+                from anki_card_presentation import apply_card_presentation, CSS_START, CSS_END
+                for mid in {row['model_id'] for row in updated.values()}:
+                    assert models[mid]['css'].count(CSS_START) == models[mid]['css'].count(CSS_END) == 1, 'Missing shared presentation'
+                    assert apply_card_presentation(models[mid]) == models[mid], 'Shared presentation differs from the exporter contract'
             for mid in {r['model_id'] for r in baseline.values()}:
                 assert [f['name'] for f in models[mid]['flds']] == [f['name'] for f in baseline_models[mid]['flds']], 'Existing field schema changed'
+                expected_model = (apply_card_presentation(baseline_models[mid])
+                                  if shared_presentation else baseline_models[mid])
                 for name in ('qfmt', 'afmt'):
-                    assert [t[name] for t in models[mid]['tmpls']] == [t[name] for t in baseline_models[mid]['tmpls']], 'Existing template changed'
+                    assert [t[name] for t in models[mid]['tmpls']] == [t[name] for t in expected_model['tmpls']], 'Existing template differs from its exact expected presentation'
             content = check_existing_content(baseline, updated)
             l9 = check_lesson9(updated, source['l9'], models)
             references = check_references(updated, source['verbs'])
@@ -468,6 +475,7 @@ def validate(manifest_path, package, lesson9_component=None):
         'second_import': repeat_log, 'archive': archive, 'content': content,
         'lesson9': l9, 'references': references, 'colours': colours,
         'fresh_import_missing_media': 0,
+        'shared_presentation_verified': shared_presentation,
     }
 
 
@@ -477,8 +485,10 @@ if __name__ == '__main__':
     parser.add_argument('package', type=Path)
     parser.add_argument('--lesson9-component', type=Path)
     parser.add_argument('--report', type=Path)
+    parser.add_argument('--shared-presentation', action='store_true',
+                        help='Require the exact shared card presentation; preserve all other validation gates')
     args = parser.parse_args()
-    report = validate(args.manifest, args.package, args.lesson9_component)
+    report = validate(args.manifest, args.package, args.lesson9_component, args.shared_presentation)
     output = json.dumps(report, ensure_ascii=False, indent=2) + '\n'
     if args.report:
         args.report.parent.mkdir(parents=True, exist_ok=True)

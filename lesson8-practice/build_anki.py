@@ -8,6 +8,7 @@ from hashlib import sha256
 from html import escape
 import json
 from pathlib import Path
+import sys
 from tempfile import TemporaryDirectory
 
 from anki.collection import Collection, NoteIdsLimit
@@ -15,6 +16,8 @@ from anki.import_export_pb2 import ExportAnkiPackageOptions
 from anki.utils import base91
 
 FOLDER = Path(__file__).resolve().parent
+sys.path.insert(0, str(FOLDER.parent / 'scripts'))
+from anki_card_presentation import apply_card_presentation
 PARENT = 'Italian - Lesson 8 - Grammar and Extra Practice'
 TOPICS = {
     'grammar': '01 Grammar in context',
@@ -71,6 +74,7 @@ def make_package(output):
             template = collection.models.new_template('Recall')
             template.update(id=stable_number('practice-template:recall'), qfmt=FRONT, afmt=BACK)
             collection.models.add_template(model, template)
+            model = apply_card_presentation(model)
             collection.models.update(model)
             make_deck(collection, PARENT)
             decks = {key:make_deck(collection, PARENT+'::'+topic) for key, topic in TOPICS.items()}
